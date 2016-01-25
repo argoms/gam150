@@ -62,7 +62,7 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
 	if(0 == AESysInit (&sysInitInfo))
 		printf("System Init Failed!\n");
 
-  LevelLoad();
+  LevelLoad(level_mainMenu);
   //GInitialize();
 
 	// Changing the window title
@@ -83,7 +83,7 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
 
 		///////////////////
 		// Game loop update
-		
+    LevelRun();
 
 		// Game loop update
 		///////////////////

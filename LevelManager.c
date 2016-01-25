@@ -1,5 +1,6 @@
 #include "Graphics.h"
 #include "AEEngine.h"
+#include "LevelManager.h"
 
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
 static AEGfxVertexList*	pMesh2;				// Pointer to Mesh (Model)
@@ -11,9 +12,71 @@ static Animation* animtest;
 static Animation* animtest2;
 //EXAMPLE CODE ENDS HERE
 
-void LevelLoad()
+
+static int currentLevel;
+static int nextLevel;
+
+extern int gGameRunning; //assume that for now
+void LevelLoad(int _level)
 {
   GInitialize();
+  switch (_level)
+  {
+  case level_level1:
+    Level1Init();
+    break;
+  case level_mainMenu:
+    MainMenuInit();
+    break;
+  }
+
+}
+
+void LevelRun()
+{
+  //debug
+  if (AEInputCheckTriggered(VK_SPACE))
+  {
+    switch (currentLevel)
+    {
+    case level_level1:
+      nextLevel = level_exit;
+      break;
+    case level_mainMenu:
+      nextLevel = level_level1;
+      break;
+    }
+  }
+  //
+
+  if (currentLevel != nextLevel)
+  {
+    switch (nextLevel)
+    {
+    case level_exit:
+      gGameRunning = 0;
+      break;
+    default:
+      LevelUnload();
+      currentLevel = nextLevel;
+      LevelLoad(nextLevel);
+      break;
+    }
+  }
+}
+
+void LevelUnload()
+{
+  GFree();
+}
+
+void MainMenuInit()
+{
+  printf("you're in the main menu, woo\n");
+}
+void Level1Init()
+{
+  printf("loading level 1\n");
   pMesh2 = GCreateMesh(128.f, 128.f, 16);
 
   // Texture 1: From file
@@ -42,9 +105,4 @@ void LevelLoad()
     //sprite = GCreateHudSprite(0, 0, animtest2, 1);
   }
   //EXAMPLE CODE ENDS HERE
-}
-
-void LevelUnload()
-{
-  GFree();
 }
