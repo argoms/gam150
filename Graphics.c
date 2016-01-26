@@ -44,6 +44,7 @@ void GRender()
 
 
 
+  
   AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
   //render sprites in list starting from the first item
   if (spriteList->first)
@@ -53,7 +54,11 @@ void GRender()
     {
       SimAnimation(spriteIndex);
       AEGfxSetPosition(spriteIndex->x, spriteIndex->y);
-      AEGfxTextureSet(spriteIndex->animation->texture, spriteIndex->animation->frameOffset * spriteIndex->frame, 0.0f);
+      AEGfxTextureSet(spriteIndex->animation->texture,
+        spriteIndex->animation->frameOffsetX * (spriteIndex->frame % spriteIndex->animation->frameWidth) - 1,
+        spriteIndex->animation->frameOffsetY * (spriteIndex->frame / spriteIndex->animation->frameWidth) - 1);
+      
+      printf("%2f mahlen", spriteIndex->animation->frameOffsetY);
       AEGfxSetTransparency(1.0f);
       AEGfxMeshDraw(spriteIndex->animation->mesh, AE_GFX_MDM_TRIANGLES);
       spriteIndex = spriteIndex->lowerSprite;
@@ -64,14 +69,14 @@ void GRender()
 
   
   //render HUD in list starting from the first item
-  if (hudLayer->first)
+  if (hudLayer->first && 0)
   {
     Sprite* spriteIndex = hudLayer->first;
     while (spriteIndex)
     {
       SimAnimation(spriteIndex);
       AEGfxSetPosition(spriteIndex->x, spriteIndex->y);
-      AEGfxTextureSet(spriteIndex->animation->texture, spriteIndex->animation->frameOffset * spriteIndex->frame, 0.0f);
+      AEGfxTextureSet(spriteIndex->animation->texture, spriteIndex->animation->frameOffsetX * spriteIndex->frame, 0.0f);
       AEGfxSetTransparency(1.0f);
       AEGfxMeshDraw(spriteIndex->animation->mesh, AE_GFX_MDM_TRIANGLES);
       spriteIndex = spriteIndex->lowerSprite;
@@ -90,24 +95,26 @@ void GRender()
 
 \param _width width of mesh
 \param _height height of mesh
-\param numframes number of frames in the animation associated with this mesh
+\param numframesX number of frames per row in the animation associated with this mesh
+\param numframesX number of rows of frames in the animation associated with this mesh
 */
-struct AEGfxVertexList* GCreateMesh(float _width, float _height, float _numFrames)
+struct AEGfxVertexList* GCreateMesh(float _width, float _height, float _numFramesX, float _numFramesY)
 {
-  float frameScale = 1/_numFrames;
+  float frameScaleX = 1/_numFramesX;
+  float frameScaleY = 1 / _numFramesY;
   AEGfxVertexList* temp;
   _width *= 0.5;
   _height *= 0.5;
 
   AEGfxMeshStart();
   AEGfxTriAdd(
-    -_width, -_height, 0x00FF00FF, 0.0f, 1.0f,
-    _width, -_height, 0x00FFFF00, frameScale, 1.0f,
+    -_width, -_height, 0x00FF00FF, 0.0f, frameScaleY,
+    _width, -_height, 0x00FFFF00, frameScaleX, frameScaleY,
     -_width, _height, 0x00F00FFF, 0.0f, 0.0f);
 
   AEGfxTriAdd(
-    _width, -_height, 0x00FFFFFF, frameScale, 1.0f,
-    _width, _height, 0x00FFFFFF, frameScale, 0.0f,
+    _width, -_height, 0x00FFFFFF, frameScaleX, frameScaleY,
+    _width, _height, 0x00FFFFFF, frameScaleX, 0.0f,
     -_width, _height, 0x00FFFFFF, 0.0f, 0.0f);
 
   temp = AEGfxMeshEnd();
@@ -396,16 +403,22 @@ void GRemoveSprite(Sprite** _input)
 \brief Generates an animation from an image file with specified info.
 Does not create texture & mesh objects as part of the process.
 
-\param _numFrames the total number of frames in the animation
+\param _numFrames the number of frames in the animation PER ROW
+\param _numRows the number of rows in the animaton
 \param _texture pointer to the texture to be used
 \param _mesh pointer to the mesh to be used
 */
-Animation* GCreateAnimation(float _numFrames, struct AEGfxTexture* _texture, struct AEGfxVertexList* _mesh)
+Animation* GCreateAnimation(float _numFrames, struct AEGfxTexture* _texture, struct AEGfxVertexList* _mesh, int _numRows)
 {
   Animation* newAnim = malloc(sizeof(Animation));
   
-  newAnim->length = _numFrames;
-  newAnim->frameOffset = 1 / _numFrames;
+  newAnim->length = _numFrames * _numRows;
+  
+  newAnim->frameOffsetX = 1 / (float)_numFrames;
+  newAnim->frameOffsetY = 1 / (float)_numRows;
+  
+  newAnim->frameWidth = _numFrames;
+  newAnim->frameHeight = _numRows;
   
   newAnim->texture = _texture;
   newAnim->mesh = _mesh;
@@ -431,6 +444,7 @@ void SimAnimation(Sprite* _input)
   }
   if (_input->frame >= _input->animation->length)
   {
+    printf("%i mahlen", _input->frame);
     _input->frame = 0;
     //printf("a");
 

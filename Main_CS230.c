@@ -106,7 +106,7 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
 			gGameRunning = 0;
 	}
 
-  LevelUnload();
+  //LevelUnload();
 
 
 

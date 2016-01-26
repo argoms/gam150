@@ -58,7 +58,10 @@ Also acts as a linked list between sprites for layering resolution. Sprites are 
    
    int length; /*! length of animation in frames*/
    
-   float frameOffset; /*! amount to offset, aka 1/(num frames)*/
+   int frameWidth; /*! number of frames per row*/
+   int frameHeight; /*! number of frames per column (number of rows)*/
+   float frameOffsetX; /*! amount to offset, aka 1/(num frames)*/
+   float frameOffsetY; /*! amount to offset y*/
  };
 
  struct MeshList
@@ -83,7 +86,7 @@ Sprite* GCreateSprite(float _spriteX, float _spriteY, Animation* _animation, flo
 
 void SortSprite(Sprite* sprite, float direction); //call every time the sprite changes y position
 
-Animation* GCreateAnimation(float _numFrames, struct AEGfxTexture* _texture, struct AEGfxVertexList* _mesh); //creates an animation
+Animation* GCreateAnimation(float _numFrames, struct AEGfxTexture* _texture, struct AEGfxVertexList* _mesh, int _numRows); //creates an animation
 
 void SimAnimation(Sprite* _input); //call every frame on every sprite to animate
 
@@ -91,6 +94,6 @@ void GRemoveSprite(Sprite** _input); //call to remove a sprite on screen
 
 Sprite* GCreateHudSprite(float _spriteX, float _spriteY, Animation* _animation, float _frameDelay); //call to create a sprite on the hud layer
 
-struct AEGfxVertexList* GCreateMesh(float _width, float _height, float _numFrames); //call to create a mesh
+struct AEGfxVertexList* GCreateMesh(float _width, float _height, float _numFramesX, float _numFramesY); //call to create a mesh
 
 struct AEGfxTexture* GCreateTexture(char* _textureName); //call to create a texture
