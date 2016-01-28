@@ -1,6 +1,7 @@
 #include "Graphics.h"
 #include "AEEngine.h"
 #include "LevelManager.h"
+#include "Text.h"
 
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
 static AEGfxVertexList*	pMesh2;				// Pointer to Mesh (Model)
@@ -88,6 +89,8 @@ void MainMenuInit()
 {
   static AEGfxVertexList*	newmesh;				// Pointer to Mesh (Model)
   newmesh = GCreateMesh(16, 24, 16, 16);
+
+  TextInit();
   printf("you're in the main menu, woo\n");
   //pretty much all example stuff
   printf("loading level 1\n");
@@ -102,23 +105,17 @@ void MainMenuInit()
   AEGfxSetBlendMode(AE_GFX_BM_BLEND);
   //EXAMPLE ENDS HERE
 
-
+  TextCreateString("test text pls ignore also im spiderwolf", -360, -50);
 
 
 
   //EXAMPLE CODE, REMOVE OUT WHEN USING
   {
-    //sprite = GCreateSprite(-5, -5, pTex1, pMesh2);
-    //sprite = GCreateSprite(-25, -25, pTex2, pMesh2);
-    animtest = GCreateAnimation(16, pTex2, newmesh, 16);
-    animtest2 = GCreateAnimation(16, pTex1, pMesh2, 16);
+    animtest2 = GCreateAnimation(16, pTex1, pMesh2, 1);
     //sprite = GCreateSprite(0, 30, animtest, 4);
     //sprite = GCreateSprite(0, 20, animtest, 4);
     //sprite = GCreateSprite(0, -30, animtest, 4);
-    sprite = GCreateSprite(0, 40, animtest2, 4000);
-    sprite = GCreateSprite(0, 0, animtest, 1000);
-
-    sprite->frame = 97;
+    sprite = GCreateSprite(100, 40, animtest2, 4);
     //sprite = GCreateHudSprite(0, 0, animtest2, 1);
   }
   //EXAMPLE CODE ENDS HERE

@@ -14,8 +14,6 @@ Also acts as a linked list between sprites for layering resolution. Sprites are 
 */
  struct Sprite
 {
-  //struct AEGfxVertexList* mesh; /*! pointer to the mesh for the sprite*/
-  //struct AEGfxTexture* texture; /*! pointer to texture of sprite*/
   struct Animation* animation; /*! pointer to the sprite's animation*/
   float x; /*! x position of sprite*/
   float y; /*! y position of sprite*/

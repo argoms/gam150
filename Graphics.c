@@ -58,7 +58,7 @@ void GRender()
         spriteIndex->animation->frameOffsetX * (spriteIndex->frame % spriteIndex->animation->frameWidth) - 1,
         spriteIndex->animation->frameOffsetY * (spriteIndex->frame / spriteIndex->animation->frameWidth) - 1);
       
-      printf("%2f mahlen", spriteIndex->animation->frameOffsetY);
+      //printf("%2f mahlen", spriteIndex->animation->frameOffsetY);
       AEGfxSetTransparency(1.0f);
       AEGfxMeshDraw(spriteIndex->animation->mesh, AE_GFX_MDM_TRIANGLES);
       spriteIndex = spriteIndex->lowerSprite;
@@ -212,8 +212,6 @@ void GFree()
       AEGfxTextureUnload(temp2->item);
       //printf("%p))", temp->item);
       temp2 = temp2->next;
-
-
     }
     //printf("%i||", temp->item->vtxNum);
     AEGfxTextureUnload(temp2->item);
@@ -444,7 +442,7 @@ void SimAnimation(Sprite* _input)
   }
   if (_input->frame >= _input->animation->length)
   {
-    printf("%i mahlen", _input->frame);
+    //printf("%i mahlen", _input->frame);
     _input->frame = 0;
     //printf("a");
 
