@@ -11,6 +11,9 @@ static AEGfxTexture *pTex2;					// Pointer to Texture (Image)
 static Sprite* sprite; //only one for debug purposes
 static Animation* animtest;
 static Animation* animtest2;
+
+static float textY;
+static TextString* textString;
 //EXAMPLE CODE ENDS HERE
 
 
@@ -55,6 +58,23 @@ void LevelRun()
       nextLevel = level_level1;
       break;
     }
+  }
+
+  if (textY > -100)
+  {
+    textY -= 1;
+    TextStringSetPos(textString, -360, textY);
+    if (textY == -10)
+    {
+      printf("potato");
+      SetTextString(&textString, "potato");
+    }
+    if (textY < -50)
+    {
+      TextRemoveString(textString);
+      textY = -200;
+    }
+    
   }
   //
 
@@ -105,8 +125,9 @@ void MainMenuInit()
   AEGfxSetBlendMode(AE_GFX_BM_BLEND);
   //EXAMPLE ENDS HERE
 
-  TextCreateString("test text pls ignore also im spiderwolf", -360, -50);
-
+  
+  textString = TextCreateString("test text pls ignore also im spiderwolf", -360, 50);
+  
 
 
   //EXAMPLE CODE, REMOVE OUT WHEN USING
