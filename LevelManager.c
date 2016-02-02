@@ -67,7 +67,7 @@ void LevelRun()
     if (textY == -10)
     {
       printf("potato");
-      SetTextString(&textString, "potato");
+      TextStringSet(&textString, "potato");
     }
     if (textY < -50)
     {
