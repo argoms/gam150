@@ -15,10 +15,10 @@ static int textWidth; /*! width of font*/
 void TextInit()
 {
   charFont = GCreateTexture("dffont.png");
-  charMesh = GCreateMesh(16, 24, 16, 16);
+  charMesh = GCreateMesh(8, 12, 16, 16);
   charAnim = GCreateAnimation(16, charFont, charMesh, 16);
-  textHeight = 20;
-  textWidth = 16;
+  textHeight = 12;
+  textWidth = 8;
 }
 
 /*!

@@ -1,10 +1,6 @@
 #include "Graphics.h"
 #include "AEEngine.h"
 
-
-
-
-
 static SpriteList* spriteList; //list of sprites for game layer
 static SpriteList* hudLayer; //list of sprites for hud layer
 static MeshList* meshList;
@@ -25,9 +21,6 @@ void GInitialize()
   hudLayer->first = NULL;
   hudLayer->last = NULL;
 
-
-
-
 }
 
 /*!
@@ -35,16 +28,6 @@ void GInitialize()
 */
 void GRender()
 {
-    //EXAMPLE CODE, REMOVE OUT WHEN USING
-  {
-    //if (sprite)
-      //GRemoveSprite(&sprite);
-  }
-    //EXAMPLE CODE ENDS HERE
-
-
-
-  
   AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
   //render sprites in list starting from the first item
   if (spriteList->first)
@@ -456,7 +439,7 @@ I'm aware that the loop could probably be optimized way better. It kept breaking
 \param _sprite input sprite object
 \param _direction y direction of change
 */
-void SortSprite(Sprite* _sprite, float _direction)
+void GSortSprite(Sprite* _sprite, float _direction)
 {
   if (_direction > 0) //assuming that the sprite is going upwards:
   {

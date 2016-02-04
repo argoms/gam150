@@ -82,7 +82,7 @@ void GFree(); //call after game/level is over to free resources
 
 Sprite* GCreateSprite(float _spriteX, float _spriteY, Animation* _animation, float _frameDelay); //creates a sprite struct
 
-void SortSprite(Sprite* sprite, float direction); //call every time the sprite changes y position
+void GSortSprite(Sprite* sprite, float direction); //call every time the sprite changes y position
 
 Animation* GCreateAnimation(float _numFrames, struct AEGfxTexture* _texture, struct AEGfxVertexList* _mesh, int _numRows); //creates an animation
 

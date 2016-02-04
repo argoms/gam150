@@ -163,18 +163,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameLevel.c" />
     <ClCompile Include="Graphics.c" />
+    <ClCompile Include="Isometric.c" />
     <ClCompile Include="LevelManager.c" />
     <ClCompile Include="Main_CS230.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Physics.c" />
     <ClCompile Include="Text.c" />
+    <ClCompile Include="Vector2D.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameLevel.h" />
     <ClInclude Include="Graphics.h" />
+    <ClInclude Include="Isometric.h" />
     <ClInclude Include="LevelManager.h" />
+    <ClInclude Include="Physics.h" />
     <ClInclude Include="Text.h" />
+    <ClInclude Include="Vector2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

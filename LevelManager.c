@@ -2,6 +2,7 @@
 #include "AEEngine.h"
 #include "LevelManager.h"
 #include "Text.h"
+#include "GameLevel.h"
 
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
 static AEGfxVertexList*	pMesh2;				// Pointer to Mesh (Model)
@@ -59,24 +60,14 @@ void LevelRun()
       break;
     }
   }
-
-  if (textY > -100)
-  {
-    textY -= 1;
-    TextStringSetPos(textString, -360, textY);
-    if (textY == -10)
-    {
-      printf("potato");
-      TextStringSet(&textString, "potato");
-    }
-    if (textY < -50)
-    {
-      TextRemoveString(textString);
-      textY = -200;
-    }
-    
-  }
   //
+
+  switch (currentLevel)
+  {
+  case level_level1:
+    GameLevelRun();
+    break;
+  }
 
   if (currentLevel != nextLevel)
   {
@@ -113,7 +104,7 @@ void MainMenuInit()
   TextInit();
   printf("you're in the main menu, woo\n");
   //pretty much all example stuff
-  printf("loading level 1\n");
+  printf("loading menu\n");
   pMesh2 = GCreateMesh(128.f, 128.f, 16, 1);
   
 
@@ -126,7 +117,7 @@ void MainMenuInit()
   //EXAMPLE ENDS HERE
 
   
-  textString = TextCreateString("test text pls ignore also im spiderwolf", -360, 50);
+  textString = TextCreateString("PLACEHOLDER MAIN MENU PRESS SPACE TO ENTER GAME", -360, 50);
   
 
 
@@ -147,32 +138,5 @@ void MainMenuInit()
 */
 void Level1Init()
 {
-  //pretty much all example stuff
-  printf("loading level 1\n");
-  pMesh2 = GCreateMesh(128.f, 128.f, 16, 1);
-
-  // Texture 1: From file
-  pTex2 = GCreateTexture("spiderwolfbrighter.png");
-
-  AEGfxSetBackgroundColor(1.0f, 1.0f, 1.0f);
-  AEGfxSetBlendMode(AE_GFX_BM_BLEND);
-  //EXAMPLE ENDS HERE
-
-
-
-
-
-  //EXAMPLE CODE, REMOVE OUT WHEN USING
-  {
-    //sprite = GCreateSprite(-5, -5, pTex1, pMesh2);
-    //sprite = GCreateSprite(-25, -25, pTex2, pMesh2);
-    animtest = GCreateAnimation(16, pTex2, pMesh2, 1);
-    //sprite = GCreateSprite(0, 30, animtest, 4);
-    //sprite = GCreateSprite(0, 20, animtest, 4);
-    //sprite = GCreateSprite(0, -30, animtest, 4);
-    sprite = GCreateSprite(0, 40, animtest, 1);
-    sprite = GCreateSprite(0, 0, animtest, 1);
-    //sprite = GCreateHudSprite(0, 0, animtest2, 1);
-  }
-  //EXAMPLE CODE ENDS HERE
+  GameLevelInit();
 }
