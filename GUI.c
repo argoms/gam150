@@ -8,7 +8,7 @@ static int iGlobalDragCancel = 0; //to prevent mouse from catching multiple obje
 
 extern GUI_ObjectInstance *goiaGUI_ObjectInstanceList;
 
-extern pTempMesh;
+extern AEGfxVertexList *pTempMesh;
 
 void LoadGUI(int GUI_ObjectTotal)
 {
