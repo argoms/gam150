@@ -13,7 +13,7 @@ void GameLevelInit()
 {
   printf("game level init\n");
   PhysicsInit();
-  IsoInit(5, 5);
+  IsoInit(16, 16);
   
 
   AEGfxSetBackgroundColor(1.0f, 1.0f, 1.0f);
@@ -23,12 +23,12 @@ void GameLevelInit()
 
 
   Animation* anim = GCreateAnimation(1, 
-                  GCreateTexture("smallisotile.png"),
-                  GCreateMesh(64.f, 32.f, 1, 1),
+                  GCreateTexture("isotileGreen.png"),
+                  GCreateMesh(128.f, 64.f, 1, 1),
                   1);
 
   playerSprite = GCreateSprite(0, 40, anim, 1);
-  playerObject = PhysicsCreateObject(Vec2(0, 0), Vec2(1, 1));
+  playerObject = PhysicsCreateObject(Vec2(2, 2), Vec2(1, 1));
 }
 
 void GameLevelRun()
@@ -36,26 +36,31 @@ void GameLevelRun()
   //shut up I debug how I want
   //printf("fuckoff");
 
-  InputHandle();
-  PhysicsSimulate();
-
   //Vector2D a = Vec2(2, 2);
   playerSprite->x = IsoWorldToScreen(&playerObject->position).x;
   playerSprite->y = IsoWorldToScreen(&playerObject->position).y;
   //printf("a %f, %f \n", IsoWorldToScreen(&playerObject->position).x, IsoWorldToScreen(&playerObject->position).y);
+
+  InputHandle();
+  PhysicsSimulate();
+  AEGfxSetCamPosition(playerSprite->x, playerSprite->y);
+
+  
 }
 
 void InputHandle()
 {
+
   //if (AEInputCheckTriggered(VK_SPACE))
   Vector2D input = Vec2(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41),
                         AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53));
   if (input.x != 0 || input.y != 0)
   {
     Vector2DNormalize(&input, &input);
-    //Vector2DScale(&input, &input, 0.05);
+    Vector2DScale(&input, &input, 5);
   }
   playerObject->velocity = IsoScreenToWorld(&input);
   GSortSprite(playerSprite, playerObject->velocity.y);
+  
   
 }

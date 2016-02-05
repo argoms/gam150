@@ -30,6 +30,12 @@ void IsoInit(int _mapHeight, int _mapWidth)
     }
     i++;
   }
+  IsoTileSet(4, 4, 1);
+
+  IsoTileSet(6, 6, 1);
+  IsoTileSet(6, 7, 1);
+  IsoTileSet(7, 6, 1);
+  IsoTileSet(7, 7, 1);
   IsoSpawnMap();
 }
 Vector2D IsoScreenToWorld(Vector2D* _input)
