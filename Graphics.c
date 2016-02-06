@@ -1,3 +1,10 @@
+/*!
+\file   Graphics.c
+\author James Do
+\par    email: j.do\@digipen.edu
+\brief
+Graphics implementation front end handling sprite layering, dynamic sprite creation etc.
+*/
 #include "Graphics.h"
 #include "AEEngine.h"
 
@@ -29,21 +36,28 @@ void GInitialize()
 void GRender()
 {
   AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+
   //render sprites in list starting from the first item
   if (spriteList->first)
   {
     Sprite* spriteIndex = spriteList->first;
     while (spriteIndex)
     {
-      SimAnimation(spriteIndex);
-      AEGfxSetPosition(spriteIndex->x, spriteIndex->y);
+      AEGfxSetPosition(spriteIndex->x, spriteIndex->y);//set draw position
+      
+
+      
+      //update sprite texture offsets according to animation
+      SimAnimation(spriteIndex); 
       AEGfxTextureSet(spriteIndex->animation->texture,
         spriteIndex->animation->frameOffsetX * (spriteIndex->frame % spriteIndex->animation->frameWidth) - 1,
         spriteIndex->animation->frameOffsetY * (spriteIndex->frame / spriteIndex->animation->frameWidth) - 1);
       
-      //printf("%2f mahlen", spriteIndex->animation->frameOffsetY);
+      
       AEGfxSetTransparency(1.0f);
       AEGfxMeshDraw(spriteIndex->animation->mesh, AE_GFX_MDM_TRIANGLES);
+
+      //move to next sprite index
       spriteIndex = spriteIndex->lowerSprite;
 
 
@@ -59,7 +73,9 @@ void GRender()
     {
       SimAnimation(spriteIndex);
       AEGfxSetPosition(spriteIndex->x, spriteIndex->y);
-      AEGfxTextureSet(spriteIndex->animation->texture, spriteIndex->animation->frameOffsetX * spriteIndex->frame, 0.0f);
+      AEGfxTextureSet(spriteIndex->animation->texture,
+        spriteIndex->animation->frameOffsetX * (spriteIndex->frame % spriteIndex->animation->frameWidth) - 1,
+        spriteIndex->animation->frameOffsetY * (spriteIndex->frame / spriteIndex->animation->frameWidth) - 1);
       AEGfxSetTransparency(1.0f);
       AEGfxMeshDraw(spriteIndex->animation->mesh, AE_GFX_MDM_TRIANGLES);
       spriteIndex = spriteIndex->lowerSprite;
@@ -67,9 +83,7 @@ void GRender()
 
     }
   }
-
-  
-  
+ 
 }
 
 
@@ -83,12 +97,15 @@ void GRender()
 */
 struct AEGfxVertexList* GCreateMesh(float _width, float _height, float _numFramesX, float _numFramesY)
 {
+  //calculate the percentage of the total texture that the mesh will occupy:
   float frameScaleX = 1/_numFramesX;
   float frameScaleY = 1 / _numFramesY;
+
   AEGfxVertexList* temp;
   _width *= 0.5;
   _height *= 0.5;
 
+  //create square mesh with given parameters:
   AEGfxMeshStart();
   AEGfxTriAdd(
     -_width, -_height, 0x00FF00FF, 0.0f, frameScaleY,
@@ -102,6 +119,7 @@ struct AEGfxVertexList* GCreateMesh(float _width, float _height, float _numFrame
 
   temp = AEGfxMeshEnd();
   
+  //update the list of created meshes:
   if (meshList)
   {
     MeshList* index = meshList;
@@ -116,14 +134,13 @@ struct AEGfxVertexList* GCreateMesh(float _width, float _height, float _numFrame
     meshList->next = NULL;
     
   }
- //  temp;
   return temp;
   AE_ASSERT_MESG(temp, "Failed to create mesh!!");
   
 }
 
 /*!
-\brief Loads a texture
+\brief Loads a texture from file
 
 \param _textureName name of texture string
 */
@@ -133,6 +150,7 @@ struct AEGfxTexture* GCreateTexture(char* _textureName)
   
   temp = AEGfxTextureLoad(_textureName);
 
+  //update list of laded textures
   if (textureList)
   {
     TextureList* index = textureList;
@@ -189,7 +207,7 @@ void GFree()
   {
     while (temp2->next)
     {
-      tempPrevious2 = temp;
+      tempPrevious2 = temp2;
       //free(tempPrevious);
       //printf("%i||", temp->item->vtxNum);
       AEGfxTextureUnload(temp2->item);
@@ -215,18 +233,16 @@ Sprite layer is initialized based on _spriteY param.
 
 \param _spriteX is the x position of the created sprite
 \param _spriteY is the y position of the created sprite
-\param _texture is a pointer to what texture for the sprite
-\param _mesh is a pointer to the vertex list (mesh) for the sprite
+\param _animation is the animation object for the new sprite
 \param _frameDelay the number of frames to wait in between changing frames for the animation
 */
 Sprite* GCreateSprite(float _spriteX, float _spriteY, Animation* _animation, float _frameDelay)//struct AEGfxTexture* _texture, struct AEGfxVertexList* _mesh)
 {
  
+  //initialize sprite variables:
   Sprite* newSprite = malloc(sizeof(struct Sprite));
   newSprite->x = _spriteX;
   newSprite->y = _spriteY;
-  //newSprite->texture = _texture;
-  //newSprite->mesh = _mesh;
   newSprite->higherSprite = NULL;
   newSprite->lowerSprite = NULL;
   newSprite->animation = _animation;
@@ -236,7 +252,7 @@ Sprite* GCreateSprite(float _spriteX, float _spriteY, Animation* _animation, flo
   newSprite->frameDelay = _frameDelay;
   newSprite->isHud = 0;
 
-
+  //update sprite list:
   if (!spriteList->first) //if first, set first in list
   {
     spriteList->first = newSprite;
@@ -276,13 +292,12 @@ Sprite* GCreateSprite(float _spriteX, float _spriteY, Animation* _animation, flo
 }
 
 /*!
-\brief creates sprite with given parameters
+\brief creates a hud sprite with given parameters
 Sprite is appended to last on the list (more recently created elements are rendered first.
 
 \param _spriteX is the x position of the created sprite
 \param _spriteY is the y position of the created sprite
-\param _texture is a pointer to what texture for the sprite
-\param _mesh is a pointer to the vertex list (mesh) for the sprite
+\param _animation is the animation for the new sprite
 \param _frameDelay the number of frames to wait in between changing frames for the animation
 */
 Sprite* GCreateHudSprite(float _spriteX, float _spriteY, Animation* _animation, float _frameDelay)//struct AEGfxTexture* _texture, struct AEGfxVertexList* _mesh)
@@ -322,8 +337,9 @@ Sprite* GCreateHudSprite(float _spriteX, float _spriteY, Animation* _animation, 
 /*!
 \brief Removes sprite object 
 Pass the address of a pointer to the sprite, not the pointer itself: &sprite instead of sprite assuming that sprite is a pointer to a sprite struct.
+If only we could pass by reference in c.
 
-\param _input pointer to pointer to sprite
+\param _input pointer to pointer to sprite (remember to add the &)
 */
 void GRemoveSprite(Sprite** _input)
 {
@@ -373,7 +389,7 @@ void GRemoveSprite(Sprite** _input)
         spriteLayer->last = NULL;
       }
     }
-    free(*_input); //note: may also free animation? no time to test, will check later
+    free(*_input); 
     *_input = NULL;
     
   }
@@ -384,7 +400,7 @@ void GRemoveSprite(Sprite** _input)
 \brief Generates an animation from an image file with specified info.
 Does not create texture & mesh objects as part of the process.
 
-\param _numFrames the number of frames in the animation PER ROW
+\param _numFrames the number of frames in the animation PER ROW (aka the number of columns)
 \param _numRows the number of rows in the animaton
 \param _texture pointer to the texture to be used
 \param _mesh pointer to the mesh to be used
@@ -407,7 +423,7 @@ Animation* GCreateAnimation(float _numFrames, struct AEGfxTexture* _texture, str
 }
 
 /*!
-\brief Call to simulate animation (changing frames)
+\brief Call to simulate animation (updating frame number)
 
 \param _input pointer to sprite
 */
@@ -425,12 +441,10 @@ void SimAnimation(Sprite* _input)
   }
   if (_input->frame >= _input->animation->length)
   {
-    //printf("%i mahlen", _input->frame);
     _input->frame = 0;
-    //printf("a");
-
   }
 }
+
 /*!
 \brief sorts sprite layer according to y position
 Call this function when a sprite changes y position to make sure it is layered correctly. 
@@ -477,7 +491,7 @@ void GSortSprite(Sprite* _sprite, float _direction)
         }
         else 
         {
-          
+          //if the replaced sprite was the highest sprite, update the pointer to the first sprite in the list
           _sprite->higherSprite = NULL;
           oldHigher->higherSprite = _sprite;
           spriteList->first = _sprite;

@@ -1,13 +1,20 @@
+/*!
+\file   Text.c
+\author James Do
+\par    email: j.do\@digipen.edu
+\brief
+Functions for creating/moving/setting text objects (groups of sprites).
+*/
 #include "Graphics.h"
 #include "Text.h"
 #include "AEEngine.h"
 
 #include <stdlib.h>
-static AEGfxVertexList*	charMesh; /*! mesh of each lettter*/
-static AEGfxTexture *charFont; /*! texture containing font sprite*/
-static Animation* charAnim; /*! animation of font*/
-static int textHeight; /*! height of font*/
-static int textWidth; /*! width of font*/
+static AEGfxVertexList*	charMesh; /**< mesh of each lettter*/
+static AEGfxTexture *charFont; /**< texture containing font sprite*/
+static Animation* charAnim; /**< animation of font*/
+static int textHeight; /**< height of font*/
+static int textWidth; /**< width of font*/
 
 /*!
 \brief Initialize text stuff
@@ -15,10 +22,10 @@ static int textWidth; /*! width of font*/
 void TextInit()
 {
   charFont = GCreateTexture("dffont.png");
-  charMesh = GCreateMesh(8, 12, 16, 16);
+  charMesh = GCreateMesh(32, 48, 16, 16);
   charAnim = GCreateAnimation(16, charFont, charMesh, 16);
-  textHeight = 12;
-  textWidth = 8;
+  textHeight = 48;
+  textWidth = 32;
 }
 
 /*!
@@ -26,6 +33,7 @@ void TextInit()
 \param _string text to be created
 \param _x x position of text
 \param _y y position of text
+\return Returns a pointer to the new text string.
 */
 TextString* TextCreateString(char* _string, float _x, float _y)
 {
@@ -37,10 +45,11 @@ TextString* TextCreateString(char* _string, float _x, float _y)
   while (_string[i])
   {
     //create new letter & sprite
-    Sprite* newChar = GCreateSprite(_x + i * textWidth, _y, charAnim, 9999);\
+    Sprite* newChar = GCreateSprite(_x + i * textWidth, _y, charAnim, 1);
     TextChar* newTextChar = malloc(sizeof(TextChar));
     newTextChar->sprite = newChar;
     newChar->frame = _string[i];
+    newChar->paused = 1;
 
     //printf("%c|", _string[i]);
    

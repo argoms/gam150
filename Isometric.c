@@ -1,9 +1,24 @@
+/*!
+\file   Isometric.c
+\author James Do
+\par    email: j.do\@digipen.edu
+\brief
+Isometric tilemap implementation. Contains functions relating to tilemaps and isometric conversions.
+*/
 #include "Vector2D.h"
 #include "Isometric.h"
 #include "Graphics.h"
 
-static IsoMap* gameMap;
+static IsoMap* gameMap; /**< contains currently active game map*/
 
+/*!
+\brief initializes isometric map system
+Sets the private gameMap var to a newly generated array with dimensions specified by the function's parameters. 
+Note that isometry means that 'x' goes up-right, and 'y' goes up-left increasing.
+
+\param _mapHeight height of the map (in tiles)
+\param _mapWidth width of the map (in tiles)
+*/
 void IsoInit(int _mapHeight, int _mapWidth)
 {
   gameMap = IsoCreateNewMap(_mapHeight, _mapWidth);
@@ -38,6 +53,13 @@ void IsoInit(int _mapHeight, int _mapWidth)
   IsoTileSet(7, 7, 1);
   IsoSpawnMap();
 }
+
+/*!
+\brief given on-screen coordinates, returns their equivalents in-world
+
+\param _input 2D vector containing screen coordinates (x and y floats)
+\return Returns the world coordinates in the form of a vector.
+*/
 Vector2D IsoScreenToWorld(Vector2D* _input)
 {
   Vector2D newVec = Vec2(
@@ -47,6 +69,12 @@ Vector2D IsoScreenToWorld(Vector2D* _input)
   return newVec;
 }
 
+/*!
+\brief given in-world coordinates, returns their equivalents on-screen
+
+\param _input 2D vector containing world coordinates (x and y floats)
+\return Returns the screen coordinates in the form of a vector.
+*/
 Vector2D IsoWorldToScreen(Vector2D* _input)
 {
   Vector2D newVec = Vec2(
@@ -56,6 +84,14 @@ Vector2D IsoWorldToScreen(Vector2D* _input)
   return newVec;
 }
 
+/*!
+\brief Given a height and with, creates a new map
+Note that the "2D" array is actually a long one-dimensional array.
+
+\param _mapHeight height of the map (in tiles)
+\param _mapWidth width of the map (in tiles)
+\return Returns a pointer to the newly created map object.
+*/
 IsoMap* IsoCreateNewMap(int _mapHeight, int _mapWidth)
 {
   int mapLength = _mapHeight * _mapWidth;
@@ -72,13 +108,23 @@ IsoMap* IsoCreateNewMap(int _mapHeight, int _mapWidth)
   return newObject;
 }
 
-//grabs the given coordinate on the gamemap
+/*!
+\brief Gets the tile info of a given coordinate on the active game map
+\param _x x coordinate of tile
+\param _y y coordinate of tile
+\return Returns the tile at the given position.
+*/
 int IsoTileGet(int _x, int _y)
 {
   return gameMap->map[_x + (_y * gameMap->mapWidth)];
 }
 
-//sets the given coordinate on the gamemap
+/*!
+\brief Sets the tile info of a given coordinate on the active game map
+\param _x x coordinate of tile
+\param _y y coordinate of tile
+\param _newValue the value to set at the given tile coordinate
+*/
 void IsoTileSet(int _x, int _y, int _newValue)
 {
   //printf("%i|", gameMap->map[_x + (_y * gameMap->mapWidth)]);
@@ -86,7 +132,9 @@ void IsoTileSet(int _x, int _y, int _newValue)
   //printf("%i|", gameMap->map[_x + (_y * gameMap->mapWidth)]);
 }
 
-//spawns the game map sprites
+/*!
+\brief Spawns sprites to create the map on-screen
+*/
 void IsoSpawnMap()
 {
   int i = 0; //index

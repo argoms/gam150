@@ -1,3 +1,10 @@
+/*!
+\file   GameLevel.c
+\author James Do
+\par    email: j.do\@digipen.edu
+\brief
+  Contains functions for 'in-dungeon' game levels.
+*/
 #include "GameLevel.h"
 #include "Physics.h"
 #include "Graphics.h"
@@ -6,9 +13,12 @@
 #include "Isometric.h"
 
 
-static PhysicsObject* playerObject;
-static Sprite* playerSprite;
+static PhysicsObject* playerObject; /**< pointer to player physics object*/
+static Sprite* playerSprite; /**<pointer to player sprite object*/
 
+/*!
+\brief Initialize game level
+*/
 void GameLevelInit()
 {
   printf("game level init\n");
@@ -31,10 +41,13 @@ void GameLevelInit()
   playerObject = PhysicsCreateObject(Vec2(2, 2), Vec2(1, 1));
 }
 
+/*!
+\brief Game loop- run every frame
+
+  Currently just updates player position based on input.
+*/
 void GameLevelRun()
 {
-  //shut up I debug how I want
-  //printf("fuckoff");
 
   //Vector2D a = Vec2(2, 2);
   playerSprite->x = IsoWorldToScreen(&playerObject->position).x;
@@ -48,6 +61,9 @@ void GameLevelRun()
   
 }
 
+/*!
+\brief Internal- helper function called by GameLevelRun
+*/
 void InputHandle()
 {
 

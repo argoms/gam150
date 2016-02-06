@@ -1,3 +1,10 @@
+/*!
+\file   Graphics.h
+\author James Do
+\par    email: j.do\@digipen.edu
+\brief
+Graphics implementation front end handling sprite layering, dynamic sprite creation etc.
+*/
 #pragma once
 
 typedef struct Animation Animation;
@@ -14,19 +21,19 @@ Also acts as a linked list between sprites for layering resolution. Sprites are 
 */
  struct Sprite
 {
-  struct Animation* animation; /*! pointer to the sprite's animation*/
-  float x; /*! x position of sprite*/
-  float y; /*! y position of sprite*/
-  Sprite* lowerSprite; /*! pointer to the next lowest (lower y position) sprite in the environment*/
-  Sprite* higherSprite; /*! pointer to the next highest (higher y position) sprite in the environment*/
+  struct Animation* animation; /**< pointer to the sprite's animation*/
+  float x; /**< x position of sprite*/
+  float y; /**< y position of sprite*/
+  Sprite* lowerSprite; /**< pointer to the next lowest (lower y position) sprite in the environment*/
+  Sprite* higherSprite; /**< pointer to the next highest (higher y position) sprite in the environment*/
 
-  int frame; /*! current frame being played*/
-  int timer; /*! internal timer for frame delay calculations*/
-  int paused; /*! bool, whether or not to play*/
+  int frame; /**< current frame being played*/
+  int timer; /**< internal timer for frame delay calculations*/
+  int paused; /**< bool, whether or not to play*/
 
-  int frameDelay; /*! how many engine frames to wait before changing animation frame*/
+  int frameDelay; /**< how many engine frames to wait before changing animation frame*/
 
-  int isHud; /*! whether or not the sprite is part of the hud, set to 1 if it is, 0 otherwise*/
+  int isHud; /**< whether or not the sprite is part of the hud, set to 1 if it is, 0 otherwise*/
 
 
  };
@@ -38,8 +45,8 @@ Also acts as a linked list between sprites for layering resolution. Sprites are 
  */
  struct SpriteList
  {
-   Sprite* first; /*! first sprite in list*/
-   Sprite* last; /*! last sprite in list*/
+   Sprite* first; /**< first sprite in list*/
+   Sprite* last; /**< last sprite in list*/
  };
 
 
@@ -50,28 +57,38 @@ Also acts as a linked list between sprites for layering resolution. Sprites are 
  */
  struct Animation
  {
-   struct AEGfxVertexList* mesh; /*! pointer to the mesh for the animation*/
-   struct AEGfxTexture* texture; /*! pointer to texture of animation*/
+   struct AEGfxVertexList* mesh; /**< pointer to the mesh for the animation*/
+   struct AEGfxTexture* texture; /**< pointer to texture of animation*/
 
    
-   int length; /*! length of animation in frames*/
+   int length; /**< length of animation in frames*/
    
-   int frameWidth; /*! number of frames per row*/
-   int frameHeight; /*! number of frames per column (number of rows)*/
-   float frameOffsetX; /*! amount to offset, aka 1/(num frames)*/
-   float frameOffsetY; /*! amount to offset y*/
+   int frameWidth; /**< number of frames per row*/
+   int frameHeight; /**< number of frames per column (number of rows)*/
+   float frameOffsetX; /**< amount to offset, aka 1/(num frames)*/
+   float frameOffsetY; /**< amount to offset y*/
  };
 
+
+ //structs for lists of loaded objects:
+ /*!
+ \struct MeshList
+ \brief info for linked list of meshes
+ */
  struct MeshList
  {
-   struct AEGfxVertexList* item;
-   MeshList* next;
+   struct AEGfxVertexList* item; /**< data portion of list*/
+   MeshList* next; /**< pointer to next object in list*/
  };
 
+ /*!
+ \struct TextureList
+ \brief info for linked list of textures
+ */
  struct TextureList
  {
-   struct AEGfxTexture* item;
-   TextureList* next;
+   struct AEGfxTexture* item; /**< data portion of list*/
+   TextureList* next; /**< pointer to next object in list*/
  };
 
 void GRender(); //call every frame to render sprites

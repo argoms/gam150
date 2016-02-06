@@ -1,3 +1,10 @@
+/*!
+\file   LevelManager.c
+\author James Do
+\par    email: j.do\@digipen.edu
+\brief
+Basic level/gamestate manager implementation.
+*/
 #include "Graphics.h"
 #include "AEEngine.h"
 #include "LevelManager.h"
@@ -5,23 +12,23 @@
 #include "GameLevel.h"
 
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
-static AEGfxVertexList*	pMesh2;				// Pointer to Mesh (Model)
-static AEGfxTexture *pTex1;					// Pointer to Texture (Image)
-static AEGfxTexture *pTex2;					// Pointer to Texture (Image)
+static AEGfxVertexList*	pMesh2;				/**< EXAMPLE VAR*/
+static AEGfxTexture *pTex1;/**< EXAMPLE VAR*/
+static AEGfxTexture *pTex2;/**< EXAMPLE VAR*/
 
-static Sprite* sprite; //only one for debug purposes
-static Animation* animtest;
-static Animation* animtest2;
+static Sprite* sprite; /**< EXAMPLE VAR*/ //only one for debug purposes
+static Animation* animtest;/**< EXAMPLE VAR*/
+static Animation* animtest2;/**< EXAMPLE VAR*/
 
-static float textY;
-static TextString* textString;
+static float textY;/**< EXAMPLE VAR*/
+static TextString* textString;/**< EXAMPLE VAR*/
 //EXAMPLE CODE ENDS HERE
 
 
-static int currentLevel;
-static int nextLevel;
+static int currentLevel;/**< Current level (uses enum)*/
+static int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
 
-extern int gGameRunning; //assume that for now
+extern int gGameRunning; /**< used to interface with main file*/
 
 /*
 \brief loads given level
@@ -67,6 +74,9 @@ void LevelRun()
   case level_level1:
     GameLevelRun();
     break;
+  case level_mainMenu:
+    //MainMenuRun();
+    break;
   }
 
   if (currentLevel != nextLevel)
@@ -93,6 +103,7 @@ void LevelUnload()
   GFree();
 }
 
+
 /*
 \brief loading for main menu
 */
@@ -117,7 +128,8 @@ void MainMenuInit()
   //EXAMPLE ENDS HERE
 
   
-  textString = TextCreateString("PLACEHOLDER MAIN MENU PRESS SPACE TO ENTER GAME", -360, 50);
+  textString = TextCreateString("PLACEHOLDER MAIN MENU", -360, 100);
+  textString = TextCreateString("PRESS SPACE FOR LEVEL 1", -360, 0);
   
 
 
@@ -127,10 +139,12 @@ void MainMenuInit()
     //sprite = GCreateSprite(0, 30, animtest, 4);
     //sprite = GCreateSprite(0, 20, animtest, 4);
     //sprite = GCreateSprite(0, -30, animtest, 4);
-    sprite = GCreateSprite(100, 40, animtest2, 4);
+    sprite = GCreateSprite(100, -100, animtest2, 4);
     //sprite = GCreateHudSprite(0, 0, animtest2, 1);
   }
   //EXAMPLE CODE ENDS HERE
+
+
 }
 
 /*
