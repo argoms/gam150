@@ -11,10 +11,12 @@
 #include "AEEngine.h"
 #include "Vector2D.h"
 #include "Isometric.h"
+#include "GameObject.h"
+#include "LevelManager.h"
 
 
-static PhysicsObject* playerObject; /**< pointer to player physics object*/
-static Sprite* playerSprite; /**<pointer to player sprite object*/
+extern int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
+static GameObject* player; /**< pointer to player object*/
 
 /*!
 \brief Initialize game level
@@ -31,14 +33,21 @@ void GameLevelInit()
   //EXAMPLE ENDS HERE
 
 
-
+  //load tile placeholder sprite:
   Animation* anim = GCreateAnimation(1, 
-                  GCreateTexture("isotileGreen.png"),
+                  GCreateTexture("isotilePlaceholder1.png"),
                   GCreateMesh(128.f, 64.f, 1, 1),
                   1);
 
-  playerSprite = GCreateSprite(0, 40, anim, 1);
-  playerObject = PhysicsCreateObject(Vec2(2, 2), Vec2(1, 1));
+
+  //set up player object:
+  player = GameObjectCreate(PhysicsCreateObject(Vec2(2, 2), 1), GCreateSprite(0, 40, anim, 1), 0, 1);
+  player->simulate = &InputHandle;
+
+  GameObject* door = GameObjectCreate(PhysicsCreateObject(Vec2(5, 4), 1), GCreateSprite(0, 40, anim, 1), 0, 2);
+  door->simulate = &OnTouchDoor;
+
+  //PhysicsRemoveObject(&a);
 }
 
 /*!
@@ -50,14 +59,14 @@ void GameLevelRun()
 {
 
   //Vector2D a = Vec2(2, 2);
-  playerSprite->x = IsoWorldToScreen(&playerObject->position).x;
-  playerSprite->y = IsoWorldToScreen(&playerObject->position).y;
+  
   //printf("a %f, %f \n", IsoWorldToScreen(&playerObject->position).x, IsoWorldToScreen(&playerObject->position).y);
 
-  InputHandle();
+  //InputHandle();
+  GameObjectSimulate();
   PhysicsSimulate();
-  AEGfxSetCamPosition(playerSprite->x, playerSprite->y);
-
+  //
+  AEGfxSetCamPosition(player->sprite->x, player->sprite->y);
   
 }
 
@@ -73,10 +82,16 @@ void InputHandle()
   if (input.x != 0 || input.y != 0)
   {
     Vector2DNormalize(&input, &input);
-    Vector2DScale(&input, &input, 5);
+    Vector2DScale(&input, &input, 10);
   }
-  playerObject->velocity = IsoScreenToWorld(&input);
-  GSortSprite(playerSprite, playerObject->velocity.y);
-  
-  
+  player->physics->velocity = IsoScreenToWorld(&input);
+  GSortSprite(player->sprite, player->physics->velocity.y);
+}
+
+/*
+\brief placeholder function for when you hit the door
+*/
+void OnTouchDoor()
+{
+  //nextLevel = level_mainMenu;
 }

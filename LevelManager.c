@@ -26,7 +26,7 @@ static TextString* textString;/**< EXAMPLE VAR*/
 
 
 static int currentLevel;/**< Current level (uses enum)*/
-static int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
+int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
 
 extern int gGameRunning; /**< used to interface with main file*/
 

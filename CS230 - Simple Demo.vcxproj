@@ -164,6 +164,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GameLevel.c" />
+    <ClCompile Include="GameObject.c" />
     <ClCompile Include="Graphics.c" />
     <ClCompile Include="Isometric.c" />
     <ClCompile Include="LevelManager.c" />
@@ -177,6 +178,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameLevel.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Isometric.h" />
     <ClInclude Include="LevelManager.h" />

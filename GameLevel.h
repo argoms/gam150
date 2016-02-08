@@ -6,6 +6,8 @@
 Contains functions for 'in-dungeon' game levels.
 */
 #pragma once
+
 void GameLevelRun();
 void GameLevelInit();
 void InputHandle();
+void OnTouchDoor();
