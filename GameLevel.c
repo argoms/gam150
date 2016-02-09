@@ -68,6 +68,7 @@ void GameLevelInit()
   enemy->physics->onCollision = EnemyOnCollision; //ENEMY COLLISON BEHAVIOR GO HERE
   enemy->simulate = &EnemySimulate; //ENEMY CALLS THIS EVERY FRAMEA
 
+
  
   //PhysicsRemoveObject(&a);
 }
@@ -108,7 +109,7 @@ void InputHandle()
   
   player->physics->velocity = IsoScreenToWorld(&input);
   GSortSprite(player->sprite, player->physics->velocity.y);
-  printf("PLAYER HP: %i\n", player->entity->health);
+  //printf("PLAYER HP: %i\n", player->entity->health);
 }
 
 /*

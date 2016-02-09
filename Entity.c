@@ -1,3 +1,10 @@
+/*!
+\file   Entity.c
+\author James Do
+\par    email: j.do\@digipen.edu
+\brief
+Contains functionality for entities- objects that can take/receive damage.
+*/
 #include "Entity.h"
 
 /*!

@@ -174,6 +174,8 @@ struct AEGfxTexture* GCreateTexture(char* _textureName)
 
 /*!
 \brief Call this function to unload everything once the gameplay is over.
+
+Might be a mem leak with not freeing texture/meshlist objects, but can't actually free them for some reason
 */
 void GFree()
 {
@@ -190,14 +192,18 @@ void GFree()
       tempPrevious = temp;
       //free(tempPrevious);
       //printf("%i||", temp->item->vtxNum);
-      if(temp->item)
-      AEGfxMeshFree(temp->item);
+      
       //printf("%p))", temp->item);
       temp = temp->next;
+
+      //printf("AAAAAAA %i", temp->item->vtxNum);
+      AEGfxMeshFree(tempPrevious->item);
+      //free(tempPrevious);
       
       
     }
     //printf("%i||", temp->item->vtxNum);
+    //printf("BBBB");
     AEGfxMeshFree(temp->item);
     //printf("%p))", temp->item);
     //free(temp);
@@ -212,9 +218,10 @@ void GFree()
       tempPrevious2 = temp2;
       //free(tempPrevious);
       //printf("%i||", temp->item->vtxNum);
-      AEGfxTextureUnload(temp2->item);
+      
       //printf("%p))", temp->item);
       temp2 = temp2->next;
+      AEGfxTextureUnload(tempPrevious2->item);
     }
     //printf("%i||", temp->item->vtxNum);
     AEGfxTextureUnload(temp2->item);
@@ -225,6 +232,8 @@ void GFree()
   //free(meshList);
   free(spriteList);
   free(hudLayer);
+  meshList = NULL;
+  textureList = NULL;
   //AEGfxTextureUnload(pTex1);
 }
 

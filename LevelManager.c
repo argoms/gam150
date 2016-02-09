@@ -100,8 +100,8 @@ void LevelRun()
 */
 void LevelUnload()
 {
-  //GameObjectFree();
-  //GFree();
+  GameObjectFree();
+  GFree();
 }
 
 
