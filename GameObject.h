@@ -13,6 +13,13 @@ typedef struct GameObject GameObject;
 typedef struct Entity Entity;
 typedef struct GameObjectList GameObjectList;
 
+enum GameObjectNames {
+  entity_player, /**< player*/
+  entity_door, /**< inter-level door*/
+  entity_enemy /**< generic enemy*/
+};
+
+
 /*!
 \struct GameObject
 \brief Game objects (mobs, pressure plates etc.)
@@ -55,3 +62,4 @@ void GameObjectSimulate();
 void GameObjectDestroy(GameObject** _input);
 GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _type);
 void GameObjectInitialize();
+void GameObjectFree();

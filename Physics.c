@@ -8,6 +8,7 @@ Basic physics/collision implementation.
 #include "Physics.h"
 #include "Isometric.h"
 #include "Vector2D.h"
+#include "GameObject.h"
 #include <math.h>
 
 static PhysicsList PhysicsObjectList; /**< list of physics objects currently active*/
@@ -42,6 +43,7 @@ PhysicsObject* PhysicsCreateObject(Vector2D _position, float _size)
   newObject->next = NULL;
   newObject->prev = NULL;
   newObject->active = 1;
+  newObject->onCollision = NULL;
 
   //update list:
   if (!PhysicsObjectList.first)
@@ -79,80 +81,30 @@ void PhysicsSimulate()
     {
       //sim physics here
 
-
-      
+      //create a pointer to physics objects to test for collisions against
       PhysicsObject* collisionTest = instance->next;
-
-      
       while (collisionTest)
       {
         float distBetweenSQ = Vector2DSquareDistance(&collisionTest->position, &instance->position);
        
         if (distBetweenSQ <= ((collisionTest->size + instance->size) / 2) * ((collisionTest->size + instance->size) / 2))
         {
+          
+          if (instance->onCollision)
+          {
+            instance->onCollision(instance->owner, collisionTest->owner);
+          }
+          if (collisionTest->onCollision)
+          {
+            //printf("A");
+            collisionTest->onCollision(collisionTest->owner, instance->owner);
+          }
           /*if (instance->owner->type == 1 && collisionTest->owner->type == 2)
           {
             printf("a");
           }*/
           
-          /*
-          DON'T TRY AND READ THIS CODE FOR YOUR OWN GOOD
-          LEAVING IT HERE IN CASE I DECIDE TO RESURRECT THE OVERLY FANCY CIRCLE COLLISIONS
-          Vector2D* movementVector = malloc(sizeof(Vector2D));
-          movementVector->x = instance->velocity.x;
-          movementVector->y = instance->velocity.y;
-          if (movementVector->x == 0 && movementVector->y == 0)
-          {
-            break;
-          }
-          Vector2DNormalize(movementVector, &instance->velocity);
           
-          Vector2D* differenceVector = malloc(sizeof(Vector2D));
-          Vector2DSub(differenceVector, &(collisionTest->position), &(instance->position));
-          //printf("%f %f a", differenceVector->x, differenceVector->y);
-
-          float dotProd = Vector2DDotProduct(movementVector, differenceVector);
-          printf("dP: %f\n movement: \n x: %f \n y: %f \n diff: \n x: %f \n y: %f\n", dotProd, movementVector->x, movementVector->y, differenceVector->x, differenceVector->y);
-          if (dotProd <= 0)
-          {
-            printf("nm", dotProd);
-          }
-          else 
-          {
-            float diffLength = Vector2DLength(differenceVector);
-            //down the rabbit hole into "matH I get but don't want to do in my head" territory
-            float F = (diffLength * diffLength) - (dotProd * dotProd);
-            
-            if (F >= distBetweenSQ)
-            {
-            }
-            else 
-            {
-              float T = distBetweenSQ - F;
-              
-              if (T < 0)
-              {
-              }
-              else 
-              {
-                printf("loop");
-                float dist = dotProd - sqrt(T);
-                
-                float magnitude = Vector2DLength(&instance->velocity);
-                //printf("%f, %f \n", magnitude, dist);
-                if (magnitude < dist)
-                {
-                }
-                else 
-                {
-                  printf("Collided \n");
-                  Vector2DNormalize(&instance->velocity, &instance->velocity);
-                  Vector2DScale(&instance->velocity, &instance->velocity, dist);
-                }
-              }
-            }
-            
-          }*/
         }
 
         collisionTest = collisionTest->next;
@@ -294,3 +246,63 @@ void PhysicsRemoveObject(PhysicsObject** _input)
   free(*_input);
   *_input = NULL;
 }
+
+/*
+LEAVING THIS HERE IN CASE I WANT TO TRY AND GET IT WORKING LATER ON:
+DON'T TRY AND READ THIS CODE FOR YOUR OWN GOOD
+LEAVING IT HERE IN CASE I DECIDE TO RESURRECT THE OVERLY FANCY CIRCLE COLLISIONS
+Vector2D* movementVector = malloc(sizeof(Vector2D));
+movementVector->x = instance->velocity.x;
+movementVector->y = instance->velocity.y;
+if (movementVector->x == 0 && movementVector->y == 0)
+{
+break;
+}
+Vector2DNormalize(movementVector, &instance->velocity);
+
+Vector2D* differenceVector = malloc(sizeof(Vector2D));
+Vector2DSub(differenceVector, &(collisionTest->position), &(instance->position));
+//printf("%f %f a", differenceVector->x, differenceVector->y);
+
+float dotProd = Vector2DDotProduct(movementVector, differenceVector);
+printf("dP: %f\n movement: \n x: %f \n y: %f \n diff: \n x: %f \n y: %f\n", dotProd, movementVector->x, movementVector->y, differenceVector->x, differenceVector->y);
+if (dotProd <= 0)
+{
+printf("nm", dotProd);
+}
+else
+{
+float diffLength = Vector2DLength(differenceVector);
+//down the rabbit hole into "matH I get but don't want to do in my head" territory
+float F = (diffLength * diffLength) - (dotProd * dotProd);
+
+if (F >= distBetweenSQ)
+{
+}
+else
+{
+float T = distBetweenSQ - F;
+
+if (T < 0)
+{
+}
+else
+{
+printf("loop");
+float dist = dotProd - sqrt(T);
+
+float magnitude = Vector2DLength(&instance->velocity);
+//printf("%f, %f \n", magnitude, dist);
+if (magnitude < dist)
+{
+}
+else
+{
+printf("Collided \n");
+Vector2DNormalize(&instance->velocity, &instance->velocity);
+Vector2DScale(&instance->velocity, &instance->velocity, dist);
+}
+}
+}
+
+}*/

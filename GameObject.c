@@ -37,6 +37,7 @@ GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _
   newGameObject->physics->owner = newGameObject;
 
   newGameObject->entity = _entity;
+  newGameObject->type = _type;
   
   newGameObject->syncSpritePhysics = 1;
   newGameObject->prev = NULL;
@@ -113,7 +114,7 @@ void GameObjectDestroy(GameObject** _input)
 */
 void GameObjectSimulate()
 {
-  printf("A");
+  //printf("A");
   if (gameObjectList.first)
   {
     GameObject* instance = gameObjectList.first;
@@ -135,4 +136,32 @@ void GameObjectSimulate()
 
     }
   }
+}
+
+/*!
+\brief frees allocated memory for gameobjects
+
+*/
+void GameObjectFree()
+{
+  GameObject* temp = gameObjectList.first; //index
+  GameObject* tempPrevious; //index for previous value
+
+  if (temp)
+  {
+    while (temp->next)
+    {
+      tempPrevious = temp;
+      //printf("||| %p, %p ||", tempPrevious, gameObjectList.first);
+        
+      temp = temp->next;
+      free(tempPrevious);
+
+    }
+    //printf("||| %p ||", temp);
+    free(temp);
+  }
+
+  gameObjectList.first = NULL;
+  gameObjectList.last = NULL;
 }

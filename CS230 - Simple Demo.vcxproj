@@ -163,6 +163,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Door.c" />
     <ClCompile Include="GameLevel.c" />
     <ClCompile Include="GameObject.c" />
     <ClCompile Include="Graphics.c" />
@@ -177,6 +178,7 @@
     <ClCompile Include="Vector2D.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Door.h" />
     <ClInclude Include="GameLevel.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Graphics.h" />

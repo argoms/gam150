@@ -159,7 +159,7 @@ void IsoSpawnMap()
         Vector2D tilePos = Vec2(i, j);
         float tileX = IsoWorldToScreen(&tilePos).x;
         float tileY = IsoWorldToScreen(&tilePos).y;
-        printf("(%i, %i)", i, j);
+        //printf("(%i, %i)", i, j);
         GCreateSprite(tileX, tileY, tileAnim, 0);
         
       }

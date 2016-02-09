@@ -189,6 +189,7 @@ void GFree()
       tempPrevious = temp;
       //free(tempPrevious);
       //printf("%i||", temp->item->vtxNum);
+      if(temp->item)
       AEGfxMeshFree(temp->item);
       //printf("%p))", temp->item);
       temp = temp->next;

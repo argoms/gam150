@@ -19,3 +19,5 @@ void LevelRun();
 
 void MainMenuInit();
 void Level1Init();
+
+void LevelSetNext(int _input);

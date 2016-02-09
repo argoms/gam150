@@ -13,6 +13,7 @@
 #include "Isometric.h"
 #include "GameObject.h"
 #include "LevelManager.h"
+#include "Door.h"
 
 
 extern int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
@@ -41,11 +42,13 @@ void GameLevelInit()
 
 
   //set up player object:
-  player = GameObjectCreate(PhysicsCreateObject(Vec2(2, 2), 1), GCreateSprite(0, 40, anim, 1), 0, 1);
+  player = GameObjectCreate(PhysicsCreateObject(Vec2(2, 2), 1), GCreateSprite(0, 40, anim, 1), 0, entity_player);
   player->simulate = &InputHandle;
 
-  GameObject* door = GameObjectCreate(PhysicsCreateObject(Vec2(5, 4), 1), GCreateSprite(0, 40, anim, 1), 0, 2);
+  //create door object:
+  GameObject* door = GameObjectCreate(PhysicsCreateObject(Vec2(5, 4), 1), GCreateSprite(0, 40, anim, 1), 0, entity_door);
   door->simulate = &OnTouchDoor;
+  door->physics->onCollision = &DoorDefaultOnCollision;
 
   //PhysicsRemoveObject(&a);
 }

@@ -26,7 +26,7 @@ static TextString* textString;/**< EXAMPLE VAR*/
 
 
 static int currentLevel;/**< Current level (uses enum)*/
-int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
+static int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
 
 extern int gGameRunning; /**< used to interface with main file*/
 
@@ -100,7 +100,8 @@ void LevelRun()
 */
 void LevelUnload()
 {
-  GFree();
+  GameObjectFree();
+  //GFree();
 }
 
 
@@ -109,6 +110,7 @@ void LevelUnload()
 */
 void MainMenuInit()
 {
+  AEGfxSetCamPosition(0, 0);
   static AEGfxVertexList*	newmesh;				// Pointer to Mesh (Model)
   newmesh = GCreateMesh(16, 24, 16, 16);
 
@@ -153,4 +155,14 @@ void MainMenuInit()
 void Level1Init()
 {
   GameLevelInit();
+}
+
+/*
+\brief sets next level for gsm
+
+\param _input level to set nextLevel var to
+*/
+void LevelSetNext(int _input)
+{
+  nextLevel = _input;
 }
