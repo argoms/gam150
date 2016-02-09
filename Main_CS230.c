@@ -38,7 +38,6 @@ LRESULT CALLBACK MyWinCallBack(HWND hWin, UINT msg, WPARAM wp, LPARAM lp) ;
 int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_line, int show)
 {
 
-
   // Initialize the system 
   AESysInitInfo sysInitInfo;
   sysInitInfo.mCreateWindow = 1;

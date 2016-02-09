@@ -11,3 +11,4 @@ void GameLevelRun();
 void GameLevelInit();
 void InputHandle();
 void OnTouchDoor();
+void OnPlayerKilled();

@@ -56,6 +56,9 @@ PhysicsObject* PhysicsCreateObject(Vector2D _position, float _size)
     PhysicsObjectList.last->next = newObject;
     PhysicsObjectList.last = newObject;
   }
+
+  return newObject;
+  
 }
 
 /*!

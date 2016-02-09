@@ -164,6 +164,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Door.c" />
+    <ClCompile Include="Enemy.c" />
+    <ClCompile Include="Entity.c" />
     <ClCompile Include="GameLevel.c" />
     <ClCompile Include="GameObject.c" />
     <ClCompile Include="Graphics.c" />
@@ -179,6 +181,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Door.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="GameLevel.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Graphics.h" />

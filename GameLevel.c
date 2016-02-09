@@ -14,6 +14,7 @@
 #include "GameObject.h"
 #include "LevelManager.h"
 #include "Door.h"
+#include "Enemy.h"
 
 
 extern int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
@@ -40,16 +41,34 @@ void GameLevelInit()
                   GCreateMesh(128.f, 64.f, 1, 1),
                   1);
 
+  Animation* anim2 = GCreateAnimation(1,
+    GCreateTexture("isoTileGreen.png"),
+    GCreateMesh(128.f, 64.f, 1, 1),
+    1);
+
 
   //set up player object:
-  player = GameObjectCreate(PhysicsCreateObject(Vec2(2, 2), 1), GCreateSprite(0, 40, anim, 1), 0, entity_player);
+  Entity* playerEntity = malloc(sizeof(Entity));
+  playerEntity->maxHealth = 100;
+  EntityInit(&playerEntity);
+  player = GameObjectCreate(PhysicsCreateObject(Vec2(2, 2), 1), GCreateSprite(0, 40, anim, 1), playerEntity, entity_player);
   player->simulate = &InputHandle;
+  player->entity->onEntityKilled = &OnPlayerKilled;
 
   //create door object:
-  GameObject* door = GameObjectCreate(PhysicsCreateObject(Vec2(5, 4), 1), GCreateSprite(0, 40, anim, 1), 0, entity_door);
-  door->simulate = &OnTouchDoor;
+  GameObject* door = GameObjectCreate(PhysicsCreateObject(Vec2(5, 4), 1), GCreateSprite(0, 40, anim2, 1), 0, entity_door);
   door->physics->onCollision = &DoorDefaultOnCollision;
+  door->simulate = NULL;
 
+  //create enemy object:
+  Entity* enemyEntity = malloc(sizeof(Entity));
+  enemyEntity->maxHealth = 100;
+  EntityInit(&enemyEntity);
+  GameObject* enemy = GameObjectCreate(PhysicsCreateObject(Vec2(4, 5), 1), GCreateSprite(0, 40, anim, 1), 0, entity_enemy);
+  enemy->physics->onCollision = EnemyOnCollision; //ENEMY COLLISON BEHAVIOR GO HERE
+  enemy->simulate = &EnemySimulate; //ENEMY CALLS THIS EVERY FRAMEA
+
+ 
   //PhysicsRemoveObject(&a);
 }
 
@@ -78,7 +97,6 @@ void GameLevelRun()
 */
 void InputHandle()
 {
-
   //if (AEInputCheckTriggered(VK_SPACE))
   Vector2D input = Vec2(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41),
                         AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53));
@@ -87,14 +105,25 @@ void InputHandle()
     Vector2DNormalize(&input, &input);
     Vector2DScale(&input, &input, 10);
   }
+  
   player->physics->velocity = IsoScreenToWorld(&input);
   GSortSprite(player->sprite, player->physics->velocity.y);
+  printf("PLAYER HP: %i\n", player->entity->health);
 }
 
 /*
-\brief placeholder function for when you hit the door
+\brief returns player object
 */
-void OnTouchDoor()
+GameObject* GetPlayerObject()
 {
-  //nextLevel = level_mainMenu;
+  return player;
+}
+
+/*!
+\brief called when player dies
+*/
+void OnPlayerKilled()
+{
+  printf("\n***\n***\nYOU DIED SO NOW YOU'RE IN MAIN MENU WOOO\n***\n***\n");
+  LevelSetNext(level_mainMenu);
 }

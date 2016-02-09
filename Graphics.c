@@ -55,6 +55,7 @@ void GRender()
       
       
       AEGfxSetTransparency(1.0f);
+      //AEGfxSetFullTransformWithZOrder(spriteIndex->x, spriteIndex->y, 1, 0, 1, 1);
       AEGfxMeshDraw(spriteIndex->animation->mesh, AE_GFX_MDM_TRIANGLES);
 
       //move to next sprite index

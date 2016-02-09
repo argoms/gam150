@@ -6,11 +6,12 @@
 Functions for game objects.
 */
 #pragma once
+#include "Entity.h"
 #include "Graphics.h"
 #include "Physics.h"
 
 typedef struct GameObject GameObject;
-typedef struct Entity Entity;
+
 typedef struct GameObjectList GameObjectList;
 
 enum GameObjectNames {
@@ -37,16 +38,7 @@ struct GameObject
   GameObject* prev; /**< pointer to next object in list*/
 };
 
-/*!
-\struct entity
-\brief Character objects (enemies, players etc.)
-*/
-struct Entity
-{
-  int health; /**< number of hitpoints remaining*/
-  int maxHealth; /**< maximum number of hitpoints*/
-  
-};
+
 
 /*!
 \struct GameObjectList

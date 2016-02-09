@@ -11,6 +11,7 @@ Functions for in-world game objects.
 #include "Physics.h"
 #include "Vector2D.h"
 #include "Isometric.h"
+#include "Entity.h"
 
 #define MAX_GAME_OBJECTS 10 /**< maximum number of game objects that can be simulated*/
 static GameObjectList gameObjectList;
@@ -37,11 +38,13 @@ GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _
   newGameObject->physics->owner = newGameObject;
 
   newGameObject->entity = _entity;
+  
+
   newGameObject->type = _type;
   
   newGameObject->syncSpritePhysics = 1;
   newGameObject->prev = NULL;
-  newGameObject->next = NULL;
+  newGameObject->next = NULL; 
   //printf("%f", newGameObject->entity);
 
   //update list:
@@ -55,6 +58,8 @@ GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _
     gameObjectList.last->next = newGameObject;
     gameObjectList.last = newGameObject;
   }
+
+  return newGameObject;
 }
 
 /*!
@@ -65,7 +70,7 @@ void GameObjectDestroy(GameObject** _input)
 {
   if ((*_input)->sprite)
   {
-    GRemoveSprite(&(*_input)->sprite);
+    GRemoveSprite(&((*_input)->sprite));
   }
   if ((*_input)->physics)
   {
@@ -139,8 +144,8 @@ void GameObjectSimulate()
 }
 
 /*!
-\brief frees allocated memory for gameobjects
-
+\brief frees allocated memory for ALL gameobjects
+mem leak atm can't free sprite member?
 */
 void GameObjectFree()
 {
@@ -155,9 +160,12 @@ void GameObjectFree()
       //printf("||| %p, %p ||", tempPrevious, gameObjectList.first);
         
       temp = temp->next;
+      //GRemoveSprite(tempPrevious->sprite);
       free(tempPrevious);
+      //GameObjectDestroy(tempPrevious);
 
     }
+    //GameObjectDestroy(temp);
     //printf("||| %p ||", temp);
     free(temp);
   }
