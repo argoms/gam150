@@ -6,7 +6,7 @@
 Contains functionality for doors to move between levels on contact.
 */
 #include "Door.h"
-//dickbutt
+
 /*!
 \brief example/default collision event function
 
