@@ -1,16 +1,18 @@
-/******************************************************************
+/**************************************************************************************************
 Author        :  Matt Chasengnou
 File          :  Audio.c
 Created       :  1/25/16
 Description   :  Provides functionality for working with audio
 ChangeLog
-  -2/3/16     : Added LoadSoundSample, LoadSoundStream, PlaySound,
-                and StopSound functions.
+  -2/3/16     : Added LoadSoundSample, LoadSoundStream, PlaySound, and StopSound functions.
   -2/9/16     : Fixed filepaths for the sound loading functions.
                 Sounds now play.
                 Added functionality to play music from a stream
                 Changed LoadSoundStream to LoadMusic.
-******************************************************************/
+  -2/14/16    : Added data structures to store sound info.
+                Changed names of functions to Audio_FunctionName to make it easier to pick out
+                functions from this module.
+**************************************************************************************************/
 #include "Audio.h"
 #include <fmod.h>
 #include <fmod_common.h>
@@ -20,44 +22,296 @@ ChangeLog
 #include <string.h>  /* strcat */
 
 #include <windows.h>  /* shows error messages */
-/*-----------------------------------------------------
+/*-------------------------------------------------------------------------------------------------
 DEFINES
------------------------------------------------------*/
+-------------------------------------------------------------------------------------------------*/
 #define true 1
 #define false 0
-//#define TRUE true
-//#define FALSE false
 
 #define SOUND_FOLDER_NAME "./sounds/"
-#define PATH_MAX_LEN 256 /* Maximum number of char allowed in path */
+#define PATH_MAX_LEN 256                /* Maximum number of char allowed in path */
+
+#define HASH_KEY 23                     /* Used by the hash code generator */
+#define NO_HASH  -1                     /* Argument to pass in search functions if hash code isn't known. */
 
 typedef int bool;
-/*-----------------------------------------------------
+/*-------------------------------------------------------------------------------------------------
 END DEFINES
-------------------------------------------------------*/
+-------------------------------------------------------------------------------------------------*/
 
 
-/*------------------------------------------------------
-GLOBAL VARIABLES
-------------------------------------------------------*/
-FMOD_SYSTEM              *fmodSystem;
-FMOD_SOUND               *sound, *musicLib, *musicToPlay;
-FMOD_CHANNEL             *channel = 0;
-FMOD_RESULT               result;
-unsigned int              version;
-void                     *extraDriverData = 0;
-int               numsubsounds;
-/*------------------------------------------------------
-END GLOBAL VARIABLES
-------------------------------------------------------*/
-
-
-/* 
-  Initialize the audio system. Instructions for initialization taken
-  FMOD site:
-http://www.fmod.org/docs/content/generated/FMOD_System_Init.html
+/*-------------------------------------------------------------------------------------------------
+DATA STRUCTURE DEFINITIONS
+-------------------------------------------------------------------------------------------------*/
+/*
+Sound entry type to use with the sound library.
 */
-void InitializeAudio(void)
+struct SOUND_ENTRY
+{
+  char                  *name;      /* The name of the file as it appears in the directory. */
+  unsigned int           hashCode;  /* The hash code (address) of the sound entry. */
+  bool                   loaded;    /* If the sound is currently loaded into memory or not. */
+  FMOD_SOUND            *sound;     /* The FMOD sound object associated with this entry. */
+  struct SOUND_ENTRY    *next;      /* The next entry in the list. */
+};
+
+/*
+The sound library data structure.
+Will be implemented using a hash table with separate chaining.
+*/
+struct SOUND_LIBRARY
+{
+  struct SOUND_ENTRY  **table;    /* Where the sound entries are being stored. */
+  unsigned int          size;     /* The size of the hash table. */
+};
+/*-------------------------------------------------------------------------------------------------
+END DATA STRUCTURE DEFINITIONS
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+GLOBAL VARIABLES
+-------------------------------------------------------------------------------------------------*/
+static FMOD_SYSTEM              *fmodSystem;
+static FMOD_SOUND               *sound, *musicLib, *musicToPlay;
+static FMOD_CHANNEL             *channel = 0;
+static FMOD_RESULT               result;
+static unsigned int              version;
+static void                     *extraDriverData = 0;
+
+static struct SOUND_LIBRARY      sampleLibrary;   /* Holds SFX and other sample-type sounds */
+static struct SOUND_LIBRARY      musicLibrary;    /* Holds music and other streamed sounds */
+/*-------------------------------------------------------------------------------------------------
+END GLOBAL VARIABLES
+-------------------------------------------------------------------------------------------------*/
+
+/*-------------------------------------------------------------------------------------------------
+FORWARD DECLARATIONS
+-------------------------------------------------------------------------------------------------*/
+void Audio_Initialize(void);
+void Audio_FreeSystem(void);
+void Audio_LoadSoundSample(const char *sName, FMOD_SOUND **pSound);
+void Audio_LoadMusic(const char *sName, FMOD_SOUND **pSound);
+void Audio_PlaySound(FMOD_SOUND *pSound);
+void Audio_PauseSound(FMOD_SOUND *pSound);
+
+void InitializeSoundLibrary(struct SOUND_LIBRARY *library, unsigned int size);
+struct SOUND_ENTRY *Audio_SearchHashTable(struct SOUND_LIBRARY *library, const char *name, unsigned int hash_code);
+unsigned int CreateHashCode(unsigned int mod, const char *string);
+/*-------------------------------------------------------------------------------------------------
+END FORWARD DECLARATIONS
+-------------------------------------------------------------------------------------------------*/
+
+/*-------------------------------------------------------------------------------------------------
+DATA STRUCTURE FUNCTIONALITY
+-------------------------------------------------------------------------------------------------*/
+/**************************************************************************************************
+Function      : InitializeSoundLibrary
+Description   : Initializes a sound library by allocating memory for it and setting its size.
+Input         : library is the pointer to the sound library to initialize,
+                size is the size of the table to create.
+Output        : No output.
+**************************************************************************************************/
+void InitializeSoundLibrary(struct SOUND_LIBRARY *library, unsigned int size)
+{
+  /* Allocate memory for the hash table to use for our library. */
+  struct SOUND_ENTRY **newLibrary = calloc(size, sizeof(struct SOUND_ENTRY *));
+
+  /* If the allocation is successful, set the library's hash table and size. */
+  if (newLibrary)
+  {
+    library->table = newLibrary;
+    library->size = size;
+  }
+}
+
+/**************************************************************************************************
+Function      : Audio_SearchHashTable
+Description   : Searches in a library for an item.
+Input         : library is the sound library to search in,
+                name is the name of the sound entry. Example: "sample.wav",
+                hash_code is the sound entry's hash code. If not known, use NO_HASH as argument.
+Output        : (SOUND_ENTRY *) Returns the address of the sound entry if found.
+                Returns NULL if not found.
+**************************************************************************************************/
+struct SOUND_ENTRY *Audio_SearchHashTable(struct SOUND_LIBRARY *library, const char *name, unsigned int hash_code)
+{
+  struct SOUND_ENTRY *entry;  /* Iterator for the entry list */
+
+  /* If there isn't a hash code, figure out what it is. */
+  if (hash_code == NO_HASH)
+  {
+    hash_code = CreateHashCode(library->size, name);
+  }
+
+  /* Get the first entry at the hashed index. */
+  entry = library->table[hash_code];
+
+  /* If there isn't an entry where we are looking, then the entry doesn't exist. Return NULL pointer. */
+  if (!entry)
+    return NULL;
+
+  /* Otherwise, check the contents of the entry. */
+  
+  do
+  {
+    /* If the entry is the one that we are looking for, then return the address of this entry. */
+    if (strcmp(entry->name, name) == 0)
+      return entry;
+
+    /* Else, move onto the next entry if it exists. */
+    //if (entry->next)
+      entry = entry->next;
+
+  } while (entry);
+
+  /* The item wasn't found. Return the NULL pointer. */
+  return NULL;
+}
+
+/**************************************************************************************************
+Function      : CreateHashCode
+Description   : Generates a hash code from a string using a modular division.
+Input         : mod is the number to use for modular division,
+                string is the string to generate the code from.
+Output        : (unsigned int) The hash code for the sound.
+**************************************************************************************************/
+unsigned int CreateHashCode(unsigned int mod, const char *string)
+{
+  unsigned int code = 0;              /* The hash code. */
+  int stringLenth = strlen(string);   /* The number of characters to process */
+  int i;                              /* Iterator for the string. */
+
+  /* Process each character in the string into the code. */
+  for (i = 0; i < stringLenth; ++i)
+    code = (code * HASH_KEY + string[i]) % mod;
+
+  /* Return the generated hash code. */
+  return code;
+}
+
+/**************************************************************************************************
+Function      : CreateSoundEntry
+Description   : Creates a new object of type SOUND_ENTRY.
+Input         : name is the name of the file as it appears in the directory. Example: "sample.wav"
+                sound is the FMOD sound object to put into this entry.
+Output        : (SOUND_ENTRY *) Returns a pointer to the newly created sound entry.
+                If unsuccessful, returns NULL.
+**************************************************************************************************/
+struct SOUND_ENTRY *CreateSoundEntry(char *name, FMOD_SOUND *sound)
+{
+  /* Allocate memory for the new entry. */
+  struct SOUND_ENTRY *newEntry = malloc(sizeof(struct SOUND_ENTRY));
+
+  /* If the memory allocation is successful, continue constructing the entry. */
+  if (newEntry)
+  {
+    /* Set the name of the new entry. */
+    newEntry->name = name;
+    //strcpy_s(newEntry->name, strlen(name) * sizeof(char), name);
+    /* Set the FMOD sound. */
+    newEntry->sound = sound;
+    
+    /* Set the rest of the data members to default values. */
+    newEntry->hashCode = NO_HASH;
+    newEntry->loaded = true;
+    newEntry->next = NULL;
+  }
+
+  /* Return the pointer to the entry. */
+  return newEntry;
+}
+
+/**************************************************************************************************
+Function      : AddToLibrary
+Description   : Adds a SOUND_ENTRY into a sound library.
+Input         : library is the sound library to add the sound to,
+                sound_entry is the entry to add to the library.
+Output        : No return.
+**************************************************************************************************/
+void AddToLibrary(struct SOUND_LIBRARY *library, struct SOUND_ENTRY *sound_entry)
+{
+  /* If the entry does not have a hash code, generate one for it. */
+  if (sound_entry->hashCode == NO_HASH)
+    sound_entry->hashCode = CreateHashCode(library->size, sound_entry->name);
+
+  /* Push this entry onto the front of whatever is currently at the desired index. */
+
+  /* Move everything behind this entry. */
+  sound_entry->next = library->table[sound_entry->hashCode];
+
+  /* Assign this entry to this position. */
+  library->table[sound_entry->hashCode] = sound_entry;
+}
+
+/**************************************************************************************************
+Function      : Audio_AddSoundSample
+Description   : Adds a new sound sample to the SFX sample library.
+Input         : sound is the name of the sound. Example: "sample.wav"
+Output        : No return.
+**************************************************************************************************/
+void Audio_AddSoundSample(char *sound)
+{
+  FMOD_SOUND *tmpSound;   /* The FMOD sound to create. */
+
+  /* Search in the sound library for the sound. */
+  struct SOUND_ENTRY *searchResult = Audio_SearchHashTable(&sampleLibrary, sound, NO_HASH);
+
+  /* If the sound is already in the library, then return. */
+  if (searchResult)
+    return;
+
+  /* Else, create the sound and add it to the library. */
+  
+  Audio_LoadSoundSample(sound, &tmpSound);
+
+  struct SOUND_ENTRY *newEntry = CreateSoundEntry(sound, tmpSound);
+
+  //PUT THE ENTRY INTO THE LIBRARY
+  AddToLibrary(&sampleLibrary, newEntry);
+}
+
+/**************************************************************************************************
+Function      : Audio_AddMusic
+Description   : Adds a new stream to the music/stream library.
+Input         : sound is the name of the sound. Example: "sample.wav"
+Output        : No return.
+**************************************************************************************************/
+void Audio_AddMusic(char *sound)
+{
+  FMOD_SOUND *tmpSound;   /* The FMOD sound to create. */
+
+                          /* Search in the sound library for the sound. */
+  struct SOUND_ENTRY *searchResult = Audio_SearchHashTable(&sampleLibrary, sound, NO_HASH);
+
+  /* If the sound is already in the library, then return. */
+  if (searchResult)
+    return;
+
+  /* Else, create the sound and add it to the library. */
+
+  Audio_LoadMusic(sound, &tmpSound);
+
+  struct SOUND_ENTRY *newEntry = CreateSoundEntry(sound, tmpSound);
+
+  //PUT THE ENTRY INTO THE LIBRARY
+  AddToLibrary(&musicLibrary, newEntry);
+}
+/*-------------------------------------------------------------------------------------------------
+END DATA STRUCTURE FUNCTIONALITY
+-------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------
+BACK-END FMOD STUFF 
+-------------------------------------------------------------------------------------------------*/
+/**************************************************************************************************
+Function      : Audio_Initialize
+Description   : Initializes the audio engine. Call during initialization of the system.
+Input         : No input.
+Output        : No output.
+**************************************************************************************************/
+void Audio_Initialize(void)
 {
   /* Max number of audio channels to use. Limit is 4093. */
   int channels = 32;
@@ -82,21 +336,26 @@ void InitializeAudio(void)
   FMOD_ErrorString(result);
 }
 
-/*
-Closes the audio system and frees it from memory.
-*/
-void FreeAudio(void)
+/**************************************************************************************************
+Function      : Audio_FreeSystem
+Description   : Releases the audio system from memory and closes it.
+Input         : No input.
+Output        : No output.
+**************************************************************************************************/
+void Audio_FreeSystem(void)
 {
   FMOD_System_Release(fmodSystem);
   FMOD_System_Close(fmodSystem);
 }
 
-/*
-  Loads a sound as a sample from a file.
-  Include extensions in name. ex: "drums.wav"
-  pSound is pointer to the sound object you will store the sound in.
-*/
-void LoadSoundSample(const char *sName, FMOD_SOUND **pSound)
+/**************************************************************************************************
+Function      : Audio_LoadSoundSample
+Description   : Loads a sound as a sample from a file.
+Input         : sName is the name of the sound file including extensions. Example: "sample.wav"
+                pSound is pointer to the FMod sound object to use for the sound.
+Output        : No output.
+**************************************************************************************************/
+void Audio_LoadSoundSample(const char *sName, FMOD_SOUND **pSound)
 {
   /* Generate the path for the sound file. */
   char *path = (char *)calloc(PATH_MAX_LEN, sizeof(char));
@@ -112,21 +371,25 @@ void LoadSoundSample(const char *sName, FMOD_SOUND **pSound)
     int msgboxID = MessageBox(
       NULL,
       FMOD_ErrorString(result),
-      "LoadSoundSample error.\n",
+      "Audio_LoadSoundSample error.\n",
       MB_ICONEXCLAMATION | MB_YESNO
       );
   }
 }
 
-/*
-  Loads a music file as a stream.
-  Include extensions in name. ex: "drums.wav"
-  pSound is pointer to the sound object you will store the sound in.
-*/
-void LoadMusic(const char *sName, FMOD_SOUND **pSound)
+/**************************************************************************************************
+Function      : Audio_LoadMusic
+Description   : Loads a music file as a stream.
+Input         : sName is the name of the sound file including extensions. Example: "sample.wav"
+                pSound is pointer to the FMod sound object to use for the sound.
+Output        : No output.
+**************************************************************************************************/
+void Audio_LoadMusic(const char *sName, FMOD_SOUND **pSound)
 {
   /* Generate the path for the sound file. */
   char *path = (char *)calloc(PATH_MAX_LEN, sizeof(char));
+
+  int numsubsounds;  /* Number of songs in the file. */
 
   strcat_s(path, PATH_MAX_LEN * sizeof(char), SOUND_FOLDER_NAME);
   strcat_s(path, PATH_MAX_LEN * sizeof(char), sName);
@@ -139,7 +402,7 @@ void LoadMusic(const char *sName, FMOD_SOUND **pSound)
     int msgboxID = MessageBox(
       NULL,
       FMOD_ErrorString(result),
-      "LoadSoundSample error.\n",
+      "Audio_LoadSoundSample error.\n",
       MB_ICONEXCLAMATION | MB_YESNO
       );
   }
@@ -147,87 +410,53 @@ void LoadMusic(const char *sName, FMOD_SOUND **pSound)
   result = FMOD_Sound_GetNumSubSounds(*pSound, &numsubsounds);//result = sound->getNumSubSounds(&numsubsounds);
   //ERRCHECK(result);
 
-  if (numsubsounds)
-  {
-    FMOD_Sound_GetSubSound(*pSound, 0, &musicToPlay);//sound->getSubSound(0, &sound_to_play);
-    //ERRCHECK(result);
-  }
-  else
-  {
-    musicToPlay = musicLib;//sound_to_play = sound;
-  }
+  //if (numsubsounds)
+  //{
+  //  FMOD_Sound_GetSubSound(*pSound, 0, &musicToPlay);//sound->getSubSound(0, &sound_to_play);
+  //  //ERRCHECK(result);
+  //}
+  //else
+  //{
+  //  musicToPlay = musicLib;//sound_to_play = sound;
+  //}
 
 }
 
-/*
-  Plays a sound.
-  pSound is pointer to sound you want to play.
-*/
-void PlayAudio(FMOD_SOUND *pSound)
+/**************************************************************************************************
+Function      : Audio_PlaySound
+Description   : Plays a sound (sample or stream).
+Input         : pSound is the FMod sound to play.
+Output        : No output.
+**************************************************************************************************/
+void Audio_PlaySound(FMOD_SOUND *pSound)
 {
   result = FMOD_System_PlaySound(fmodSystem, pSound, NULL, false, &channel);
   FMOD_ErrorString(result);
 }
 
-/* 
-  Stops playback of a sound.
-*/
-void StopSound(FMOD_SOUND *pSound)
+/**************************************************************************************************
+Function      : Audio_PauseSound
+Description   : Pauses playback of a sound.
+Input         : pSound is the FMod sound to pause.
+Output        : No output.
+**************************************************************************************************/
+void Audio_PauseSound(FMOD_SOUND *pSound)
 {
   result = FMOD_System_PlaySound(fmodSystem, pSound, NULL, true, &channel);
   FMOD_ErrorString(result);
 }
 
-void FreeSound()
+/**************************************************************************************************
+Function      : UpdateAudio
+Description   : Updates the audio system.
+Input         : No input.
+Output        : No output.
+**************************************************************************************************/
+void UpdateAudio(void)
 {
-  result = FMOD_Sound_Release(sound);//result = sound1->release();
-  FMOD_ErrorString(result);//ERRCHECK(result);
-  result = FMOD_Sound_Release(musicLib);
+  /* Update the FMod audio system. */
+  result = FMOD_System_Update(fmodSystem);
   FMOD_ErrorString(result);
-  result = FMOD_System_Close(fmodSystem);//result = sound2->release();
-  FMOD_ErrorString(result);//ERRCHECK(result);
-  result = FMOD_System_Release(fmodSystem);//result = sound3->release();
-  FMOD_ErrorString(result);//ERRCHECK(result);
-  //result = system->close();
-  //ERRCHECK(result);
-  //result = system->release();
-  //ERRCHECK(result);
-}
-
-void TestAudioINIT(void)
-{
-  InitializeAudio();
-  LoadSoundSample("sample.ogg", &sound);
-  LoadMusic("music_sample.ogg", &musicLib);
-
-  PlayAudio(sound);
-  PlayAudio(musicToPlay);
-}
-
-void UpdateAudio()
-{
-  //Common_Update();
-
-  //if (Common_BtnPress(BTN_ACTION1))
-  //{
-  //  result = system->playSound(sound1, 0, false, &channel);
-  //  ERRCHECK(result);
-  //}
-
-  //if (Common_BtnPress(BTN_ACTION2))
-  //{
-  //  result = system->playSound(sound2, 0, false, &channel);
-  //  ERRCHECK(result);
-  //}
-
-  //if (Common_BtnPress(BTN_ACTION3))
-  //{
-  //  result = system->playSound(sound3, 0, false, &channel);
-  //  ERRCHECK(result);
-  //}
-
-  result = FMOD_System_Update(fmodSystem);//result = system->update();
-  FMOD_ErrorString(result);//ERRCHECK(result);
 
   {
     unsigned int ms = 0;
@@ -240,35 +469,111 @@ void UpdateAudio()
     {
       FMOD_SOUND *currentsound = 0;
 
-      result = FMOD_Channel_IsPlaying(channel, &playing);//result = channel->isPlaying(&playing);
+      result = FMOD_Channel_IsPlaying(channel, &playing);
       if ((result != FMOD_OK) && (result != FMOD_ERR_INVALID_HANDLE) && (result != FMOD_ERR_CHANNEL_STOLEN))
       {
-        FMOD_ErrorString(result);//ERRCHECK(result);
+        FMOD_ErrorString(result);
       }
 
-      result = FMOD_Channel_IsPlaying(channel, &paused);//result = channel->getPaused(&paused);
+      result = FMOD_Channel_IsPlaying(channel, &paused);
       if ((result != FMOD_OK) && (result != FMOD_ERR_INVALID_HANDLE) && (result != FMOD_ERR_CHANNEL_STOLEN))
       {
-        FMOD_ErrorString(result);//ERRCHECK(result);
+        FMOD_ErrorString(result);
       }
 
-      result = FMOD_Channel_GetPosition(channel, &ms, FMOD_TIMEUNIT_MS);//result = channel->getPosition(&ms, FMOD_TIMEUNIT_MS);
+      result = FMOD_Channel_GetPosition(channel, &ms, FMOD_TIMEUNIT_MS);
       if ((result != FMOD_OK) && (result != FMOD_ERR_INVALID_HANDLE) && (result != FMOD_ERR_CHANNEL_STOLEN))
       {
-        FMOD_ErrorString(result);//ERRCHECK(result);
+        FMOD_ErrorString(result);
       }
 
-      //channel->getCurrentSound(&currentsound);
+      FMOD_Channel_GetCurrentSound(channel, &currentsound);
       if (currentsound)
       {
-        result = FMOD_Sound_GetLength(currentsound, &lenms, FMOD_TIMEUNIT_MS);//result = currentsound->getLength(&lenms, FMOD_TIMEUNIT_MS);
+        result = FMOD_Sound_GetLength(currentsound, &lenms, FMOD_TIMEUNIT_MS);
         if ((result != FMOD_OK) && (result != FMOD_ERR_INVALID_HANDLE) && (result != FMOD_ERR_CHANNEL_STOLEN))
         {
-          FMOD_ErrorString(result);//ERRCHECK(result);
+          FMOD_ErrorString(result);
         }
       }
     }
 
-    FMOD_System_GetChannelsPlaying(fmodSystem, &channelsplaying);// system->getChannelsPlaying(&channelsplaying);
+    FMOD_System_GetChannelsPlaying(fmodSystem, &channelsplaying);
   }
 }
+
+/*-------------------------------------------------------------------------------------------------
+END BACK-END FMOD STUFF
+-------------------------------------------------------------------------------------------------*/
+
+/*-------------------------------------------------------------------------------------------------
+TEST FUNCTIONS
+-------------------------------------------------------------------------------------------------*/
+// Testing code
+void FreeSound()
+{
+  //free both libraries
+  unsigned int i;
+  for (i = 0; i < sampleLibrary.size; ++i)
+  {
+    struct SOUND_ENTRY *entry = sampleLibrary.table[i];
+    while (entry)
+    {
+      FMOD_Sound_Release(entry->sound);
+      entry = entry->next;
+    }
+  }
+  for (i = 0; i < musicLibrary.size; ++i)
+  {
+    struct SOUND_ENTRY *entry = musicLibrary.table[i];
+    while (entry)
+    {
+      FMOD_Sound_Release(entry->sound);
+      entry = entry->next;
+    }
+  }
+
+
+
+  //result = FMOD_Sound_Release(sound);//result = sound1->release();
+  //FMOD_ErrorString(result);//ERRCHECK(result);
+  //result = FMOD_Sound_Release(musicLib);
+  //FMOD_ErrorString(result);
+  result = FMOD_System_Close(fmodSystem);//result = sound2->release();
+  FMOD_ErrorString(result);//ERRCHECK(result);
+  result = FMOD_System_Release(fmodSystem);//result = sound3->release();
+  FMOD_ErrorString(result);//ERRCHECK(result);
+  //result = system->close();
+  //ERRCHECK(result);
+  //result = system->release();
+  //ERRCHECK(result);
+
+
+
+}
+
+// Testing code
+void TestAudioINIT(void)
+{
+  Audio_Initialize();
+
+  InitializeSoundLibrary(&sampleLibrary, 100);
+  InitializeSoundLibrary(&musicLibrary, 30);
+
+  //Audio_LoadSoundSample("sample.ogg", &sound);
+  //Audio_LoadMusic("music_sample.ogg", &musicLib);
+
+  Audio_AddSoundSample("sample.ogg");
+  Audio_AddMusic("music_sample.ogg");
+
+  //Audio_PlaySound(sound);
+  //Audio_PlaySound(musicToPlay);
+
+  Audio_PlaySound(Audio_SearchHashTable(&sampleLibrary, "sample.ogg", NO_HASH)->sound);
+  Audio_PlaySound(Audio_SearchHashTable(&musicLibrary, "music_sample.ogg", NO_HASH)->sound);
+}
+
+/*-------------------------------------------------------------------------------------------------
+END TEST FUNCTIONS
+-------------------------------------------------------------------------------------------------*/
+
