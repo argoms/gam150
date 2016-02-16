@@ -70,7 +70,6 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
   -----------------------------------------------------------------------------*/
     TestAudioINIT();
 
-
   LevelLoad(level_mainMenu);
   //GInitialize();
 
@@ -100,7 +99,7 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
         /*----------------------------------------------------------------------------
         AUDIO TEST  PART 2/3  UPDATE AUDIO
         -----------------------------------------------------------------------------*/
-    UpdateAudio();
+    Audio_UpdatePlayback();
 
 		//////////////////
 		// Game loop draw
@@ -124,7 +123,7 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
   /*----------------------------------------------------------------------------
   AUDIO TEST  PART 3/3  FREE AUDIO SYSTEM
   -----------------------------------------------------------------------------*/
-    FreeSound();
+    Audio_FreeSystem();
 
 	// free the system
 	AESysExit();
