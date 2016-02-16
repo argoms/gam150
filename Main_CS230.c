@@ -6,6 +6,8 @@
 // Purpose			:	main entry point2 for the test programpotato
 // History			:
 // - 2012/01/11		:	- initial implementation
+
+// - 2/12/16        :  Matt - Added sample audio playback.
 // ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
@@ -15,6 +17,8 @@
 
 #include "Graphics.h"
 #include "LevelManager.h"
+
+#include "Audio.h"
 // ---------------------------------------------------------------------------
 
 // Libraries
@@ -61,6 +65,12 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
 	if(0 == AESysInit (&sysInitInfo))
 		printf("System Init Failed!\n");
 
+  /*----------------------------------------------------------------------------
+  AUDIO TEST  PART 1/3  INITIALIZING
+  -----------------------------------------------------------------------------*/
+    TestAudioINIT();
+
+
   LevelLoad(level_mainMenu);
   //GInitialize();
 
@@ -87,6 +97,10 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
 		// Game loop update
 		///////////////////
 
+        /*----------------------------------------------------------------------------
+        AUDIO TEST  PART 2/3  UPDATE AUDIO
+        -----------------------------------------------------------------------------*/
+    UpdateAudio();
 
 		//////////////////
 		// Game loop draw
@@ -107,7 +121,10 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
 
   //LevelUnload();
 
-
+  /*----------------------------------------------------------------------------
+  AUDIO TEST  PART 3/3  FREE AUDIO SYSTEM
+  -----------------------------------------------------------------------------*/
+    FreeSound();
 
 	// free the system
 	AESysExit();
