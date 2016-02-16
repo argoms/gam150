@@ -98,7 +98,7 @@ IsoMap* IsoCreateNewMap(int _mapHeight, int _mapWidth)
   int i = 0; //index
   int j = 0; //index
 
-  IsoMap* newObject =  malloc(sizeof(IsoMap));
+  IsoMap* newObject =  (IsoMap*) malloc(sizeof(IsoMap));
   newObject->mapHeight = _mapHeight;
   newObject->mapWidth = _mapWidth;
   newObject->map = (int*) malloc(sizeof(int) * mapLength);

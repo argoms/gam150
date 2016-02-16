@@ -177,6 +177,7 @@
     </ClCompile>
     <ClCompile Include="Physics.c" />
     <ClCompile Include="Text.c" />
+    <ClCompile Include="TownScreen.c" />
     <ClCompile Include="Vector2D.c" />
   </ItemGroup>
   <ItemGroup>
@@ -190,6 +191,7 @@
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Text.h" />
+    <ClInclude Include="TownScreen.h" />
     <ClInclude Include="Vector2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

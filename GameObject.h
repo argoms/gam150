@@ -30,7 +30,7 @@ struct GameObject
   Sprite* sprite; /**< graphical component*/
   PhysicsObject* physics; /**< physics component*/
   Entity* entity; /**< entity component*/
-  void(*simulate)(void); /**< function to run every frame*/
+  void(*simulate)(); /**< function to run every frame*/
   int syncSpritePhysics; /**< whether or not to sync the graphical component with the world position of the gameobject (leave it at 1 unless you're doing something weird)*/
   int type; /**< NOTE TO SELF: ENUM THIS SOME TIME*/
   

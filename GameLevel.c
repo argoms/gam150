@@ -17,13 +17,13 @@
 #include "Enemy.h"
 
 
-extern int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
+//extern int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
 static GameObject* player; /**< pointer to player object*/
 
 /*!
 \brief Initialize game level
 */
-void GameLevelInit()
+void GameLevelInit(void)
 {
   printf("game level init\n");
   PhysicsInit();
@@ -78,7 +78,7 @@ void GameLevelInit()
 
   Currently just updates player position based on input.
 */
-void GameLevelRun()
+void GameLevelRun(void)
 {
 
   //Vector2D a = Vec2(2, 2);
@@ -96,7 +96,7 @@ void GameLevelRun()
 /*!
 \brief Internal- helper function called by GameLevelRun
 */
-void InputHandle()
+void InputHandle(void)
 {
   //if (AEInputCheckTriggered(VK_SPACE))
   Vector2D input = Vec2(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41),
@@ -115,7 +115,7 @@ void InputHandle()
 /*
 \brief returns player object
 */
-GameObject* GetPlayerObject()
+GameObject* GetPlayerObject(void)
 {
   return player;
 }
@@ -123,7 +123,7 @@ GameObject* GetPlayerObject()
 /*!
 \brief called when player dies
 */
-void OnPlayerKilled()
+void OnPlayerKilled(void)
 {
   printf("\n***\n***\nYOU DIED SO NOW YOU'RE IN MAIN MENU WOOO\n***\n***\n");
   LevelSetNext(level_mainMenu);
