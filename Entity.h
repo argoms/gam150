@@ -8,7 +8,7 @@ struct Entity
 {
   int health; /**< number of hitpoints remaining*/
   int maxHealth; /**< maximum number of hitpoints*/
-  void(*onEntityKilled)(void); /**< called when entity dies*/
+  void(*onEntityKilled)(); /**< called when entity dies*/
 };
 
 void EntityInit(Entity** _entity);

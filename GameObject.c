@@ -128,7 +128,7 @@ void GameObjectSimulate()
 
       if (instance->simulate)
       {
-        instance->simulate(); //remember to set this to time later on
+        instance->simulate(instance); //remember to set this to time later on
       }
       if (instance->syncSpritePhysics)
       {

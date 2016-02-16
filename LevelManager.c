@@ -10,6 +10,7 @@ Basic level/gamestate manager implementation.
 #include "LevelManager.h"
 #include "Text.h"
 #include "GameLevel.h"
+#include "TownScreen.h"
 
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
 static AEGfxVertexList*	pMesh2;				/**< EXAMPLE VAR*/
@@ -30,6 +31,8 @@ static int nextLevel;/**< Level to switch to (if not equal to current level) (us
 
 extern int gGameRunning; /**< used to interface with main file*/
 
+double frameTime;
+
 /*
 \brief loads given level
 \param _level level to be loaded
@@ -45,6 +48,9 @@ void LevelLoad(int _level)
   case level_mainMenu:
     MainMenuInit();
     break;
+  case level_town:
+    TownScreenInit();
+    break;
   }
 
 }
@@ -54,20 +60,7 @@ void LevelLoad(int _level)
 */
 void LevelRun()
 {
-  //debug
-  if (AEInputCheckTriggered(VK_SPACE))
-  {
-    switch (currentLevel)
-    {
-    case level_level1:
-      nextLevel = level_exit;
-      break;
-    case level_mainMenu:
-      nextLevel = level_level1;
-      break;
-    }
-  }
-  //
+  frameTime = AEFrameRateControllerGetFrameTime();
 
   switch (currentLevel)
   {
@@ -75,7 +68,10 @@ void LevelRun()
     GameLevelRun();
     break;
   case level_mainMenu:
-    //MainMenuRun();
+    MainMenuRun();
+    break;
+  case level_town:
+    TownScreenRun();
     break;
   }
 
@@ -100,8 +96,10 @@ void LevelRun()
 */
 void LevelUnload()
 {
+  AEGfxSetCamPosition(0, 0);
   GameObjectFree();
   GFree();
+
 }
 
 
@@ -165,4 +163,22 @@ void Level1Init()
 void LevelSetNext(int _input)
 {
   nextLevel = _input;
+}
+
+void MainMenuRun()
+{
+  //debug
+  if (AEInputCheckTriggered(VK_SPACE))
+  {
+    switch (currentLevel)
+    {
+    case level_level1:
+      nextLevel = level_exit;
+      break;
+    case level_mainMenu:
+      nextLevel = level_level1;
+      break;
+    }
+  }
+  //
 }

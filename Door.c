@@ -6,9 +6,12 @@
 Contains functionality for doors to move between levels on contact.
 */
 #include "Door.h"
+#include <stdio.h>
 
 /*!
-\brief example/default collision event function
+\brief Functionality for doors switching levels upon contact.
+
+good as an example/default collision event function to look at when in doubt
 
 \param _thisObject pointer to gameobject of obect 1
 \param _otherObject pointer to gameobject of object 2
@@ -19,7 +22,7 @@ void DoorDefaultOnCollision(GameObject* _thisObject, GameObject* _otherObject)
   if (_thisObject->type = entity_door && _otherObject->type == entity_player)
   {
     //GameObjectDestroy(&_thisObject);
-    LevelSetNext(level_mainMenu);
+    LevelSetNext(level_town);
     printf("DOOR ME");
   }
 }

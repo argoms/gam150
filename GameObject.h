@@ -17,7 +17,8 @@ typedef struct GameObjectList GameObjectList;
 enum GameObjectNames {
   entity_player, /**< player*/
   entity_door, /**< inter-level door*/
-  entity_enemy /**< generic enemy*/
+  entity_enemy, /**< generic enemy*/
+  entity_friendlyProjectile /**<used for player projectiles/attack tracers etc.*/
 };
 
 
@@ -30,9 +31,9 @@ struct GameObject
   Sprite* sprite; /**< graphical component*/
   PhysicsObject* physics; /**< physics component*/
   Entity* entity; /**< entity component*/
-  void(*simulate)(void); /**< function to run every frame*/
+  void(*simulate)(); /**< function to run every frame*/
   int syncSpritePhysics; /**< whether or not to sync the graphical component with the world position of the gameobject (leave it at 1 unless you're doing something weird)*/
-  int type; /**< NOTE TO SELF: ENUM THIS SOME TIME*/
+  int type; /**type of eneity that the gameobject is (refer to enum list)*/
   
   GameObject* next; /**< pointer to previous object in list*/
   GameObject* prev; /**< pointer to next object in list*/

@@ -15,12 +15,22 @@ void EnemySimulate()
 */
 void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject)
 {
-  //printf("%i||", _otherObject->type);
-  if (_thisObject->type = entity_door && _otherObject->type == entity_player)
+  printf("%i||", _thisObject->type);
+  if (_thisObject->type == entity_enemy && _otherObject->type == entity_player)
   {
     //GameObjectDestroy(&_thisObject);
     //LevelSetNext(level_mainMenu);
-    EntityTakeDamage(&(_otherObject->entity), 1);
+    EntityTakeDamage(&(_otherObject->entity), 2);
     printf("TAKING DAMAGE");
   }
+}
+
+/*!
+\brief called on enemy's death
+
+\param _self pointer to enemy object being killed
+*/
+void EnemyOnKilled(GameObject* _self)
+{
+  printf("Ided");
 }

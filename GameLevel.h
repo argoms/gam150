@@ -6,9 +6,10 @@
 Contains functions for 'in-dungeon' game levels.
 */
 #pragma once
-
+#include "GameObject.h"
 void GameLevelRun();
 void GameLevelInit();
 void InputHandle();
 void OnTouchDoor();
 void OnPlayerKilled();
+GameObject* GetPlayerObject(void);
