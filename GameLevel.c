@@ -15,6 +15,7 @@
 #include "LevelManager.h"
 #include "Door.h"
 #include "Enemy.h"
+#include "PlayerEntity.h"
 
 
 //extern int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
@@ -52,8 +53,9 @@ void GameLevelInit(void)
   playerEntity->maxHealth = 100;
   EntityInit(&playerEntity);
   player = GameObjectCreate(PhysicsCreateObject(Vec2(2, 2), 1), GCreateSprite(0, 40, anim, 1), playerEntity, entity_player);
-  player->simulate = &InputHandle;
+  player->simulate = &PlayerSimulate;
   player->entity->onEntityKilled = &OnPlayerKilled;
+  PlayerInit();
 
   //create door object:
   GameObject* door = GameObjectCreate(PhysicsCreateObject(Vec2(5, 4), 1), GCreateSprite(0, 40, anim2, 1), 0, entity_door);
@@ -64,9 +66,10 @@ void GameLevelInit(void)
   Entity* enemyEntity = malloc(sizeof(Entity));
   enemyEntity->maxHealth = 100;
   EntityInit(&enemyEntity);
-  GameObject* enemy = GameObjectCreate(PhysicsCreateObject(Vec2(4, 5), 1), GCreateSprite(0, 40, anim, 1), 0, entity_enemy);
-  enemy->physics->onCollision = EnemyOnCollision; //ENEMY COLLISON BEHAVIOR GO HERE
-  enemy->simulate = &EnemySimulate; //ENEMY CALLS THIS EVERY FRAMEA
+  GameObject* enemy = GameObjectCreate(PhysicsCreateObject(Vec2(4, 5), 1), GCreateSprite(0, 40, anim, 1), enemyEntity, entity_enemy);
+  enemy->physics->onCollision = &EnemyOnCollision; //ENEMY COLLISON BEHAVIOR GO HERE
+  enemy->simulate = &EnemySimulate; //ENEMY CALLS THIS EVERY FRAME
+  enemy->entity->onEntityKilled = &EnemyOnKilled;
 
 
  
@@ -98,18 +101,7 @@ void GameLevelRun(void)
 */
 void InputHandle(void)
 {
-  //if (AEInputCheckTriggered(VK_SPACE))
-  Vector2D input = Vec2(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41),
-                        AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53));
-  if (input.x != 0 || input.y != 0)
-  {
-    Vector2DNormalize(&input, &input);
-    Vector2DScale(&input, &input, 10);
-  }
   
-  player->physics->velocity = IsoScreenToWorld(&input);
-  GSortSprite(player->sprite, player->physics->velocity.y);
-  //printf("PLAYER HP: %i\n", player->entity->health);
 }
 
 /*

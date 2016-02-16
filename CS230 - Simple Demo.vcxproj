@@ -176,6 +176,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Physics.c" />
+    <ClCompile Include="PlayerEntity.c" />
     <ClCompile Include="Text.c" />
     <ClCompile Include="TownScreen.c" />
     <ClCompile Include="Vector2D.c" />
@@ -190,6 +191,7 @@
     <ClInclude Include="Isometric.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="Physics.h" />
+    <ClInclude Include="PlayerEntity.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TownScreen.h" />
     <ClInclude Include="Vector2D.h" />

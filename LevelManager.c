@@ -31,6 +31,8 @@ static int nextLevel;/**< Level to switch to (if not equal to current level) (us
 
 extern int gGameRunning; /**< used to interface with main file*/
 
+double frameTime;
+
 /*
 \brief loads given level
 \param _level level to be loaded
@@ -58,7 +60,7 @@ void LevelLoad(int _level)
 */
 void LevelRun()
 {
-
+  frameTime = AEFrameRateControllerGetFrameTime();
 
   switch (currentLevel)
   {

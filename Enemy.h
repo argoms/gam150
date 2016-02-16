@@ -9,3 +9,4 @@ Contains functionality for entities- objects that can take/receive damage.
 #include "GameObject.h"
 void EnemySimulate();
 void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject);
+void EnemyOnKilled(GameObject* _self);
