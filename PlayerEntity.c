@@ -66,7 +66,7 @@ void PlayerInput()
 
   //get movement vector:
   Vector2D input = Vec2(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41),
-    AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53));
+    ((float)(AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53)) / 2));
 
   //transform vector to use world (iso) coordinates while visually appearing to be straight orthogonal
   if (input.x != 0 || input.y != 0)
@@ -89,7 +89,7 @@ void PlayerInput()
 void TracerSimulate(GameObject* _self)
 {
   //printf("%p || %p \n", &_self, &player);
-  GameObjectDestroy(&_self);
+  //GameObjectDestroy(&_self);
 }
 
 void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _otherObject)

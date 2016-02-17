@@ -65,8 +65,11 @@ void GameLevelInit(void)
   //create enemy object:
   Entity* enemyEntity = malloc(sizeof(Entity));
   enemyEntity->maxHealth = 100;
+  
   EntityInit(&enemyEntity);
+  
   GameObject* enemy = GameObjectCreate(PhysicsCreateObject(Vec2(4, 5), 1), GCreateSprite(0, 40, anim, 1), enemyEntity, entity_enemy);
+  //printf("%i \n iimiamsdias \n", enemyEntity->owner);
   enemy->physics->onCollision = &EnemyOnCollision; //ENEMY COLLISON BEHAVIOR GO HERE
   enemy->simulate = &EnemySimulate; //ENEMY CALLS THIS EVERY FRAME
   enemy->entity->onEntityKilled = &EnemyOnKilled;

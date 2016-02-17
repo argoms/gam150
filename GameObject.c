@@ -47,8 +47,11 @@ GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _
   newGameObject->physics->owner = newGameObject;
 
   newGameObject->entity = _entity;
-  //printf("%i FUCKJIINGKAJSDS", _entity->health);
-//  _entity->owner = newGameObject;
+  //printf("\n %i FUCKJIINGKAJSDS \n", _entity);
+  if (_entity)
+  {
+    _entity->owner = newGameObject;
+  }
   
 
   newGameObject->type = _type;
