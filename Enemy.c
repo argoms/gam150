@@ -15,13 +15,13 @@ void EnemySimulate()
 */
 void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject)
 {
-  printf("%i||", _thisObject->type);
+  //printf("%i||", _thisObject->type);
   if (_thisObject->type == entity_enemy && _otherObject->type == entity_player)
   {
     //GameObjectDestroy(&_thisObject);
     //LevelSetNext(level_mainMenu);
     EntityTakeDamage(&(_otherObject->entity), 2);
-    printf("TAKING DAMAGE");
+    printf("PLAYER TAKING DAMAGE \n");
   }
 }
 
@@ -32,5 +32,8 @@ void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject)
 */
 void EnemyOnKilled(GameObject* _self)
 {
-  printf("Ided");
+  printf("\n *** \n ENEMY DIED WOO \n *** \n");
+  GameObjectDestroy(&_self);
+  printf("\n dflag: %i", (_self)->destroyFlag);
+  printf("type: %i \n", (_self)->type);
 }

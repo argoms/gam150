@@ -12,13 +12,21 @@ Functions for in-world game objects.
 #include "Vector2D.h"
 #include "Isometric.h"
 #include "Entity.h"
+#include <stdlib.h>
+#include <stdio.h>
 
-#define MAX_GAME_OBJECTS 10 /**< maximum number of game objects that can be simulated*/
-static GameObjectList gameObjectList;
+//#define MAX_GAME_OBJECTS 10 /**< maximum number of game objects that can be simulated*/
+static GameObjectList gameObjectList; /**< contains data about currently active objects*/
+static int objectDestroyedFlag; /**< flag triggered when a game object is destroyed, for internal usage*/
+
+//static function prototypes:
+static void GameObjectRemove(GameObject** _input); 
+
 void GameObjectInitialize()
 {
   gameObjectList.first = NULL;
   gameObjectList.last = NULL;
+  objectDestroyedFlag = 0;
 }
 /*!
 \brief creates a gameobject given relevant components
@@ -31,6 +39,7 @@ void GameObjectInitialize()
 */
 GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _type)
 {
+  
   GameObject* newGameObject = (GameObject*) malloc(sizeof(GameObject));
   newGameObject->sprite = _sprite;
   
@@ -38,9 +47,12 @@ GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _
   newGameObject->physics->owner = newGameObject;
 
   newGameObject->entity = _entity;
+  //printf("%i FUCKJIINGKAJSDS", _entity->health);
+//  _entity->owner = newGameObject;
   
 
   newGameObject->type = _type;
+  newGameObject->destroyFlag = 0;
   
   newGameObject->syncSpritePhysics = 1;
   newGameObject->prev = NULL;
@@ -63,10 +75,26 @@ GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _
 }
 
 /*!
-\brief Frees gameobject from memory, including removing component objects (eg. sprite) from their relevant parts.
-\param _target pointer to address of gameobject to destroy (&potato*, not potato*)
+\brief Tells engine to free gameobject from memory, including removing component objects (eg. sprite) from their relevant parts.
+Actually sets a flag, which is then managed to properly destroy later.
+\param _input pointer to address of gameobject to destroy (&potato*, not potato*)
 */
 void GameObjectDestroy(GameObject** _input)
+{
+  printf("%i ASADQWE", (*_input)->type);
+  if ((*_input)->type == 2)
+  {
+    printf("EK");
+  }
+  (*_input)->destroyFlag = 1;
+  
+}
+
+/*!
+\brief actually frees gameobject from memory, done after game loop steps
+\param _target pointer to address of gameobject to destroy (&potato*, not potato*)
+*/
+static void GameObjectRemove(GameObject** _input)
 {
   if ((*_input)->sprite)
   {
@@ -115,6 +143,31 @@ void GameObjectDestroy(GameObject** _input)
 }
 
 /*!
+\brief run at the end of a game loop to remove objects (prevents stuff from breaking by removing mid-simulation of a step)
+*/
+void GameObjectsPostStep()
+{
+  if (gameObjectList.first)
+  {
+    GameObject* instance = gameObjectList.first;
+    while (instance)
+    {
+      GameObject* instanceNext = instance->next;
+      if (instance->type == 2)
+      {
+        //printf("%i \n", instance->destroyFlag);
+      }
+      if (instance->destroyFlag)
+      {
+        printf("\nQQQ \nQQQ\n %i poststep\n", instance->next);
+        GameObjectRemove(&instance);
+      }
+      instance = instanceNext;
+
+    }
+  }
+}
+/*!
 \brief simulates gameobject behavior (calls the "simulate" function on every gameobject)
 */
 void GameObjectSimulate()
@@ -126,18 +179,27 @@ void GameObjectSimulate()
     while (instance)
     {
 
+      GameObject* instanceNext = instance->next;
       if (instance->simulate)
       {
+        objectDestroyedFlag = 0;
         instance->simulate(instance); //remember to set this to time later on
+        if (objectDestroyedFlag)
+        {
+          instance = instanceNext;
+          printf("%i, %p ADSSADSADASD", objectDestroyedFlag, instance);
+          continue;
+        }
       }
-      if (instance->syncSpritePhysics)
+
+      if (instance->physics && instance->syncSpritePhysics)
       {
         
         instance->sprite->x = IsoWorldToScreen(&instance->physics->position).x;
         instance->sprite->y = IsoWorldToScreen(&instance->physics->position).y;
-        
+
       }
-      instance = instance->next;
+      instance = instanceNext;
 
     }
   }

@@ -91,6 +91,7 @@ void GameLevelRun(void)
   //InputHandle();
   GameObjectSimulate();
   PhysicsSimulate();
+  GameObjectsPostStep();
   //
   AEGfxSetCamPosition(player->sprite->x, player->sprite->y);
   

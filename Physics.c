@@ -99,7 +99,6 @@ void PhysicsSimulate()
           }
           if (collisionTest->onCollision)
           {
-            //printf("A");
             collisionTest->onCollision(collisionTest->owner, instance->owner);
           }
           /*if (instance->owner->type == 1 && collisionTest->owner->type == 2)

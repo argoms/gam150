@@ -21,8 +21,9 @@ void EntityTakeDamage(Entity** _entity, int damage)
 {
   
   (*_entity)->health -= damage;
+  printf("OW, %i left", (*_entity)->health);
   if ((*_entity)->health < 1)
   {
-    (*_entity)->onEntityKilled();
+    (*_entity)->onEntityKilled(&_entity);
   }
 }

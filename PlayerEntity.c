@@ -12,6 +12,7 @@ static GameObject* player; /**< pointer to player object*/
 static double attackCooldown; /**< timer before player can attack again*/
 
 static double attackCooldownLength; /**< defined minimum time between attacks (attackCooldown is the timer)*/
+static int attackDamage;
 
 /*!
 \brief Call at the start of a level to initialize player values.
@@ -21,6 +22,7 @@ void PlayerInit()
   player = GetPlayerObject();
   attackCooldown = 0;
   attackCooldownLength = 0.75;
+  attackDamage = 100;
 }
 
 /*!
@@ -87,18 +89,17 @@ void PlayerInput()
 void TracerSimulate(GameObject* _self)
 {
   //printf("%p || %p \n", &_self, &player);
-  _self->simulate = 0;
-  
+  GameObjectDestroy(&_self);
 }
 
 void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _otherObject)
 {
-  printf("%i", _otherObject->type);
+  //printf("%i", _otherObject->type);
 
-  if (_otherObject->type == entity_enemy)
+  if (_otherObject && _otherObject->type == entity_enemy)
   {
-    printf("AAA");
-    EntityTakeDamage(&_otherObject->entity, 1);
-    
+    printf("YOU HIT ENEMY FOR %i DAMAGE\n", attackDamage);
+    EntityTakeDamage(&_otherObject->entity, attackDamage);
+    GameObjectDestroy(&_thisObject);
   }
 }

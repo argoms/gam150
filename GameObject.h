@@ -33,8 +33,9 @@ struct GameObject
   Entity* entity; /**< entity component*/
   void(*simulate)(); /**< function to run every frame*/
   int syncSpritePhysics; /**< whether or not to sync the graphical component with the world position of the gameobject (leave it at 1 unless you're doing something weird)*/
-  int type; /**type of eneity that the gameobject is (refer to enum list)*/
+  int type; /**< type of entity that the gameobject is (refer to enum list)*/
   
+  int destroyFlag; /**< internal, used for removing game objects*/
   GameObject* next; /**< pointer to previous object in list*/
   GameObject* prev; /**< pointer to next object in list*/
 };
@@ -56,3 +57,4 @@ void GameObjectDestroy(GameObject** _input);
 GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _type);
 void GameObjectInitialize();
 void GameObjectFree();
+void GameObjectsPostStep();
