@@ -6,6 +6,7 @@
 Graphics implementation front end handling sprite layering, dynamic sprite creation etc.
 */
 #pragma once
+#include "Vector2D.h"
 
 typedef struct Animation Animation;
 typedef struct Sprite Sprite;
@@ -34,7 +35,7 @@ struct Sprite
   float frameDelay; /**< how many engine frames to wait before changing animation frame*/
 
   int isHud; /**< whether or not the sprite is part of the hud, set to 1 if it is, 0 otherwise*/
-
+  Vector2D offset; /**< additional visual offset to individual sprite*/
 
 };
 

@@ -44,9 +44,9 @@ void GRender()
     Sprite* spriteIndex = spriteList->first;
     while (spriteIndex)
     {
-      AEGfxSetPosition(spriteIndex->x, spriteIndex->y);//set draw position
+      AEGfxSetPosition(spriteIndex->x + spriteIndex->offset.x, spriteIndex->y + spriteIndex->offset.y);//set draw position
 
-
+      
 
                                                        //update sprite texture offsets according to animation
       SimAnimation(spriteIndex);
@@ -263,7 +263,8 @@ Sprite* GCreateSprite(float _spriteX, float _spriteY, Animation* _animation, flo
   newSprite->paused = 0;
   newSprite->frameDelay = _frameDelay;
   newSprite->isHud = 0;
-
+  newSprite->offset.x = 0;
+  newSprite->offset.y = 0;
   //update sprite list:
   if (!spriteList->first) //if first, set first in list
   {
