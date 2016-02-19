@@ -13,6 +13,10 @@ static double attackCooldown; /**< timer before player can attack again*/
 
 static double attackCooldownLength; /**< defined minimum time between attacks (attackCooldown is the timer)*/
 static int attackDamage;
+static Animation* tracerAnimation;
+
+signed long mouseX;
+signed long mouseY;
 
 /*!
 \brief Call at the start of a level to initialize player values.
@@ -23,6 +27,10 @@ void PlayerInit()
   attackCooldown = 0;
   attackCooldownLength = 0.75;
   attackDamage = 100;
+  tracerAnimation = GCreateAnimation(1,
+    GCreateTexture("isotilePlaceholder1.png"),
+    GCreateMesh(128.f, 64.f, 1, 1),
+    1);
 }
 
 /*!
@@ -41,18 +49,31 @@ void PlayerSimulate()
 */
 void PlayerInput()
 {
-  Animation* anim = GCreateAnimation(1,
-    GCreateTexture("isotilePlaceholder1.png"),
-    GCreateMesh(128.f, 64.f, 1, 1),
-    1);
+  
 
   //attacking:
   if (attackCooldown < 0 && AEInputCheckCurr(1))
   {
+    
+
+    AEInputGetCursorPosition(&mouseX, &mouseY);
+
+    //HARD CODING MAGIC NUMBERS SPOOOOOKY
+    mouseX += -400;
+    mouseY += -300;
+    /***/
+
+    //printf("%i, %i|||", mouseX, mouseY);
+    //AEGfxConvertScreenCoordinatesToWorld(mouseX, mouseY, &(mousePos.x), &(mousePos.y));
+    Vector2D mousePos = Vec2(mouseX, mouseY * -1);
+    
+    mousePos = IsoScreenToWorld(&mousePos);
+    Vector2DNormalize(&mousePos, &mousePos);
+
     attackCooldown = attackCooldownLength;
     GameObject* tracer = GameObjectCreate(
-      PhysicsCreateObject(Vec2(player->physics->position.x - 1, player->physics->position.y), 1),
-      GCreateSprite(0, 40, anim, 1),
+      PhysicsCreateObject(Vec2(player->physics->position.x + mousePos.x, player->physics->position.y + mousePos.y), 1),
+      GCreateSprite(0, 40, tracerAnimation, 1),
       0,
       entity_friendlyProjectile);
     tracer->syncSpritePhysics = 1;
@@ -84,7 +105,7 @@ void PlayerInput()
 }
 
 /*!
-\brief simulates attack tracers
+\brief simulates attack tracers, at the moment they just die immediately
 */
 void TracerSimulate(GameObject* _self)
 {

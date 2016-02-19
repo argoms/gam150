@@ -62,6 +62,7 @@ GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _
   newGameObject->next = NULL; 
 
   newGameObject->miscData = NULL; 
+  newGameObject->simulate = NULL;
   //printf("%f", newGameObject->entity);
 
   //update list:
@@ -164,7 +165,7 @@ void GameObjectsPostStep()
       }
       if (instance->destroyFlag)
       {
-        printf("\nQQQ \nQQQ\n %i poststep\n", instance->next);
+        //printf("\nQQQ \nQQQ\n %i poststep\n", instance->next);
         GameObjectRemove(&instance);
       }
       instance = instanceNext;
@@ -181,10 +182,11 @@ void GameObjectSimulate()
   if (gameObjectList.first)
   {
     GameObject* instance = gameObjectList.first;
+    GameObject* instanceNext;
     while (instance)
     {
 
-      GameObject* instanceNext = instance->next;
+      instanceNext = instance->next;
       if (instance->simulate)
       {
         objectDestroyedFlag = 0;
@@ -192,7 +194,6 @@ void GameObjectSimulate()
         if (objectDestroyedFlag)
         {
           instance = instanceNext;
-          printf("%i, %p ADSSADSADASD", objectDestroyedFlag, instance);
           continue;
         }
       }

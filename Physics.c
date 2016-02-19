@@ -10,6 +10,8 @@ Basic physics/collision implementation.
 #include "Vector2D.h"
 #include "GameObject.h"
 #include <math.h>
+#include <stdlib.h>
+#include "conversions.h"
 
 static PhysicsList PhysicsObjectList; /**< list of physics objects currently active*/
 
@@ -146,7 +148,7 @@ static void PhysicsTileCollisions(PhysicsObject* _instance)
     == 1)
   {
     //printf("left");
-    instance->position.x = (int)(instance->position.x + 0.5);
+    instance->position.x = FloatToInt(instance->position.x + 0.5);
   }
 
   //positive x (right):
@@ -159,7 +161,7 @@ static void PhysicsTileCollisions(PhysicsObject* _instance)
     == 1)
   {
     //printf("right");
-    instance->position.x = (int)(instance->position.x + 0.5);
+    instance->position.x = FloatToInt(instance->position.x + 0.5);
   }
 
   //positive y (up):
@@ -172,7 +174,7 @@ static void PhysicsTileCollisions(PhysicsObject* _instance)
     == 1)
   {
     //printf("up");
-    instance->position.y = (int)(instance->position.y + 0.5);
+    instance->position.y = FloatToInt(instance->position.y + 0.5);
   }
 
   //negative y (down)
@@ -185,7 +187,7 @@ static void PhysicsTileCollisions(PhysicsObject* _instance)
     == 1)
   {
     //printf("down");
-    instance->position.y = (int)(instance->position.y + 0.5);
+    instance->position.y = FloatToInt(instance->position.y + 0.5);
   }
 }
 

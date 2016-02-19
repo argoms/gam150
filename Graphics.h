@@ -8,7 +8,7 @@ Graphics implementation front end handling sprite layering, dynamic sprite creat
 #pragma once
 
 typedef struct Animation Animation;
-typedef struct Sprite Sprite; 
+typedef struct Sprite Sprite;
 typedef struct SpriteList SpriteList;
 typedef struct MeshList MeshList;
 typedef struct TextureList TextureList;
@@ -19,7 +19,7 @@ typedef struct TextureList TextureList;
 
 Also acts as a linked list between sprites for layering resolution. Sprites are layered with a painter's algorithm (back first), assuming higher Y is further back.
 */
- struct Sprite
+struct Sprite
 {
   struct Animation* animation; /**< pointer to the sprite's animation*/
   float x; /**< x position of sprite*/
@@ -36,60 +36,60 @@ Also acts as a linked list between sprites for layering resolution. Sprites are 
   int isHud; /**< whether or not the sprite is part of the hud, set to 1 if it is, 0 otherwise*/
 
 
- };
-
- 
- /*!
- \struct SpriteList
- \brief info for linked list of sprites
- */
- struct SpriteList
- {
-   Sprite* first; /**< first sprite in list*/
-   Sprite* last; /**< last sprite in list*/
- };
+};
 
 
- /*!
- \struct Animation
- \brief contains information about animations
- Note: animation spritesheet should be 1 frame high- all frames on horizontal strip.
- */
- struct Animation
- {
-   struct AEGfxVertexList* mesh; /**< pointer to the mesh for the animation*/
-   struct AEGfxTexture* texture; /**< pointer to texture of animation*/
-
-   
-   int length; /**< length of animation in frames*/
-   
-   int frameWidth; /**< number of frames per row*/
-   int frameHeight; /**< number of frames per column (number of rows)*/
-   float frameOffsetX; /**< amount to offset, aka 1/(num frames)*/
-   float frameOffsetY; /**< amount to offset y*/
- };
+/*!
+\struct SpriteList
+\brief info for linked list of sprites
+*/
+struct SpriteList
+{
+  Sprite* first; /**< first sprite in list*/
+  Sprite* last; /**< last sprite in list*/
+};
 
 
- //structs for lists of loaded objects:
- /*!
- \struct MeshList
- \brief info for linked list of meshes
- */
- struct MeshList
- {
-   struct AEGfxVertexList* item; /**< data portion of list*/
-   MeshList* next; /**< pointer to next object in list*/
- };
+/*!
+\struct Animation
+\brief contains information about animations
+Note: animation spritesheet should be 1 frame high- all frames on horizontal strip.
+*/
+struct Animation
+{
+  struct AEGfxVertexList* mesh; /**< pointer to the mesh for the animation*/
+  struct AEGfxTexture* texture; /**< pointer to texture of animation*/
 
- /*!
- \struct TextureList
- \brief info for linked list of textures
- */
- struct TextureList
- {
-   struct AEGfxTexture* item; /**< data portion of list*/
-   TextureList* next; /**< pointer to next object in list*/
- };
+
+  int length; /**< length of animation in frames*/
+
+  int frameWidth; /**< number of frames per row*/
+  int frameHeight; /**< number of frames per column (number of rows)*/
+  float frameOffsetX; /**< amount to offset, aka 1/(num frames)*/
+  float frameOffsetY; /**< amount to offset y*/
+};
+
+
+//structs for lists of loaded objects:
+/*!
+\struct MeshList
+\brief info for linked list of meshes
+*/
+struct MeshList
+{
+  struct AEGfxVertexList* item; /**< data portion of list*/
+  MeshList* next; /**< pointer to next object in list*/
+};
+
+/*!
+\struct TextureList
+\brief info for linked list of textures
+*/
+struct TextureList
+{
+  struct AEGfxTexture* item; /**< data portion of list*/
+  TextureList* next; /**< pointer to next object in list*/
+};
 
 void GRender(); //call every frame to render sprites
 

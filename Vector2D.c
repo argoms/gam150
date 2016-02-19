@@ -14,7 +14,7 @@ History
 #include <math.h>
 
 #define EPSILON 0.0001
-#define PI      3.1415926535897932384626433832795
+#define PI      3.1415926535897932384626433832795f
 
 // ---------------------------------------------------------------------------
 
@@ -137,8 +137,8 @@ float Vector2DDotProduct(Vector2D *pVec0, Vector2D *pVec1)
 
 void Vector2DFromAngleDeg(Vector2D *pResult, float angle)
 {
-  pResult->x = cos(angle);
-  pResult->y = sin(angle);
+  pResult->x = cosf(angle);
+  pResult->y = sinf(angle);
 }
 
 // ---------------------------------------------------------------------------
