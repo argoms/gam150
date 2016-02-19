@@ -7,6 +7,7 @@ Graphics implementation front end handling sprite layering, dynamic sprite creat
 */
 #include "Graphics.h"
 #include "AEEngine.h"
+#include "conversions.h"
 
 static SpriteList* spriteList; //list of sprites for game layer
 static SpriteList* hudLayer; //list of sprites for hud layer
@@ -416,7 +417,7 @@ Does not create texture & mesh objects as part of the process.
 \param _texture pointer to the texture to be used
 \param _mesh pointer to the mesh to be used
 */
-Animation* GCreateAnimation(float _numFrames, struct AEGfxTexture* _texture, struct AEGfxVertexList* _mesh, int _numRows)
+Animation* GCreateAnimation(int _numFrames, struct AEGfxTexture* _texture, struct AEGfxVertexList* _mesh, int _numRows)
 {
   Animation* newAnim = malloc(sizeof(Animation));
 

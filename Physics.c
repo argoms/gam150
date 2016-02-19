@@ -140,54 +140,54 @@ static void PhysicsTileCollisions(PhysicsObject* _instance)
 {
   PhysicsObject* instance = _instance;
   if (IsoTileGet(
-    (instance->position.x),
-    (instance->position.y + 0.25))
+    FloatToInt(instance->position.x),
+    FloatToInt(instance->position.y + 0.25f))
     == 1 || IsoTileGet(
-      (instance->position.x),
-      (instance->position.y + 0.75))
+      FloatToInt(instance->position.x),
+      FloatToInt(instance->position.y + 0.75f))
     == 1)
   {
     //printf("left");
-    instance->position.x = FloatToInt(instance->position.x + 0.5);
+    instance->position.x = IntToFloat(FloatToInt(instance->position.x + 0.5f));
   }
 
   //positive x (right):
   if (IsoTileGet(
-    (instance->position.x + 1),
-    (instance->position.y + 0.25))
+    FloatToInt(instance->position.x + 1),
+    FloatToInt(instance->position.y + 0.25f))
     == 1 || IsoTileGet(
-      (instance->position.x + 1),
-      (instance->position.y + 0.75))
+      FloatToInt(instance->position.x + 1),
+      FloatToInt(instance->position.y + 0.75f))
     == 1)
   {
     //printf("right");
-    instance->position.x = FloatToInt(instance->position.x + 0.5);
+    instance->position.x = IntToFloat(FloatToInt(instance->position.x + 0.5f));
   }
 
   //positive y (up):
   if (IsoTileGet(
-    (instance->position.x + 0.25),
-    (instance->position.y + 1))
+    FloatToInt(instance->position.x + 0.25f),
+    FloatToInt(instance->position.y + 1))
     == 1 || IsoTileGet(
-      (instance->position.x + 0.75),
-      (instance->position.y + 1))
+      FloatToInt(instance->position.x + 0.75f),
+      FloatToInt(instance->position.y + 1))
     == 1)
   {
     //printf("up");
-    instance->position.y = FloatToInt(instance->position.y + 0.5);
+    instance->position.y = IntToFloat(FloatToInt(instance->position.y + 0.5f));
   }
 
   //negative y (down)
   if (IsoTileGet(
-    (instance->position.x + 0.25),
-    (instance->position.y))
+    FloatToInt(instance->position.x + 0.25f),
+    FloatToInt(instance->position.y))
     == 1 || IsoTileGet(
-      (instance->position.x + 0.75),
-      (instance->position.y))
+      FloatToInt(instance->position.x + 0.75f),
+      FloatToInt(instance->position.y))
     == 1)
   {
     //printf("down");
-    instance->position.y = FloatToInt(instance->position.y + 0.5);
+    instance->position.y = IntToFloat(FloatToInt(instance->position.y + 0.5f));
   }
 }
 

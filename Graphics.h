@@ -31,7 +31,7 @@ struct Sprite
   int timer; /**< internal timer for frame delay calculations*/
   int paused; /**< bool, whether or not to play*/
 
-  int frameDelay; /**< how many engine frames to wait before changing animation frame*/
+  float frameDelay; /**< how many engine frames to wait before changing animation frame*/
 
   int isHud; /**< whether or not the sprite is part of the hud, set to 1 if it is, 0 otherwise*/
 
@@ -101,7 +101,7 @@ Sprite* GCreateSprite(float _spriteX, float _spriteY, Animation* _animation, flo
 
 void GSortSprite(Sprite* sprite, float direction); //call every time the sprite changes y position
 
-Animation* GCreateAnimation(float _numFrames, struct AEGfxTexture* _texture, struct AEGfxVertexList* _mesh, int _numRows); //creates an animation
+Animation* GCreateAnimation(int _numFrames, struct AEGfxTexture* _texture, struct AEGfxVertexList* _mesh, int _numRows); //creates an animation
 
 void SimAnimation(Sprite* _input); //call every frame on every sprite to animate
 
