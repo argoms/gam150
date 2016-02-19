@@ -18,7 +18,8 @@ enum GameObjectNames {
   entity_player, /**< player*/
   entity_door, /**< inter-level door*/
   entity_enemy, /**< generic enemy*/
-  entity_friendlyProjectile /**<used for player projectiles/attack tracers etc.*/
+  entity_friendlyProjectile, /**<used for player projectiles/attack tracers etc.*/
+  entity_button /**< generic button */
 };
 
 
