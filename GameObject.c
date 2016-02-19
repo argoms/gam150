@@ -60,6 +60,8 @@ GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _
   newGameObject->syncSpritePhysics = 1;
   newGameObject->prev = NULL;
   newGameObject->next = NULL; 
+
+  newGameObject->miscData = NULL; 
   //printf("%f", newGameObject->entity);
 
   //update list:
