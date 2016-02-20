@@ -46,6 +46,7 @@ PhysicsObject* PhysicsCreateObject(Vector2D _position, float _size)
   newObject->prev = NULL;
   newObject->active = 1;
   newObject->onCollision = NULL;
+  newObject->angle = 0.0f;
 
   //update list:
   if (!PhysicsObjectList.first)

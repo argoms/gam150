@@ -30,7 +30,7 @@ struct PhysicsObject
   int active; /**< whether or not object should be simulated*/
   GameObject* owner; /**< game object that this physics object belongs to*/
   void(*onCollision)(GameObject* _thisObject, GameObject* _otherObject); /**< calls while object collides with another object (not including tiles)*/
-  
+  float angle;
   
 };
 
