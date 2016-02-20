@@ -12,6 +12,7 @@ Functions for in-world game objects.
 #include "Vector2D.h"
 #include "Isometric.h"
 #include "Entity.h"
+#include "Enemy.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -53,6 +54,12 @@ GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _
     _entity->owner = newGameObject;
   }
   
+  newGameObject->enemyAI = NULL;
+  if (_entity == entity_enemy)
+  {
+    newGameObject->enemyAI = (EnemyAI*)malloc(sizeof(EnemyAI));
+    newGameObject->enemyAI->enemyState = ENEMY_STATE_PATROL;
+  }
 
   newGameObject->type = _type;
   newGameObject->destroyFlag = 0;
@@ -113,6 +120,10 @@ static void GameObjectRemove(GameObject** _input)
   if ((*_input)->entity)
   {
     free((*_input)->entity);
+  }
+  if ((*_input)->enemyAI)
+  {
+    free((*_input)->enemyAI);
   }
 
   if ((*_input)->prev)
