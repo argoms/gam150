@@ -94,11 +94,12 @@ Actually sets a flag, which is then managed to properly destroy later.
 */
 void GameObjectDestroy(GameObject** _input)
 {
+  /*
   printf("%i ASADQWE", (*_input)->type);
   if ((*_input)->type == 2)
   {
     printf("EK");
-  }
+  }*/
   (*_input)->destroyFlag = 1;
   
 }
@@ -170,10 +171,6 @@ void GameObjectsPostStep()
     while (instance)
     {
       GameObject* instanceNext = instance->next;
-      if (instance->type == 2)
-      {
-        //printf("%i \n", instance->destroyFlag);
-      }
       if (instance->destroyFlag)
       {
         //printf("\nQQQ \nQQQ\n %i poststep\n", instance->next);
