@@ -22,7 +22,7 @@ void DoorDefaultOnCollision(GameObject* _thisObject, GameObject* _otherObject)
   if (_thisObject->type == entity_door && _otherObject->type == entity_player)
   {
     //GameObjectDestroy(&_thisObject);
-    //LevelSetNext(level_town);
+    LevelSetNext(level_town);
     printf("DOOR ME");
   }
 }

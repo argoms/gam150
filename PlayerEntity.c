@@ -18,6 +18,10 @@ static Animation* tracerAnimation;
 signed long mouseX;
 signed long mouseY;
 
+static float playerMaxSpeed;
+static float playerAccel;
+static float playerDrag;
+
 /*!
 \brief Call at the start of a level to initialize player values.
 */
@@ -31,6 +35,11 @@ void PlayerInit()
     GCreateTexture("isotilePlaceholder1.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
     1);
+
+  //set up player movement vars:
+  playerMaxSpeed = 1;
+  playerAccel = 0.2;
+  playerDrag = 0.7;
 }
 
 /*!
@@ -97,7 +106,10 @@ void PlayerInput()
   }
 
   //update positions
-  player->physics->velocity = IsoScreenToWorld(&input);
+  player->physics->velocity.x += IsoScreenToWorld(&input).x * playerAccel; //= IsoScreenToWorld(&input);
+  player->physics->velocity.y += IsoScreenToWorld(&input).y * playerAccel;
+  Vector2DScale(&(player->physics->velocity), &(player->physics->velocity), playerDrag);
+  
   GSortSprite(player->sprite, player->physics->velocity.y);
 
 
@@ -124,3 +136,4 @@ void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _oth
     GameObjectDestroy(&_thisObject);
   }
 }
+
