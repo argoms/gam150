@@ -9,6 +9,7 @@ Functions for game objects.
 #include "Entity.h"
 #include "Graphics.h"
 #include "Physics.h"
+#include "Hazard.h"
 
 typedef struct GameObject GameObject;
 
@@ -19,7 +20,8 @@ enum GameObjectNames {
   entity_door, /**< inter-level door*/
   entity_enemy, /**< generic enemy*/
   entity_friendlyProjectile, /**<used for player projectiles/attack tracers etc.*/
-  entity_button /**< generic button */
+  entity_button, /**< generic button */
+  entity_hazard   /* environmental hazards */
 };
 
 
@@ -32,6 +34,8 @@ struct GameObject
   Sprite* sprite; /**< graphical component*/
   PhysicsObject* physics; /**< physics component*/
   Entity* entity; /**< entity component*/
+  Component_HAZARD *hazardComponent;  /* Hazard component */
+
   void(*simulate)(); /**< function to run every frame*/
   int syncSpritePhysics; /**< whether or not to sync the graphical component with the world position of the gameobject (leave it at 1 unless you're doing something weird)*/
   int type; /**< type of entity that the gameobject is (refer to enum list)*/
