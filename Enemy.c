@@ -30,12 +30,12 @@ void EnemySimulateAI(GameObject* _thisObject)
     if (dotProduct > 0)
     {
       _thisObject->physics->angle -= ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
-      printf("ROTATION");
+      //printf("ROTATION");
     }
     else if (dotProduct < 0)
     {
       _thisObject->physics->angle += ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
-      printf("ROTATION");
+      //printf("ROTATION");
     }
 
     Vector2D newVelocityVector;
@@ -44,7 +44,7 @@ void EnemySimulateAI(GameObject* _thisObject)
 
     _thisObject->physics->velocity.x = newVelocityVector.x;
     _thisObject->physics->velocity.y = newVelocityVector.y;
-    printf("DETECTED PLAYER");
+    //printf("DETECTED PLAYER");
   }
 }
 

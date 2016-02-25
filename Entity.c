@@ -45,5 +45,4 @@ void EntityApplyKnockback(Entity* _target, Vector2D* _force)
 {
   _target->owner->physics->velocity.x += _force->x;
   _target->owner->physics->velocity.y += _force->y;
-
 }
