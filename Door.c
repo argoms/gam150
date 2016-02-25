@@ -19,7 +19,7 @@ good as an example/default collision event function to look at when in doubt
 void DoorDefaultOnCollision(GameObject* _thisObject, GameObject* _otherObject)
 {
   //printf("%i||", _otherObject->type);
-  if (_thisObject->type = entity_door && _otherObject->type == entity_player)
+  if (_thisObject->type == entity_door && _otherObject->type == entity_player)
   {
     //GameObjectDestroy(&_thisObject);
     LevelSetNext(level_town);

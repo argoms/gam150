@@ -4,6 +4,8 @@
 #include "LevelManager.h"
 #include "AEEngine.h"
 #include <stdio.h>
+
+
 void EnemySimulate(GameObject* _thisObject)
 {
   EnemySimulateAI(_thisObject);
@@ -28,12 +30,12 @@ void EnemySimulateAI(GameObject* _thisObject)
     if (dotProduct > 0)
     {
       _thisObject->physics->angle -= ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
-      printf("ROTATION");
+      //printf("ROTATION");
     }
     else if (dotProduct < 0)
     {
       _thisObject->physics->angle += ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
-      printf("ROTATION");
+      //printf("ROTATION");
     }
 
     Vector2D newVelocityVector;
@@ -42,7 +44,7 @@ void EnemySimulateAI(GameObject* _thisObject)
 
     _thisObject->physics->velocity.x = newVelocityVector.x;
     _thisObject->physics->velocity.y = newVelocityVector.y;
-    printf("DETECTED PLAYER");
+    //printf("DETECTED PLAYER");
   }
 }
 
@@ -59,7 +61,20 @@ void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject)
   {
     //GameObjectDestroy(&_thisObject);
     //LevelSetNext(level_mainMenu);
+    
     EntityTakeDamage(&(_otherObject->entity), 2);
+
+    //apply knockback to player:
+    Vector2D knockbackVector; //first, create the vector
+    Vector2DSub(&knockbackVector, &_thisObject->physics->position, &_otherObject->physics->position); //based on difference between characters
+
+    //scale vector according to ENEMY_KNOCKBACK_FORCE:
+    Vector2DNormalize(&knockbackVector, &knockbackVector);
+    Vector2DScale(&knockbackVector, &knockbackVector, -ENEMY_KNOCKBACK_FORCE);
+
+    //actually apply knockback:
+    EntityApplyKnockback(_otherObject->entity, &knockbackVector);
+
     printf("PLAYER TAKING DAMAGE \n");
   }
 }
