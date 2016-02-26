@@ -16,7 +16,7 @@
 #include "Door.h"
 #include "Enemy.h"
 #include "PlayerEntity.h"
-
+#include "Hazard.h"
 
 //extern int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
 static GameObject* player; /**< pointer to player object*/
@@ -75,7 +75,12 @@ void GameLevelInit(void)
   enemy->entity->onEntityKilled = &EnemyOnKilled;
   enemy->target = player;
 
-
+  /**********************
+  HAZARDS
+  ***************************/
+  GameObject* hazard = GameObjectCreate(PhysicsCreateObject(Vec2(10, 5), 1), GCreateSprite(0, 40, anim2, 1), 0, entity_hazard);
+  hazard->physics->onCollision = &Hazard_OnCollision;
+  hazard->simulate = NULL;
  
   //PhysicsRemoveObject(&a);
 }
