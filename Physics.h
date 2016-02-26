@@ -8,6 +8,9 @@ Basic physics/collision implementation.
 Weird quirks:
 Tilemap treats physics objects as squares, while they treat each other as circles.
 This isn't strictly intended, and you're welcome to try and chang everything to circles.
+
+changes
+2/25/16   Matt - added setvelocity function
 */
 #pragma once
 #include "Vector2D.h"
@@ -51,3 +54,5 @@ void PhysicsSimulate();
 static void PhysicsTileCollisions(PhysicsObject* _instance);
 static void PhysicsIsInsideTile(PhysicsObject* _instance);
 void PhysicsRemoveObject(PhysicsObject** _input);
+
+int PhysicsSetVelocity(PhysicsObject* _instance, float x, float y);

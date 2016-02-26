@@ -293,6 +293,20 @@ void PhysicsRemoveObject(PhysicsObject** _input)
   *_input = NULL;
 }
 
+/**************************************************************************************************
+Function      : PhysicsSetVelocity
+Description   : Sets the velocity of the physics component.
+Input         : _instance is the physics object,
+                x is the x velocity,
+                y is the y velocity.
+Output        : No output.
+**************************************************************************************************/
+int PhysicsSetVelocity(PhysicsObject* _instance, float x, float y)
+{
+  _instance->velocity.x = x;
+  _instance->velocity.y = y;
+}
+
 /*
 LEAVING THIS HERE IN CASE I WANT TO TRY AND GET IT WORKING LATER ON:
 DON'T TRY AND READ THIS CODE FOR YOUR OWN GOOD
