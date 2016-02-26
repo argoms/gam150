@@ -16,7 +16,7 @@
 #include "Door.h"
 #include "Enemy.h"
 #include "PlayerEntity.h"
-
+#include "Hazard.h"
 
 //extern int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
 static GameObject* player; /**< pointer to player object*/
@@ -73,8 +73,20 @@ void GameLevelInit(void)
   enemy->physics->onCollision = &EnemyOnCollision; //ENEMY COLLISON BEHAVIOR GO HERE
   enemy->simulate = &EnemySimulate; //ENEMY CALLS THIS EVERY FRAME
   enemy->entity->onEntityKilled = &EnemyOnKilled;
+  enemy->target = player;
 
-
+  /**********************
+  HAZARDS
+  ***************************/
+  GameObject* hazard = GameObjectCreate(PhysicsCreateObject(Vec2(10, 5), 1), GCreateSprite(0, 40, anim2, 1), 0, entity_hazard);
+  Vector2D pushForce = { 5.f, 8.f };
+  unsigned int hType = 0;
+  hType |= HAZARD_DAMAGE;
+  hType |= HAZARD_DAMAGE_CONSTANT;
+  hType |= HAZARD_WARP;
+  ComponentAdd_Hazard(hazard, 4, 3, 1, pushForce, hType);
+  hazard->physics->onCollision = &Hazard_OnCollision;
+  hazard->simulate = NULL;
  
   //PhysicsRemoveObject(&a);
 }

@@ -10,6 +10,8 @@ Basic physics/collision implementation.
 #include "Vector2D.h"
 #include "GameObject.h"
 #include <math.h>
+#include <stdlib.h>
+#include "conversions.h"
 
 static PhysicsList PhysicsObjectList; /**< list of physics objects currently active*/
 
@@ -44,6 +46,8 @@ PhysicsObject* PhysicsCreateObject(Vector2D _position, float _size)
   newObject->prev = NULL;
   newObject->active = 1;
   newObject->onCollision = NULL;
+  newObject->angle = 0.0f;
+  newObject->insideTile = 0;
 
   //update list:
   if (!PhysicsObjectList.first)
@@ -137,55 +141,95 @@ void PhysicsSimulate()
 static void PhysicsTileCollisions(PhysicsObject* _instance)
 {
   PhysicsObject* instance = _instance;
-  if (IsoTileGet(
-    (instance->position.x),
-    (instance->position.y + 0.25))
-    == 1 || IsoTileGet(
-      (instance->position.x),
-      (instance->position.y + 0.75))
+
+  if (IsoTileGet(FloatToInt(instance->position.x), FloatToInt(instance->position.y + 0.25f)) == 1 
+    || IsoTileGet(FloatToInt(instance->position.x), FloatToInt(instance->position.y + 0.75f))
     == 1)
   {
     //printf("left");
-    instance->position.x = (int)(instance->position.x + 0.5);
+    instance->position.x = IntToFloat(FloatToInt(instance->position.x + 0.5f));
+
+    // This chunk handles if the player would be inside the tilemap
+    // Basically more precise adjustments, same for all four directions
+    PhysicsIsInsideTile(instance);
+	  if (instance->insideTile)
+	  {
+      instance->position.x = instance->position.x = IntToFloat(FloatToInt(instance->position.x + 1.0f));
+      instance->insideTile = 0;
+      printf("bounce FROM left");
+	  }
   }
 
   //positive x (right):
   if (IsoTileGet(
-    (instance->position.x + 1),
-    (instance->position.y + 0.25))
+    FloatToInt(instance->position.x + 1),
+    FloatToInt(instance->position.y + 0.25f))
     == 1 || IsoTileGet(
-      (instance->position.x + 1),
-      (instance->position.y + 0.75))
+      FloatToInt(instance->position.x + 1),
+      FloatToInt(instance->position.y + 0.75f))
     == 1)
   {
     //printf("right");
-    instance->position.x = (int)(instance->position.x + 0.5);
+    instance->position.x = IntToFloat(FloatToInt(instance->position.x + 0.5f));
+
+    PhysicsIsInsideTile(instance);
+	  if (instance->insideTile)
+	  {
+      instance->position.x = instance->position.x = IntToFloat(FloatToInt(instance->position.x + -1.0f));
+      instance->insideTile = 0;
+      printf("bounce FROM right");
+	  }
   }
 
   //positive y (up):
   if (IsoTileGet(
-    (instance->position.x + 0.25),
-    (instance->position.y + 1))
+    FloatToInt(instance->position.x + 0.25f),
+    FloatToInt(instance->position.y + 1))
     == 1 || IsoTileGet(
-      (instance->position.x + 0.75),
-      (instance->position.y + 1))
+      FloatToInt(instance->position.x + 0.75f),
+      FloatToInt(instance->position.y + 1))
     == 1)
   {
     //printf("up");
-    instance->position.y = (int)(instance->position.y + 0.5);
+    instance->position.y = IntToFloat(FloatToInt(instance->position.y + 0.5f));
+
+    PhysicsIsInsideTile(instance);
+	  if (instance->insideTile)
+	  {
+      instance->position.y = instance->position.y = IntToFloat(FloatToInt(instance->position.y + -1.0f));
+      instance->insideTile = 0;
+      printf("bounce FROM up");
+	  }
   }
 
   //negative y (down)
-  if (IsoTileGet(
-    (instance->position.x + 0.25),
-    (instance->position.y))
-    == 1 || IsoTileGet(
-      (instance->position.x + 0.75),
-      (instance->position.y))
-    == 1)
+  if (IsoTileGet(FloatToInt(instance->position.x + 0.25f), FloatToInt(instance->position.y))== 1 
+    || IsoTileGet(FloatToInt(instance->position.x + 0.75f), FloatToInt(instance->position.y)) == 1)
   {
     //printf("down");
-    instance->position.y = (int)(instance->position.y + 0.5);
+    instance->position.y = IntToFloat(FloatToInt(instance->position.y + 0.5f));
+
+    PhysicsIsInsideTile(instance);
+	  if (instance->insideTile)
+	  {
+      instance->position.y = instance->position.y = IntToFloat(FloatToInt(instance->position.y + 1.0f));
+      instance->insideTile = 0;
+      printf("bounce FROM down");
+	  }
+  }
+}
+
+/*
+\brief sets a simple flag is the instance would be inside a tile
+
+\param the instance's physics component
+*/
+static void PhysicsIsInsideTile(PhysicsObject* _instance)
+{
+  if (IsoTileGet(FloatToInt(_instance->position.x), FloatToInt(_instance->position.y)) == 1
+    || IsoTileGet(FloatToInt(_instance->position.x), FloatToInt(_instance->position.y)) == 1)
+  {
+    _instance->insideTile = 1;
   }
 }
 
@@ -247,6 +291,20 @@ void PhysicsRemoveObject(PhysicsObject** _input)
   }
   free(*_input);
   *_input = NULL;
+}
+
+/**************************************************************************************************
+Function      : PhysicsSetVelocity
+Description   : Sets the velocity of the physics component.
+Input         : _instance is the physics object,
+                x is the x velocity,
+                y is the y velocity.
+Output        : No output.
+**************************************************************************************************/
+int PhysicsSetVelocity(PhysicsObject* _instance, float x, float y)
+{
+  _instance->velocity.x = x;
+  _instance->velocity.y = y;
 }
 
 /*

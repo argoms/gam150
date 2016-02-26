@@ -7,6 +7,7 @@ Graphics implementation front end handling sprite layering, dynamic sprite creat
 */
 #include "Graphics.h"
 #include "AEEngine.h"
+#include "conversions.h"
 
 static SpriteList* spriteList; //list of sprites for game layer
 static SpriteList* hudLayer; //list of sprites for hud layer
@@ -43,17 +44,17 @@ void GRender()
     Sprite* spriteIndex = spriteList->first;
     while (spriteIndex)
     {
-      AEGfxSetPosition(spriteIndex->x, spriteIndex->y);//set draw position
-      
+      AEGfxSetPosition(spriteIndex->x + spriteIndex->offset.x, spriteIndex->y + spriteIndex->offset.y);//set draw position
 
       
-      //update sprite texture offsets according to animation
-      SimAnimation(spriteIndex); 
+
+                                                       //update sprite texture offsets according to animation
+      SimAnimation(spriteIndex);
       AEGfxTextureSet(spriteIndex->animation->texture,
         spriteIndex->animation->frameOffsetX * (spriteIndex->frame % spriteIndex->animation->frameWidth) - 1,
         spriteIndex->animation->frameOffsetY * (spriteIndex->frame / spriteIndex->animation->frameWidth) - 1);
-      
-      
+
+
       AEGfxSetTransparency(1.0f);
       //AEGfxSetFullTransformWithZOrder(spriteIndex->x, spriteIndex->y, 1, 0, 1, 1);
       AEGfxMeshDraw(spriteIndex->animation->mesh, AE_GFX_MDM_TRIANGLES);
@@ -65,7 +66,7 @@ void GRender()
     }
   }
 
-  
+
   //render HUD in list starting from the first item
   if (hudLayer->first && 0)
   {
@@ -84,7 +85,7 @@ void GRender()
 
     }
   }
- 
+
 }
 
 
@@ -99,7 +100,7 @@ void GRender()
 struct AEGfxVertexList* GCreateMesh(float _width, float _height, float _numFramesX, float _numFramesY)
 {
   //calculate the percentage of the total texture that the mesh will occupy:
-  float frameScaleX = 1/_numFramesX;
+  float frameScaleX = 1 / _numFramesX;
   float frameScaleY = 1 / _numFramesY;
 
   AEGfxVertexList* temp;
@@ -119,7 +120,7 @@ struct AEGfxVertexList* GCreateMesh(float _width, float _height, float _numFrame
     -_width, _height, 0x00FFFFFF, 0.0f, 0.0f);
 
   temp = AEGfxMeshEnd();
-  
+
   //update the list of created meshes:
   if (meshList)
   {
@@ -133,11 +134,11 @@ struct AEGfxVertexList* GCreateMesh(float _width, float _height, float _numFrame
     meshList = malloc(sizeof(meshList));
     meshList->item = temp;
     meshList->next = NULL;
-    
+
   }
   return temp;
   AE_ASSERT_MESG(temp, "Failed to create mesh!!");
-  
+
 }
 
 /*!
@@ -148,7 +149,7 @@ struct AEGfxVertexList* GCreateMesh(float _width, float _height, float _numFrame
 struct AEGfxTexture* GCreateTexture(char* _textureName)
 {
   AEGfxTexture* temp;
-  
+
   temp = AEGfxTextureLoad(_textureName);
 
   //update list of laded textures
@@ -164,7 +165,7 @@ struct AEGfxTexture* GCreateTexture(char* _textureName)
     textureList = malloc(sizeof(textureList));
     textureList->item = temp;
     textureList->next = NULL;
-    
+
   }
 
   return temp;
@@ -182,7 +183,7 @@ void GFree()
   // Freeing the objects and textures
   MeshList* temp = meshList;
   MeshList* tempPrevious;
-  
+
   TextureList* temp2 = textureList;
   TextureList* tempPrevious2;
   if (temp)
@@ -192,15 +193,15 @@ void GFree()
       tempPrevious = temp;
       //free(tempPrevious);
       //printf("%i||", temp->item->vtxNum);
-      
+
       //printf("%p))", temp->item);
       temp = temp->next;
 
       //printf("AAAAAAA %i", temp->item->vtxNum);
       AEGfxMeshFree(tempPrevious->item);
       //free(tempPrevious);
-      
-      
+
+
     }
     //printf("%i||", temp->item->vtxNum);
     //printf("BBBB");
@@ -209,7 +210,7 @@ void GFree()
     //free(temp);
   }
 
-  
+
 
   if (temp2)
   {
@@ -218,7 +219,7 @@ void GFree()
       tempPrevious2 = temp2;
       //free(tempPrevious);
       //printf("%i||", temp->item->vtxNum);
-      
+
       //printf("%p))", temp->item);
       temp2 = temp2->next;
       AEGfxTextureUnload(tempPrevious2->item);
@@ -249,7 +250,7 @@ Sprite layer is initialized based on _spriteY param.
 */
 Sprite* GCreateSprite(float _spriteX, float _spriteY, Animation* _animation, float _frameDelay)//struct AEGfxTexture* _texture, struct AEGfxVertexList* _mesh)
 {
- 
+
   //initialize sprite variables:
   Sprite* newSprite = malloc(sizeof(struct Sprite));
   newSprite->x = _spriteX;
@@ -262,14 +263,15 @@ Sprite* GCreateSprite(float _spriteX, float _spriteY, Animation* _animation, flo
   newSprite->paused = 0;
   newSprite->frameDelay = _frameDelay;
   newSprite->isHud = 0;
-
+  newSprite->offset.x = 0;
+  newSprite->offset.y = 0;
   //update sprite list:
   if (!spriteList->first) //if first, set first in list
   {
     spriteList->first = newSprite;
   }
-  else 
-  { 
+  else
+  {
     //otherwise, sort through the list until the correct y position is found for layering, and insert self there
 
     Sprite* index = spriteList->first;
@@ -281,10 +283,10 @@ Sprite* GCreateSprite(float _spriteX, float _spriteY, Animation* _animation, flo
       newSprite->lowerSprite = index;
       index->higherSprite = newSprite;
     }
-    else 
+    else
     {
       //starting from the top, go down the spritelist until the appropriate sprite layer can be found
-      
+
       while (index->lowerSprite && index->lowerSprite->y > _spriteY)
       {
         index = index->lowerSprite;
@@ -296,7 +298,7 @@ Sprite* GCreateSprite(float _spriteX, float _spriteY, Animation* _animation, flo
       }
       index->lowerSprite = newSprite;
       newSprite->higherSprite = index;
-      
+
     }
   }
   return newSprite;
@@ -340,13 +342,13 @@ Sprite* GCreateHudSprite(float _spriteX, float _spriteY, Animation* _animation, 
       hudLayer->last->lowerSprite = newSprite;
     }
     hudLayer->last = newSprite;
-    
+
   }
   return newSprite;
 }
 
 /*!
-\brief Removes sprite object 
+\brief Removes sprite object
 Pass the address of a pointer to the sprite, not the pointer itself: &sprite instead of sprite assuming that sprite is a pointer to a sprite struct.
 If only we could pass by reference in c.
 
@@ -355,25 +357,25 @@ If only we could pass by reference in c.
 void GRemoveSprite(Sprite** _input)
 {
   SpriteList* spriteLayer; //pointer to the layer that the sprite is in
-  
+
   if (_input)
   {
     switch ((*_input)->isHud) //check what layer the sprite is in, set the layer pointer accordingly
     {
-    
+
     case 1:
       spriteLayer = hudLayer;
       break;
     default:
     case 0:
       spriteLayer = spriteList;
-        break;
+      break;
     }
-    
-    
+
+
     if ((*_input)->higherSprite)
     {
-      
+
       if ((*_input)->lowerSprite)
       {
         (*_input)->lowerSprite->higherSprite = (*_input)->higherSprite;
@@ -388,7 +390,7 @@ void GRemoveSprite(Sprite** _input)
     }
     else
     {
-      
+
       if ((*_input)->lowerSprite)
       {
         (*_input)->lowerSprite->higherSprite = NULL;
@@ -400,9 +402,9 @@ void GRemoveSprite(Sprite** _input)
         spriteLayer->last = NULL;
       }
     }
-    free(*_input); 
+    free(*_input);
     *_input = NULL;
-    
+
   }
 }
 
@@ -416,18 +418,18 @@ Does not create texture & mesh objects as part of the process.
 \param _texture pointer to the texture to be used
 \param _mesh pointer to the mesh to be used
 */
-Animation* GCreateAnimation(float _numFrames, struct AEGfxTexture* _texture, struct AEGfxVertexList* _mesh, int _numRows)
+Animation* GCreateAnimation(int _numFrames, struct AEGfxTexture* _texture, struct AEGfxVertexList* _mesh, int _numRows)
 {
   Animation* newAnim = malloc(sizeof(Animation));
-  
+
   newAnim->length = _numFrames * _numRows;
-  
+
   newAnim->frameOffsetX = 1 / (float)_numFrames;
   newAnim->frameOffsetY = 1 / (float)_numRows;
-  
+
   newAnim->frameWidth = _numFrames;
   newAnim->frameHeight = _numRows;
-  
+
   newAnim->texture = _texture;
   newAnim->mesh = _mesh;
   return newAnim;
@@ -448,7 +450,7 @@ void SimAnimation(Sprite* _input)
   {
     ++_input->frame;
     _input->timer = 0;
-    
+
   }
   if (_input->frame >= _input->animation->length)
   {
@@ -458,7 +460,7 @@ void SimAnimation(Sprite* _input)
 
 /*!
 \brief sorts sprite layer according to y position
-Call this function when a sprite changes y position to make sure it is layered correctly. 
+Call this function when a sprite changes y position to make sure it is layered correctly.
 I'm aware that the loop could probably be optimized way better. It kept breaking on me, so I went overkill on safety checks ok? D:
 
 \param _sprite input sprite object
@@ -473,19 +475,19 @@ void GSortSprite(Sprite* _sprite, float _direction)
     {
 
       Sprite* oldHigher; //old higher sprite to be swapped
-      
-      //keep moving self up through list until the highest object has a higher y value than the sprite
-      while (_sprite->higherSprite && _sprite->higherSprite->y < _sprite->y) 
+
+                         //keep moving self up through list until the highest object has a higher y value than the sprite
+      while (_sprite->higherSprite && _sprite->higherSprite->y < _sprite->y)
       {
 
         oldHigher = _sprite->higherSprite;
-        
+
         if (_sprite->lowerSprite)
         {
           _sprite->lowerSprite->higherSprite = oldHigher;
           oldHigher->lowerSprite = _sprite->lowerSprite;
         }
-        else 
+        else
         {
           //if the sprite was the lowest before, update that fact with the new lowest sprite
           oldHigher->lowerSprite = NULL;
@@ -500,7 +502,7 @@ void GSortSprite(Sprite* _sprite, float _direction)
           oldHigher->higherSprite->lowerSprite = _sprite;
           oldHigher->higherSprite = _sprite;
         }
-        else 
+        else
         {
           //if the replaced sprite was the highest sprite, update the pointer to the first sprite in the list
           _sprite->higherSprite = NULL;
@@ -508,18 +510,18 @@ void GSortSprite(Sprite* _sprite, float _direction)
           spriteList->first = _sprite;
           break;
         }
-        
+
       }
-      
+
     }
 
   }
-  else if(_direction < 0) //same process, but going downwards instead of upwards
+  else if (_direction < 0) //same process, but going downwards instead of upwards
   {
-    if (_sprite->lowerSprite && spriteList->last != _sprite) 
+    if (_sprite->lowerSprite && spriteList->last != _sprite)
     {
 
-      Sprite* oldLower; 
+      Sprite* oldLower;
       while (_sprite->lowerSprite && _sprite->lowerSprite->y > _sprite->y)
       {
 
@@ -529,7 +531,7 @@ void GSortSprite(Sprite* _sprite, float _direction)
           _sprite->higherSprite->lowerSprite = oldLower;
           oldLower->higherSprite = _sprite->higherSprite;
         }
-        else 
+        else
         {
           oldLower->higherSprite = NULL;
           spriteList->first = oldLower;
@@ -543,7 +545,7 @@ void GSortSprite(Sprite* _sprite, float _direction)
           oldLower->lowerSprite->higherSprite = _sprite;
           oldLower->lowerSprite = _sprite;
         }
-        else 
+        else
         {
 
           _sprite->lowerSprite = NULL;

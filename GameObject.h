@@ -9,19 +9,29 @@ Functions for game objects.
 #include "Entity.h"
 #include "Graphics.h"
 #include "Physics.h"
+#include "Hazard.h"
 
 typedef struct GameObject GameObject;
 
 typedef struct GameObjectList GameObjectList;
+typedef struct EnemyAI EnemyAI;
+
+typedef struct Component_HAZARD Component_HAZARD;
 
 enum GameObjectNames {
   entity_player, /**< player*/
   entity_door, /**< inter-level door*/
   entity_enemy, /**< generic enemy*/
   entity_friendlyProjectile, /**<used for player projectiles/attack tracers etc.*/
-  entity_button /**< generic button */
+  entity_button, /**< generic button */
+  entity_hazard   /* environmental hazards */
 };
 
+
+struct EnemyAI
+{
+  int enemyState;
+};
 
 /*!
 \struct GameObject
@@ -32,10 +42,19 @@ struct GameObject
   Sprite* sprite; /**< graphical component*/
   PhysicsObject* physics; /**< physics component*/
   Entity* entity; /**< entity component*/
+<<<<<<< HEAD
   void(*simulate)(GameObject* instance); /**< function to run every frame*/
+=======
+  Component_HAZARD *hazardComponent;  /* Hazard component */
+
+  void(*simulate)(); /**< function to run every frame*/
+>>>>>>> refs/remotes/origin/master
   int syncSpritePhysics; /**< whether or not to sync the graphical component with the world position of the gameobject (leave it at 1 unless you're doing something weird)*/
   int type; /**< type of entity that the gameobject is (refer to enum list)*/
   
+  EnemyAI* enemyAI;
+  GameObject* target;
+
   int destroyFlag; /**< internal, used for removing game objects*/
   GameObject* next; /**< pointer to previous object in list*/
   GameObject* prev; /**< pointer to next object in list*/
