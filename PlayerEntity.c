@@ -22,6 +22,26 @@ static float playerMaxSpeed;
 static float playerAccel;
 static float playerDrag;
 
+static Animation* animWalkDown;
+static Animation* animWalkLeft;
+static Animation* animWalkUp;
+static Animation* animWalkRight;
+static Animation* animWalkUpLeft;
+static Animation* animWalkUpRight;
+static Animation* animWalkDownRight;
+static Animation* animWalkDownLeft;
+
+static Sprite* playerSprite;
+
+static enum directions 
+{
+  PLAYER_LEFT = 1,
+  PLAYER_RIGHT = 2,
+  PLAYER_UP = 4,
+  PLAYER_DOWN = 8
+};
+static int playerDirection;
+
 /*!
 \brief Call at the start of a level to initialize player values.
 */
@@ -40,6 +60,52 @@ void PlayerInit()
   playerMaxSpeed = 1;
   playerAccel = 0.2;
   playerDrag = 0.7;
+
+  
+  //load animations:
+  animWalkDown = GCreateAnimation(12,
+    GCreateTexture("animations/player/walkDown.png"),
+    GCreateMesh(192.f, 192.f, 12, 1),
+    1);
+
+  animWalkLeft = GCreateAnimation(12,
+    GCreateTexture("animations/player/walkLeft.png"),
+    GCreateMesh(192.f, 192.f, 12, 1),
+    1);
+
+  animWalkUp = GCreateAnimation(12,
+    GCreateTexture("animations/player/walkUp.png"),
+    GCreateMesh(192.f, 192.f, 12, 1),
+    1);
+
+  animWalkRight = GCreateAnimation(12,
+    GCreateTexture("animations/player/walkRight.png"),
+    GCreateMesh(192.f, 192.f, 12, 1),
+    1);
+
+  animWalkUpRight = GCreateAnimation(12,
+    GCreateTexture("animations/player/walkUpRight.png"),
+    GCreateMesh(192.f, 192.f, 12, 1),
+    1);
+
+  animWalkUpLeft = GCreateAnimation(12,
+    GCreateTexture("animations/player/walkUpLeft.png"),
+    GCreateMesh(192.f, 192.f, 12, 1),
+    1);
+
+  animWalkDownRight = GCreateAnimation(12,
+    GCreateTexture("animations/player/walkDownRight.png"),
+    GCreateMesh(192.f, 192.f, 12, 1),
+    1);
+
+  animWalkDownLeft = GCreateAnimation(12,
+    GCreateTexture("animations/player/walkDownLeft.png"),
+    GCreateMesh(192.f, 192.f, 12, 1),
+    1);
+
+  playerSprite = GCreateSprite(0, 0, animWalkLeft, 2);
+  playerSprite->offset.x = 0;
+  playerSprite->offset.y = 64;
 }
 
 /*!
@@ -51,6 +117,7 @@ void PlayerSimulate()
   //printf("%f \n", frameTime);
 
   PlayerInput();
+  PlayerAnimations();
 }
 
 /*!
@@ -103,6 +170,28 @@ void PlayerInput()
   {
     Vector2DNormalize(&input, &input);
     Vector2DScale(&input, &input, 10);
+    playerDirection = 0;
+    if (input.x > 0)
+    {
+      playerDirection += PLAYER_RIGHT;
+    } 
+    else if (input.x < 0)
+    {
+      playerDirection += PLAYER_LEFT;
+    }
+
+    if (input.y > 0)
+    {
+      playerDirection += PLAYER_UP;
+    }
+    else if (input.y < 0)
+    {
+      playerDirection += PLAYER_DOWN;
+    }
+  } 
+  else
+  {
+    playerDirection = 0;
   }
 
   //update positions
@@ -135,5 +224,39 @@ void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _oth
     EntityTakeDamage(&_otherObject->entity, attackDamage);
     GameObjectDestroy(&_thisObject);
   }
+}
+
+void PlayerAnimations()
+{
+  //printf("%i", playerDirection);
+  switch (playerDirection)
+  {
+  case PLAYER_DOWN:
+    playerSprite->animation = animWalkDown;
+    break;
+  case PLAYER_DOWN + PLAYER_LEFT:
+    playerSprite->animation = animWalkDownLeft;
+    break;
+  case PLAYER_LEFT:
+    playerSprite->animation = animWalkLeft;
+    break;
+  case PLAYER_DOWN + PLAYER_RIGHT:
+    playerSprite->animation = animWalkDownRight;
+    break;
+  case PLAYER_RIGHT:
+    playerSprite->animation = animWalkRight;
+    break;
+  case PLAYER_UP:
+    playerSprite->animation = animWalkUp;
+    break;
+  case PLAYER_UP + PLAYER_LEFT:
+    playerSprite->animation = animWalkUpLeft;
+    break;
+  case PLAYER_UP + PLAYER_RIGHT:
+    playerSprite->animation = animWalkUpRight;
+    break;
+  }
+  playerSprite->x = player->sprite->x;
+  playerSprite->y = player->sprite->y;
 }
 
