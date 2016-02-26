@@ -72,10 +72,11 @@ void GameLevelInit(void)
   //printf("%i \n iimiamsdias \n", enemyEntity->owner);
   enemy->physics->onCollision = &EnemyOnCollision; //ENEMY COLLISON BEHAVIOR GO HERE
   enemy->simulate = &EnemySimulate; //ENEMY CALLS THIS EVERY FRAME
+  enemy->initialize = &EnemyInitialize;
   enemy->entity->onEntityKilled = &EnemyOnKilled;
   enemy->target = player;
-
-
+  enemy->initialize(); /*inittialize the enemy*/
+  
  
   //PhysicsRemoveObject(&a);
 }
