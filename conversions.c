@@ -68,7 +68,7 @@ int FloatToInt(float f)
   /* note to self, add checks later */
   
   int i;      /* int for the result         */
-  i = (int)f; /* cast the double to a int   */
+  i = (int)f; /* cast the float to a int    */
   return i;   /* return the result          */
 }
 
@@ -87,7 +87,61 @@ float IntToFloat(int i)
 {
   /* note to self, add checks later */
   
-  float f;      /* int for the result         */
-  f = (float)i; /* cast the double to a int   */
-  return f;     /* return the result          */
+  float f;      /* float for the result        */
+  f = (float)i; /* cast the int to a int       */
+  return f;     /* return the result           */
+}
+
+/*************************************************************************/
+/*!
+\par   Function: LongIntToFloat
+
+\par Description: converts a long int to a float
+
+\param li - long int to be converted
+
+\return  A converted float
+*/
+/*************************************************************************/
+float LongIntToFloat(long int li)
+{
+  float f;      /* float for the result            */
+  f = (float)li;/* cast the long int to a float    */
+  return f;     /* return the result               */
+}
+
+/*************************************************************************/
+/*!
+\par   Function: LongFloatToInt
+
+\par Description: converts a long float to a int
+
+\param lf - long float to be converted
+
+\return  A converted int
+*/
+/*************************************************************************/
+int LongFloatToInt(long float lf)
+{
+  int i;      /* int for the result            */
+  i = (int)lf;/* cast the long float to a int  */
+  return i;   /* return the result             */
+}
+
+/*************************************************************************/
+/*!
+\par   Function: UnsignedLongToFloat
+
+\par Description: converts a unsignedvlong int to a float
+
+\param uli - unsigned long int to be converted
+
+\return  A converted float
+*/
+/*************************************************************************/
+float UnsignedLongToFloat(unsigned long int uli)
+{
+  float f;       /* float for the result                  */
+  f = (float)uli;/* cast the unsigned long int to a float */
+  return f;      /* return the result                     */
 }
