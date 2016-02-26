@@ -16,8 +16,6 @@ typedef struct GameObject GameObject;
 typedef struct GameObjectList GameObjectList;
 typedef struct EnemyAI EnemyAI;
 
-typedef struct Component_HAZARD Component_HAZARD;
-
 enum GameObjectNames {
   entity_player, /**< player*/
   entity_door, /**< inter-level door*/
@@ -44,8 +42,6 @@ struct GameObject
   Entity* entity; /**< entity component*/
 
   void(*simulate)(GameObject* instance); /**< function to run every frame*/
-
-  Component_HAZARD *hazardComponent;  /* Hazard component */
 
   int syncSpritePhysics; /**< whether or not to sync the graphical component with the world position of the gameobject (leave it at 1 unless you're doing something weird)*/
   int type; /**< type of entity that the gameobject is (refer to enum list)*/
