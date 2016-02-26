@@ -13,6 +13,7 @@ Functions for in-world game objects.
 #include "Isometric.h"
 #include "Entity.h"
 #include "Enemy.h"
+#include "Hazard.h"
 #include <stdlib.h>
 #include <stdio.h>
 

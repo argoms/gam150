@@ -16,6 +16,8 @@ typedef struct GameObject GameObject;
 typedef struct GameObjectList GameObjectList;
 typedef struct EnemyAI EnemyAI;
 
+typedef struct Component_HAZARD Component_HAZARD;
+
 enum GameObjectNames {
   entity_player, /**< player*/
   entity_door, /**< inter-level door*/

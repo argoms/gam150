@@ -79,6 +79,12 @@ void GameLevelInit(void)
   HAZARDS
   ***************************/
   GameObject* hazard = GameObjectCreate(PhysicsCreateObject(Vec2(10, 5), 1), GCreateSprite(0, 40, anim2, 1), 0, entity_hazard);
+  Vector2D pushForce = { 5.f, 8.f };
+  unsigned int hType = 0;
+  hType |= HAZARD_DAMAGE;
+  hType |= HAZARD_DAMAGE_CONSTANT;
+  hType |= HAZARD_WARP;
+  ComponentAdd_Hazard(hazard, 4, 3, 1, pushForce, hType);
   hazard->physics->onCollision = &Hazard_OnCollision;
   hazard->simulate = NULL;
  
