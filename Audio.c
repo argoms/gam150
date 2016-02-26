@@ -602,13 +602,13 @@ void TestAudioINIT(void)
   Audio_AddMusic("music_sample2.ogg");
 
   // Test playback of one sample, one stream
-  Audio_PlaySoundSample("sample1.ogg", false);
+  //Audio_PlaySoundSample("sample1.ogg", false);
   //Audio_PlaySound("music_sample1.ogg", false);
 
   // Test playback of multiple samples, multiple streams (will be cacophonous)
-  Audio_PlaySoundSample("sample2.ogg", false);
-  Audio_PlaySoundSample("sample3.ogg", false);
-  Audio_PlayMusicStream("music_sample2.ogg", false);
+  //Audio_PlaySoundSample("sample2.ogg", false);
+  //Audio_PlaySoundSample("sample3.ogg", false);
+  //Audio_PlayMusicStream("music_sample2.ogg", false);
 
 }
 

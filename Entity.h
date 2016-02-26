@@ -1,5 +1,12 @@
+/*!
+\file   Entity.h
+\author James Do
+\par    email: j.do\@digipen.edu
+\brief
+Contains prototypes/declarations for entities- objects that can take/receive damage.
+*/
 #pragma once
-//#include "GameObject.h"
+#include "Vector2D.h"
 typedef struct Entity Entity;
 typedef struct GameObject GameObject;
 /*!
@@ -18,3 +25,4 @@ struct Entity
 
 void EntityInit(Entity** _entity);
 void EntityTakeDamage(Entity** _entity, int damage);
+void EntityApplyKnockback(Entity* _target, Vector2D* _force);

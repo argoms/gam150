@@ -8,6 +8,7 @@ Isometric tilemap implementation. Contains functions relating to tilemaps and is
 #include "Vector2D.h"
 #include "Isometric.h"
 #include "Graphics.h"
+#include <stdlib.h>
 
 static IsoMap* gameMap; /**< contains currently active game map*/
 

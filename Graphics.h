@@ -6,9 +6,10 @@
 Graphics implementation front end handling sprite layering, dynamic sprite creation etc.
 */
 #pragma once
+#include "Vector2D.h"
 
 typedef struct Animation Animation;
-typedef struct Sprite Sprite; 
+typedef struct Sprite Sprite;
 typedef struct SpriteList SpriteList;
 typedef struct MeshList MeshList;
 typedef struct TextureList TextureList;
@@ -19,7 +20,7 @@ typedef struct TextureList TextureList;
 
 Also acts as a linked list between sprites for layering resolution. Sprites are layered with a painter's algorithm (back first), assuming higher Y is further back.
 */
- struct Sprite
+struct Sprite
 {
   struct Animation* animation; /**< pointer to the sprite's animation*/
   float x; /**< x position of sprite*/
@@ -31,65 +32,65 @@ Also acts as a linked list between sprites for layering resolution. Sprites are 
   int timer; /**< internal timer for frame delay calculations*/
   int paused; /**< bool, whether or not to play*/
 
-  int frameDelay; /**< how many engine frames to wait before changing animation frame*/
+  float frameDelay; /**< how many engine frames to wait before changing animation frame*/
 
   int isHud; /**< whether or not the sprite is part of the hud, set to 1 if it is, 0 otherwise*/
+  Vector2D offset; /**< additional visual offset to individual sprite*/
+
+};
 
 
- };
-
- 
- /*!
- \struct SpriteList
- \brief info for linked list of sprites
- */
- struct SpriteList
- {
-   Sprite* first; /**< first sprite in list*/
-   Sprite* last; /**< last sprite in list*/
- };
+/*!
+\struct SpriteList
+\brief info for linked list of sprites
+*/
+struct SpriteList
+{
+  Sprite* first; /**< first sprite in list*/
+  Sprite* last; /**< last sprite in list*/
+};
 
 
- /*!
- \struct Animation
- \brief contains information about animations
- Note: animation spritesheet should be 1 frame high- all frames on horizontal strip.
- */
- struct Animation
- {
-   struct AEGfxVertexList* mesh; /**< pointer to the mesh for the animation*/
-   struct AEGfxTexture* texture; /**< pointer to texture of animation*/
-
-   
-   int length; /**< length of animation in frames*/
-   
-   int frameWidth; /**< number of frames per row*/
-   int frameHeight; /**< number of frames per column (number of rows)*/
-   float frameOffsetX; /**< amount to offset, aka 1/(num frames)*/
-   float frameOffsetY; /**< amount to offset y*/
- };
+/*!
+\struct Animation
+\brief contains information about animations
+Note: animation spritesheet should be 1 frame high- all frames on horizontal strip.
+*/
+struct Animation
+{
+  struct AEGfxVertexList* mesh; /**< pointer to the mesh for the animation*/
+  struct AEGfxTexture* texture; /**< pointer to texture of animation*/
 
 
- //structs for lists of loaded objects:
- /*!
- \struct MeshList
- \brief info for linked list of meshes
- */
- struct MeshList
- {
-   struct AEGfxVertexList* item; /**< data portion of list*/
-   MeshList* next; /**< pointer to next object in list*/
- };
+  int length; /**< length of animation in frames*/
 
- /*!
- \struct TextureList
- \brief info for linked list of textures
- */
- struct TextureList
- {
-   struct AEGfxTexture* item; /**< data portion of list*/
-   TextureList* next; /**< pointer to next object in list*/
- };
+  int frameWidth; /**< number of frames per row*/
+  int frameHeight; /**< number of frames per column (number of rows)*/
+  float frameOffsetX; /**< amount to offset, aka 1/(num frames)*/
+  float frameOffsetY; /**< amount to offset y*/
+};
+
+
+//structs for lists of loaded objects:
+/*!
+\struct MeshList
+\brief info for linked list of meshes
+*/
+struct MeshList
+{
+  struct AEGfxVertexList* item; /**< data portion of list*/
+  MeshList* next; /**< pointer to next object in list*/
+};
+
+/*!
+\struct TextureList
+\brief info for linked list of textures
+*/
+struct TextureList
+{
+  struct AEGfxTexture* item; /**< data portion of list*/
+  TextureList* next; /**< pointer to next object in list*/
+};
 
 void GRender(); //call every frame to render sprites
 
@@ -101,7 +102,7 @@ Sprite* GCreateSprite(float _spriteX, float _spriteY, Animation* _animation, flo
 
 void GSortSprite(Sprite* sprite, float direction); //call every time the sprite changes y position
 
-Animation* GCreateAnimation(float _numFrames, struct AEGfxTexture* _texture, struct AEGfxVertexList* _mesh, int _numRows); //creates an animation
+Animation* GCreateAnimation(int _numFrames, struct AEGfxTexture* _texture, struct AEGfxVertexList* _mesh, int _numRows); //creates an animation
 
 void SimAnimation(Sprite* _input); //call every frame on every sprite to animate
 
