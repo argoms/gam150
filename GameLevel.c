@@ -58,7 +58,7 @@ void GameLevelInit(void)
   PlayerInit();
 
   //create door object:
-  GameObject* door = GameObjectCreate(PhysicsCreateObject(Vec2(5, 4), 1), GCreateSprite(0, 40, anim2, 1), 0, entity_door);
+  GameObject* door = GameObjectCreate(PhysicsCreateObject(Vec2(6, 4), 1), GCreateSprite(0, 40, anim2, 1), 0, entity_door);
   door->physics->onCollision = &DoorDefaultOnCollision;
   door->simulate = NULL;
 
@@ -73,7 +73,7 @@ void GameLevelInit(void)
   enemy->physics->onCollision = &EnemyOnCollision; //ENEMY COLLISON BEHAVIOR GO HERE
   enemy->simulate = &EnemySimulate; //ENEMY CALLS THIS EVERY FRAME
   enemy->entity->onEntityKilled = &EnemyOnKilled;
-  enemy->target = player;
+  enemy->target = door;
 
   /**********************
   HAZARDS

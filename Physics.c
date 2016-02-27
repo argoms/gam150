@@ -4,6 +4,9 @@
 \par    email: j.do\@digipen.edu
 \brief
 Basic physics/collision implementation.
+
+Changelog:
+2/26/16   Matt - Modified tilecollision checking functions.
 */
 #include "Physics.h"
 #include "Isometric.h"
@@ -12,6 +15,15 @@ Basic physics/collision implementation.
 #include <math.h>
 #include <stdlib.h>
 #include "conversions.h"
+
+/* Flags for collisions */
+enum Collisions
+{
+  COLLISION_RIGHT   = 1,
+  COLLISION_LEFT    = 1 << 1,
+  COLLISION_TOP     = 1 << 2,
+  COLLISION_BOTTOM  = 1 << 3
+};
 
 static PhysicsList PhysicsObjectList; /**< list of physics objects currently active*/
 
@@ -135,88 +147,290 @@ void PhysicsSimulate()
 }
 
 /*!
+\brief  Snaps a coordinate to a cell
+\param  coordinate is the coordinate to snap
+        side is where to snap relative to
+          use Collision flags:
+          COLLISION_LEFT
+          COLLISION_RIGHT
+          COLLISION_TOP
+          COLLISION_BOTTOM
+*/
+void SnaptoCell(float *coordinate, unsigned side)
+{
+  /* If snapping from bottom or left, snap the value by finding its integral part and adding 1 */
+  if (side == COLLISION_BOTTOM || side == COLLISION_LEFT)
+    *coordinate = (int)(*coordinate) + 1.f;
+
+  /* Else, if snapping from right or top, snap the value by finding its integral part */
+  else
+    *coordinate = (int)(*coordinate);
+}
+
+/*!
+\brief Tests collision between a circle and a rectangle
+\param pCircle  center of the circle
+       radius   radius of the circle
+       pRect    center of rectangle
+       width    width of rectangle
+       height   height of rectangle
+*/
+static int CircleToRectCollTest(Vector2D * pCircle, float radius, Vector2D *pRect, float width, float height)
+{
+  /* Copy of the data from pCircle, converted center of object */
+  Vector2D pCircleCopy = { pCircle->x, pCircle->y };
+
+  /* Create a point to test from the circle's center */
+  Vector2D testpoint = { pCircleCopy.x, pCircleCopy.y };
+
+  //pRect->x += 0.5f;
+  //pRect->y += 0.5f;
+
+  // if the point is higher than the rectangle's top, then set its height to the rectangle's top position
+  if (testpoint.y > pRect->y + height / 2.f)
+    testpoint.y = pRect->y + height / 2.f;
+
+  // if the point is lower than the rectangle's bottom, then set its height to the bottom position
+  else if (testpoint.y < pRect->y - height / 2.f)
+    testpoint.y = pRect->y - height / 2.f;
+
+  // if the point is further left than the rectangle's left corners, set its x position to the left position
+  if (testpoint.x < pRect->x - width / 2.f)
+    testpoint.x = pRect->x - width / 2.f;
+
+  // if the point is further right than the rectangle's right corners, then set its x position to the right position
+  else if (testpoint.x > pRect->x + width / 2.f)
+    testpoint.x = pRect->x + width / 2.f;
+
+  // Test for collision
+  if (Vector2DSquareDistance(&pCircleCopy , &testpoint) < radius * radius)
+    return 1;
+
+  return 0;
+}
+
+/*!
 \brief Handles collisions with the tilemap
 \param _instance physics object to update position of
 */
 static void PhysicsTileCollisions(PhysicsObject* _instance)
 {
-  PhysicsObject* instance = _instance;
+  //PhysicsObject* instance = _instance;
 
-  if (IsoTileGet(FloatToInt(instance->position.x), FloatToInt(instance->position.y + 0.25f)) == 1 
-    || IsoTileGet(FloatToInt(instance->position.x), FloatToInt(instance->position.y + 0.75f))
-    == 1)
+  unsigned int collisionFields = 0; /* Flag for collisions */
+
+  float radius;  /* The radius of the object */
+
+  int
+    centerX,  /* X coordinate of center in map units */
+    centerY,  /* Y coordinate of center in map units */
+    left,     /* Left side of object in map units */
+    right,    /* Right side of object in map units */
+    top,      /* Top of object in map units */
+    bottom;   /* Bottom of object in map units */
+
+  /* Get the information on the instance */
+  radius = _instance->size;
+
+  centerX = FloatToInt(_instance->position.x + 0.5f);
+  centerY = FloatToInt(_instance->position.y + 0.5f);
+  left = FloatToInt(_instance->position.x);
+  right = FloatToInt(_instance->position.x + radius);
+  top = FloatToInt(_instance->position.y + radius);
+  bottom = FloatToInt(_instance->position.y);
+
+
+  /* Update collision flags */
+
+  /* If the object passes on the left check for collision */
+  if (IsoTileGet(left, centerY))
   {
-    //printf("left");
-    instance->position.x = IntToFloat(FloatToInt(instance->position.x + 0.5f));
-
-    // This chunk handles if the player would be inside the tilemap
-    // Basically more precise adjustments, same for all four directions
-    PhysicsIsInsideTile(instance);
-	  if (instance->insideTile)
-	  {
-      instance->position.x = instance->position.x = IntToFloat(FloatToInt(instance->position.x + 1.0f));
-      instance->insideTile = 0;
-      printf("bounce FROM left");
-	  }
+    Vector2D tilePos = { left, centerY };
+    if (CircleToRectCollTest(&_instance->position, radius, &tilePos, 1, 1))
+    {
+      collisionFields |= COLLISION_LEFT;
+      printf("left collision ");
+    }
+  }
+  
+  /* If the object passes on the right, check for collision */
+  if (IsoTileGet(right, centerY))
+  {
+    Vector2D tilePos = { right, centerY };
+    if (CircleToRectCollTest(&_instance->position, radius, &tilePos, 1, 1))
+    {
+      collisionFields |= COLLISION_RIGHT;
+      printf("right collision ");
+    }
   }
 
-  //positive x (right):
-  if (IsoTileGet(
-    FloatToInt(instance->position.x + 1),
-    FloatToInt(instance->position.y + 0.25f))
-    == 1 || IsoTileGet(
-      FloatToInt(instance->position.x + 1),
-      FloatToInt(instance->position.y + 0.75f))
-    == 1)
+  /* If the object passes on the top, chech for collision */
+  if (IsoTileGet(centerX, top))
   {
-    //printf("right");
-    instance->position.x = IntToFloat(FloatToInt(instance->position.x + 0.5f));
-
-    PhysicsIsInsideTile(instance);
-	  if (instance->insideTile)
-	  {
-      instance->position.x = instance->position.x = IntToFloat(FloatToInt(instance->position.x + -1.0f));
-      instance->insideTile = 0;
-      printf("bounce FROM right");
-	  }
+    Vector2D tilePos = { centerX, top };
+    if (CircleToRectCollTest(&_instance->position, radius, &tilePos, 1, 1))
+    {
+      collisionFields |= COLLISION_TOP;
+      printf("top collision ");
+    }
   }
 
-  //positive y (up):
-  if (IsoTileGet(
-    FloatToInt(instance->position.x + 0.25f),
-    FloatToInt(instance->position.y + 1))
-    == 1 || IsoTileGet(
-      FloatToInt(instance->position.x + 0.75f),
-      FloatToInt(instance->position.y + 1))
-    == 1)
+  /* If the object passes on the bottom, check for collision */
+  if (IsoTileGet(centerX, bottom))
   {
-    //printf("up");
-    instance->position.y = IntToFloat(FloatToInt(instance->position.y + 0.5f));
-
-    PhysicsIsInsideTile(instance);
-	  if (instance->insideTile)
-	  {
-      instance->position.y = instance->position.y = IntToFloat(FloatToInt(instance->position.y + -1.0f));
-      instance->insideTile = 0;
-      printf("bounce FROM up");
-	  }
+    Vector2D tilePos = { centerX, bottom };
+    if (CircleToRectCollTest(&_instance->position, radius, &tilePos, 1, 1))
+    {
+      collisionFields |= COLLISION_BOTTOM;
+      printf("bottom collision ");
+    }
   }
 
-  //negative y (down)
-  if (IsoTileGet(FloatToInt(instance->position.x + 0.25f), FloatToInt(instance->position.y))== 1 
-    || IsoTileGet(FloatToInt(instance->position.x + 0.75f), FloatToInt(instance->position.y)) == 1)
-  {
-    //printf("down");
-    instance->position.y = IntToFloat(FloatToInt(instance->position.y + 0.5f));
+  /* Check the collision flags and act based on them */
 
-    PhysicsIsInsideTile(instance);
-	  if (instance->insideTile)
-	  {
-      instance->position.y = instance->position.y = IntToFloat(FloatToInt(instance->position.y + 1.0f));
-      instance->insideTile = 0;
-      printf("bounce FROM down");
-	  }
+  /* If collising on left or right, stop moving in that direction and snap position */
+  if (collisionFields & COLLISION_LEFT)
+  {
+    //_instance->velocity.x = 0;          /* Stop moving left */
+    //_instance->position.x += 1;          /* Shift the position back*/
+    SnaptoCell(&_instance->position.x, COLLISION_LEFT); /* Snap the x position */
+
+    //PhysicsIsInsideTile(_instance);
+    //if (_instance->insideTile)
+    //{
+    //  _instance->position.x = IntToFloat(FloatToInt(_instance->position.x + 0.5f));
+    //  _instance->insideTile = 0;
+    //  printf("bounce FROM left");
+    //}
   }
+
+  /* If collising on left or right, stop moving in that direction and snap position */
+  else if (collisionFields & COLLISION_RIGHT)
+  {
+    //_instance->velocity.x = 0;          /* Stop moving right */
+    //_instance->position.x -= 1;          /* Shift the position back*/
+    SnaptoCell(&_instance->position.x, COLLISION_RIGHT); /* Snap the x position */
+
+    //PhysicsIsInsideTile(_instance);
+    //if (_instance->insideTile)
+    //{
+    //  _instance->position.x = IntToFloat(FloatToInt(_instance->position.x - 1.f));
+    //  _instance->insideTile = 0;
+    //  printf("bounce FROM right");
+    //}
+  }
+
+  /* If collising on top, stop moving in that direction and snap position */
+  if (collisionFields & COLLISION_TOP)
+  {
+    //_instance->velocity.y = 0;          /* Stop moving right */
+                                        //_instance->position.x -= 1;          /* Shift the position back*/
+    SnaptoCell(&_instance->position.y, COLLISION_TOP); /* Snap the x position */
+
+    //PhysicsIsInsideTile(_instance);
+    //if (_instance->insideTile)
+    //{
+    //  _instance->position.x = IntToFloat(FloatToInt(_instance->position.y - 1.f));
+    //  _instance->insideTile = 0;
+    //  printf("bounce FROM top");
+    //}
+  }
+
+  /* If collising on bottom, stop moving in that direction and snap position */
+  else if (collisionFields & COLLISION_BOTTOM)
+  {
+    //_instance->velocity.y = 0;          /* Stop moving right */
+                                        //_instance->position.x -= 1;          /* Shift the position back*/
+    SnaptoCell(&_instance->position.y, COLLISION_BOTTOM); /* Snap the x position */
+
+    //PhysicsIsInsideTile(_instance);
+    //if (_instance->insideTile)
+    //{
+    //  _instance->position.x = IntToFloat(FloatToInt(_instance->position.y + 1.f));
+    //  _instance->insideTile = 0;
+    //  printf("bounce FROM bottom");
+    //}
+  }
+  
+  ////Collision test for left
+  //if (IsoTileGet(
+  //  FloatToInt(instance->position.x), 
+  //  FloatToInt(instance->position.y + 0.25f)) == 1
+  //  ||
+  //  IsoTileGet(FloatToInt(instance->position.x), 
+  //    FloatToInt(instance->position.y + 0.75f)) == 1)
+  //{
+  //  //printf("left");
+  //  instance->position.x = IntToFloat(FloatToInt(instance->position.x + 0.5f));
+
+  //  // This chunk handles if the player would be inside the tilemap
+  //  // Basically more precise adjustments, same for all four directions
+  //  PhysicsIsInsideTile(instance);
+	 // if (instance->insideTile)
+	 // {
+  //    instance->position.x = IntToFloat(FloatToInt(instance->position.x + 0.5f));
+  //    instance->insideTile = 0;
+  //    printf("bounce FROM left");
+	 // }
+  //}
+
+  ////positive x (right):
+  //if (IsoTileGet(
+  //  FloatToInt(instance->position.x + 1),
+  //  FloatToInt(instance->position.y + 0.25f))
+  //  == 1 || IsoTileGet(
+  //    FloatToInt(instance->position.x + 1),
+  //    FloatToInt(instance->position.y + 0.75f))
+  //  == 1)
+  //{
+  //  //printf("right");
+  //  instance->position.x = IntToFloat(FloatToInt(instance->position.x + 0.5f));
+
+  //  PhysicsIsInsideTile(instance);
+	 // if (instance->insideTile)
+	 // {
+  //    instance->position.x = IntToFloat(FloatToInt(instance->position.x + -0.5f));
+  //    instance->insideTile = 0;
+  //    printf("bounce FROM right");
+	 // }
+  //}
+
+  ////positive y (up):
+  //if (IsoTileGet(
+  //  FloatToInt(instance->position.x + 0.25f),
+  //  FloatToInt(instance->position.y + 1))
+  //  == 1 || IsoTileGet(
+  //    FloatToInt(instance->position.x + 0.75f),
+  //    FloatToInt(instance->position.y + 1))
+  //  == 1)
+  //{
+  //  //printf("up");
+  //  instance->position.y = IntToFloat(FloatToInt(instance->position.y + 0.5f));
+
+  //  PhysicsIsInsideTile(instance);
+	 // if (instance->insideTile)
+	 // {
+  //    instance->position.y = instance->position.y = IntToFloat(FloatToInt(instance->position.y + -1.0f));
+  //    instance->insideTile = 0;
+  //    printf("bounce FROM up");
+	 // }
+  //}
+
+  ////negative y (down)
+  //if (IsoTileGet(FloatToInt(instance->position.x + 0.25f), FloatToInt(instance->position.y))== 1 
+  //  || IsoTileGet(FloatToInt(instance->position.x + 0.75f), FloatToInt(instance->position.y)) == 1)
+  //{
+  //  //printf("down");
+  //  instance->position.y = IntToFloat(FloatToInt(instance->position.y + 0.5f));
+
+  //  PhysicsIsInsideTile(instance);
+	 // if (instance->insideTile)
+	 // {
+  //    instance->position.y = IntToFloat(FloatToInt(instance->position.y + 1.0f));
+  //    instance->insideTile = 0;
+  //    printf("bounce FROM down");
+	 // }
+  //}
 }
 
 /*
@@ -227,10 +441,12 @@ static void PhysicsTileCollisions(PhysicsObject* _instance)
 static void PhysicsIsInsideTile(PhysicsObject* _instance)
 {
   if (IsoTileGet(FloatToInt(_instance->position.x), FloatToInt(_instance->position.y)) == 1
-    || IsoTileGet(FloatToInt(_instance->position.x), FloatToInt(_instance->position.y)) == 1)
+    || IsoTileGet(FloatToInt(_instance->position.x), FloatToInt(_instance->position.y)) == 1)  /* redundant? */
   {
     _instance->insideTile = 1;
   }
+  else
+    _instance->insideTile = 0;
 }
 
 /*!
