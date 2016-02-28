@@ -31,8 +31,18 @@ static Animation* animWalkUpRight;
 static Animation* animWalkDownRight;
 static Animation* animWalkDownLeft;
 
+static Animation* animIdleDown;
+static Animation* animIdleLeft;
+static Animation* animIdleRight;
+static Animation* animIdleUp;
+static Animation* animIdleDownLeft;
+static Animation* animIdleDownRight;
+static Animation* animIdleUpLeft;
+static Animation* animIdleUpRight;
+
 static Sprite* playerSprite;
 
+//the following enums are used for the player action bit field:
 static enum directions 
 {
   PLAYER_LEFT = 1,
@@ -40,7 +50,21 @@ static enum directions
   PLAYER_UP = 4,
   PLAYER_DOWN = 8
 };
-static int playerDirection;
+
+static enum actions
+{
+  PLAYER_IDLE = 16,
+  PLAYER_WALK = 32,
+  PLAYER_ATTACK = 64
+};
+
+static unsigned int playerAction; //bit field for player action flags:
+/*!
+Bits 1-4 are for direction (going left/right/up/down or some combination of those)
+Bit 5 is active if the player is idle
+Bit 6 is active if the player is moving
+Bit 7 is active if the player is attacking
+*/
 
 /*!
 \brief Call at the start of a level to initialize player values.
@@ -63,49 +87,98 @@ void PlayerInit()
 
   
   //load animations:
-  animWalkDown = GCreateAnimation(12,
+  AEGfxVertexList* walkMesh = GCreateMesh(256.f, 256.f, 12, 1); //mesh for walking (12 frames)
+  AEGfxVertexList* idleMesh = GCreateMesh(256.f, 256.f, 1, 1); //mesh for idle (1 frames)
+  int walkFrames = 12; //number of frames in walk animation
+  int idleFrames = 1; //number of frames in idle animation
+
+  //load walking:
+  animWalkDown = GCreateAnimation(walkFrames,
     GCreateTexture("animations/player/walkDown.png"),
-    GCreateMesh(192.f, 192.f, 12, 1),
+    walkMesh,
     1);
 
-  animWalkLeft = GCreateAnimation(12,
+  animWalkLeft = GCreateAnimation(walkFrames,
     GCreateTexture("animations/player/walkLeft.png"),
-    GCreateMesh(192.f, 192.f, 12, 1),
+    walkMesh,
     1);
 
-  animWalkUp = GCreateAnimation(12,
+  animWalkUp = GCreateAnimation(walkFrames,
     GCreateTexture("animations/player/walkUp.png"),
-    GCreateMesh(192.f, 192.f, 12, 1),
+    walkMesh,
     1);
 
-  animWalkRight = GCreateAnimation(12,
+  animWalkRight = GCreateAnimation(walkFrames,
     GCreateTexture("animations/player/walkRight.png"),
-    GCreateMesh(192.f, 192.f, 12, 1),
+    walkMesh,
     1);
 
-  animWalkUpRight = GCreateAnimation(12,
+  animWalkUpRight = GCreateAnimation(walkFrames,
     GCreateTexture("animations/player/walkUpRight.png"),
-    GCreateMesh(192.f, 192.f, 12, 1),
+    walkMesh,
     1);
 
-  animWalkUpLeft = GCreateAnimation(12,
+  animWalkUpLeft = GCreateAnimation(walkFrames,
     GCreateTexture("animations/player/walkUpLeft.png"),
-    GCreateMesh(192.f, 192.f, 12, 1),
+    walkMesh,
     1);
 
-  animWalkDownRight = GCreateAnimation(12,
+  animWalkDownRight = GCreateAnimation(walkFrames,
     GCreateTexture("animations/player/walkDownRight.png"),
-    GCreateMesh(192.f, 192.f, 12, 1),
+    walkMesh,
     1);
 
-  animWalkDownLeft = GCreateAnimation(12,
+  animWalkDownLeft = GCreateAnimation(walkFrames,
     GCreateTexture("animations/player/walkDownLeft.png"),
-    GCreateMesh(192.f, 192.f, 12, 1),
+    walkMesh,
     1);
 
-  playerSprite = GCreateSprite(0, 0, animWalkLeft, 2);
+  //
+
+  animIdleDown = GCreateAnimation(idleFrames,
+    GCreateTexture("animations/player/idleDown.png"),
+    idleMesh,
+    1);
+
+  animIdleLeft = GCreateAnimation(idleFrames,
+    GCreateTexture("animations/player/idleLeft.png"),
+    idleMesh,
+    1);
+
+  animIdleUp = GCreateAnimation(idleFrames,
+    GCreateTexture("animations/player/idleUp.png"),
+    idleMesh,
+    1);
+
+  animIdleRight = GCreateAnimation(idleFrames,
+    GCreateTexture("animations/player/idleRight.png"),
+    idleMesh,
+    1);
+
+  animIdleUpRight = GCreateAnimation(idleFrames,
+    GCreateTexture("animations/player/idleUpRight.png"),
+    idleMesh,
+    1);
+
+  animIdleUpLeft = GCreateAnimation(idleFrames,
+    GCreateTexture("animations/player/idleUpLeft.png"),
+    idleMesh,
+    1);
+
+  animIdleDownRight = GCreateAnimation(idleFrames,
+    GCreateTexture("animations/player/idleDownRight.png"),
+    idleMesh,
+    1);
+
+  animIdleDownLeft = GCreateAnimation(idleFrames,
+    GCreateTexture("animations/player/idleDownLeft.png"),
+    idleMesh,
+    1);
+
+  playerSprite = player->sprite;//GCreateSprite(0, 0, animWalkLeft, 2); //re-add this code instead of directly pointing to player sprite if you want collision shape under player
+  playerSprite->frameDelay = 3;
   playerSprite->offset.x = 0;
-  playerSprite->offset.y = 64;
+  playerSprite->offset.y = 96;
 }
 
 /*!
@@ -165,36 +238,48 @@ void PlayerInput()
   Vector2D input = Vec2(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41),
     ((float)(AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53)) / 2));
 
-  //transform vector to use world (iso) coordinates while visually appearing to be straight orthogonal
+  
   if (input.x != 0 || input.y != 0)
   {
     Vector2DNormalize(&input, &input);
     Vector2DScale(&input, &input, 10);
-    playerDirection = 0;
+
+    //set player animation flags:
+    playerAction = PLAYER_WALK;
+    
+    //player directions:
     if (input.x > 0)
     {
-      playerDirection += PLAYER_RIGHT;
+      playerAction += PLAYER_RIGHT;
     } 
     else if (input.x < 0)
     {
-      playerDirection += PLAYER_LEFT;
+      playerAction += PLAYER_LEFT;
     }
 
     if (input.y > 0)
     {
-      playerDirection += PLAYER_UP;
+      playerAction += PLAYER_UP;
     }
     else if (input.y < 0)
     {
-      playerDirection += PLAYER_DOWN;
+      playerAction += PLAYER_DOWN;
     }
   } 
   else
   {
-    playerDirection = 0;
+
+    //if idle, set idle flag and remove walk flag
+    if (!(playerAction & PLAYER_IDLE)) //called on the frame where player goes from walk to idle
+    {
+      playerAction -= PLAYER_WALK;
+      playerAction += PLAYER_IDLE;
+    }
   }
+  printf("%i \n", playerAction);
 
   //update positions
+  //transform vector to use world (iso) coordinates while visually appearing to be straight orthogonal
   player->physics->velocity.x += IsoScreenToWorld(&input).x * playerAccel; //= IsoScreenToWorld(&input);
   player->physics->velocity.y += IsoScreenToWorld(&input).y * playerAccel;
   Vector2DScale(&(player->physics->velocity), &(player->physics->velocity), playerDrag);
@@ -228,32 +313,62 @@ void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _oth
 
 void PlayerAnimations()
 {
-  //printf("%i", playerDirection);
-  switch (playerDirection)
+  //printf("%i", playerAction);
+  switch (playerAction)
   {
-  case PLAYER_DOWN:
+  //PLAYER WALKING:
+  case PLAYER_WALK + PLAYER_DOWN:
     playerSprite->animation = animWalkDown;
     break;
-  case PLAYER_DOWN + PLAYER_LEFT:
+  case PLAYER_WALK + PLAYER_DOWN + PLAYER_LEFT:
     playerSprite->animation = animWalkDownLeft;
     break;
-  case PLAYER_LEFT:
+  case PLAYER_WALK + PLAYER_LEFT:
     playerSprite->animation = animWalkLeft;
     break;
-  case PLAYER_DOWN + PLAYER_RIGHT:
+  case PLAYER_WALK + PLAYER_DOWN + PLAYER_RIGHT:
     playerSprite->animation = animWalkDownRight;
     break;
-  case PLAYER_RIGHT:
+  case PLAYER_WALK + PLAYER_RIGHT:
     playerSprite->animation = animWalkRight;
     break;
-  case PLAYER_UP:
+  case PLAYER_WALK + PLAYER_UP:
     playerSprite->animation = animWalkUp;
     break;
-  case PLAYER_UP + PLAYER_LEFT:
+  case PLAYER_WALK + PLAYER_UP + PLAYER_LEFT:
     playerSprite->animation = animWalkUpLeft;
     break;
-  case PLAYER_UP + PLAYER_RIGHT:
+  case PLAYER_WALK + PLAYER_UP + PLAYER_RIGHT:
     playerSprite->animation = animWalkUpRight;
+    break;
+
+
+  //PLAYER IDLE:
+    
+  case PLAYER_IDLE + PLAYER_DOWN:
+    playerSprite->animation = animIdleDown;
+    break;
+  case PLAYER_IDLE + PLAYER_DOWN + PLAYER_LEFT:
+    playerSprite->animation = animIdleDownLeft;
+    break;
+  case PLAYER_IDLE + PLAYER_LEFT:
+    playerSprite->animation = animIdleLeft;
+    break;
+  case PLAYER_IDLE + PLAYER_DOWN + PLAYER_RIGHT:
+    playerSprite->animation = animIdleDownRight;
+    break;
+  case PLAYER_IDLE + PLAYER_RIGHT:
+    playerSprite->animation = animIdleRight;
+    break;
+  case PLAYER_IDLE + PLAYER_UP:
+    printf("A");
+    playerSprite->animation = animIdleUp;
+    break;
+  case PLAYER_IDLE + PLAYER_UP + PLAYER_LEFT:
+    playerSprite->animation = animIdleUpLeft;
+    break;
+  case PLAYER_IDLE + PLAYER_UP + PLAYER_RIGHT:
+    playerSprite->animation = animIdleUpRight;
     break;
   }
   playerSprite->x = player->sprite->x;
