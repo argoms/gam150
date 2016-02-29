@@ -5,6 +5,7 @@
 #include "Isometric.h"
 #include "GameLevel.h"
 #include "AEEngine.h"
+#include <math.h>
 
 extern double frameTime;
 
@@ -22,8 +23,9 @@ static float playerMaxSpeed;
 static float playerAccel;
 static float playerDrag;
 
-//prototypes:
+//prototypes for static funcs:
 static void PlayerAttack();
+static void SnapVector(Vector2D* _input);
 
 //animations:
 static Animation* animWalkDown;
@@ -268,9 +270,11 @@ void PlayerInput()
   //player movement:
   if (!(playerAction & PLAYER_SWORD))
   {
+    playerSprite->frameDelay = 3;
     //get movement vector:
     Vector2D input = Vec2(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41),
       ((float)(AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53)) / 2));
+    
 
 
     if (input.x != 0 || input.y != 0)
@@ -318,7 +322,8 @@ void PlayerInput()
   }
   else if(playerAction & PLAYER_SWORD)
   {
-    printf("AAA");
+    playerSprite->frameDelay = 1;
+    //printf("AAA");
     //stop animation after it's done
     if (playerSprite->frame == 12)
     {
@@ -334,6 +339,53 @@ void PlayerInput()
 
 
 
+}
+
+/*!
+\brief internal, used to snap player to direction given by input vector
+
+\param _input Vector between player (center of screen) and mouse
+*/
+static void SnapVector(Vector2D* _input)
+{
+  //get input dir
+  float directionAngle = atan2f(_input->y, _input->x);
+  float fortyFiveDegrees = 0.785398;
+  directionAngle = lroundf(directionAngle / fortyFiveDegrees) * fortyFiveDegrees;
+  
+  //note: probably more efficient to switch
+  //convert mouse angle into world angle (iso projection means x is twice as much as y)
+  _input->x *= 2;
+  Vector2DNormalize(_input, _input);
+  _input->x = cosf(directionAngle);
+  _input->y = sinf(directionAngle);
+
+  //change player sprite direction:
+  playerAction = playerAction & (~(PLAYER_LEFT + PLAYER_RIGHT + PLAYER_UP + PLAYER_DOWN));
+  printf("playeraction: %i", playerAction);
+  if (_input->x > EPSILON)
+  {
+    playerAction += PLAYER_RIGHT;
+    //printf("ri");
+  }
+  if (_input->x < -EPSILON)
+  {
+    playerAction += PLAYER_LEFT;
+   // printf("li");
+  }
+  if (_input->y > EPSILON)
+  {
+    playerAction += PLAYER_UP;
+    //printf("ui");
+  }
+  if (_input->y < -EPSILON)
+  {
+    playerAction += PLAYER_DOWN;
+    //printf("di");
+  }
+  
+  //printf("x: %f, y: %f |", _input->x, _input->y);
+  //printf("%f, AAA", directionAngle * (180 / 3.14159265358979));
 }
 
 /*!
@@ -360,11 +412,13 @@ static void PlayerAttack()
   //printf("%i, %i|||", mouseX, mouseY);
   //AEGfxConvertScreenCoordinatesToWorld(mouseX, mouseY, &(mousePos.x), &(mousePos.y));
   Vector2D mousePos = Vec2(mouseX, mouseY * -1);
+  SnapVector(&mousePos);
 
   mousePos = IsoScreenToWorld(&mousePos);
   Vector2DNormalize(&mousePos, &mousePos);
 
-  EntityApplyKnockback(player->entity, &mousePos);
+  
+  //EntityApplyKnockback(player->entity, &mousePos);
 
   attackCooldown = attackCooldownLength;
   GameObject* tracer = GameObjectCreate(
@@ -384,7 +438,7 @@ static void PlayerAttack()
 void TracerSimulate(GameObject* _self)
 {
   //printf("%p || %p \n", &_self, &player);
-  GameObjectDestroy(&_self);
+  //GameObjectDestroy(&_self);
 }
 
 void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _otherObject)
