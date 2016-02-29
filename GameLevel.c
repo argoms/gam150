@@ -62,7 +62,7 @@ void GameLevelInit(void)
   PlayerInit();
 
   //create door object:
-  GameObject* door = GameObjectCreate(PhysicsCreateObject(Vec2(5, 4), 1), GCreateSprite(0, 40, anim2, 1), 0, entity_door);
+  GameObject* door = GameObjectCreate(PhysicsCreateObject(Vec2(6, 4), 1), GCreateSprite(0, 40, anim2, 1), 0, entity_door);
   door->physics->onCollision = &DoorDefaultOnCollision;
   door->simulate = NULL;
 
