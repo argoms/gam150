@@ -101,7 +101,7 @@ void PlayerInit()
   
   //load animations:
   AEGfxVertexList* walkMesh = GCreateMesh(256.f, 256.f, 12, 1); //mesh for walking (12 frames)
-  AEGfxVertexList* swordMesh = GCreateMesh(256.f, 256.f, 13, 1); //mesh for sword (13 frames)
+  AEGfxVertexList* swordMesh = GCreateMesh(256.f, 256.f, 1, 13); //mesh for sword (13 frames)
   AEGfxVertexList* idleMesh = GCreateMesh(256.f, 256.f, 1, 1); //mesh for idle (1 frames)
   int walkFrames = 12; //number of frames in walk animation
   int idleFrames = 1; //number of frames in idle animation
@@ -191,45 +191,45 @@ void PlayerInit()
     1);
 
   //sword:
-  animSwordDown = GCreateAnimation(swordFrames,
+  animSwordDown = GCreateAnimation(1,
     GCreateTexture("animations/player/swordDown.png"),
     swordMesh,
-    1);
+    swordFrames);
 
-  animSwordLeft = GCreateAnimation(swordFrames,
+  animSwordLeft = GCreateAnimation(1,
     GCreateTexture("animations/player/swordLeft.png"),
     swordMesh,
-    1);
+    swordFrames);
 
-  animSwordUp = GCreateAnimation(swordFrames,
+  animSwordUp = GCreateAnimation(1,
     GCreateTexture("animations/player/swordUp.png"),
     swordMesh,
-    1);
+    swordFrames);
 
-  animSwordRight = GCreateAnimation(swordFrames,
+  animSwordRight = GCreateAnimation(1,
     GCreateTexture("animations/player/swordRight.png"),
     swordMesh,
-    1);
+    swordFrames);
 
-  animSwordUpRight = GCreateAnimation(swordFrames,
+  animSwordUpRight = GCreateAnimation(1,
     GCreateTexture("animations/player/swordUpRight.png"),
     swordMesh,
-    1);
+    swordFrames);
 
-  animSwordUpLeft = GCreateAnimation(swordFrames,
+  animSwordUpLeft = GCreateAnimation(1,
     GCreateTexture("animations/player/swordUpLeft.png"),
     swordMesh,
-    1);
+    swordFrames);
 
-  animSwordDownRight = GCreateAnimation(swordFrames,
+  animSwordDownRight = GCreateAnimation(1,
     GCreateTexture("animations/player/swordDownRight.png"),
     swordMesh,
-    1);
+    swordFrames);
 
-  animSwordDownLeft = GCreateAnimation(swordFrames,
+  animSwordDownLeft = GCreateAnimation(1,
     GCreateTexture("animations/player/swordDownLeft.png"),
     swordMesh,
-    1);
+    swordFrames);
 
   playerSprite = player->sprite;
   //playerSprite = GCreateSprite(0, 0, animWalkLeft, 2); //re-add this code instead of directly pointing to player sprite if you want collision shape under player
@@ -316,6 +316,16 @@ void PlayerInput()
     player->physics->velocity.x += IsoScreenToWorld(&input).x * playerAccel; //= IsoScreenToWorld(&input);
     player->physics->velocity.y += IsoScreenToWorld(&input).y * playerAccel;
   }
+  else if(playerAction & PLAYER_SWORD)
+  {
+    printf("AAA");
+    //stop animation after it's done
+    if (playerSprite->frame == 12)
+    {
+      playerAction -= PLAYER_SWORD;
+      playerAction += PLAYER_IDLE;
+    }
+  }
 
   
   Vector2DScale(&(player->physics->velocity), &(player->physics->velocity), playerDrag);
@@ -331,9 +341,18 @@ void PlayerInput()
 */
 static void PlayerAttack()
 {
+  //set up animation:
+  playerAction = playerAction & (PLAYER_DOWN + PLAYER_UP + PLAYER_LEFT + PLAYER_RIGHT); //strip direction from current flags
+  playerAction += PLAYER_SWORD;
+  playerSprite->frame = 0;
+
+  
+
+
   AEInputGetCursorPosition(&mouseX, &mouseY);
 
   //HARD CODING MAGIC NUMBERS SPOOOOOKY
+  //these are half screen height/widths
   mouseX += -400;
   mouseY += -300;
   /***/
@@ -344,6 +363,8 @@ static void PlayerAttack()
 
   mousePos = IsoScreenToWorld(&mousePos);
   Vector2DNormalize(&mousePos, &mousePos);
+
+  EntityApplyKnockback(player->entity, &mousePos);
 
   attackCooldown = attackCooldownLength;
   GameObject* tracer = GameObjectCreate(
