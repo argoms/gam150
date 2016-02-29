@@ -8,6 +8,8 @@ Basic physics/collision implementation.
 Changelog:
 2/26/16   Matt - Modified tilecollision checking functions.
 2/29/16   Matt - Finished tilecollision fixes
+                 Added circle to rect collision function
+                 Added coordinate snapping function
 */
 #include "Physics.h"
 #include "Isometric.h"
@@ -53,6 +55,7 @@ PhysicsObject* PhysicsCreateObject(Vector2D _position, float _size)
   zeroVec.x = 0;
   zeroVec.y = 0;
   newObject->position = _position;
+  newObject->lastValidPosition = _position;
   newObject->size = _size;
   newObject->velocity = zeroVec;
   newObject->next = NULL;
