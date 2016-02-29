@@ -22,6 +22,10 @@ static float playerMaxSpeed;
 static float playerAccel;
 static float playerDrag;
 
+//prototypes:
+static void PlayerAttack();
+
+//animations:
 static Animation* animWalkDown;
 static Animation* animWalkLeft;
 static Animation* animWalkUp;
@@ -40,6 +44,15 @@ static Animation* animIdleDownRight;
 static Animation* animIdleUpLeft;
 static Animation* animIdleUpRight;
 
+static Animation* animSwordDown;
+static Animation* animSwordLeft;
+static Animation* animSwordRight;
+static Animation* animSwordUp;
+static Animation* animSwordDownLeft;
+static Animation* animSwordDownRight;
+static Animation* animSwordUpLeft;
+static Animation* animSwordUpRight;
+
 static Sprite* playerSprite;
 
 //the following enums are used for the player action bit field:
@@ -55,7 +68,7 @@ static enum actions
 {
   PLAYER_IDLE = 16,
   PLAYER_WALK = 32,
-  PLAYER_ATTACK = 64
+  PLAYER_SWORD = 64
 };
 
 static unsigned int playerAction; //bit field for player action flags:
@@ -88,9 +101,11 @@ void PlayerInit()
   
   //load animations:
   AEGfxVertexList* walkMesh = GCreateMesh(256.f, 256.f, 12, 1); //mesh for walking (12 frames)
+  AEGfxVertexList* swordMesh = GCreateMesh(256.f, 256.f, 13, 1); //mesh for sword (13 frames)
   AEGfxVertexList* idleMesh = GCreateMesh(256.f, 256.f, 1, 1); //mesh for idle (1 frames)
   int walkFrames = 12; //number of frames in walk animation
   int idleFrames = 1; //number of frames in idle animation
+  int swordFrames = 13;
 
   //load walking:
   animWalkDown = GCreateAnimation(walkFrames,
@@ -133,7 +148,7 @@ void PlayerInit()
     walkMesh,
     1);
 
-  //
+  //idle:
 
   animIdleDown = GCreateAnimation(idleFrames,
     GCreateTexture("animations/player/idleDown.png"),
@@ -175,10 +190,54 @@ void PlayerInit()
     idleMesh,
     1);
 
-  playerSprite = player->sprite;//GCreateSprite(0, 0, animWalkLeft, 2); //re-add this code instead of directly pointing to player sprite if you want collision shape under player
+  //sword:
+  animSwordDown = GCreateAnimation(swordFrames,
+    GCreateTexture("animations/player/swordDown.png"),
+    swordMesh,
+    1);
+
+  animSwordLeft = GCreateAnimation(swordFrames,
+    GCreateTexture("animations/player/swordLeft.png"),
+    swordMesh,
+    1);
+
+  animSwordUp = GCreateAnimation(swordFrames,
+    GCreateTexture("animations/player/swordUp.png"),
+    swordMesh,
+    1);
+
+  animSwordRight = GCreateAnimation(swordFrames,
+    GCreateTexture("animations/player/swordRight.png"),
+    swordMesh,
+    1);
+
+  animSwordUpRight = GCreateAnimation(swordFrames,
+    GCreateTexture("animations/player/swordUpRight.png"),
+    swordMesh,
+    1);
+
+  animSwordUpLeft = GCreateAnimation(swordFrames,
+    GCreateTexture("animations/player/swordUpLeft.png"),
+    swordMesh,
+    1);
+
+  animSwordDownRight = GCreateAnimation(swordFrames,
+    GCreateTexture("animations/player/swordDownRight.png"),
+    swordMesh,
+    1);
+
+  animSwordDownLeft = GCreateAnimation(swordFrames,
+    GCreateTexture("animations/player/swordDownLeft.png"),
+    swordMesh,
+    1);
+
+  playerSprite = player->sprite;
+  //playerSprite = GCreateSprite(0, 0, animWalkLeft, 2); //re-add this code instead of directly pointing to player sprite if you want collision shape under player
   playerSprite->frameDelay = 3;
   playerSprite->offset.x = 0;
-  playerSprite->offset.y = 96;
+  playerSprite->offset.y = 80;
+
+  playerAction = PLAYER_IDLE + PLAYER_DOWN;
 }
 
 /*!
@@ -203,100 +262,108 @@ void PlayerInput()
   //attacking:
   if (attackCooldown < 0 && AEInputCheckCurr(1))
   {
-    
-
-    AEInputGetCursorPosition(&mouseX, &mouseY);
-
-    //HARD CODING MAGIC NUMBERS SPOOOOOKY
-    mouseX += -400;
-    mouseY += -300;
-    /***/
-
-    //printf("%i, %i|||", mouseX, mouseY);
-    //AEGfxConvertScreenCoordinatesToWorld(mouseX, mouseY, &(mousePos.x), &(mousePos.y));
-    Vector2D mousePos = Vec2(mouseX, mouseY * -1);
-    
-    mousePos = IsoScreenToWorld(&mousePos);
-    Vector2DNormalize(&mousePos, &mousePos);
-
-    attackCooldown = attackCooldownLength;
-    GameObject* tracer = GameObjectCreate(
-      PhysicsCreateObject(Vec2(player->physics->position.x + mousePos.x, player->physics->position.y + mousePos.y), 1),
-      GCreateSprite(0, 40, tracerAnimation, 1),
-      0,
-      entity_friendlyProjectile);
-    tracer->syncSpritePhysics = 1;
-    tracer->simulate = &TracerSimulate;
-    tracer->physics->onCollision = &TracerFriendlyProjectileCollision;
-
-    printf("M1\n");
+    PlayerAttack();
   }
 
   //player movement:
+  if (!(playerAction & PLAYER_SWORD))
+  {
+    //get movement vector:
+    Vector2D input = Vec2(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41),
+      ((float)(AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53)) / 2));
 
-  //get movement vector:
-  Vector2D input = Vec2(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41),
-    ((float)(AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53)) / 2));
+
+    if (input.x != 0 || input.y != 0)
+    {
+      Vector2DNormalize(&input, &input);
+      Vector2DScale(&input, &input, 10);
+
+      //set player animation flags:
+      playerAction = PLAYER_WALK;
+
+      //player directions:
+      if (input.x > 0)
+      {
+        playerAction += PLAYER_RIGHT;
+      }
+      else if (input.x < 0)
+      {
+        playerAction += PLAYER_LEFT;
+      }
+
+      if (input.y > 0)
+      {
+        playerAction += PLAYER_UP;
+      }
+      else if (input.y < 0)
+      {
+        playerAction += PLAYER_DOWN;
+      }
+    }
+    else
+    {
+
+      //if idle, set idle flag and remove walk flag
+      if (!(playerAction & PLAYER_IDLE)) //called on the frame where player goes from walk to idle
+      {
+        playerAction -= PLAYER_WALK;
+        playerAction += PLAYER_IDLE;
+      }
+    }
+
+    //update positions
+    //transform vector to use world (iso) coordinates while visually appearing to be straight orthogonal
+    player->physics->velocity.x += IsoScreenToWorld(&input).x * playerAccel; //= IsoScreenToWorld(&input);
+    player->physics->velocity.y += IsoScreenToWorld(&input).y * playerAccel;
+  }
 
   
-  if (input.x != 0 || input.y != 0)
-  {
-    Vector2DNormalize(&input, &input);
-    Vector2DScale(&input, &input, 10);
-
-    //set player animation flags:
-    playerAction = PLAYER_WALK;
-    
-    //player directions:
-    if (input.x > 0)
-    {
-      playerAction += PLAYER_RIGHT;
-    } 
-    else if (input.x < 0)
-    {
-      playerAction += PLAYER_LEFT;
-    }
-
-    if (input.y > 0)
-    {
-      playerAction += PLAYER_UP;
-    }
-    else if (input.y < 0)
-    {
-      playerAction += PLAYER_DOWN;
-    }
-  } 
-  else
-  {
-
-    //if idle, set idle flag and remove walk flag
-    if (!(playerAction & PLAYER_IDLE)) //called on the frame where player goes from walk to idle
-    {
-      playerAction -= PLAYER_WALK;
-      playerAction += PLAYER_IDLE;
-    }
-  }
-  printf("%i \n", playerAction);
-
-  //update positions
-  //transform vector to use world (iso) coordinates while visually appearing to be straight orthogonal
-  player->physics->velocity.x += IsoScreenToWorld(&input).x * playerAccel; //= IsoScreenToWorld(&input);
-  player->physics->velocity.y += IsoScreenToWorld(&input).y * playerAccel;
   Vector2DScale(&(player->physics->velocity), &(player->physics->velocity), playerDrag);
   
-  GSortSprite(player->sprite, player->physics->velocity.y);
+  GSortSprite(playerSprite, player->physics->velocity.y); //NOTE: having to do this hints at some bugginess somewhere
 
 
 
 }
 
 /*!
+\brief Contains behavior for when the player attacks
+*/
+static void PlayerAttack()
+{
+  AEInputGetCursorPosition(&mouseX, &mouseY);
+
+  //HARD CODING MAGIC NUMBERS SPOOOOOKY
+  mouseX += -400;
+  mouseY += -300;
+  /***/
+
+  //printf("%i, %i|||", mouseX, mouseY);
+  //AEGfxConvertScreenCoordinatesToWorld(mouseX, mouseY, &(mousePos.x), &(mousePos.y));
+  Vector2D mousePos = Vec2(mouseX, mouseY * -1);
+
+  mousePos = IsoScreenToWorld(&mousePos);
+  Vector2DNormalize(&mousePos, &mousePos);
+
+  attackCooldown = attackCooldownLength;
+  GameObject* tracer = GameObjectCreate(
+    PhysicsCreateObject(Vec2(player->physics->position.x + mousePos.x, player->physics->position.y + mousePos.y), 1),
+    GCreateSprite(0, 40, tracerAnimation, 1),
+    0,
+    entity_friendlyProjectile);
+  tracer->syncSpritePhysics = 1;
+  tracer->simulate = &TracerSimulate;
+  tracer->physics->onCollision = &TracerFriendlyProjectileCollision;
+
+  printf("M1\n");
+}
+/*!
 \brief simulates attack tracers, at the moment they just die immediately
 */
 void TracerSimulate(GameObject* _self)
 {
   //printf("%p || %p \n", &_self, &player);
-  //GameObjectDestroy(&_self);
+  GameObjectDestroy(&_self);
 }
 
 void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _otherObject)
@@ -311,6 +378,9 @@ void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _oth
   }
 }
 
+/*!
+\brief Handles player animation setting based on playerAction flags.
+*/
 void PlayerAnimations()
 {
   //printf("%i", playerAction);
@@ -361,7 +431,6 @@ void PlayerAnimations()
     playerSprite->animation = animIdleRight;
     break;
   case PLAYER_IDLE + PLAYER_UP:
-    printf("A");
     playerSprite->animation = animIdleUp;
     break;
   case PLAYER_IDLE + PLAYER_UP + PLAYER_LEFT:
@@ -369,6 +438,33 @@ void PlayerAnimations()
     break;
   case PLAYER_IDLE + PLAYER_UP + PLAYER_RIGHT:
     playerSprite->animation = animIdleUpRight;
+    break;
+
+    //PLAYER SWORD:
+
+  case PLAYER_SWORD + PLAYER_DOWN:
+    playerSprite->animation = animSwordDown;
+    break;
+  case PLAYER_SWORD + PLAYER_DOWN + PLAYER_LEFT:
+    playerSprite->animation = animSwordDownLeft;
+    break;
+  case PLAYER_SWORD + PLAYER_LEFT:
+    playerSprite->animation = animSwordLeft;
+    break;
+  case PLAYER_SWORD + PLAYER_DOWN + PLAYER_RIGHT:
+    playerSprite->animation = animSwordDownRight;
+    break;
+  case PLAYER_SWORD + PLAYER_RIGHT:
+    playerSprite->animation = animSwordRight;
+    break;
+  case PLAYER_SWORD + PLAYER_UP:
+    playerSprite->animation = animSwordUp;
+    break;
+  case PLAYER_SWORD + PLAYER_UP + PLAYER_LEFT:
+    playerSprite->animation = animSwordUpLeft;
+    break;
+  case PLAYER_SWORD + PLAYER_UP + PLAYER_RIGHT:
+    playerSprite->animation = animSwordUpRight;
     break;
   }
   playerSprite->x = player->sprite->x;
