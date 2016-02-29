@@ -468,7 +468,7 @@ I'm aware that the loop could probably be optimized way better. It kept breaking
 */
 void GSortSprite(Sprite* _sprite, float _direction)
 {
-  if (_direction >= 0) //assuming that the sprite is going upwards:
+  //if (_direction >= 0) //assuming that the sprite is going upwards:
   {
 
     if (_sprite->higherSprite && spriteList->first != _sprite) //if not at the top...
@@ -516,7 +516,7 @@ void GSortSprite(Sprite* _sprite, float _direction)
     }
 
   }
-  if (_direction <= 0) //same process, but going downwards instead of upwards
+  //if (_direction <= 0) //same process, but going downwards instead of upwards
   {
     if (_sprite->lowerSprite && spriteList->last != _sprite)
     {
