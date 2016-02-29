@@ -181,6 +181,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="MapGen.c" />
     <ClCompile Include="Physics.c" />
     <ClCompile Include="PlayerEntity.c" />
     <ClCompile Include="Text.c" />
@@ -200,6 +201,7 @@
     <ClInclude Include="Hazard.h" />
     <ClInclude Include="Isometric.h" />
     <ClInclude Include="LevelManager.h" />
+    <ClInclude Include="MapGen.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PlayerEntity.h" />
     <ClInclude Include="Text.h" />
