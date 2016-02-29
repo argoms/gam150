@@ -6,6 +6,7 @@
 Isometric tilemap implementation. Contains functions relating to tilemaps and isometric conversions.
 */
 #pragma once
+
 typedef struct IsoMap IsoMap;
 
 /*!
