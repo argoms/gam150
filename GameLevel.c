@@ -47,6 +47,9 @@ void GameLevelInit(void)
     GCreateMesh(128.f, 64.f, 1, 1),
     1);
 
+  
+  
+
 
   //set up player object:
   Entity* playerEntity = malloc(sizeof(Entity));
@@ -55,6 +58,7 @@ void GameLevelInit(void)
   player = GameObjectCreate(PhysicsCreateObject(Vec2(2, 2), 1), GCreateSprite(0, 40, anim, 1), playerEntity, entity_player);
   player->simulate = &PlayerSimulate;
   player->entity->onEntityKilled = &OnPlayerKilled;
+  
   PlayerInit();
 
   //create door object:
@@ -102,7 +106,6 @@ void GameLevelRun(void)
   //Vector2D a = Vec2(2, 2);
   
   //printf("a %f, %f \n", IsoWorldToScreen(&playerObject->position).x, IsoWorldToScreen(&playerObject->position).y);
-
   //InputHandle();
   GameObjectSimulate();
   PhysicsSimulate();

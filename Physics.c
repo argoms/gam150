@@ -131,7 +131,9 @@ void PhysicsSimulate()
 
       Vector2DAdd(&instance->position, &instance->position, &instance->velocity);
       PhysicsTileCollisions(instance);
-      
+
+      //printf("%f aaa \n", IsoWorldToScreen(&instance->velocity).y);
+      GSortSprite(instance->owner->sprite, IsoWorldToScreen(&instance->velocity).y);
       
       
       //printf("%3f | %3f", instance->position.x, instance->position.y);
