@@ -28,7 +28,7 @@ void GameLevelInit(void)
 {
   printf("game level init\n");
   PhysicsInit();
-  IsoInit(16, 16);
+  IsoInit(64, 64);
   
 
   AEGfxSetBackgroundColor(1.0f, 1.0f, 1.0f);
