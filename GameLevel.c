@@ -77,7 +77,7 @@ void GameLevelInit(void)
   enemy->physics->onCollision = &EnemyOnCollision; //ENEMY COLLISON BEHAVIOR GO HERE
   enemy->simulate = &EnemySimulate; //ENEMY CALLS THIS EVERY FRAME
   enemy->entity->onEntityKilled = &EnemyOnKilled;
-  enemy->target = door;
+  enemy->target = player;
 
   /**********************
   HAZARDS
