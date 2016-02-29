@@ -27,6 +27,7 @@ void IsoInit(int _mapHeight, int _mapWidth)
   int i = 0;
   int j = 0;
 
+  //create borders:
   while (i < _mapWidth)
   {
     j = 0;
@@ -103,7 +104,6 @@ IsoMap* IsoCreateNewMap(int _mapHeight, int _mapWidth)
   newObject->mapHeight = _mapHeight;
   newObject->mapWidth = _mapWidth;
   newObject->map = (int*) malloc(sizeof(int) * mapLength);
-  
   
 
   return newObject;
