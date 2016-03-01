@@ -438,7 +438,7 @@ static void PlayerAttack()
 void TracerSimulate(GameObject* _self)
 {
   //printf("%p || %p \n", &_self, &player);
-  //GameObjectDestroy(&_self);
+  GameObjectDestroy(&_self);
 }
 
 void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _otherObject)
