@@ -14,15 +14,31 @@ typedef struct GameObject GameObject;
 
 typedef struct GameObjectList GameObjectList;
 typedef struct EnemyAI EnemyAI;
+typedef struct EnemyContainer EnemyContainer;
 
 enum GameObjectNames {
   entity_player, /**< player*/
   entity_door, /**< inter-level door*/
   entity_enemy, /**< generic enemy*/
   entity_friendlyProjectile, /**<used for player projectiles/attack tracers etc.*/
+  entity_enemyProjectile,
   entity_button /**< generic button */
 };
 
+// SET THE NUMBERS IN COMMENTS FOR THE ENEMIES TEXT FILE
+enum EnemyType {
+  ENEMY_TYPE_MELEE,         // 1
+  ENEMY_TYPE_MELEE_BIG,     // 2
+  ENEMY_TYPE_MELEE_CHARGE,  // 3
+  ENEMY_TYPE_RANGED,        // 4
+  ENEMY_TYPE_RANGED_ARC,    // 5
+  ENEMY_TYPE_RANGED_HOMING, // 6
+
+  /* Special enemies */
+  ENEMY_TYPE_HEALER, // 7
+  ENEMY_TYPE_SLIME,  // 8
+  ENEMY_TYPE_SHIELD, // 9
+};
 
 struct EnemyAI
 {
@@ -50,6 +66,34 @@ struct GameObject
   GameObject* next; /**< pointer to previous object in list*/
   GameObject* prev; /**< pointer to next object in list*/
   void* miscData;   /**< void pointer to whatever we want*/
+};
+
+/*
+\brief Container for enemy specific stuff
+*/
+struct EnemyContainer
+{
+  int enemyType;
+
+  int health;
+
+  float chaseSpeed;
+  float patrolSpeed;
+
+  float detectRange;
+  float knockback;
+
+  float attackCooldown; /**< timer before player can attack again*/
+  float attackCooldownLength; /**< defined minimum time between attacks (attackCooldown is the timer)*/
+  float attackWindup;  /* Wind up timer */
+  float attackWindupLength; /* Defined minimum time between windups (attackWindup is the actual timer) */
+  float attackRange;  
+  int attackDamage;
+  float attackKnockbackForce;
+
+
+
+  float projectileSpeed;
 };
 
 

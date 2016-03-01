@@ -154,7 +154,7 @@ static void PhysicsTileCollisions(PhysicsObject* _instance)
     PhysicsIsInsideTile(instance);
 	  if (instance->insideTile)
 	  {
-      instance->position.x = instance->position.x = IntToFloat(FloatToInt(instance->position.x + 1.0f));
+      instance->position.x = IntToFloat(FloatToInt(instance->position.x + 1.0f));
       instance->insideTile = 0;
       printf("bounce FROM left");
 	  }
@@ -175,7 +175,7 @@ static void PhysicsTileCollisions(PhysicsObject* _instance)
     PhysicsIsInsideTile(instance);
 	  if (instance->insideTile)
 	  {
-      instance->position.x = instance->position.x = IntToFloat(FloatToInt(instance->position.x + -1.0f));
+      instance->position.x = IntToFloat(FloatToInt(instance->position.x + -1.0f));
       instance->insideTile = 0;
       printf("bounce FROM right");
 	  }
@@ -196,7 +196,7 @@ static void PhysicsTileCollisions(PhysicsObject* _instance)
     PhysicsIsInsideTile(instance);
 	  if (instance->insideTile)
 	  {
-      instance->position.y = instance->position.y = IntToFloat(FloatToInt(instance->position.y + -1.0f));
+      instance->position.y = IntToFloat(FloatToInt(instance->position.y + -1.0f));
       instance->insideTile = 0;
       printf("bounce FROM up");
 	  }
@@ -212,7 +212,7 @@ static void PhysicsTileCollisions(PhysicsObject* _instance)
     PhysicsIsInsideTile(instance);
 	  if (instance->insideTile)
 	  {
-      instance->position.y = instance->position.y = IntToFloat(FloatToInt(instance->position.y + 1.0f));
+      instance->position.y = IntToFloat(FloatToInt(instance->position.y + 1.0f));
       instance->insideTile = 0;
       printf("bounce FROM down");
 	  }

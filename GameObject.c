@@ -40,7 +40,6 @@ void GameObjectInitialize()
 */
 GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _type)
 {
-  
   GameObject* newGameObject = (GameObject*) malloc(sizeof(GameObject));
   newGameObject->sprite = _sprite;
   
@@ -48,18 +47,13 @@ GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _
   newGameObject->physics->owner = newGameObject;
 
   newGameObject->entity = _entity;
-  //printf("\n %i FUCKJIINGKAJSDS \n", _entity);
+
   if (_entity)
   {
     _entity->owner = newGameObject;
   }
   
   newGameObject->enemyAI = NULL;
-  if (_entity == entity_enemy)
-  {
-    newGameObject->enemyAI = (EnemyAI*)malloc(sizeof(EnemyAI));
-    newGameObject->enemyAI->enemyState = ENEMY_STATE_PATROL;
-  }
 
   newGameObject->type = _type;
   newGameObject->destroyFlag = 0;
@@ -83,7 +77,7 @@ GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _
     gameObjectList.last->next = newGameObject;
     gameObjectList.last = newGameObject;
   }
-
+  
   return newGameObject;
 }
 
@@ -125,6 +119,10 @@ static void GameObjectRemove(GameObject** _input)
   if ((*_input)->enemyAI)
   {
     free((*_input)->enemyAI);
+  }
+  if ((*_input)->miscData && (*_input)->type == entity_enemy)
+  {
+    free((*_input)->miscData);
   }
 
   if ((*_input)->prev)

@@ -87,7 +87,7 @@ void PlayerInput()
       entity_friendlyProjectile);
     tracer->syncSpritePhysics = 1;
     tracer->simulate = &TracerSimulate;
-    tracer->physics->onCollision = &TracerFriendlyProjectileCollision;
+    tracer->physics->onCollision = &TracerEnemyProjectileCollision;
 
     printf("M1\n");
   }
@@ -125,7 +125,7 @@ void TracerSimulate(GameObject* _self)
   //GameObjectDestroy(&_self);
 }
 
-void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _otherObject)
+void TracerEnemyProjectileCollision(GameObject* _thisObject, GameObject* _otherObject)
 {
   //printf("%i", _otherObject->type);
 
@@ -134,6 +134,17 @@ void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _oth
     printf("YOU HIT ENEMY FOR %i DAMAGE\n", attackDamage);
     EntityTakeDamage(&_otherObject->entity, attackDamage);
     GameObjectDestroy(&_thisObject);
+    
+    Vector2D knockbackVector; //first, create the vectWor
+    Vector2DSub(&knockbackVector, &_thisObject->physics->position, &_otherObject->physics->position); //based on difference between characters
+
+                                                                                                      //scale vector according to ENEMY_KNOCKBACK_FORCE:
+    Vector2DNormalize(&knockbackVector, &knockbackVector);
+    Vector2DScale(&knockbackVector, &knockbackVector, -PLAYERS_KNOCKBACK_FORCE);
+
+    //actually apply knockback:
+    EntityApplyKnockback(_otherObject->entity, &knockbackVector);
+    
   }
 }
 

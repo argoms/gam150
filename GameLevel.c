@@ -16,7 +16,7 @@
 #include "Door.h"
 #include "Enemy.h"
 #include "PlayerEntity.h"
-
+#include "ImportData.h"
 
 //extern int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
 static GameObject* player; /**< pointer to player object*/
@@ -37,11 +37,12 @@ void GameLevelInit(void)
 
 
   //load tile placeholder sprite:
+  
   Animation* anim = GCreateAnimation(1, 
                   GCreateTexture("isotilePlaceholder1.png"),
                   GCreateMesh(128.f, 64.f, 1, 1),
                   1);
-
+                  
   Animation* anim2 = GCreateAnimation(1,
     GCreateTexture("isoTileGreen.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
@@ -61,24 +62,9 @@ void GameLevelInit(void)
   GameObject* door = GameObjectCreate(PhysicsCreateObject(Vec2(5, 4), 1), GCreateSprite(0, 40, anim2, 1), 0, entity_door);
   door->physics->onCollision = &DoorDefaultOnCollision;
   door->simulate = NULL;
+  
+  ImportEnemyData("EnemiesLevel1.txt", player);
 
-  //create enemy object:
-  Entity* enemyEntity = malloc(sizeof(Entity));
-  enemyEntity->maxHealth = 100;
-  
-  EntityInit(&enemyEntity);
-  
-  GameObject* enemy = GameObjectCreate(PhysicsCreateObject(Vec2(4, 5), 1), GCreateSprite(0, 40, anim, 1), enemyEntity, entity_enemy);
-  //printf("%i \n iimiamsdias \n", enemyEntity->owner);
-  enemy->physics->onCollision = &EnemyOnCollision; //ENEMY COLLISON BEHAVIOR GO HERE
-  enemy->simulate = &EnemySimulate; //ENEMY CALLS THIS EVERY FRAME
-  enemy->initialize = &EnemyInitialize;
-  enemy->entity->onEntityKilled = &EnemyOnKilled;
-  enemy->target = player;
-  enemy->initialize(); /*inittialize the enemy*/
-  
- 
-  //PhysicsRemoveObject(&a);
 }
 
 /*!
