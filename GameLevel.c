@@ -17,6 +17,7 @@
 #include "Enemy.h"
 #include "PlayerEntity.h"
 #include "Hazard.h"
+#include "ImportData.h"
 
 //extern int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
 static GameObject* player; /**< pointer to player object*/
@@ -66,6 +67,7 @@ void GameLevelInit(void)
   door->physics->onCollision = &DoorDefaultOnCollision;
   door->simulate = NULL;
 
+  /*
   //create enemy object:
   Entity* enemyEntity = malloc(sizeof(Entity));
   enemyEntity->maxHealth = 100;
@@ -77,7 +79,9 @@ void GameLevelInit(void)
   enemy->physics->onCollision = &EnemyOnCollision; //ENEMY COLLISON BEHAVIOR GO HERE
   enemy->simulate = &EnemySimulate; //ENEMY CALLS THIS EVERY FRAME
   enemy->entity->onEntityKilled = &EnemyOnKilled;
+  enemy->initialize = &EnemyInitialize;
   enemy->target = player;
+  enemy->initialize();*/
 
   /**********************
   HAZARDS
@@ -93,6 +97,8 @@ void GameLevelInit(void)
   hazard->simulate = NULL;
  
   //PhysicsRemoveObject(&a);
+
+  ImportEnemyData("EnemiesLevel1.txt", player);
 }
 
 /*!

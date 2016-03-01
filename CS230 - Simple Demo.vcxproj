@@ -175,6 +175,7 @@
     <ClCompile Include="GameObject.c" />
     <ClCompile Include="Graphics.c" />
     <ClCompile Include="Hazard.c" />
+    <ClCompile Include="ImportData.c" />
     <ClCompile Include="Isometric.c" />
     <ClCompile Include="LevelManager.c" />
     <ClCompile Include="Main_CS230.c">
@@ -199,6 +200,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Hazard.h" />
+    <ClInclude Include="ImportData.h" />
     <ClInclude Include="Isometric.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="MapGen.h" />
