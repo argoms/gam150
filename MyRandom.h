@@ -26,5 +26,13 @@ Output        : Returns an int between min and max.
 **************************************************************************************************/
 int RandIntRange(int min, int max);
 
+/**************************************************************************************************
+Function      : RandSeed
+Description   : Sets the seed for the random number generator.
+Input         : seed is the number to use as the seed.
+Output        : No return.
+**************************************************************************************************/
+void RandSeed(unsigned int seed);
+
 #endif // !MY_RANDOM_H
 

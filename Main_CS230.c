@@ -19,6 +19,8 @@
 #include "LevelManager.h"
 
 #include "Audio.h"
+
+#include "MapCreator.h"
 // ---------------------------------------------------------------------------
 
 // Libraries
@@ -69,6 +71,15 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
   AUDIO TEST  PART 1/3  INITIALIZING
   -----------------------------------------------------------------------------*/
     TestAudioINIT();
+
+
+  //----------------------------------------------------------------------------
+  //TESTING MAP GENERATION
+  //----------------------------------------------------------------------------
+    MapCreator_ToFile("map1.txt", 20, 20, 0.4);
+    MapCreator_ToFile("map2.txt", 20, 20, 0.4);
+    MapCreator_ToFile("map3.txt", 20, 20, 0.4);
+    MapCreator_ToFile("map4.txt", 20, 20, 0.4);
 
   LevelLoad(level_mainMenu);
   //GInitialize();

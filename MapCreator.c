@@ -80,7 +80,7 @@ struct TileGen_Tile
   bool          isWall;           /* Whether this tile is a wall or not */
   bool          connectedToEdge;  /* Whether this tile is connected to the edge or not */
   unsigned int  tileGroup;        /* Which tilegroup this tile is in */
-  TileGen_Tile  connections[8];   /* Other tiles that are connected to this one */
+  TileGen_Tile  *connections[8];  /* Other tiles that are connected to this one */
   int x;                          /* x position of tile */
   int y;                          /* y position of tile */
 };
@@ -127,7 +127,7 @@ FORWARD DECLARATIONS
 -------------------------------------------------------------------------------------------------*/
 
 bool MapCreator_ToFile(char *targetFile, int width, int height, float wallDensity);
-IsoMap *MapCreator_CreateMap(int width, int height, float wallDensity);
+TileGen_Map *MapCreator_CreateMap(int width, int height, float wallDensity);
 /*-------------------------------------------------------------------------------------------------
 END FORWARD DECLARATIONS
 -------------------------------------------------------------------------------------------------*/
@@ -258,6 +258,7 @@ bool MapCreator_AssignCollisionTile(TileGen_Tile *tile, bool enableCollision)
         connections[TILE_TOP] = tile->mapOwner->map[tile->x + 1][tile->y];
       }  
     }
+    
 
     /* If the top-left tile is valid, check it. */
     if (tile->x + 1 < tile->mapOwner->height)
@@ -287,18 +288,32 @@ void MapCreator_GenerateValues(TileGen_Map *tileMap, float wallDensity, int pass
   int row, column;      /* Iterators */
 
   /* Calculate the number of walls to create. */
-  int wallsToCreate = FloatToInt(tileMap->height * tileMap->width / wallDensity);
+  int wallsToCreate = FloatToInt(tileMap->height * tileMap->width * wallDensity);
 
   /* First, create borders on the map. */
 
   /* Start with the left and right side of the map. */
-  for (row = 0; row < tileMap->height; ++row)
+  //for (row = 0; row < tileMap->height; ++row)
+  //{
+  //  tileMap->map[row][0].isWall = 1;
+  //  tileMap->map[row][0].connections = 1;
+  //  tileMap->map[row][0].tileGroup = 1;
+  //  tileMap->map[row][0].isWall = 1;
+  //}
+
+  // DUMB TEST CODE
+  int i;
+
+  RandSeed(1);
+
+  for (i = 0; i < wallsToCreate; ++i)
   {
-    tileMap->map[row][0].isWall = 1;
-    tileMap->map[row][0].connections = 1;
-    tileMap->map[row][0].tileGroup = 1;
-    tileMap->map[row][0].isWall = 1;
+    int x = RandIntRange(1, tileMap->height);
+    int y = RandIntRange(0, tileMap->width);
+
+    tileMap->map[x][y].isWall = 1;
   }
+
 }
 
 /**************************************************************************************************
@@ -333,6 +348,11 @@ TileGen_Map *MapCreator_CreateMap(int width, int height, float wallDensity)
 
   /* Else, proceed with map generation. */
 
+  /* Generate values for the map. */
+  MapCreator_GenerateValues(tileGenMap, wallDensity, 3);
+
+  /* Return the generated map. */
+  return tileGenMap;
 }
 
 /**************************************************************************************************
@@ -348,14 +368,31 @@ Output        : Returns true (1) if map data generation is successful, false (0)
 bool MapCreator_ToFile(char *targetFile, int width, int height, float wallDensity)
 {
 
+  TileGen_Map *tileGenMap = MapCreator_CreateMap(width, height, wallDensity);
 
+  /* If map was not created, return false. */
+  if (!tileGenMap)
+  {
+    /* If error messages are enabled, print error dialogue.  */
+    if (SHOW_ERRORS)
+    {
+      int msgboxID = MessageBox(
+        NULL,
+        "TileGenMap was not created.",
+        "MapCreator_ToFile ERROR",
+        MB_ICONEXCLAMATION | MB_YESNO
+        );
+    }
+    return false;
+  }
+
+  /* Else, proceed with writing to file. */
 
   /* Create the name of the path. */
   char *path = (char *)calloc(PATH_MAX_LEN, sizeof(char));
   strcat_s(path, PATH_MAX_LEN * sizeof(char), MAP_DIRECTORY);
   strcat_s(path, PATH_MAX_LEN * sizeof(char), targetFile);
 
-  // FILE chEcking? to do?
 
   /* Open the file for writing. */
   FILE *destinationFile = NULL;
@@ -363,7 +400,34 @@ bool MapCreator_ToFile(char *targetFile, int width, int height, float wallDensit
 
   /* If fopen_s fails, return false. */
   if (!destinationFile)
+  {
+    /* If error messages are enabled, print error dialogue.  */
+    if (SHOW_ERRORS)
+    {
+      int msgboxID = MessageBox(
+        NULL,
+        "File was not opened.",
+        "MapCreator_ToFile ERROR",
+        MB_ICONEXCLAMATION | MB_YESNO
+        );
+    }
     return false;
+  }
 
   /* Else, write the map data to the file */
+
+  fprintf_s(destinationFile, "Width %i\nHeight %i\n\n", width, height);
+
+  int i, j;
+
+  for (i = 0; i < height; ++i)
+  {
+    for (j = 0; j < width; ++j)
+    {
+      fprintf_s(destinationFile, "%i ", tileGenMap->map[i][j].isWall);
+    }
+    fprintf_s(destinationFile, "\n");
+  }
+
+  fclose(destinationFile);
 }

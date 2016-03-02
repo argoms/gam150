@@ -29,5 +29,16 @@ Output        : Returns an int between min and max.
 **************************************************************************************************/
 int RandIntRange(int min, int max)
 {
-  return (int)RandFloatRange((float)min, (float)max);
+  return ((rand() % (max - min)) + min);
+}
+
+/**************************************************************************************************
+Function      : RandSeed
+Description   : Sets the seed for the random number generator.
+Input         : seed is the number to use as the seed.
+Output        : No return.
+**************************************************************************************************/
+void RandSeed(unsigned int seed)
+{
+  srand(seed);
 }
