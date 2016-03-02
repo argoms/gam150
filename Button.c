@@ -118,6 +118,8 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
 
   return buttonObject;  //return the button object
   }
+
+  return 0;
 }
 
 /*************************************************************************/
