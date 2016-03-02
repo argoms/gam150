@@ -164,11 +164,11 @@ void SnaptoCell(float *coordinate, unsigned side)
 {
   /* If snapping from bottom or left, snap the value by finding its integral part and adding 1 */
   if (side == COLLISION_BOTTOM || side == COLLISION_LEFT)
-    *coordinate = (int)(*coordinate) + 1.f;
+    *coordinate = floorf(*coordinate) + 1.f;
 
   /* Else, if snapping from right or top, snap the value by finding its integral part */
   else
-    *coordinate = (int)(*coordinate);
+    *coordinate = floorf(*coordinate);
 }
 
 /*!
@@ -243,7 +243,7 @@ static void PhysicsTileCollisions(PhysicsObject* _instance)
   */
 
   /* Check top-top-left */
-  if (IsoTileGet(centerX - radius / 2.f, top) == 1)
+  if (IsoTileGet(FloatToInt(centerX - radius / 2.f), top) == 1)
   {
     Vector2D tilePos = { (FloatToInt)(centerX - radius / 2.f) + 0.5f, top + 0.5f };
 
@@ -252,7 +252,7 @@ static void PhysicsTileCollisions(PhysicsObject* _instance)
   }
 
   /* Check top-top-right */
-  if (IsoTileGet(centerX + radius / 2.f, top) == 1)
+  if (IsoTileGet(FloatToInt(centerX + radius / 2.f), top) == 1)
   {
     Vector2D tilePos = { (FloatToInt)(centerX + radius / 2.f) + 0.5f, top + 0.5f };
 
@@ -261,7 +261,7 @@ static void PhysicsTileCollisions(PhysicsObject* _instance)
   }
 
   /* Check left-top-left */
-  if (IsoTileGet(left, centerY + radius / 2.f) == 1)
+  if (IsoTileGet(left, FloatToInt(centerY + radius / 2.f)) == 1)
   {
     Vector2D tilePos = { left + 0.5f, (FloatToInt)(centerY + radius / 2.f) + 0.5f };
 
@@ -270,7 +270,7 @@ static void PhysicsTileCollisions(PhysicsObject* _instance)
   }
 
   /* Check left-bottom-left */
-  if (IsoTileGet(left, centerY - radius / 2.f) == 1)
+  if (IsoTileGet(left, FloatToInt(centerY - radius / 2.f)) == 1)
   {
     Vector2D tilePos = { left + 0.5f, (FloatToInt)(centerY - radius / 2.f) + 0.5f };
 
@@ -279,7 +279,7 @@ static void PhysicsTileCollisions(PhysicsObject* _instance)
   }
 
   /* Check right-top-right */
-  if (IsoTileGet(right, centerY + radius / 2.f) == 1)
+  if (IsoTileGet(right, FloatToInt(centerY + radius / 2.f)) == 1)
   {
     Vector2D tilePos = { right + 0.5f, (FloatToInt)(centerY + radius / 2.f) + 0.5f };
 
@@ -288,7 +288,7 @@ static void PhysicsTileCollisions(PhysicsObject* _instance)
   }
 
   /* Check right-bottom-right */
-  if (IsoTileGet(right, centerY - radius / 2.f) == 1)
+  if (IsoTileGet(right, FloatToInt(centerY - radius / 2.f)) == 1)
   {
     Vector2D tilePos = { right + 0.5f, (FloatToInt)(centerY - radius / 2.f) + 0.5f };
 
@@ -297,7 +297,7 @@ static void PhysicsTileCollisions(PhysicsObject* _instance)
   }
 
   /* Check bottom-bottom-left */
-  if (IsoTileGet(centerX - radius / 2.f, bottom) == 1)
+  if (IsoTileGet(FloatToInt(centerX - radius / 2.f), bottom) == 1)
   {
     Vector2D tilePos = { (FloatToInt)(centerX - radius / 2.f) + 0.5f, bottom + 0.5f };
 
@@ -306,7 +306,7 @@ static void PhysicsTileCollisions(PhysicsObject* _instance)
   }
 
   /* Check bottom-bottom-right */
-  if (IsoTileGet(centerX + radius / 2.f, bottom) == 1)
+  if (IsoTileGet(FloatToInt(centerX + radius / 2.f), bottom) == 1)
   {
     Vector2D tilePos = { (FloatToInt)(centerX + radius / 2.f) + 0.5f, bottom + 0.5f };
 
@@ -528,7 +528,7 @@ Input         : _instance is the physics object,
                 y is the y velocity.
 Output        : No output.
 **************************************************************************************************/
-int PhysicsSetVelocity(PhysicsObject* _instance, float x, float y)
+void PhysicsSetVelocity(PhysicsObject* _instance, float x, float y)
 {
   _instance->velocity.x = x;
   _instance->velocity.y = y;

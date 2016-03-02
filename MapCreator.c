@@ -232,6 +232,15 @@ static TileGen_Map *MapCreator_InitializeMap(int width, int height)
 }
 
 /**************************************************************************************************
+Function      : MapCreator_EvaluateConnectedTiles
+Description   : Evaluates if the formation of this set of tiles forms an unpassable wall.
+Input         : tile is the tile to set,
+enableCollision is flag to set tile with.
+Output        : Returns true if resulting tile is set to collision, false if not.
+**************************************************************************************************/
+
+
+/**************************************************************************************************
 Function      : MapCreator_AssignCollisionTile
 Description   : Sets collision flags on tile.
 Input         : tile is the tile to set,
@@ -258,18 +267,85 @@ bool MapCreator_AssignCollisionTile(TileGen_Tile *tile, bool enableCollision)
         connections[TILE_TOP] = tile->mapOwner->map[tile->x + 1][tile->y];
       }  
     }
-    
 
-    /* If the top-left tile is valid, check it. */
-    if (tile->x + 1 < tile->mapOwner->height)
+    /* If the bottom tile is valid, check it. */
+    if (tile->x - 1 >= 0)
     {
-      /* Check if the top tile is a collision tile, */
-      if (tile->mapOwner->map[tile->x + 1][tile->y].isWall)
+      /* Check if the bottom tile is a collision tile, */
+      if (tile->mapOwner->map[tile->x - 1][tile->y].isWall)
       {
         /* Update the temp flag. */
-        connections[TILE_TOP] = tile->mapOwner->map[tile->x + 1][tile->y];
+        connections[TILE_BOTTOM] = tile->mapOwner->map[tile->x - 1][tile->y];
       }
     }
+
+    /* If the left tile is valid, check it. */
+    if (tile->y - 1 >= 0)
+    {
+      /* Check if the left tile is a collision tile, */
+      if (tile->mapOwner->map[tile->x][tile->y - 1].isWall)
+      {
+        /* Update the temp flag. */
+        connections[TILE_LEFT] = tile->mapOwner->map[tile->x][tile->y - 1];
+      }
+    }
+
+    /* If the right tile is valid, check it. */
+    if (tile->y + 1 < tile->mapOwner->width)
+    {
+      /* Check if the right tile is a collision tile, */
+      if (tile->mapOwner->map[tile->x][tile->y + 1].isWall)
+      {
+        /* Update the temp flag. */
+        connections[TILE_RIGHT] = tile->mapOwner->map[tile->x][tile->y + 1];
+      }
+    }
+    
+    /* If the top-left tile is valid, check it. */
+    if ((tile->x + 1 < tile->mapOwner->height) && (tile->y - 1 >= 0))
+    {
+      /* Check if the top-left tile is a collision tile, */
+      if (tile->mapOwner->map[tile->x + 1][tile->y - 1].isWall)
+      {
+        /* Update the temp flag. */
+        connections[TILE_TOP_LEFT] = tile->mapOwner->map[tile->x + 1][tile->y - 1];
+      }
+    }
+
+    /* If the top-right tile is valid, check it. */
+    if ((tile->x + 1 < tile->mapOwner->height) && (tile->y + 1 < tile->mapOwner->width))
+    {
+      /* Check if the top-right tile is a collision tile, */
+      if (tile->mapOwner->map[tile->x + 1][tile->y + 1].isWall)
+      {
+        /* Update the temp flag. */
+        connections[TILE_TOP_RIGHT] = tile->mapOwner->map[tile->x + 1][tile->y + 1];
+      }
+    }
+
+    /* If the bottom-left tile is valid, check it. */
+    if ((tile->x - 1 >= 0) && (tile->y - 1 >= 0))
+    {
+      /* Check if the bottom-left tile is a collision tile, */
+      if (tile->mapOwner->map[tile->x - 1][tile->y - 1].isWall)
+      {
+        /* Update the temp flag. */
+        connections[TILE_BOTTOM_LEFT] = tile->mapOwner->map[tile->x - 1][tile->y - 1];
+      }
+    }
+
+    /* If the bottom-right tile is valid, check it. */
+    if ((tile->x - 1 >= 0 ) && (tile->y + 1 < tile->mapOwner->width))
+    {
+      /* Check if the bottom-right tile is a collision tile, */
+      if (tile->mapOwner->map[tile->x - 1][tile->y + 1].isWall)
+      {
+        /* Update the temp flag. */
+        connections[TILE_BOTTOM_RIGHT] = tile->mapOwner->map[tile->x - 1][tile->y + 1];
+      }
+    }
+
+
 
   }
 }
@@ -416,18 +492,24 @@ bool MapCreator_ToFile(char *targetFile, int width, int height, float wallDensit
 
   /* Else, write the map data to the file */
 
+  /* Write the width and height information. */
   fprintf_s(destinationFile, "Width %i\nHeight %i\n\n", width, height);
 
-  int i, j;
+  int i, j;   /* Iterators */
 
+  /* Write the collision information for each tile in the map. */
   for (i = 0; i < height; ++i)
   {
     for (j = 0; j < width; ++j)
     {
-      fprintf_s(destinationFile, "%i ", tileGenMap->map[i][j].isWall);
+      fprintf_s(destinationFile, "%i, %i ", i, j);// tileGenMap->map[i][j].isWall);
     }
     fprintf_s(destinationFile, "\n");
   }
 
+  /* Close the file. */
   fclose(destinationFile);
+
+  /* Done. Return true. */
+  return true;
 }
