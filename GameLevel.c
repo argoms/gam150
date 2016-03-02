@@ -82,6 +82,7 @@ void GameLevelInit(void)
  
   //PhysicsRemoveObject(&a);
 
+  //Magical function that populates the world
   ImportEnemyData("EnemiesLevel1.txt", player);
 }
 

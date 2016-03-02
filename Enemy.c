@@ -8,9 +8,11 @@
 static Animation* tracerAnimation;
 
 /*
-\brief Use this when you want to creat enemy game objects
+\brief
 It's prety huge but deal with it because we want full access to everything an enemy could ever possibly do....
 James' idea, not mine
+
+Don't actually call this method. Use the import enemy data function instead, which calls this anyways
 
 //KILL ME
 \param
