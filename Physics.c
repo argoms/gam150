@@ -528,7 +528,7 @@ Input         : _instance is the physics object,
                 y is the y velocity.
 Output        : No output.
 **************************************************************************************************/
-int PhysicsSetVelocity(PhysicsObject* _instance, float x, float y)
+void PhysicsSetVelocity(PhysicsObject* _instance, float x, float y)
 {
   _instance->velocity.x = x;
   _instance->velocity.y = y;

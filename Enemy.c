@@ -8,13 +8,15 @@
 static Animation* tracerAnimation;
 
 /*
-\brief Use this when you want to creat enemy game objects
+\brief
 It's prety huge but deal with it because we want full access to everything an enemy could ever possibly do....
 James' idea, not mine
 
+Don't actually call this method. Use the import enemy data function instead, which calls this anyways
+
 //KILL ME
 \param
-a metrik fuk ton
+	a metrik fuk ton
 */
 GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _type,
   int enemyType, float chaseSpeed, float detectRange, float knockback, float attackCooldown, float attackCooldownLength, float attackWindup, float attackWindupLength,
@@ -137,12 +139,12 @@ Vector2D EnemyMovement(GameObject* _thisObject, const float distanceToPlayer)
     if (dotProduct > 0)
     {
       _thisObject->physics->angle += ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
-      printf("ROTATION");
+      //printf("ROTATION");
     }
     else if (dotProduct < 0)
     {
       _thisObject->physics->angle -= ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
-      printf("ROTATION");
+      //printf("ROTATION");
     }
 
     Vector2D newVelocityVector;
@@ -186,11 +188,11 @@ void EnemyAttackDetect(GameObject* _thisObject)
       {
       case ENEMY_TYPE_MELEE:
         EnemyMeleeAttack(_thisObject, attackDirection);
-        printf("%i, %i", attackDirection.x, attackDirection.y);
+        //printf("%i, %i", attackDirection.x, attackDirection.y);
         break;
       case ENEMY_TYPE_RANGED:
         EnemyRangedAttack(_thisObject, attackDirection, enemyContainer->projectileSpeed);
-        printf("%i, %i", attackDirection.x, attackDirection.y);
+        //printf("%i, %i", attackDirection.x, attackDirection.y);
         break;
       }
     }
