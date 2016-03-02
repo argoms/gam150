@@ -6,6 +6,8 @@
 #include "GameLevel.h"
 #include "AEEngine.h"
 #include <math.h>
+#include "Text.h"
+#include <string.h>
 
 extern double frameTime;
 
@@ -81,11 +83,13 @@ Bit 6 is active if the player is moving
 Bit 7 is active if the player is attacking
 */
 
+static TextString* healthText;
 /*!
 \brief Call at the start of a level to initialize player values.
 */
 void PlayerInit()
 {
+  
   player = GetPlayerObject();
   attackCooldown = 0;
   attackCooldownLength = 0.75;
@@ -240,6 +244,9 @@ void PlayerInit()
   playerSprite->offset.y = 80;
 
   playerAction = PLAYER_IDLE + PLAYER_DOWN;
+
+  TextInit();
+  healthText =  TextCreateHUDString("Health: ", -300, -200);
 }
 
 /*!
@@ -252,6 +259,8 @@ void PlayerSimulate()
 
   PlayerInput();
   PlayerAnimations();
+  //8
+  
 }
 
 /*!
