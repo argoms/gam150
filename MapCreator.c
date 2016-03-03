@@ -6,6 +6,7 @@ Description   :  Provides functionality for generating tilemap info
 ChangeLog
 
 -3/2/16       :  Renamed functions to more consistent convention
+                 Added pipelining functionality into iso maps
 
 
 NOTES       REMEMBER TO CONVERT YOUR X/Y to the iso X/Y
@@ -61,16 +62,6 @@ enum TILE_CONNECTIONS
   TILE_TOP_RIGHT,
   TILE_BOTTOM_LEFT,
   TILE_BOTTOM_RIGHT
-
-  //TILE_TOP            = 1 << 0,
-  //TILE_LEFT           = 1 << 1,
-  //TILE_BOTTOM         = 1 << 2,
-  //TILE_RIGHT          = 1 << 3,
-
-  //TILE_TOP_LEFT       = 1 << 4,
-  //TILE_TOP_RIGHT      = 1 << 5,
-  //TILE_BOTTOM_LEFT    = 1 << 6,
-  //TILE_BOTTOM_RIGHT   = 1 << 7
 };
 /*-------------------------------------------------------------------------------------------------
 END DEFINES/ENUMS
@@ -142,14 +133,9 @@ static TILE_GROUP_MANAGER tileGroupManager;
 END STATIC VARIABLES
 -------------------------------------------------------------------------------------------------*/
 
-/*-------------------------------------------------------------------------------------------------
-FORWARD DECLARATIONS
--------------------------------------------------------------------------------------------------*/
 
-bool MapCreator_ToFile(char *targetFile, int width, int height, float wallDensity);
-TileGen_Map *MapCreator_CreateMap(int width, int height, float wallDensity);
 /*-------------------------------------------------------------------------------------------------
-END FORWARD DECLARATIONS
+FUNCTIONS
 -------------------------------------------------------------------------------------------------*/
 
 /**************************************************************************************************
@@ -257,7 +243,7 @@ Description   : Updates the connections on the tile.
 Input         : tile is the tile to update.
 Output        : No return.
 **************************************************************************************************/
-void MapCreator_Tile_Updateconnections(TileGen_Tile *tile)
+static void MapCreator_Tile_Updateconnections(TileGen_Tile *tile)
 {
   /* If the top tile is valid, check it. */
   if (tile->x + 1 < tile->mapOwner->height)
@@ -354,7 +340,7 @@ Description   : Checks for conflicts between connecting tiles.
 Input         : tile is the tile to check for conflicts.
 Output        : Returns true if there is a conflict, false if there is not.
 **************************************************************************************************/
-bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
+static bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
 {
   /*
     First, count the number of active connections.
@@ -381,7 +367,67 @@ bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
     return false;
 
   /*
-    Else, we have to check the layout of the tiles. 
+    Else, we have to check the layout of the tiles.
+  */
+
+  /* Represents if the tiles relative to this one are of concern. */
+  bool
+    top = false,
+    left = false,
+    right = false,
+    bottom = false,
+    top_left = false,
+    top_right = false,
+    bottom_left = false,
+    bottom_right = false;
+
+  /*
+  Get the states of the tiles.
+  If the tile is a collision tile and is connected to the edge,
+  then set it as an object of concern.
+  */
+
+  /* Get the top tile. */
+  if (tile->connections[TILE_TOP])
+    if (tile->connections[TILE_TOP]->connectedToEdge)
+      top = true;
+
+  /* Get the left tile. */
+  if (tile->connections[TILE_LEFT])
+    if (tile->connections[TILE_LEFT]->connectedToEdge)
+      left = true;
+
+  /* Get the right tile. */
+  if (tile->connections[TILE_RIGHT])
+    if (tile->connections[TILE_RIGHT]->connectedToEdge)
+      right = true;
+
+  /* Get the bottom tile. */
+  if (tile->connections[TILE_BOTTOM])
+    if (tile->connections[TILE_BOTTOM]->connectedToEdge)
+      bottom = true;
+
+  /* Get the top-left tile. */
+  if (tile->connections[TILE_TOP_LEFT])
+    if (tile->connections[TILE_TOP_LEFT]->connectedToEdge)
+      top_left = true;
+
+  /* Get the top-right tile. */
+  if (tile->connections[TILE_TOP_RIGHT])
+    if (tile->connections[TILE_TOP_RIGHT]->connectedToEdge)
+      top_right = true;
+
+  /* Get the bottom-left tile. */
+  if (tile->connections[TILE_BOTTOM_LEFT])
+    if (tile->connections[TILE_BOTTOM_LEFT]->connectedToEdge)
+      bottom_left = true;
+
+  /* Get the bottom-right tile. */
+  if (tile->connections[TILE_BOTTOM_RIGHT])
+    if (tile->connections[TILE_BOTTOM_RIGHT]->connectedToEdge)
+      bottom_right = true;
+
+  /*
     In the below diagrams, X is our tile, 1 is collision tile, 0 is non-collision tile, - is nonspecified tile
   */
 
@@ -394,12 +440,12 @@ bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
       - X -
       - 0 -
 
-    Where there is at least one 1 on the left column and on the right column.
+    Where there is at least one 1 on the left column and one 1 on the right column.
     If any config matches, then conflict. Return true.
   */
   if (!(tile->connections[TILE_BOTTOM] || tile->connections[TILE_TOP])
-    && (tile->connections[TILE_LEFT] || tile->connections[TILE_BOTTOM_LEFT] || tile->connections[TILE_TOP_LEFT])
-    && (tile->connections[TILE_RIGHT] || tile->connections[TILE_BOTTOM_RIGHT] || tile->connections[TILE_TOP_RIGHT]))
+    && (left || top_left || bottom_left)
+    && (right || top_right || bottom_right))
   {
     return true;
   }
@@ -416,9 +462,9 @@ bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
   */
   if (!(tile->connections[TILE_LEFT] || tile->connections[TILE_RIGHT])
     &&
-    (tile->connections[TILE_TOP] || tile->connections[TILE_TOP_RIGHT] || tile->connections[TILE_TOP_LEFT])
+    (top || top_left || top_right)
     &&
-    (tile->connections[TILE_BOTTOM] || tile->connections[TILE_BOTTOM_LEFT] || tile->connections[TILE_BOTTOM_RIGHT]))
+    (bottom || bottom_left || bottom_right))
   {
     return true;
   }
@@ -435,12 +481,12 @@ bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
   */
   if (!(tile->connections[TILE_BOTTOM] || tile->connections[TILE_RIGHT])
     &&
-    tile->connections[TILE_BOTTOM_RIGHT]
+    bottom_right
     &&
     (
-      (tile->connections[TILE_TOP] || tile->connections[TILE_TOP_RIGHT] || tile->connections[TILE_TOP_LEFT])
+      (top || top_left || top_right)
       ||
-      (tile->connections[TILE_LEFT] || tile->connections[TILE_BOTTOM_LEFT])))
+      (left || bottom_left)))
   {
     return true;
   }
@@ -457,12 +503,12 @@ bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
   */
   if (!(tile->connections[TILE_BOTTOM] || tile->connections[TILE_LEFT])
     &&
-    tile->connections[TILE_BOTTOM_LEFT]
+    bottom_left
     &&
     (
-      (tile->connections[TILE_TOP] || tile->connections[TILE_TOP_RIGHT] || tile->connections[TILE_TOP_LEFT])
+      (top || top_left || top_right)
       ||
-      (tile->connections[TILE_RIGHT] || tile->connections[TILE_BOTTOM_RIGHT])))
+      (right || bottom_right)))
   {
     return true;
   }
@@ -479,12 +525,12 @@ bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
   */
   if (!(tile->connections[TILE_TOP] || tile->connections[TILE_LEFT])
     &&
-    tile->connections[TILE_TOP_LEFT]
+    top_left
     &&
     (
-      (tile->connections[TILE_BOTTOM] || tile->connections[TILE_BOTTOM_RIGHT] || tile->connections[TILE_BOTTOM_LEFT])
+      (bottom || bottom_left || bottom_right)
       ||
-      (tile->connections[TILE_RIGHT] || tile->connections[TILE_TOP_RIGHT])))
+      (right || top_right)))
   {
     return true;
   }
@@ -501,12 +547,12 @@ bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
   */
   if (!(tile->connections[TILE_TOP] || tile->connections[TILE_RIGHT])
     &&
-    tile->connections[TILE_TOP_RIGHT]
+    top_right
     &&
     (
-      (tile->connections[TILE_BOTTOM] || tile->connections[TILE_BOTTOM_RIGHT] || tile->connections[TILE_BOTTOM_LEFT])
+      (bottom || bottom_left || bottom_right)
       ||
-      (tile->connections[TILE_LEFT] || tile->connections[TILE_TOP_LEFT])))
+      (left || top_left)))
   {
     return true;
   }
@@ -522,7 +568,7 @@ Input         : tile is the tile to set,
                 enableCollision is flag to set tile with.
 Output        : No return.
 **************************************************************************************************/
-void MapCreator_Tile_Set(TileGen_Tile *tile, bool enableCollision)
+static void MapCreator_Tile_Set(TileGen_Tile *tile, bool enableCollision)
 {
   TileGen_Tile *tSet = NULL;   /* Used to set nearby tiles. */
 
@@ -567,7 +613,7 @@ Input         : tile is the tile to set,
                 enableCollision is flag to set tile with.
 Output        : Returns true if successful, false if there is a tile conflict.
 **************************************************************************************************/
-bool MapCreator_Tile_AssignCollision(TileGen_Tile *tile, bool enableCollision)
+static bool MapCreator_Tile_AssignCollision(TileGen_Tile *tile, bool enableCollision)
 {
   /* Checks to do if setting collision. */
   if (enableCollision)
@@ -598,7 +644,7 @@ Input         : tileMap is the map to use,
                 passes is the number of times to pass through the generated tiles for wall quality.
 Output        : No return.
 **************************************************************************************************/
-void MapCreator_Map_GenerateValues(TileGen_Map *tileMap, float wallDensity, int passes)
+static void MapCreator_Map_GenerateValues(TileGen_Map *tileMap, float wallDensity, int passes)
 {
   int row, column;      /* Iterators */
 
@@ -636,9 +682,11 @@ void MapCreator_Map_GenerateValues(TileGen_Map *tileMap, float wallDensity, int 
   /* Calculate the number of collision tiles to generate, accounting for edge rows and columns. */
   wallsToCreate = (int)((tileMap->height - 2) * (tileMap->width - 2) * wallDensity);
 
-  // DUMB TEST CODE
+  /* Set the values of the map. */
+
   int i;
 
+  /* Seeds the random number generator. ONLY FOR PLAY-TESTING AND PRESENTATION PURPOSES. */
   RandSeed(1);
 
   for (i = 0; i < wallsToCreate; ++i)
@@ -673,7 +721,7 @@ Input         : width is the width of the map,
                   0 means don't create walls, 1 means cover the entire map with walls.
 Output        : Returns pointer to new map if successful. Returns NULL pointer if unsuccessful.
 **************************************************************************************************/
-TileGen_Map *MapCreator_CreateMap(int width, int height, float wallDensity)
+static TileGen_Map *MapCreator_CreateMap(int width, int height, float wallDensity)
 {
   /* Initialize a TileGen_Map. */
   TileGen_Map *tileGenMap = MapCreator_Map_Initialize(width, height);
@@ -711,7 +759,7 @@ Input         : targetMap is where the map data output will go.
                   0 means don't create walls, 1 means cover the entire map with walls.
 Output        : Returns true (1) if map data generation is successful, false (0) if unsuccessful.
 **************************************************************************************************/
-bool MapCreator_ToFile(IsoMap *targetMap,  float wallDensity)
+bool MapCreator_ToMap(IsoMap *targetMap,  float wallDensity)
 {
   TileGen_Map *tileGenMap = MapCreator_CreateMap(targetMap->mapWidth, targetMap->mapHeight, wallDensity);
 
@@ -733,20 +781,16 @@ bool MapCreator_ToFile(IsoMap *targetMap,  float wallDensity)
 
   /* Else, write the map data into the iso map. */
 
-  int row, j;   /* Iterators */
+  int row, column;   /* Iterators */
 
   /* Write the collision information for each tile in the map. */
   for (row = 0; row < targetMap->mapHeight; ++row)
   {
-    for (j = 0; j < targetMap->mapWidth; ++j)
+    for (column = 0; column < targetMap->mapWidth; ++column)
     {
-      iso = tileGenMap->map[tileGenMap->height - row - 1][j].isWall;
+      IsoTileSet(row, column, tileGenMap->map[tileGenMap->height - row - 1][column].isWall);
     }
-    fprintf_s(destinationFile, "\n");
   }
-
-  /* Close the file. */
-  fclose(destinationFile);
 
   /* Done. Return true. */
   return true;
@@ -816,14 +860,14 @@ bool MapCreator_ToFile(char *targetFile, int width, int height, float wallDensit
   /* Write the width and height information. */
   fprintf_s(destinationFile, "Width %i\nHeight %i\n\n", width, height);
 
-  int row, j;   /* Iterators */
+  int row, column;   /* Iterators */
 
   /* Write the collision information for each tile in the map. */
   for (row = 0; row < height; ++row)
   {
-    for (j = 0; j < width; ++j)
+    for (column = 0; column < width; ++column)
     {
-      fprintf_s(destinationFile, "%i ", tileGenMap->map[tileGenMap->height - i - 1][j].isWall);
+      fprintf_s(destinationFile, "%i ", tileGenMap->map[tileGenMap->height - row - 1][column].isWall);
     }
     fprintf_s(destinationFile, "\n");
   }
@@ -834,7 +878,9 @@ bool MapCreator_ToFile(char *targetFile, int width, int height, float wallDensit
   /* Done. Return true. */
   return true;
 }
-
+/*-------------------------------------------------------------------------------------------------
+END FUNCTIONS
+-------------------------------------------------------------------------------------------------*/
 
 /*-------------------------------------------------------------------------------------------------
 DEPRECATED CODE - NOTHING ELSE BEYOND THIS POINT

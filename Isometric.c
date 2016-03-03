@@ -10,6 +10,7 @@ Isometric tilemap implementation. Contains functions relating to tilemaps and is
 #include "Graphics.h"
 #include <stdlib.h>
 #include "MapGen.h"
+#include "MapCreator.h"
 
 static IsoMap* gameMap; /**< contains currently active game map*/
 
@@ -27,7 +28,10 @@ void IsoInit(int _mapHeight, int _mapWidth)
 
   int i = 0;
   int j = 0;
-  GenerateMap(gameMap);
+  MapCreator_ToMap(gameMap, 0.1f);
+  
+  //GenerateMap(gameMap);
+
   /*
   //create borders:
   while (i < _mapWidth)
