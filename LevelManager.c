@@ -11,7 +11,10 @@ Basic level/gamestate manager implementation.
 #include "Text.h"
 #include "GameLevel.h"
 #include "TownScreen.h"
-
+#include "Button.h"
+#include "DeathScreen.h"
+#include "SplashScreen.h"
+#include "Audio.h"
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
 static AEGfxVertexList*	pMesh2;				/**< EXAMPLE VAR*/
 static AEGfxTexture *pTex1;/**< EXAMPLE VAR*/
@@ -27,7 +30,7 @@ static TextString* textString;/**< EXAMPLE VAR*/
 
 
 static int currentLevel;/**< Current level (uses enum)*/
-static int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
+static int nextLevel;/**derp< Level to switch to (if not equal to current level) (uses enum)*/
 
 extern int gGameRunning; /**< used to interface with main file*/
 
@@ -40,6 +43,7 @@ double frameTime;
 void LevelLoad(int _level)
 {
   GInitialize();
+
   switch (_level)
   {
   case level_level1:
@@ -51,6 +55,12 @@ void LevelLoad(int _level)
   case level_town:
     TownScreenInit();
     break;
+  case level_deathScreen:
+    DeathScreenInit();
+    break;
+  case level_splashScreen:
+    SplashScreenInit();
+    break;
   }
 
 }
@@ -61,9 +71,9 @@ void LevelLoad(int _level)
 void LevelRun()
 {
   frameTime = AEFrameRateControllerGetFrameTime();
-
   switch (currentLevel)
   {
+    
   case level_level1:
     GameLevelRun();
     break;
@@ -72,6 +82,12 @@ void LevelRun()
     break;
   case level_town:
     TownScreenRun();
+    break;
+  case level_deathScreen:
+    DeathScreenRun();
+    break;
+  case level_splashScreen:
+    SplashScreenRun();
     break;
   }
 
@@ -83,6 +99,7 @@ void LevelRun()
       gGameRunning = 0;
       break;
     default:
+      Audio_PlaySoundSample("ButtonClick2.ogg", 0);
       LevelUnload();
       currentLevel = nextLevel;
       LevelLoad(nextLevel);
@@ -99,7 +116,6 @@ void LevelUnload()
   AEGfxSetCamPosition(0, 0);
   GameObjectFree();
   GFree();
-
 }
 
 
@@ -130,7 +146,36 @@ void MainMenuInit()
   
   textString = TextCreateString("PLACEHOLDER MAIN MENU", -360, 100);
   textString = TextCreateString("PRESS SPACE FOR LEVEL 1", -360, 0);
-  
+
+  //BUTTONS------------------------------------------------------
+  int button_type = LEVEL_ONE_BUTTON;             /* type of button  */
+  float button1x = -360;                          /* x position      */
+  float button1y = -100;                          /* y position      */
+  float mesh1x = 128.0f;                          /* mesh x          */
+  float mesh1y = 64.0f;                           /* mesh y          */
+  float button1size = 1.0f;                       /* size            */
+  static AEGfxVertexList*	button_mesh;				    /* mesh ptr        */
+  button_mesh = GCreateMesh(mesh1x, mesh1y, 1, 1);/* create the mesh */
+
+  //load button:
+  Animation* anim_button1 = GCreateAnimation(1,
+    GCreateTexture("isotilePlaceholder1.png"),
+    button_mesh,
+    1);
+
+  Sprite *button1_sprite = GCreateSprite(button1x, button1y, anim_button1, 1);
+  //PhysicsObject *button1_physics = PhysicsCreateObject(Vec2(button1x,button1y),1);
+
+  GameObject* button = CreateButton(0, button1_sprite, NULL, button_type, button1size, mesh1x, mesh1y);
+  /*
+  PhysicsObject *button_physics = PhysicsCreateObject(Vec2(-360, 100), 1);
+  Sprite *sprite_object_button = GCreateSprite(0, 40, anim2, 1);
+  //int entity_butt = entity_button;
+  int button_type = MAIN_MENU_BUTTON;
+  GameObject* button = CreateButton(button_physics, sprite_object_button, NULL, button_type);
+  */
+
+  //END BUTTONS-------------------------------------------------------------
 
 
   //EXAMPLE CODE, REMOVE OUT WHEN USING
@@ -167,9 +212,13 @@ void LevelSetNext(int _input)
 
 void MainMenuRun()
 {
+  GameObjectSimulate();
+  PhysicsSimulate();
+  GameObjectsPostStep();
   //debug
   if (AEInputCheckTriggered(VK_SPACE))
   {
+    
     switch (currentLevel)
     {
     case level_level1:
@@ -182,3 +231,4 @@ void MainMenuRun()
   }
   //
 }
+

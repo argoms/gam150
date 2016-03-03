@@ -6,6 +6,8 @@
 #include "GameLevel.h"
 #include "AEEngine.h"
 #include <math.h>
+#include "Text.h"
+#include <string.h>
 
 extern double frameTime;
 
@@ -56,6 +58,7 @@ static Animation* animSwordUpLeft;
 static Animation* animSwordUpRight;
 
 static Sprite* playerSprite;
+static float stepSoundTimer;
 
 //the following enums are used for the player action bit field:
 static enum directions 
@@ -81,15 +84,17 @@ Bit 6 is active if the player is moving
 Bit 7 is active if the player is attacking
 */
 
+static TextString* healthText;
 /*!
 \brief Call at the start of a level to initialize player values.
 */
 void PlayerInit()
 {
+  
   player = GetPlayerObject();
   attackCooldown = 0;
-  attackCooldownLength = 0.75;
-  attackDamage = 100;
+  attackCooldownLength = 0.5;
+  attackDamage = 50;
   tracerAnimation = GCreateAnimation(1,
     GCreateTexture("isotilePlaceholder1.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
@@ -240,6 +245,20 @@ void PlayerInit()
   playerSprite->offset.y = 80;
 
   playerAction = PLAYER_IDLE + PLAYER_DOWN;
+
+  //shitty alpha fast coding:
+  TextInit();
+  char hpstring[20] = "Health:            ";
+  int tempHP = player->entity->health;
+  int count = 0;
+  while (tempHP > 0)
+  {
+    //printf("a");
+    count++;
+    hpstring[6 + count] = '*';
+    tempHP -= 10;
+  }
+  healthText =  TextCreateHUDString(hpstring, -300, -200);
 }
 
 /*!
@@ -252,6 +271,23 @@ void PlayerSimulate()
 
   PlayerInput();
   PlayerAnimations();
+  //8
+  
+  //alpha dumb hardcoding
+  {
+    char hpstring[20] = "Health:            ";
+    int tempHP = player->entity->health;
+    int count = 0;
+    while (tempHP > 0)
+    {
+      count++;
+      hpstring[6 + count] = '*';
+      tempHP -= 10;
+    }
+    TextRemoveString(healthText);
+    healthText = TextCreateHUDString(hpstring, -300, -200);
+    //TextHUDStringSet(&healthText, "aaa");
+  }
 }
 
 /*!
@@ -276,9 +312,22 @@ void PlayerInput()
       ((float)(AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53)) / 2));
     
 
+    AEInputGetCursorPosition(&mouseX, &mouseY);
+    
+    //HARD CODING MAGIC NUMBERS SPOOOOOKY
+    mouseX += -400;
+    mouseY += -300;
+    /***/
 
+    
     if (input.x != 0 || input.y != 0)
     {
+      stepSoundTimer -= frameTime;
+      if(stepSoundTimer < 0)
+      {
+       Audio_PlaySoundSample("ButtonClick.ogg", 0);
+       stepSoundTimer = 0.3;
+      }
       Vector2DNormalize(&input, &input);
       Vector2DScale(&input, &input, 10);
 
@@ -306,7 +355,7 @@ void PlayerInput()
     }
     else
     {
-
+      stepSoundTimer = 0.1;
       //if idle, set idle flag and remove walk flag
       if (!(playerAction & PLAYER_IDLE)) //called on the frame where player goes from walk to idle
       {
@@ -393,6 +442,15 @@ static void SnapVector(Vector2D* _input)
 */
 static void PlayerAttack()
 {
+  //randomly pick sword sound
+  if (AERandFloat() < 0.5)
+  {
+    Audio_PlaySoundSample("SwordSwing1.ogg", 0);
+  }
+  else
+  {
+    Audio_PlaySoundSample("SwordSwing2.ogg", 0);
+  }
   //set up animation:
   playerAction = playerAction & (PLAYER_DOWN + PLAYER_UP + PLAYER_LEFT + PLAYER_RIGHT); //strip direction from current flags
   playerAction += PLAYER_SWORD;
@@ -447,6 +505,7 @@ void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _oth
 
   if (_otherObject && _otherObject->type == entity_enemy)
   {
+    Audio_PlaySoundSample("SwordClash1.ogg", 0);
     printf("YOU HIT ENEMY FOR %i DAMAGE\n", attackDamage);
     EntityTakeDamage(&_otherObject->entity, attackDamage);
     GameObjectDestroy(&_thisObject);

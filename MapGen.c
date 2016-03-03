@@ -3,7 +3,7 @@
 #include "Isometric.h"
 #include "AEEngine.h"
 
-#define ROOM_SIZE 10
+#define ROOM_SIZE 12
 
 void GenerateMap(IsoMap* inputMap)
 {
