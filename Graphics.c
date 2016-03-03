@@ -272,6 +272,8 @@ Sprite* GCreateSprite(float _spriteX, float _spriteY, Animation* _animation, flo
   newSprite->isHud = 0;
   newSprite->offset.x = 0;
   newSprite->offset.y = 0;
+
+  //newSprite->animation->mesh
   //update sprite list:
   if (!spriteList->first) //if first, set first in list
   {

@@ -39,14 +39,17 @@ void GameObjectInitialize()
 \param _type type of the new object
 \return Returns a pointer to the new gameobject.
 */
-GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _type)
+GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _type, float _size)
 {
   
   GameObject* newGameObject = (GameObject*) malloc(sizeof(GameObject));
   newGameObject->sprite = _sprite;
   
-  newGameObject->physics = _physics;
-  newGameObject->physics->owner = newGameObject;
+  if (_physics)
+  {
+    newGameObject->physics = _physics;
+    newGameObject->physics->owner = newGameObject;
+  }
 
   newGameObject->entity = _entity;
   //printf("\n %i FUCKJIINGKAJSDS \n", _entity);
@@ -195,6 +198,13 @@ void GameObjectSimulate()
     while (instance)
     {
 
+      //debuging delete later
+      //if (instance->type == entity_button)
+      //{
+        //int derp = 2+2;
+      //}
+
+      //
       instanceNext = instance->next;
       if (instance->simulate)
       {
@@ -249,4 +259,34 @@ void GameObjectFree()
 
   gameObjectList.first = NULL;
   gameObjectList.last = NULL;
+}
+
+
+/*************************************************************************/
+/*!
+\par   Function: DisplayHealth
+
+\par Description: displays a health bar of the object
+
+\param obj pointer to the game object
+
+*/
+/*************************************************************************/
+void DisplayHealth(GameObject *obj)
+{
+  //these objects will always have a healthbar
+  if (obj->type == entity_enemy || 
+      obj->type == entity_player)
+  {
+    int max_health = obj->entity->maxHealth;   
+    int current_health = obj->entity->health;    
+    float health_percentage = ( (float)current_health ) / ( (float)max_health );
+    
+    
+  }
+  else  //cant display its healthbar
+  {
+    printf("object cannot display its health bar");
+    return;
+  }
 }

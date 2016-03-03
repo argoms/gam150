@@ -23,7 +23,12 @@ enum GameObjectNames {
   entity_friendlyProjectile, /**<used for player projectiles/attack tracers etc.*/
   entity_enemyProjectile,
   entity_button, /**< generic button */
+<<<<<<< HEAD
+  entity_hazard,   /* environmental hazards */
+  //entity_health_bar /**< health bar */
+=======
   entity_hazard /* environmental hazards */
+>>>>>>> refs/remotes/origin/master
 };
 
 // SET THE NUMBERS IN COMMENTS FOR THE ENEMIES TEXT FILE
@@ -115,3 +120,4 @@ GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _
 void GameObjectInitialize();
 void GameObjectFree();
 void GameObjectsPostStep();
+void DisplayHealth(GameObject *obj);

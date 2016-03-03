@@ -285,11 +285,20 @@ void PlayerInput()
       ((float)(AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53)) / 2));
     
 
+<<<<<<< HEAD
+    AEInputGetCursorPosition(&mouseX, &mouseY);
+    
+    //HARD CODING MAGIC NUMBERS SPOOOOOKY
+    mouseX += -400;
+    mouseY += -300;
+    /***/
+=======
 
     if (input.x != 0 || input.y != 0)
     {
       Vector2DNormalize(&input, &input);
       Vector2DScale(&input, &input, 10);
+>>>>>>> refs/remotes/origin/master
 
       //set player animation flags:
       playerAction = PLAYER_WALK;
