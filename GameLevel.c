@@ -17,6 +17,7 @@
 #include "Enemy.h"
 #include "PlayerEntity.h"
 #include "Hazard.h"
+#include "Button.h"
 
 //extern int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
 static GameObject* player; /**< pointer to player object*/
@@ -89,8 +90,16 @@ void GameLevelInit(void)
   hazard->simulate = NULL;
  
   //PhysicsRemoveObject(&a);
+
+  /*************************
+  BUTTONS
+  ************************/
+  
+
+  //GameObject* hazard = GameObjectCreate(, , 0, entity_hazard);
 }
 
+//THE GAME LEVEL RUN FUNCTION WAS HERE AND MOVED TO LEVEL MANAGER BY TARRANT AND NOW IT IS BACK 
 /*!
 \brief Game loop- run every frame
 

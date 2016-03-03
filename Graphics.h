@@ -37,6 +37,9 @@ struct Sprite
   int isHud; /**< whether or not the sprite is part of the hud, set to 1 if it is, 0 otherwise*/
   Vector2D offset; /**< additional visual offset to individual sprite*/
 
+  float Xscale; /**< width of sprite  */
+  float Yscale; /**< height of sprite */
+
 };
 
 

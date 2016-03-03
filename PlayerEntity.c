@@ -66,7 +66,7 @@ void PlayerInput()
     
 
     AEInputGetCursorPosition(&mouseX, &mouseY);
-
+    
     //HARD CODING MAGIC NUMBERS SPOOOOOKY
     mouseX += -400;
     mouseY += -300;
