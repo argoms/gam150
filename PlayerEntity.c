@@ -6,6 +6,8 @@
 #include "GameLevel.h"
 #include "AEEngine.h"
 #include <math.h>
+#include "Text.h"
+#include <string.h>
 
 extern double frameTime;
 
@@ -81,11 +83,13 @@ Bit 6 is active if the player is moving
 Bit 7 is active if the player is attacking
 */
 
+static TextString* healthText;
 /*!
 \brief Call at the start of a level to initialize player values.
 */
 void PlayerInit()
 {
+  
   player = GetPlayerObject();
   attackCooldown = 0;
   attackCooldownLength = 0.75;
@@ -240,6 +244,20 @@ void PlayerInit()
   playerSprite->offset.y = 80;
 
   playerAction = PLAYER_IDLE + PLAYER_DOWN;
+
+  //shitty alpha fast coding:
+  TextInit();
+  char hpstring[20] = "Health:            ";
+  int tempHP = player->entity->health;
+  int count = 0;
+  while (tempHP > 0)
+  {
+    printf("a");
+    count++;
+    hpstring[6 + count] = '*';
+    tempHP -= 10;
+  }
+  healthText =  TextCreateHUDString(hpstring, -300, -200);
 }
 
 /*!
@@ -252,6 +270,23 @@ void PlayerSimulate()
 
   PlayerInput();
   PlayerAnimations();
+  //8
+  
+  //alpha dumb hardcoding
+  {
+    char hpstring[20] = "Health:            ";
+    int tempHP = player->entity->health;
+    int count = 0;
+    while (tempHP > 0)
+    {
+      count++;
+      hpstring[6 + count] = '*';
+      tempHP -= 10;
+    }
+    TextRemoveString(healthText);
+    healthText = TextCreateHUDString(hpstring, -300, -200);
+    //TextHUDStringSet(&healthText, "aaa");
+  }
 }
 
 /*!
@@ -276,6 +311,12 @@ void PlayerInput()
       ((float)(AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53)) / 2));
     
 
+    AEInputGetCursorPosition(&mouseX, &mouseY);
+    
+    //HARD CODING MAGIC NUMBERS SPOOOOOKY
+    mouseX += -400;
+    mouseY += -300;
+    /***/
 
     if (input.x != 0 || input.y != 0)
     {
@@ -438,7 +479,7 @@ static void PlayerAttack()
 void TracerSimulate(GameObject* _self)
 {
   //printf("%p || %p \n", &_self, &player);
-  //GameObjectDestroy(&_self);
+  GameObjectDestroy(&_self);
 }
 
 void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _otherObject)

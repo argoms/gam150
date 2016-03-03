@@ -37,7 +37,9 @@ void GInitialize()
 void GRender()
 {
   AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-
+  float CameraX;
+  float CameraY;
+  AEGfxGetCamPosition(&CameraX, &CameraY);
   //render sprites in list starting from the first item
   if (spriteList->first)
   {
@@ -45,7 +47,7 @@ void GRender()
     while (spriteIndex)
     {
       AEGfxSetPosition(spriteIndex->x + spriteIndex->offset.x, spriteIndex->y + spriteIndex->offset.y);//set draw position
-
+      
       
 
                                                        //update sprite texture offsets according to animation
@@ -68,13 +70,17 @@ void GRender()
 
 
   //render HUD in list starting from the first item
-  if (hudLayer->first && 0)
+  if (hudLayer->first)
   {
+    
     Sprite* spriteIndex = hudLayer->first;
     while (spriteIndex)
     {
+      //printf("%p |", spriteIndex);
       SimAnimation(spriteIndex);
-      AEGfxSetPosition(spriteIndex->x, spriteIndex->y);
+      AEGfxSetPosition(spriteIndex->x + spriteIndex->offset.x + CameraX
+                      , spriteIndex->y + spriteIndex->offset.y + CameraY);//set draw position
+
       AEGfxTextureSet(spriteIndex->animation->texture,
         spriteIndex->animation->frameOffsetX * (spriteIndex->frame % spriteIndex->animation->frameWidth) - 1,
         spriteIndex->animation->frameOffsetY * (spriteIndex->frame / spriteIndex->animation->frameWidth) - 1);
@@ -84,6 +90,7 @@ void GRender()
 
 
     }
+    //printf("a \n");
   }
 
 }
@@ -265,6 +272,8 @@ Sprite* GCreateSprite(float _spriteX, float _spriteY, Animation* _animation, flo
   newSprite->isHud = 0;
   newSprite->offset.x = 0;
   newSprite->offset.y = 0;
+
+  //newSprite->animation->mesh
   //update sprite list:
   if (!spriteList->first) //if first, set first in list
   {
@@ -315,7 +324,6 @@ Sprite is appended to last on the list (more recently created elements are rende
 */
 Sprite* GCreateHudSprite(float _spriteX, float _spriteY, Animation* _animation, float _frameDelay)//struct AEGfxTexture* _texture, struct AEGfxVertexList* _mesh)
 {
-
   Sprite* newSprite = malloc(sizeof(struct Sprite));
   newSprite->x = _spriteX;
   newSprite->y = _spriteY;
@@ -329,11 +337,14 @@ Sprite* GCreateHudSprite(float _spriteX, float _spriteY, Animation* _animation, 
   newSprite->paused = 0;
   newSprite->frameDelay = _frameDelay;
   newSprite->isHud = 1;
+  newSprite->offset.x = 0;
+  newSprite->offset.y = 0;
 
 
   if (!hudLayer->first) //if first, set first in list
   {
     hudLayer->first = newSprite;
+    hudLayer->last = newSprite;
   }
   else
   {
@@ -468,7 +479,7 @@ I'm aware that the loop could probably be optimized way better. It kept breaking
 */
 void GSortSprite(Sprite* _sprite, float _direction)
 {
-  if (_direction >= 0) //assuming that the sprite is going upwards:
+  //if (_direction >= 0) //assuming that the sprite is going upwards:
   {
 
     if (_sprite->higherSprite && spriteList->first != _sprite) //if not at the top...
@@ -516,7 +527,7 @@ void GSortSprite(Sprite* _sprite, float _direction)
     }
 
   }
-  if (_direction <= 0) //same process, but going downwards instead of upwards
+  //if (_direction <= 0) //same process, but going downwards instead of upwards
   {
     if (_sprite->lowerSprite && spriteList->last != _sprite)
     {

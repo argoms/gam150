@@ -108,6 +108,7 @@ void PhysicsSimulate()
       PhysicsObject* collisionTest = instance->next;
       while (collisionTest)
       {
+
         float distBetweenSQ = Vector2DSquareDistance(&collisionTest->position, &instance->position);
        
         if (distBetweenSQ <= ((collisionTest->size + instance->size) / 2) * ((collisionTest->size + instance->size) / 2))
@@ -132,9 +133,11 @@ void PhysicsSimulate()
         collisionTest = collisionTest->next;
       }
 
+
+
       Vector2DAdd(&instance->position, &instance->position, &instance->velocity);
       PhysicsTileCollisions(instance);
-      
+      GSortSprite(instance->owner->sprite, 0);
       
       
       //printf("%3f | %3f", instance->position.x, instance->position.y);

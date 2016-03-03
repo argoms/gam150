@@ -167,7 +167,9 @@
   <ItemGroup>
     <ClCompile Include="Audio.c" />
     <ClCompile Include="Button.c" />
+    <ClCompile Include="Collision.c" />
     <ClCompile Include="conversions.c" />
+    <ClCompile Include="DeathScreen.c" />
     <ClCompile Include="Door.c" />
     <ClCompile Include="Enemy.c" />
     <ClCompile Include="Entity.c" />
@@ -175,6 +177,7 @@
     <ClCompile Include="GameObject.c" />
     <ClCompile Include="Graphics.c" />
     <ClCompile Include="Hazard.c" />
+    <ClCompile Include="ImportData.c" />
     <ClCompile Include="Isometric.c" />
     <ClCompile Include="LevelManager.c" />
     <ClCompile Include="Main_CS230.c">
@@ -193,7 +196,9 @@
   <ItemGroup>
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="Collision.h" />
     <ClInclude Include="conversions.h" />
+    <ClInclude Include="DeathScreen.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
@@ -201,6 +206,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Hazard.h" />
+    <ClInclude Include="ImportData.h" />
     <ClInclude Include="Isometric.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="MapCreator.h" />
@@ -211,6 +217,9 @@
     <ClInclude Include="Text.h" />
     <ClInclude Include="TownScreen.h" />
     <ClInclude Include="Vector2D.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="EnemiesLevel1.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

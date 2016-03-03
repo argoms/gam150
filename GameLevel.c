@@ -17,6 +17,13 @@
 #include "Enemy.h"
 #include "PlayerEntity.h"
 #include "Hazard.h"
+#include "Button.h"
+#include "ImportData.h"
+
+//dumb hard coding for alpha:
+int level; 
+//
+
 
 //extern int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
 static GameObject* player; /**< pointer to player object*/
@@ -53,7 +60,7 @@ void GameLevelInit(void)
 
   //set up player object:
   Entity* playerEntity = malloc(sizeof(Entity));
-  playerEntity->maxHealth = 100;
+  playerEntity->maxHealth = 30;
   EntityInit(&playerEntity);
   player = GameObjectCreate(PhysicsCreateObject(Vec2(2, 2), 1), GCreateSprite(0, 40, anim, 1), playerEntity, entity_player);
   player->simulate = &PlayerSimulate;
@@ -65,19 +72,6 @@ void GameLevelInit(void)
   GameObject* door = GameObjectCreate(PhysicsCreateObject(Vec2(6, 4), 1), GCreateSprite(0, 40, anim2, 1), 0, entity_door);
   door->physics->onCollision = &DoorDefaultOnCollision;
   door->simulate = NULL;
-
-  //create enemy object:
-  Entity* enemyEntity = malloc(sizeof(Entity));
-  enemyEntity->maxHealth = 100;
-  
-  EntityInit(&enemyEntity);
-  
-  GameObject* enemy = GameObjectCreate(PhysicsCreateObject(Vec2(4, 5), 1), GCreateSprite(0, 40, anim, 1), enemyEntity, entity_enemy);
-  //printf("%i \n iimiamsdias \n", enemyEntity->owner);
-  enemy->physics->onCollision = &EnemyOnCollision; //ENEMY COLLISON BEHAVIOR GO HERE
-  enemy->simulate = &EnemySimulate; //ENEMY CALLS THIS EVERY FRAME
-  enemy->entity->onEntityKilled = &EnemyOnKilled;
-  enemy->target = player;
 
   /**********************
   HAZARDS
@@ -93,13 +87,24 @@ void GameLevelInit(void)
   hazard->simulate = NULL;
  
   //PhysicsRemoveObject(&a);
+
+  /*************************
+  BUTTONS
+  ************************/
+  
+
+  //GameObject* hazard = GameObjectCreate(, , 0, entity_hazard);
+  //Magical function that populates the world
+  ImportEnemyData("EnemiesLevel1.txt", player);
 }
 
+//THE GAME LEVEL RUN FUNCTION WAS HERE AND MOVED TO LEVEL MANAGER BY TARRANT AND NOW IT IS BACK 
 /*!
 \brief Game loop- run every frame
 
   Currently just updates player position based on input.
 */
+
 void GameLevelRun(void)
 {
 
@@ -137,5 +142,5 @@ GameObject* GetPlayerObject(void)
 void OnPlayerKilled(void)
 {
   printf("\n***\n***\nYOU DIED SO NOW YOU'RE IN MAIN MENU WOOO\n***\n***\n");
-  LevelSetNext(level_mainMenu);
+  LevelSetNext(level_deathScreen);
 }
