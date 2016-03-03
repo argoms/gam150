@@ -170,6 +170,7 @@
     <ClCompile Include="conversions.c" />
     <ClCompile Include="Door.c" />
     <ClCompile Include="Enemy.c" />
+    <ClCompile Include="EnemyAnimations.c" />
     <ClCompile Include="Entity.c" />
     <ClCompile Include="GameLevel.c" />
     <ClCompile Include="GameObject.c" />
@@ -195,6 +196,7 @@
     <ClInclude Include="conversions.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyAnimations.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="GameLevel.h" />
     <ClInclude Include="GameObject.h" />
@@ -209,6 +211,9 @@
     <ClInclude Include="Text.h" />
     <ClInclude Include="TownScreen.h" />
     <ClInclude Include="Vector2D.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="EnemiesLevel1.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

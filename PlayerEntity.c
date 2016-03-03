@@ -72,6 +72,23 @@ static enum actions
   PLAYER_WALK = 32,
   PLAYER_SWORD = 64
 };
+/*
+typedef struct
+{
+  unsigned int action;
+  const char *filename;
+  Animation *animation;
+} AnimationDefinition;
+
+static AnimationDefinition animations[] =
+{
+  { PLAYER_WALK + PLAYER_LEFT + PLAYER_DOWN, "anims/walkLD.png",  NULL },
+  { PLAYER_WALK + PLAYER_RIGHT + PLAYER_DOWN, "anims/walkRD.png",  NULL }
+  { PLAYER_IDLE + PLAYER_LEFT + PLAYER_DOWN, "anims/idleLD.png", NULL },
+  { PLAYER_IDLE + PLAYER_RIGHT + PLAYER_DOWN, "anims/idleRD.png", NULL }
+
+};
+*/
 
 static unsigned int playerAction; //bit field for player action flags:
 /*!
@@ -108,7 +125,30 @@ void PlayerInit()
   int walkFrames = 12; //number of frames in walk animation
   int idleFrames = 1; //number of frames in idle animation
   int swordFrames = 13;
-
+  /*
+  int numAnimations = sizeof(animations) / sizeof(AnimationDefinition);
+  int i = 0;
+  for (i = 0; i < numAnimations; ++i)
+  {
+    int frames;
+    AEGfxVertexList *mesh;
+    switch (animations[i].action)
+    {
+    case PLAYER_IDLE:
+      frames = idleFrames;
+      mesh = idleMesh;
+      break;
+    case PLAYER_WALK:
+      frames = walkFrames;
+      mesh = walkMesh;
+      break;
+    }
+    animations[i].animation = GCreateAnimation(frames,
+      GCreateTexture(animations[i].filename),
+      mesh,
+      1);
+  }
+  */
   //load walking:
   animWalkDown = GCreateAnimation(walkFrames,
     GCreateTexture("animations/player/walkDown.png"),
@@ -458,6 +498,17 @@ void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _oth
 */
 void PlayerAnimations()
 {
+  /*
+  int numAnimations = sizeof(animations) / sizeof(AnimationDefinition);
+  for (int i = 0; i < numAnimations; ++i)
+  {
+    if ((playerAction == animations[i].action) && (animations[i].animation != NULL))
+    {
+      playerSprite->animation = animations[i].animation;
+      break;
+    }
+  }
+  */
   //printf("%i", playerAction);
   switch (playerAction)
   {

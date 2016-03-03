@@ -1,9 +1,12 @@
 #include "Enemy.h"
+#include "EnemyAnimations.h"
 #include "GameLevel.h"
 #include "GameObject.h"
 #include "LevelManager.h"
+#include "Isometric.h"
 #include "AEEngine.h"
 #include <stdio.h>
+#include <math.h>
 
 static Animation* tracerAnimation;
 
@@ -40,6 +43,8 @@ GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entit
 
   enemy->miscData = enemyContainer;
 
+  EnemyAnimationInitialize(enemy);
+
   return enemy;
 }
 
@@ -62,6 +67,7 @@ void EnemyInitialize(GameObject* _thisObject)
 void EnemySimulate(GameObject* _thisObject)
 {
   EnemySimulateAI(_thisObject);
+  EnemyAnimationStateManager(_thisObject);
 }
 
 /*
@@ -123,6 +129,8 @@ Vector2D EnemyMovement(GameObject* _thisObject, const float distanceToPlayer)
 
   if (distanceToPlayer <= enemyContainer->attackRange)
   {
+    enemyContainer->enemyAnimationState = ENEMY_WALK;
+
     Vector2D enemyToPlayer;
     enemyToPlayer.x = _thisObject->target->physics->position.x - _thisObject->physics->position.x;
     enemyToPlayer.y = _thisObject->target->physics->position.y - _thisObject->physics->position.y;
@@ -132,26 +140,48 @@ Vector2D EnemyMovement(GameObject* _thisObject, const float distanceToPlayer)
     normalVelocityVector.y = _thisObject->physics->velocity.x;
 
     float dotProduct = Vector2DDotProduct(&(normalVelocityVector), &(enemyToPlayer));
-    printf("%f", dotProduct);
+    //printf("%f", dotProduct);
 
     if (dotProduct > 0)
     {
-      _thisObject->physics->angle += ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
-      printf("ROTATION");
+      _thisObject->physics->angle -= ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
+      //printf("ROTATION");
     }
     else if (dotProduct < 0)
     {
-      _thisObject->physics->angle -= ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
-      printf("ROTATION");
+      _thisObject->physics->angle += ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
+      //printf("ROTATION");
     }
+    //printf("%f\n", _thisObject->physics->angle * (180.0f / PI));
 
     Vector2D newVelocityVector;
     Vector2DFromAngleRad(&newVelocityVector, _thisObject->physics->angle);
     facingDirection = newVelocityVector;
     Vector2DScale(&newVelocityVector, &newVelocityVector, enemyContainer->chaseSpeed);
-
     _thisObject->physics->velocity.x = newVelocityVector.x;
     _thisObject->physics->velocity.y = newVelocityVector.y;
+
+    // facing angle
+    Vector2D worldFacingDirection = IsoWorldToScreen(&facingDirection);
+    printf("%f, %f\n", worldFacingDirection.x, worldFacingDirection.y);
+
+    if (worldFacingDirection.x > 0)
+    {
+      enemyContainer->enemyAnimationState += ENEMY_RIGHT;
+    }
+    else if (worldFacingDirection.x < 0)
+    {
+      enemyContainer->enemyAnimationState += ENEMY_LEFT;
+    }
+
+    if (worldFacingDirection.y > 0)
+    {
+      enemyContainer->enemyAnimationState += ENEMY_UP;
+    }
+    else if (worldFacingDirection.y < 0)
+    {
+      enemyContainer->enemyAnimationState += ENEMY_DOWN;
+    }
   }
 
   return facingDirection;

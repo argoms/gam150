@@ -125,8 +125,6 @@ int ImportEnemyData(const char *file, GameObject* player)
       newEnemy->initialize(newEnemy);
 
       printf("%i enemy", newEnemy);
-      newEnemy->physics->position.x = 2;
-      newEnemy->physics->position.y = 2;
     }
   }
 }
