@@ -12,6 +12,7 @@ Basic level/gamestate manager implementation.
 #include "GameLevel.h"
 #include "TownScreen.h"
 #include "Button.h"
+#include "DeathScreen.h"
 
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
 static AEGfxVertexList*	pMesh2;				/**< EXAMPLE VAR*/
@@ -52,6 +53,9 @@ void LevelLoad(int _level)
   case level_town:
     TownScreenInit();
     break;
+  case level_deathScreen:
+    DeathScreenInit();
+    break;
   }
 
 }
@@ -73,6 +77,9 @@ void LevelRun()
     break;
   case level_town:
     TownScreenRun();
+    break;
+  case level_deathScreen:
+    DeathScreenRun();
     break;
   }
 

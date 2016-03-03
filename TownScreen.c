@@ -12,12 +12,15 @@ Functions handling the town menu/screen portion of the game where the player res
 #include <stdio.h>
 #include "Button.h"
 
-
+extern int level;
 void TownScreenInit()
 {
   TextInit();
   printf("\nWELCOME TO TOWN");
-  TextCreateString("PLACEHOLDER TOWN", -200, 0);
+  char levelIndicator[3];
+  itoa(level, levelIndicator, 10);
+  TextCreateString(levelIndicator, -350, 50);
+  TextCreateString("PLACEHOLDER INTERMISSION", -350, 0);
   TextCreateString("PRESS SPACE TO LEAVE", -300, -50);
 
 

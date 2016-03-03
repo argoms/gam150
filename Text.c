@@ -173,3 +173,19 @@ void TextStringSet(TextString** _textString, char* _string)
   //free(*_textString);
   *_textString = TextCreateString(_string, tempX, tempY);
 }
+
+/*!
+\brief sets text HUD string to given string
+
+\param _textString address of the text string (type &textPointer, not textPointer)
+\param _string string to overwrite
+*/
+void TextHUDStringSet(TextString** _textString, char* _string)
+{
+  float tempX = (*_textString)->x;
+  float tempY = (*_textString)->y;
+  TextRemoveString(*_textString);
+  //free(*_textString);
+  *_textString = TextCreateHUDString(_string, tempX, tempY);
+  printf("hudset");
+}

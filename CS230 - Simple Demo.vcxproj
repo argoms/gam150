@@ -169,6 +169,7 @@
     <ClCompile Include="Button.c" />
     <ClCompile Include="Collision.c" />
     <ClCompile Include="conversions.c" />
+    <ClCompile Include="DeathScreen.c" />
     <ClCompile Include="Door.c" />
     <ClCompile Include="Enemy.c" />
     <ClCompile Include="Entity.c" />
@@ -195,6 +196,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="conversions.h" />
+    <ClInclude Include="DeathScreen.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />

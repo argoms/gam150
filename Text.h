@@ -38,3 +38,4 @@ TextString* TextCreateHUDString(char* _string, float _x, float _y);
 void TextStringSetPos(TextString* _textString, float _x, float _y);
 void TextRemoveString(TextString* _textString);
 void TextStringSet(TextString** _textString, char* _string);
+void TextHUDStringSet(TextString** _textString, char* _string);

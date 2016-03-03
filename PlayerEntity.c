@@ -245,8 +245,19 @@ void PlayerInit()
 
   playerAction = PLAYER_IDLE + PLAYER_DOWN;
 
+  //shitty alpha fast coding:
   TextInit();
-  healthText =  TextCreateHUDString("Health: ", -300, -200);
+  char hpstring[20] = "Health:            ";
+  int tempHP = player->entity->health;
+  int count = 0;
+  while (tempHP > 0)
+  {
+    printf("a");
+    count++;
+    hpstring[6 + count] = '*';
+    tempHP -= 10;
+  }
+  healthText =  TextCreateHUDString(hpstring, -300, -200);
 }
 
 /*!
@@ -261,6 +272,21 @@ void PlayerSimulate()
   PlayerAnimations();
   //8
   
+  //alpha dumb hardcoding
+  {
+    char hpstring[20] = "Health:            ";
+    int tempHP = player->entity->health;
+    int count = 0;
+    while (tempHP > 0)
+    {
+      count++;
+      hpstring[6 + count] = '*';
+      tempHP -= 10;
+    }
+    TextRemoveString(healthText);
+    healthText = TextCreateHUDString(hpstring, -300, -200);
+    //TextHUDStringSet(&healthText, "aaa");
+  }
 }
 
 /*!
