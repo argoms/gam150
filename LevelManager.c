@@ -14,6 +14,7 @@ Basic level/gamestate manager implementation.
 #include "Button.h"
 #include "DeathScreen.h"
 #include "SplashScreen.h"
+#include "Audio.h"
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
 static AEGfxVertexList*	pMesh2;				/**< EXAMPLE VAR*/
 static AEGfxTexture *pTex1;/**< EXAMPLE VAR*/
@@ -70,7 +71,6 @@ void LevelLoad(int _level)
 void LevelRun()
 {
   frameTime = AEFrameRateControllerGetFrameTime();
-  printf("%i", currentLevel);
   switch (currentLevel)
   {
     
@@ -99,6 +99,7 @@ void LevelRun()
       gGameRunning = 0;
       break;
     default:
+      Audio_PlaySoundSample("ButtonClick2.ogg", 0);
       LevelUnload();
       currentLevel = nextLevel;
       LevelLoad(nextLevel);

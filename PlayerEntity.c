@@ -58,6 +58,7 @@ static Animation* animSwordUpLeft;
 static Animation* animSwordUpRight;
 
 static Sprite* playerSprite;
+static float stepSoundTimer;
 
 //the following enums are used for the player action bit field:
 static enum directions 
@@ -92,8 +93,8 @@ void PlayerInit()
   
   player = GetPlayerObject();
   attackCooldown = 0;
-  attackCooldownLength = 0.75;
-  attackDamage = 100;
+  attackCooldownLength = 0.5;
+  attackDamage = 50;
   tracerAnimation = GCreateAnimation(1,
     GCreateTexture("isotilePlaceholder1.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
@@ -252,7 +253,7 @@ void PlayerInit()
   int count = 0;
   while (tempHP > 0)
   {
-    printf("a");
+    //printf("a");
     count++;
     hpstring[6 + count] = '*';
     tempHP -= 10;
@@ -318,8 +319,15 @@ void PlayerInput()
     mouseY += -300;
     /***/
 
+    
     if (input.x != 0 || input.y != 0)
     {
+      stepSoundTimer -= frameTime;
+      if(stepSoundTimer < 0)
+      {
+       Audio_PlaySoundSample("ButtonClick.ogg", 0);
+       stepSoundTimer = 0.3;
+      }
       Vector2DNormalize(&input, &input);
       Vector2DScale(&input, &input, 10);
 
@@ -347,7 +355,7 @@ void PlayerInput()
     }
     else
     {
-
+      stepSoundTimer = 0.1;
       //if idle, set idle flag and remove walk flag
       if (!(playerAction & PLAYER_IDLE)) //called on the frame where player goes from walk to idle
       {
@@ -434,6 +442,15 @@ static void SnapVector(Vector2D* _input)
 */
 static void PlayerAttack()
 {
+  //randomly pick sword sound
+  if (AERandFloat() < 0.5)
+  {
+    Audio_PlaySoundSample("SwordSwing1.ogg", 0);
+  }
+  else
+  {
+    Audio_PlaySoundSample("SwordSwing2.ogg", 0);
+  }
   //set up animation:
   playerAction = playerAction & (PLAYER_DOWN + PLAYER_UP + PLAYER_LEFT + PLAYER_RIGHT); //strip direction from current flags
   playerAction += PLAYER_SWORD;
@@ -488,6 +505,7 @@ void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _oth
 
   if (_otherObject && _otherObject->type == entity_enemy)
   {
+    Audio_PlaySoundSample("SwordClash1.ogg", 0);
     printf("YOU HIT ENEMY FOR %i DAMAGE\n", attackDamage);
     EntityTakeDamage(&_otherObject->entity, attackDamage);
     GameObjectDestroy(&_thisObject);
