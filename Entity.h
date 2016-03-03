@@ -7,6 +7,8 @@ Contains prototypes/declarations for entities- objects that can take/receive dam
 */
 #pragma once
 #include "Vector2D.h"
+//#include "Dodge.h"
+
 typedef struct Entity Entity;
 typedef struct GameObject GameObject;
 /*!
@@ -19,8 +21,11 @@ struct Entity
 
   int health; /**< number of hitpoints remaining*/
   int maxHealth; /**< maximum number of hitpoints*/
-  
+  int invincibilityTime;/**< frames before the entitiy is vulnerable agian  */
+  int invincibilityRecoveryTime; /**< frames before the entitity can be invincible again, this is only upon activation, NOT immediatly */
+
   void(*onEntityKilled)(); /**< called when entity dies*/
+  int canBeDamaged; /**< flag if the entity can be damaged, default to 1 */
 };
 
 void EntityInit(Entity** _entity);
