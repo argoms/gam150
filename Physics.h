@@ -26,6 +26,7 @@ struct PhysicsObject
 {
   
   Vector2D position; /**< world position of object*/
+  Vector2D lastValidPosition; /* Last known valid position of object */
   Vector2D velocity; /**< world velocity of object*/
   float size; /**< world size of object*/
   PhysicsObject* next; /**< next object in linked list*/
@@ -55,4 +56,4 @@ static void PhysicsTileCollisions(PhysicsObject* _instance);
 static void PhysicsIsInsideTile(PhysicsObject* _instance);
 void PhysicsRemoveObject(PhysicsObject** _input);
 
-int PhysicsSetVelocity(PhysicsObject* _instance, float x, float y);
+void PhysicsSetVelocity(PhysicsObject* _instance, float x, float y);
