@@ -20,6 +20,11 @@
 #include "Button.h"
 #include "ImportData.h"
 
+//dumb hard coding for alpha:
+int level; 
+//
+
+
 //extern int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
 static GameObject* player; /**< pointer to player object*/
 
