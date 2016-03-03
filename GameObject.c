@@ -248,13 +248,15 @@ void GameObjectFree()
         
       temp = temp->next;
       //GRemoveSprite(tempPrevious->sprite);
-      free(tempPrevious);
+      //free(tempPrevious);
+      GameObjectRemove(&tempPrevious);
       //GameObjectDestroy(tempPrevious);
 
     }
     //GameObjectDestroy(temp);
     //printf("||| %p ||", temp);
-    free(temp);
+    //free(temp);
+    GameObjectRemove(&temp);
   }
 
   gameObjectList.first = NULL;
