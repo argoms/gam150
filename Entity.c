@@ -26,12 +26,14 @@ void EntityInit(Entity** _entity)
 */
 void EntityTakeDamage(Entity** _entity, int _damage)
 {
-  
-  (*_entity)->health -= _damage;
-  //printf("OW, %i left", (*_entity)->health);
-  if ((*_entity)->health < 1)
+  if (*_entity)
   {
-    (*_entity)->onEntityKilled(((*_entity)->owner));
+    (*_entity)->health -= _damage;
+    //printf("OW, %i left", (*_entity)->health);
+    if ((*_entity)->health < 1)
+    {
+      (*_entity)->onEntityKilled(((*_entity)->owner));
+    }
   }
 }
 

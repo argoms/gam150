@@ -70,7 +70,7 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
   -----------------------------------------------------------------------------*/
     TestAudioINIT();
 
-  LevelLoad(level_mainMenu);
+  LevelLoad(level_splashScreen);
   //GInitialize();
 
 	// Changing the window title

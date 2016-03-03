@@ -1,0 +1,32 @@
+/*!
+\file   DeathScreen.c
+\author James Do
+\par    email: j.do\@digipen.edu
+\brief
+Functions handling the splash screen
+*/
+#include "Graphics.h"
+#include "AEEngine.h"
+#include "LevelManager.h"
+#include "Text.h"
+#include <stdio.h>
+#include "Button.h"
+#include "SplashScreen.h"
+
+
+void SplashScreenInit()
+{
+  TextInit();
+  GCreateSprite(0, 0, GCreateAnimation(1, GCreateTexture("splash.png"), GCreateMesh(800, 600, 1, 1), 1), 1);
+  TextCreateString("", -300, -50);
+  printf("AAA");
+}
+
+void SplashScreenRun()
+{
+  printf("AAA");
+  if (AEInputCheckTriggered(VK_SPACE))
+  {
+    LevelSetNext(level_mainMenu);
+  }
+}

@@ -187,6 +187,7 @@
     <ClCompile Include="MapGen.c" />
     <ClCompile Include="Physics.c" />
     <ClCompile Include="PlayerEntity.c" />
+    <ClCompile Include="SplashScreen.c" />
     <ClCompile Include="Text.c" />
     <ClCompile Include="TownScreen.c" />
     <ClCompile Include="Vector2D.c" />
@@ -210,6 +211,7 @@
     <ClInclude Include="MapGen.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PlayerEntity.h" />
+    <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TownScreen.h" />
     <ClInclude Include="Vector2D.h" />

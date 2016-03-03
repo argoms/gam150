@@ -13,7 +13,7 @@ Basic level/gamestate manager implementation.
 #include "TownScreen.h"
 #include "Button.h"
 #include "DeathScreen.h"
-
+#include "SplashScreen.h"
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
 static AEGfxVertexList*	pMesh2;				/**< EXAMPLE VAR*/
 static AEGfxTexture *pTex1;/**< EXAMPLE VAR*/
@@ -42,6 +42,7 @@ double frameTime;
 void LevelLoad(int _level)
 {
   GInitialize();
+
   switch (_level)
   {
   case level_level1:
@@ -56,6 +57,9 @@ void LevelLoad(int _level)
   case level_deathScreen:
     DeathScreenInit();
     break;
+  case level_splashScreen:
+    SplashScreenInit();
+    break;
   }
 
 }
@@ -66,9 +70,10 @@ void LevelLoad(int _level)
 void LevelRun()
 {
   frameTime = AEFrameRateControllerGetFrameTime();
-
+  printf("%i", currentLevel);
   switch (currentLevel)
   {
+    
   case level_level1:
     GameLevelRun();
     break;
@@ -80,6 +85,9 @@ void LevelRun()
     break;
   case level_deathScreen:
     DeathScreenRun();
+    break;
+  case level_splashScreen:
+    SplashScreenRun();
     break;
   }
 
