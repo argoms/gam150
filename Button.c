@@ -13,6 +13,8 @@ include this if you have warnings with type conversions
 /*****************************************************************************/
 #include "Button.h"
 
+#define LEFT_CLICK 1
+#define RIGHT_CLICK 2
 
 /*************************************************************************/
 /*!
@@ -30,22 +32,40 @@ include this if you have warnings with type conversions
 
 \param _type type of the new object
 
-\param _button_typen type of button
+\param _button_type type of button
+
+\param _size size of button
+
+\param _scalex size of the x of the mesh
+
+\param _scaley size of the y of the mesh
 
 \return Returns a pointer to the new gameobject.
 */
 /*************************************************************************/
-GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _button_type)
+GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _button_type, float _size, float _scalex, float _scaley)
 {
-  GameObject *buttonObject; /* button object pointer              */
-  Button* buttonComponent;  /* reference to the component created */
+  printf("created button");
+
+  GameObject *buttonObject;                   /* button object pointer              */
+  Button* buttonComponent;                    /* reference to the component created */
 
   /* call the create game object function to make the button */
-  buttonObject = GameObjectCreate(_physics, _sprite, _entity, entity_button);  
+  buttonObject = GameObjectCreate(NULL, _sprite, _entity, entity_button);  
+
+  buttonObject->simulate = &ButtonSimulate;   /* set the similate function          */
 
   buttonComponent = (Button*)malloc(sizeof(Button));    /* malloc the button component */
   buttonComponent->type = _button_type;                 /* give the component the type */
+  buttonComponent->Xscale = _scalex;                    /* set the x scale             */
+  buttonComponent->Yscale = _scaley;                    /* set the y scale             */
+  buttonComponent->size = _size;                        /* set the size                */
+
   /* the type will determine where the next level will be upon function call */
+
+  //free(buttonObject->physics);
+  buttonObject->physics = NULL;
+
 
   // set the function pointers to point to whatever function you wish to call
   switch (_button_type)
@@ -116,10 +136,10 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
   }
   break;
 
-  return buttonObject;  //return the button object
+  
   }
-
-  return 0;
+  buttonObject->miscData = buttonComponent;
+  return buttonObject;  //return the button object
 }
 
 /*************************************************************************/
@@ -230,7 +250,7 @@ void PlayPressedAnimation(GameObject *button)
   }
 
 
-  printf("played pressed animation");
+  //printf("played pressed animation");
 }
 
 /*************************************************************************/
@@ -265,7 +285,7 @@ void PlayButtonHoverAnimation(GameObject *button)
   {
     return;
   }
-  printf("played hover animation");
+  //printf("played hover animation");
 }
 
 /*************************************************************************/
@@ -281,9 +301,9 @@ void PlayButtonHoverAnimation(GameObject *button)
 /*************************************************************************/
 void PlayButtonReleasedAnimation(GameObject *button)
 {
-  if (button == NULL)
+  if (button == NULL)                               /* check if it is null */
   {
-    printf("attempted to play release animation");
+    printf("attempted to play release animation and failed");  /* print               */
     return;
   }
 
@@ -292,10 +312,99 @@ void PlayButtonReleasedAnimation(GameObject *button)
     return;
   }
 
-  Button *button_data = button->miscData;
-  printf("played released animation");
-  int level = button_data->type;
-  LevelSetNext(level);
+  Button *button_data = button->miscData; /* get the micelaneous data */
+  //printf("played released animation");    /* print                    */
+  int level = button_data->next;          /* get the level            */
+  LevelSetNext(level);                    /* set the next level       */
 }
 
+/*************************************************************************/
+/*!
+\par   Function: ButtonSimulate
 
+\par Description: Simulate function for the button. Checks if the mouse is
+                  over the button(colliding), pressed, released. 
+                  Releaasing the button switches the level or whatever 
+                  the function pointer is set to.
+
+\param button pointer to the button game object, not its component
+
+*/
+/*************************************************************************/
+void ButtonSimulate(GameObject *button)
+{
+  float winMaxX;            
+  float winMaxY;
+  float winMinX;
+  float winMinY;
+
+  winMaxX = AEGfxGetWinMaxX();
+  winMaxY = AEGfxGetWinMaxY();
+  winMinX = AEGfxGetWinMinX();
+  winMinY = AEGfxGetWinMinY();
+
+  if (button == NULL)
+  {
+    return;
+  }
+
+  if (button->miscData == NULL)
+  {
+    return;
+  }
+
+
+  Button *button_data = button->miscData;
+ 
+  float x = button->sprite->x;                  /* button x position            */
+  float y = button->sprite->y;                  /* button y position            */
+  Vector2D position;                            /* button position vector       */
+  position.x = x;                               /* set the x of the rect*/
+  position.y = y;                               /* set thr y of the rect*/
+  float scalex = button_data->Xscale;           /* button width                 */
+  float scaley = button_data->Yscale;           /* button height                */
+                                                    
+  signed long mouse_x = 0.0f;                   /* mouse x position             */
+  signed long mouse_y = 0.0f;                   /* mouse y position             */
+  AEInputGetCursorPosition(&mouse_x, &mouse_y); /* modify the x and y positions */
+  mouse_x += - (winMaxX - winMinX) / 2;
+  mouse_y = -1 * mouse_y + (winMaxY - winMinY) / 2;
+  //mouse_y += - (mouse_y - (winMaxY - winMinY) / 2);
+
+  Vector2D point;                               /* vector for the mouse pos     */
+  point.x = mouse_x;      /* set the x of the mouse       */
+  point.y = mouse_y;      /* set the y of the mouse       */
+
+  //AEGfxConvertScreenCoordinatesToWorld(mouse_x, mouse_y, &point.x,&point.y);
+
+  if (PointToRect(&point, &position, scalex, scaley))
+  {
+    int derp = 1 + 1;
+  }
+  
+    //if a left click and collision of mouse position and button position
+  if (AEInputCheckCurr(LEFT_CLICK) && PointToRect(&point, &position, scalex, scaley))
+  {
+    //printf("left click \n");
+    button_data->onClick(button);//call the on click function pointer
+    //(button);
+  }//if a left click release and still near the button
+  else if (AEInputCheckReleased(LEFT_CLICK) && PointToRect(&point, &position, scalex, scaley))//if left click released
+  {
+    //printf("left click and released \n");
+    button_data->onRelease(button);     //call the on release function pointer
+    
+  }//if collision
+  else if (PointToRect(&point, &position, scalex, scaley))
+  {
+    //printf("mouse is over \n");
+    //get the button data
+    //Button *button_data = button->miscData; 
+    button_data->onOver(button);   //call the on over function pointer
+    //PlayButtonHoverAnimation(button); //
+  }
+  else
+  {
+    //printf("Mouse: %d  %d | sprite %f %f\ | diffY %f \n", mouse_x, mouse_y, x, y, winMaxY - winMinY);
+  }
+}

@@ -17,7 +17,11 @@
 #include "Enemy.h"
 #include "PlayerEntity.h"
 #include "Hazard.h"
+<<<<<<< HEAD
+#include "Button.h"
+=======
 #include "ImportData.h"
+>>>>>>> refs/remotes/origin/master
 
 //extern int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
 static GameObject* player; /**< pointer to player object*/
@@ -82,10 +86,20 @@ void GameLevelInit(void)
  
   //PhysicsRemoveObject(&a);
 
+<<<<<<< HEAD
+  /*************************
+  BUTTONS
+  ************************/
+  
+
+  //GameObject* hazard = GameObjectCreate(, , 0, entity_hazard);
+=======
   //Magical function that populates the world
   ImportEnemyData("EnemiesLevel1.txt", player);
+>>>>>>> refs/remotes/origin/master
 }
 
+//THE GAME LEVEL RUN FUNCTION WAS HERE AND MOVED TO LEVEL MANAGER BY TARRANT AND NOW IT IS BACK 
 /*!
 \brief Game loop- run every frame
 
