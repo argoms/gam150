@@ -118,6 +118,8 @@ SWITCHES
 -------------------------------------------------------------------------------------------------*/
 
 bool SHOW_ERRORS = true;    /* Whether or not to display error messages */
+
+bool USE_FIXED_TLES = true; /* Whether or not to use fixed tiles */
 /*-------------------------------------------------------------------------------------------------
 END SWItCHES
 -------------------------------------------------------------------------------------------------*/
@@ -389,42 +391,42 @@ static bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
 
   /* Get the top tile. */
   if (tile->connections[TILE_TOP])
-    if (tile->connections[TILE_TOP]->connectedToEdge)
+    //if (tile->connections[TILE_TOP]->connectedToEdge)
       top = true;
 
   /* Get the left tile. */
   if (tile->connections[TILE_LEFT])
-    if (tile->connections[TILE_LEFT]->connectedToEdge)
+    //if (tile->connections[TILE_LEFT]->connectedToEdge)
       left = true;
 
   /* Get the right tile. */
   if (tile->connections[TILE_RIGHT])
-    if (tile->connections[TILE_RIGHT]->connectedToEdge)
+    //if (tile->connections[TILE_RIGHT]->connectedToEdge)
       right = true;
 
   /* Get the bottom tile. */
   if (tile->connections[TILE_BOTTOM])
-    if (tile->connections[TILE_BOTTOM]->connectedToEdge)
+    //if (tile->connections[TILE_BOTTOM]->connectedToEdge)
       bottom = true;
 
   /* Get the top-left tile. */
   if (tile->connections[TILE_TOP_LEFT])
-    if (tile->connections[TILE_TOP_LEFT]->connectedToEdge)
+    //if (tile->connections[TILE_TOP_LEFT]->connectedToEdge)
       top_left = true;
 
   /* Get the top-right tile. */
   if (tile->connections[TILE_TOP_RIGHT])
-    if (tile->connections[TILE_TOP_RIGHT]->connectedToEdge)
+    //if (tile->connections[TILE_TOP_RIGHT]->connectedToEdge)
       top_right = true;
 
   /* Get the bottom-left tile. */
   if (tile->connections[TILE_BOTTOM_LEFT])
-    if (tile->connections[TILE_BOTTOM_LEFT]->connectedToEdge)
+    //if (tile->connections[TILE_BOTTOM_LEFT]->connectedToEdge)
       bottom_left = true;
 
   /* Get the bottom-right tile. */
   if (tile->connections[TILE_BOTTOM_RIGHT])
-    if (tile->connections[TILE_BOTTOM_RIGHT]->connectedToEdge)
+    //if (tile->connections[TILE_BOTTOM_RIGHT]->connectedToEdge)
       bottom_right = true;
 
   /*
@@ -687,7 +689,8 @@ static void MapCreator_Map_GenerateValues(TileGen_Map *tileMap, float wallDensit
   int i;
 
   /* Seeds the random number generator. ONLY FOR PLAY-TESTING AND PRESENTATION PURPOSES. */
-  RandSeed(1);
+  if (USE_FIXED_TLES)
+    RandSeed(1);
 
   for (i = 0; i < wallsToCreate; ++i)
   {

@@ -137,8 +137,13 @@ GameObject* ImportEnemyData(float x, float y, const char *file, GameObject* play
       //newEnemy->physics->position.x = 2;
       //newEnemy->physics->position.y = 2;
 	  printf("Created an enemy!");
+
+      //CLOSE THE FILE
+      fclose(infile);
+
+      return newEnemy;
     }
   }
 
-  return newEnemy;
+  
 }

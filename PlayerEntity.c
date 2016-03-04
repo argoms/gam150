@@ -561,7 +561,7 @@ void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _oth
     EntityTakeDamage(&_otherObject->entity, attackDamage);
   }
 
-  if (_otherObject->entity->health <= 0)
+  if (_otherObject->entity && _otherObject->entity->health <= 0)
   {
     GameObjectDestroy(&_thisObject);
   }
