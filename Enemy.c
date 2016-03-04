@@ -32,6 +32,7 @@ GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entit
   enemyContainer->enemyType = enemyType;
   enemyContainer->chaseSpeed = chaseSpeed;
   enemyContainer->detectRange = detectRange;
+  enemyContainer->knockback = knockback;
   enemyContainer->attackCooldown = attackCooldown;
   enemyContainer->attackCooldownLength = attackCooldownLength;
   enemyContainer->attackWindup = attackWindup;
@@ -42,8 +43,6 @@ GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entit
   enemyContainer->projectileSpeed = projectileSpeed;
 
   enemy->miscData = enemyContainer;
-
-  EnemyAnimationInitialize(enemy);
 
   return enemy;
 }
@@ -94,10 +93,8 @@ void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject)
   {
     //GameObjectDestroy(&_thisObject);
     //LevelSetNext(level_mainMenu);
-
-    EntityTakeDamage(&(_otherObject->entity), 2);
-
     EnemyKnockBack(_thisObject, _otherObject);
+    EntityTakeDamage(&(_otherObject->entity), 2);
 
     printf("PLAYER TAKING DAMAGE \n");
   }
@@ -116,6 +113,39 @@ void EnemyOnKilled(GameObject* _self)
   printf("type: %i \n", (_self)->type);
 }
 
+void EnemyChangeAnimationFlag(EnemyContainer* enemyContainer, Vector2D* worldFacingDirection)
+{
+
+  double worldFacingAngle = atan2(worldFacingDirection->y, worldFacingDirection->x) * (180.0f / PI);
+  //printf("%f\n", worldFacingAngle);
+  enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & (~(ENEMY_LEFT + ENEMY_RIGHT + ENEMY_UP + ENEMY_DOWN));
+  
+  if (worldFacingAngle < 67.5 && worldFacingAngle > -67.5)
+  {
+    //printf("right");
+    //printf("%f\n", worldFacingAngle);
+    enemyContainer->enemyAnimationState += ENEMY_RIGHT;
+  }
+  
+  if (worldFacingAngle > 112.5 || worldFacingAngle < -112.5)
+  {
+    //printf("left\n");
+    enemyContainer->enemyAnimationState += ENEMY_LEFT;
+  }
+
+  if (worldFacingAngle > 22.5 && worldFacingAngle < 157.5)
+  {
+    //printf("up\n");
+    enemyContainer->enemyAnimationState += ENEMY_UP;
+  }
+  if (worldFacingAngle < -22.5 && worldFacingAngle > -157.5)
+  {
+    //printf("down\n");
+    enemyContainer->enemyAnimationState += ENEMY_DOWN;
+  }
+  
+}
+
 /*
 \brief Handles enemy movement
 \param _thisObject the enemy that moves
@@ -130,60 +160,23 @@ Vector2D EnemyMovement(GameObject* _thisObject, const float distanceToPlayer)
   if (distanceToPlayer <= enemyContainer->attackRange)
   {
     enemyContainer->enemyAnimationState = ENEMY_WALK;
+    facingDirection.x = _thisObject->target->physics->position.x - _thisObject->physics->position.x;
+    facingDirection.y = _thisObject->target->physics->position.y - _thisObject->physics->position.y;
 
-    Vector2D enemyToPlayer;
-    enemyToPlayer.x = _thisObject->target->physics->position.x - _thisObject->physics->position.x;
-    enemyToPlayer.y = _thisObject->target->physics->position.y - _thisObject->physics->position.y;
+    Vector2D normalizedFacing;
+    Vector2DNormalize(&normalizedFacing, &facingDirection);
+    Vector2D velocityVector;
+    Vector2DScale(&velocityVector, &normalizedFacing, enemyContainer->chaseSpeed);
 
-    Vector2D normalVelocityVector;
-    normalVelocityVector.x = _thisObject->physics->velocity.y * -1.0f;
-    normalVelocityVector.y = _thisObject->physics->velocity.x;
+    _thisObject->physics->velocity.x = velocityVector.x;
+    _thisObject->physics->velocity.y = velocityVector.y;
+   
+    Vector2D worldFacing;
+    worldFacing = IsoWorldToScreen(&facingDirection);
+    EnemyChangeAnimationFlag(enemyContainer, &worldFacing);
 
-    float dotProduct = Vector2DDotProduct(&(normalVelocityVector), &(enemyToPlayer));
-    //printf("%f", dotProduct);
-
-    if (dotProduct > 0)
-    {
-      _thisObject->physics->angle -= ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
-      //printf("ROTATION");
-    }
-    else if (dotProduct < 0)
-    {
-      _thisObject->physics->angle += ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
-      //printf("ROTATION");
-    }
-    //printf("%f\n", _thisObject->physics->angle * (180.0f / PI));
-
-    Vector2D newVelocityVector;
-    Vector2DFromAngleRad(&newVelocityVector, _thisObject->physics->angle);
-    facingDirection = newVelocityVector;
-    Vector2DScale(&newVelocityVector, &newVelocityVector, enemyContainer->chaseSpeed);
-    _thisObject->physics->velocity.x = newVelocityVector.x;
-    _thisObject->physics->velocity.y = newVelocityVector.y;
-
-    // facing angle
-    Vector2D worldFacingDirection = IsoWorldToScreen(&facingDirection);
-    printf("%f, %f\n", worldFacingDirection.x, worldFacingDirection.y);
-
-    if (worldFacingDirection.x > 0)
-    {
-      enemyContainer->enemyAnimationState += ENEMY_RIGHT;
-    }
-    else if (worldFacingDirection.x < 0)
-    {
-      enemyContainer->enemyAnimationState += ENEMY_LEFT;
-    }
-
-    if (worldFacingDirection.y > 0)
-    {
-      enemyContainer->enemyAnimationState += ENEMY_UP;
-    }
-    else if (worldFacingDirection.y < 0)
-    {
-      enemyContainer->enemyAnimationState += ENEMY_DOWN;
-    }
+    facingDirection = normalizedFacing;
   }
-
   return facingDirection;
 }
 
@@ -209,14 +202,14 @@ void EnemyAttackDetect(GameObject* _thisObject)
     //printf("ATTACKCOOLDOWN: %F \n", enemyContainer->attackCooldown);
     if (enemyContainer->attackWindup < 0 && enemyContainer->attackCooldown < 0)
     {
-      printf("ENEMY ATTACK");
+      //printf("ENEMY ATTACK");
       enemyContainer->attackCooldown = enemyContainer->attackCooldownLength;
       enemyContainer->attackWindup = enemyContainer->attackWindupLength;
       switch (enemyContainer->enemyType)
       {
       case ENEMY_TYPE_MELEE:
         EnemyMeleeAttack(_thisObject, attackDirection);
-        printf("%i, %i", attackDirection.x, attackDirection.y);
+        //printf("%i, %i", attackDirection.x, attackDirection.y);
         break;
       case ENEMY_TYPE_RANGED:
         EnemyRangedAttack(_thisObject, attackDirection, enemyContainer->projectileSpeed);
@@ -279,8 +272,41 @@ static void EnemyKnockBack(GameObject* _thisObject, GameObject* _otherObject)
 
                                                                                                     //scale vector according to ENEMY_KNOCKBACK_FORCE:
   Vector2DNormalize(&knockbackVector, &knockbackVector);
-  Vector2DScale(&knockbackVector, &knockbackVector, -enemyContainer->attackKnockbackForce);
+  Vector2DScale(&knockbackVector, &knockbackVector, -enemyContainer->knockback);
 
   //actually apply knockback:
   EntityApplyKnockback(_otherObject->entity, &knockbackVector);
 }
+
+
+// IGNORE THIS CRAP
+/*
+Vector2D enemyToPlayer;
+enemyToPlayer.x = _thisObject->target->physics->position.x - _thisObject->physics->position.x;
+enemyToPlayer.y = _thisObject->target->physics->position.y - _thisObject->physics->position.y;
+
+Vector2D normalVelocityVector;
+normalVelocityVector.x = _thisObject->physics->velocity.y * -1.0f;
+normalVelocityVector.y = _thisObject->physics->velocity.x;
+
+float dotProduct = Vector2DDotProduct(&(normalVelocityVector), &(enemyToPlayer));
+//printf("%f", dotProduct);
+
+if (dotProduct > 0)
+{
+_thisObject->physics->angle += ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
+//printf("ROTATION");
+}
+else if (dotProduct < 0)
+{
+_thisObject->physics->angle -= ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
+//printf("ROTATION");
+}
+
+Vector2D newVelocityVector;
+Vector2DFromAngleRad(&newVelocityVector, _thisObject->physics->angle);
+facingDirection = newVelocityVector;
+Vector2DScale(&newVelocityVector, &newVelocityVector, enemyContainer->chaseSpeed);
+_thisObject->physics->velocity.x = newVelocityVector.x;
+_thisObject->physics->velocity.y = newVelocityVector.y;
+*/

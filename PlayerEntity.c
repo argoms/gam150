@@ -346,7 +346,6 @@ void PlayerInput()
     }
     else
     {
-
       //if idle, set idle flag and remove walk flag
       if (!(playerAction & PLAYER_IDLE)) //called on the frame where player goes from walk to idle
       {
@@ -489,6 +488,10 @@ void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _oth
   {
     printf("YOU HIT ENEMY FOR %i DAMAGE\n", attackDamage);
     EntityTakeDamage(&_otherObject->entity, attackDamage);
+  }
+
+  if (_otherObject->entity->health <= 0)
+  {
     GameObjectDestroy(&_thisObject);
   }
 }

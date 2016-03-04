@@ -213,7 +213,8 @@
     <ClInclude Include="Vector2D.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="EnemiesLevel1.txt" />
+    <Text Include="Level1EnemyMelee1.txt" />
+    <Text Include="Level1EnemyRanged2.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

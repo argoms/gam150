@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Audio.c" />
+    <ClCompile Include="Button.c" />
+    <ClCompile Include="conversions.c" />
+    <ClCompile Include="Door.c" />
+    <ClCompile Include="Enemy.c" />
+    <ClCompile Include="EnemyAnimations.c" />
+    <ClCompile Include="Entity.c" />
+    <ClCompile Include="GameLevel.c" />
+    <ClCompile Include="GameObject.c" />
+    <ClCompile Include="Graphics.c" />
+    <ClCompile Include="Hazard.c" />
+    <ClCompile Include="ImportData.c" />
+    <ClCompile Include="Isometric.c" />
+    <ClCompile Include="LevelManager.c" />
+    <ClCompile Include="Main_CS230.c" />
+    <ClCompile Include="MapGen.c" />
+    <ClCompile Include="Physics.c" />
+    <ClCompile Include="PlayerEntity.c" />
+    <ClCompile Include="Text.c" />
+    <ClCompile Include="TownScreen.c" />
+    <ClCompile Include="Vector2D.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Audio.h" />
+    <ClInclude Include="Button.h" />
+    <ClInclude Include="conversions.h" />
+    <ClInclude Include="Door.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyAnimations.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="GameLevel.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Graphics.h" />
+    <ClInclude Include="Hazard.h" />
+    <ClInclude Include="ImportData.h" />
+    <ClInclude Include="Isometric.h" />
+    <ClInclude Include="LevelManager.h" />
+    <ClInclude Include="MapGen.h" />
+    <ClInclude Include="Physics.h" />
+    <ClInclude Include="PlayerEntity.h" />
+    <ClInclude Include="Text.h" />
+    <ClInclude Include="TownScreen.h" />
+    <ClInclude Include="Vector2D.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="EnemyFiles">
+      <UniqueIdentifier>{1da9aae2-fd68-4b9b-8226-2800ac14ceca}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Level1EnemyMelee1.txt">
+      <Filter>EnemyFiles</Filter>
+    </Text>
+    <Text Include="Level1EnemyRanged2.txt">
+      <Filter>EnemyFiles</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

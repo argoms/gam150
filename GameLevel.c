@@ -98,7 +98,10 @@ void GameLevelInit(void)
  
   //PhysicsRemoveObject(&a);
 
-  ImportEnemyData("EnemiesLevel1.txt", player);
+  ImportEnemyData(7, 8, "Level1EnemyMelee1.txt", player);
+  ImportEnemyData(10, 10, "Level1EnemyMelee1.txt", player);
+
+  ImportEnemyData(10, 8, "Level1EnemyRanged2.txt", player);
 }
 
 /*!

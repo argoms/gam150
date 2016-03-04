@@ -1,4 +1,3 @@
-#pragma once
 #include "GameObject.h"
 
-int ImportEnemyData(const char *file, GameObject* player);
+GameObject* ImportEnemyData(float x, float y, const char *file, GameObject* player);

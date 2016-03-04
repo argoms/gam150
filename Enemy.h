@@ -2,7 +2,7 @@
 #include "GameObject.h"
 
 #define PI 3.1415926535897
-#define ENEMY_ROTATION_SPEED  (2.0f*PI)
+#define ENEMY_ROTATION_SPEED  (PI / 2.0f)
 #define ENEMY_CHASE_SPEED     .05f
 #define ENEMY_DETECT_RANGE    10.0f
 #define ENEMY_KNOCKBACK_FORCE 0.25
@@ -22,6 +22,8 @@ void EnemySimulate(GameObject* _thisObject);
 void EnemySimulateAI(GameObject* _thisObject);
 void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject);
 void EnemyOnKilled(GameObject* _self);
+
+void EnemyChangeAnimationFlag(EnemyContainer*, Vector2D* worldFacingDirection);
 
 Vector2D EnemyMovement(GameObject* _thisObject, const float distanceToPlayer);
 void EnemyAttackDetect(GameObject* _thisObject);

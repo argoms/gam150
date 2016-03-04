@@ -60,7 +60,7 @@ void EnemyAnimationInitialize(GameObject* enemy)
   }
   
   enemy->sprite->animation = animationSpiderWolf[8].animation;
-  
+  enemy->sprite->offset.y = 60.0f;
   /* Test code
   enemy->sprite->animation = GCreateAnimation(idleFrames,
     GCreateTexture("animations/spiderwolf/walkDown.png"),
@@ -80,6 +80,7 @@ void EnemyAnimationStateManager(GameObject* enemy)
     if ((animationFlag == animationSpiderWolf[i].action) && (animationSpiderWolf[i].animation != NULL))
     {
       enemy->sprite->animation = animationSpiderWolf[i].animation;
+      enemy->sprite->offset.y = 60.0f;
       break;
     }
   }
