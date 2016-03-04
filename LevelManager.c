@@ -14,7 +14,10 @@ Basic level/gamestate manager implementation.
 #include "Button.h"
 #include "DeathScreen.h"
 #include "SplashScreen.h"
+#include "WinScreen.h"
 #include "Audio.h"
+#include "ParticleSystems(Redo).h"
+
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
 static AEGfxVertexList*	pMesh2;				/**< EXAMPLE VAR*/
 static AEGfxTexture *pTex1;/**< EXAMPLE VAR*/
@@ -36,30 +39,42 @@ extern int gGameRunning; /**< used to interface with main file*/
 
 double frameTime;
 
+extern int level;
+
 /*
 \brief loads given level
 \param _level level to be loaded
 */
 void LevelLoad(int _level)
 {
+	LoadAll_PS();
+
   GInitialize();
 
   switch (_level)
   {
   case level_level1:
     Level1Init();
+    //Audio_PauseMusicStream("music_sample3.ogg");
+    //Audio_PlayMusicStream("music_sample2A.ogg", 1);
     break;
   case level_mainMenu:
     MainMenuInit();
+    Audio_PlayMusicStream("music_sample3.ogg", 1);
     break;
   case level_town:
     TownScreenInit();
     break;
   case level_deathScreen:
     DeathScreenInit();
+    level = 1;
+    //Audio_PauseMusicStream("music_sample2A.ogg");
     break;
   case level_splashScreen:
     SplashScreenInit();
+    break;
+  case level_winScreen:
+    WinScreenInit();
     break;
   }
 
@@ -89,6 +104,9 @@ void LevelRun()
   case level_splashScreen:
     SplashScreenRun();
     break;
+  case level_winScreen:
+    WinScreenRun();
+    break;
   }
 
   if (currentLevel != nextLevel)
@@ -106,6 +124,12 @@ void LevelRun()
       break;
     }
   }
+
+  if (frameTime > 0.5)
+  {
+	  frameTime = 0.016;
+  }
+  UpdateAllPS_Inst((float)frameTime);
 }
 
 /*
@@ -115,6 +139,7 @@ void LevelUnload()
 {
   AEGfxSetCamPosition(0, 0);
   GameObjectFree();
+  UnloadAll_PS();
   GFree();
 }
 
@@ -124,6 +149,8 @@ void LevelUnload()
 */
 void MainMenuInit()
 {
+
+
   AEGfxSetCamPosition(0, 0);
   static AEGfxVertexList*	newmesh;				// Pointer to Mesh (Model)
   newmesh = GCreateMesh(16, 24, 16, 16);
@@ -167,6 +194,7 @@ void MainMenuInit()
     1);
 
   Sprite *button1_sprite = GCreateSprite(button1x, button1y, anim_button1, 1);
+  button1_sprite->offset.y = 10000;
   //PhysicsObject *button1_physics = PhysicsCreateObject(Vec2(button1x,button1y),1);
 
   GameObject* button = CreateButton(0, button1_sprite, NULL, button_type, button1size, mesh1x, mesh1y);
@@ -212,9 +240,9 @@ void MainMenuRun()
   PhysicsSimulate();
   GameObjectsPostStep();
   //debug
+
   if (AEInputCheckReleased(VK_SPACE))
   {
-    
     switch (currentLevel)
     {
     case level_level1:
@@ -222,6 +250,9 @@ void MainMenuRun()
       break;
     case level_mainMenu:
       nextLevel = level_level1;
+      
+      //Audio_PauseMusicStream("music_sample3.ogg");
+      //Audio_PlayMusicStream("music_sample2A.ogg", 1);
       break;
     }
   }

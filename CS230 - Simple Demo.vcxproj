@@ -173,6 +173,7 @@
     <ClCompile Include="Dodge.c" />
     <ClCompile Include="Door.c" />
     <ClCompile Include="Enemy.c" />
+    <ClCompile Include="EnemyAnimations.c" />
     <ClCompile Include="Entity.c" />
     <ClCompile Include="GameLevel.c" />
     <ClCompile Include="GameObject.c" />
@@ -185,13 +186,17 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="MapCreator.c" />
     <ClCompile Include="MapGen.c" />
+    <ClCompile Include="MyRandom.c" />
+    <ClCompile Include="ParticleSystems(Redo).c" />
     <ClCompile Include="Physics.c" />
     <ClCompile Include="PlayerEntity.c" />
     <ClCompile Include="SplashScreen.c" />
     <ClCompile Include="Text.c" />
     <ClCompile Include="TownScreen.c" />
     <ClCompile Include="Vector2D.c" />
+    <ClCompile Include="WinScreen.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h" />
@@ -202,6 +207,7 @@
     <ClInclude Include="Dodge.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyAnimations.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="GameLevel.h" />
     <ClInclude Include="GameObject.h" />
@@ -210,16 +216,21 @@
     <ClInclude Include="ImportData.h" />
     <ClInclude Include="Isometric.h" />
     <ClInclude Include="LevelManager.h" />
+    <ClInclude Include="MapCreator.h" />
     <ClInclude Include="MapGen.h" />
+    <ClInclude Include="MyRandom.h" />
+    <ClInclude Include="ParticleSystems(Redo).h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PlayerEntity.h" />
     <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TownScreen.h" />
     <ClInclude Include="Vector2D.h" />
+    <ClInclude Include="WinScreen.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="EnemiesLevel1.txt" />
+    <Text Include="Level1EnemyMelee1.txt" />
+    <Text Include="Level1EnemyRanged2.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -57,6 +57,12 @@ void GRender()
         spriteIndex->animation->frameOffsetY * (spriteIndex->frame / spriteIndex->animation->frameWidth) - 1);
 
 
+      AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
+      if (spriteIndex->specialFX != NULL)
+      {
+        spriteIndex->specialFX();
+      }
+
       AEGfxSetTransparency(1.0f);
       //AEGfxSetFullTransformWithZOrder(spriteIndex->x, spriteIndex->y, 1, 0, 1, 1);
       AEGfxMeshDraw(spriteIndex->animation->mesh, AE_GFX_MDM_TRIANGLES);
@@ -265,6 +271,7 @@ Sprite* GCreateSprite(float _spriteX, float _spriteY, Animation* _animation, flo
   newSprite->higherSprite = NULL;
   newSprite->lowerSprite = NULL;
   newSprite->animation = _animation;
+  newSprite->specialFX = NULL;
   newSprite->frame = 0;
   newSprite->timer = 0;
   newSprite->paused = 0;
@@ -332,6 +339,7 @@ Sprite* GCreateHudSprite(float _spriteX, float _spriteY, Animation* _animation, 
   newSprite->higherSprite = NULL;
   newSprite->lowerSprite = NULL;
   newSprite->animation = _animation;
+  newSprite->specialFX = NULL;
   newSprite->frame = 0;
   newSprite->timer = 0;
   newSprite->paused = 0;

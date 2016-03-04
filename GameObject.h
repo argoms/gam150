@@ -25,6 +25,7 @@ enum GameObjectNames {
   entity_button, /**< generic button */
   entity_hazard,   /* environmental hazards */
   //entity_health_bar /**< health bar */
+  entity_particle /*particle that doesn't affect other game objects*/
 };
 
 // SET THE NUMBERS IN COMMENTS FOR THE ENEMIES TEXT FILE
@@ -68,6 +69,7 @@ struct GameObject
   GameObject* next; /**< pointer to previous object in list*/
   GameObject* prev; /**< pointer to next object in list*/
   void* miscData;   /**< void pointer to whatever we want*/
+  float projectileLifeTime;
 };
 
 /*
@@ -75,6 +77,8 @@ struct GameObject
 */
 struct EnemyContainer
 {
+  unsigned int enemyAnimationState;
+
   int enemyType;
 
   int health;
@@ -92,8 +96,6 @@ struct EnemyContainer
   float attackRange;
   int attackDamage;
   float attackKnockbackForce;
-
-
 
   float projectileSpeed;
 };

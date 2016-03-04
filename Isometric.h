@@ -7,6 +7,8 @@ Isometric tilemap implementation. Contains functions relating to tilemaps and is
 */
 #pragma once
 
+#include "Vector2D.h"
+
 typedef struct IsoMap IsoMap;
 
 /*!

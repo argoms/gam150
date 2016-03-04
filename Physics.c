@@ -167,11 +167,11 @@ void SnaptoCell(float *coordinate, unsigned side)
 {
   /* If snapping from bottom or left, snap the value by finding its integral part and adding 1 */
   if (side == COLLISION_BOTTOM || side == COLLISION_LEFT)
-    *coordinate = (int)(*coordinate) + 1.f;
+    *coordinate = floorf(*coordinate) + 1.f;
 
   /* Else, if snapping from right or top, snap the value by finding its integral part */
   else
-    *coordinate = (int)(*coordinate);
+    *coordinate = floorf(*coordinate);
 }
 
 /*!
@@ -217,234 +217,236 @@ static int CircleToRectCollTest(Vector2D * pCircle, float radius, Vector2D *pRec
 static void PhysicsTileCollisions(PhysicsObject* _instance)
 {
   //PhysicsObject* instance = _instance;
-
-  unsigned int collisionFields = 0; /* Flag for collisions */
-
-  /*
-  Get the object's collider information.
-  Some conversions had to be made because objects are not centered on origin.
-  */
-
-  float 
-    radius = _instance->size / 2.f,               /* The radius of the object */
-    centerX = _instance->position.x + radius,     /* X coordinate of center */
-    centerY = _instance->position.y + radius;     /* Y coordinate of center */
-  int
-    left = FloatToInt(_instance->position.x),     /* Left side of object in map units */
-    right = FloatToInt(centerX + radius),         /* Right side of object in map units */
-    top = FloatToInt(centerY + radius),           /* Top of object in map units */
-    bottom = FloatToInt(_instance->position.y);   /* Bottom of object in map units */
-
-  Vector2D colliderPos = Vec2(centerX, centerY);  /* Position of the object's collider, converted for collisions */
-
-  /* Update collision flags */
-
-  /* 
-    First, do simple binary checks on the object hotspots.
-    Then, if binary check indicates a collision tile, do a more detailed collision check
-    using circle to rect test.
-  */
-
-  /* Check top-top-left */
-  if (IsoTileGet(centerX - radius / 2.f, top) == 1)
+  if (_instance->active)
   {
-    Vector2D tilePos = { (FloatToInt)(centerX - radius / 2.f) + 0.5f, top + 0.5f };
+    unsigned int collisionFields = 0; /* Flag for collisions */
 
-    if (CircleToRectCollTest(&colliderPos, radius, &tilePos, 1, 1))
-      collisionFields |= COLLISION_TOP;
+    /*
+    Get the object's collider information.
+    Some conversions had to be made because objects are not centered on origin.
+    */
+
+    float
+      radius = _instance->size / 2.f,               /* The radius of the object */
+      centerX = _instance->position.x + radius,     /* X coordinate of center */
+      centerY = _instance->position.y + radius;     /* Y coordinate of center */
+    int
+      left = FloatToInt(_instance->position.x),     /* Left side of object in map units */
+      right = FloatToInt(centerX + radius),         /* Right side of object in map units */
+      top = FloatToInt(centerY + radius),           /* Top of object in map units */
+      bottom = FloatToInt(_instance->position.y);   /* Bottom of object in map units */
+
+    Vector2D colliderPos = Vec2(centerX, centerY);  /* Position of the object's collider, converted for collisions */
+
+    /* Update collision flags */
+
+    /*
+      First, do simple binary checks on the object hotspots.
+      Then, if binary check indicates a collision tile, do a more detailed collision check
+      using circle to rect test.
+    */
+
+    /* Check top-top-left */
+    if (IsoTileGet(FloatToInt(centerX - radius / 2.f), top) == 1)
+    {
+      Vector2D tilePos = { (FloatToInt)(centerX - radius / 2.f) + 0.5f, top + 0.5f };
+
+      if (CircleToRectCollTest(&colliderPos, radius, &tilePos, 1, 1))
+        collisionFields |= COLLISION_TOP;
+    }
+
+    /* Check top-top-right */
+    if (IsoTileGet(FloatToInt(centerX + radius / 2.f), top) == 1)
+    {
+      Vector2D tilePos = { (FloatToInt)(centerX + radius / 2.f) + 0.5f, top + 0.5f };
+
+      if (CircleToRectCollTest(&colliderPos, radius, &tilePos, 1, 1))
+        collisionFields |= COLLISION_TOP;
+    }
+
+    /* Check left-top-left */
+    if (IsoTileGet(left, FloatToInt(centerY + radius / 2.f)) == 1)
+    {
+      Vector2D tilePos = { left + 0.5f, (FloatToInt)(centerY + radius / 2.f) + 0.5f };
+
+      if (CircleToRectCollTest(&colliderPos, radius, &tilePos, 1, 1))
+        collisionFields |= COLLISION_LEFT;
+    }
+
+    /* Check left-bottom-left */
+    if (IsoTileGet(left, FloatToInt(centerY - radius / 2.f)) == 1)
+    {
+      Vector2D tilePos = { left + 0.5f, (FloatToInt)(centerY - radius / 2.f) + 0.5f };
+
+      if (CircleToRectCollTest(&colliderPos, radius, &tilePos, 1, 1))
+        collisionFields |= COLLISION_LEFT;
+    }
+
+    /* Check right-top-right */
+    if (IsoTileGet(right, FloatToInt(centerY + radius / 2.f)) == 1)
+    {
+      Vector2D tilePos = { right + 0.5f, (FloatToInt)(centerY + radius / 2.f) + 0.5f };
+
+      if (CircleToRectCollTest(&colliderPos, radius, &tilePos, 1, 1))
+        collisionFields |= COLLISION_RIGHT;
+    }
+
+    /* Check right-bottom-right */
+    if (IsoTileGet(right, FloatToInt(centerY - radius / 2.f)) == 1)
+    {
+      Vector2D tilePos = { right + 0.5f, (FloatToInt)(centerY - radius / 2.f) + 0.5f };
+
+      if (CircleToRectCollTest(&colliderPos, radius, &tilePos, 1, 1))
+        collisionFields |= COLLISION_RIGHT;
+    }
+
+    /* Check bottom-bottom-left */
+    if (IsoTileGet(FloatToInt(centerX - radius / 2.f), bottom) == 1)
+    {
+      Vector2D tilePos = { (FloatToInt)(centerX - radius / 2.f) + 0.5f, bottom + 0.5f };
+
+      if (CircleToRectCollTest(&colliderPos, radius, &tilePos, 1, 1))
+        collisionFields |= COLLISION_BOTTOM;
+    }
+
+    /* Check bottom-bottom-right */
+    if (IsoTileGet(FloatToInt(centerX + radius / 2.f), bottom) == 1)
+    {
+      Vector2D tilePos = { (FloatToInt)(centerX + radius / 2.f) + 0.5f, bottom + 0.5f };
+
+      if (CircleToRectCollTest(&colliderPos, radius, &tilePos, 1, 1))
+        collisionFields |= COLLISION_BOTTOM;
+    }
+
+    /* Check the collision flags and act based on them */
+
+    /* If there is no collision, update the last known position to current and return */
+    if (!collisionFields)
+    {
+      _instance->lastValidPosition = Vec2(_instance->position.x, _instance->position.y);
+      return;
+    }
+
+    /* If colliding on leftt, snap position */
+    if (collisionFields & COLLISION_LEFT)
+    {
+      /* Snap the x position from the left */
+      SnaptoCell(&_instance->position.x, COLLISION_LEFT);
+    }
+
+    /* If colliding on right, snap position */
+    else if (collisionFields & COLLISION_RIGHT)
+    {
+      /* Snap the x position from the right */
+      SnaptoCell(&_instance->position.x, COLLISION_RIGHT);
+    }
+
+    /* If colliding on top, snap position */
+    if (collisionFields & COLLISION_TOP)
+    {
+      /* Snap the y position from the top */
+      SnaptoCell(&_instance->position.y, COLLISION_TOP);
+    }
+
+    /* If colliding on bottom, snap position */
+    else if (collisionFields & COLLISION_BOTTOM)
+    {
+      /* Snap the y position from the bottom */
+      SnaptoCell(&_instance->position.y, COLLISION_BOTTOM);
+    }
+
+    /*
+      If the object has moved too far from its last known position due to snapping,
+      return it to the last known position.
+    */
+    if (Vector2DSquareDistance(&_instance->position, &_instance->lastValidPosition) > 0.1f)
+      _instance->position = Vec2(_instance->lastValidPosition.x, _instance->lastValidPosition.y);
+
+    /* Else, the snapping was successful, so update the last known position to current */
+    else
+      _instance->lastValidPosition = Vec2(_instance->position.x, _instance->position.y);
+
+    // Deprecated code. Noah's code
+    ////Collision test for left
+    //if (IsoTileGet(
+    //  FloatToInt(instance->position.x), 
+    //  FloatToInt(instance->position.y + 0.25f)) == 1
+    //  ||
+    //  IsoTileGet(FloatToInt(instance->position.x), 
+    //    FloatToInt(instance->position.y + 0.75f)) == 1)
+    //{
+    //  //printf("left");
+    //  instance->position.x = IntToFloat(FloatToInt(instance->position.x + 0.5f));
+
+    //  // This chunk handles if the player would be inside the tilemap
+    //  // Basically more precise adjustments, same for all four directions
+    //  PhysicsIsInsideTile(instance);
+     // if (instance->insideTile)
+     // {
+    //    instance->position.x = IntToFloat(FloatToInt(instance->position.x + 0.5f));
+    //    instance->insideTile = 0;
+    //    printf("bounce FROM left");
+     // }
+    //}
+
+    ////positive x (right):
+    //if (IsoTileGet(
+    //  FloatToInt(instance->position.x + 1),
+    //  FloatToInt(instance->position.y + 0.25f))
+    //  == 1 || IsoTileGet(
+    //    FloatToInt(instance->position.x + 1),
+    //    FloatToInt(instance->position.y + 0.75f))
+    //  == 1)
+    //{
+    //  //printf("right");
+    //  instance->position.x = IntToFloat(FloatToInt(instance->position.x + 0.5f));
+
+    //  PhysicsIsInsideTile(instance);
+     // if (instance->insideTile)
+     // {
+    //    instance->position.x = IntToFloat(FloatToInt(instance->position.x + -0.5f));
+    //    instance->insideTile = 0;
+    //    printf("bounce FROM right");
+     // }
+    //}
+
+    ////positive y (up):
+    //if (IsoTileGet(
+    //  FloatToInt(instance->position.x + 0.25f),
+    //  FloatToInt(instance->position.y + 1))
+    //  == 1 || IsoTileGet(
+    //    FloatToInt(instance->position.x + 0.75f),
+    //    FloatToInt(instance->position.y + 1))
+    //  == 1)
+    //{
+    //  //printf("up");
+    //  instance->position.y = IntToFloat(FloatToInt(instance->position.y + 0.5f));
+
+    //  PhysicsIsInsideTile(instance);
+     // if (instance->insideTile)
+     // {
+    //    instance->position.y = instance->position.y = IntToFloat(FloatToInt(instance->position.y + -1.0f));
+    //    instance->insideTile = 0;
+    //    printf("bounce FROM up");
+     // }
+    //}
+
+    ////negative y (down)
+    //if (IsoTileGet(FloatToInt(instance->position.x + 0.25f), FloatToInt(instance->position.y))== 1 
+    //  || IsoTileGet(FloatToInt(instance->position.x + 0.75f), FloatToInt(instance->position.y)) == 1)
+    //{
+    //  //printf("down");
+    //  instance->position.y = IntToFloat(FloatToInt(instance->position.y + 0.5f));
+
+    //  PhysicsIsInsideTile(instance);
+     // if (instance->insideTile)
+     // {
+    //    instance->position.y = IntToFloat(FloatToInt(instance->position.y + 1.0f));
+    //    instance->insideTile = 0;
+    //    printf("bounce FROM down");
+     // }
+    //}
   }
-
-  /* Check top-top-right */
-  if (IsoTileGet(centerX + radius / 2.f, top) == 1)
-  {
-    Vector2D tilePos = { (FloatToInt)(centerX + radius / 2.f) + 0.5f, top + 0.5f };
-
-    if (CircleToRectCollTest(&colliderPos, radius, &tilePos, 1, 1))
-      collisionFields |= COLLISION_TOP;
-  }
-
-  /* Check left-top-left */
-  if (IsoTileGet(left, centerY + radius / 2.f) == 1)
-  {
-    Vector2D tilePos = { left + 0.5f, (FloatToInt)(centerY + radius / 2.f) + 0.5f };
-
-    if (CircleToRectCollTest(&colliderPos, radius, &tilePos, 1, 1))
-      collisionFields |= COLLISION_LEFT;
-  }
-
-  /* Check left-bottom-left */
-  if (IsoTileGet(left, centerY - radius / 2.f) == 1)
-  {
-    Vector2D tilePos = { left + 0.5f, (FloatToInt)(centerY - radius / 2.f) + 0.5f };
-
-    if (CircleToRectCollTest(&colliderPos, radius, &tilePos, 1, 1))
-      collisionFields |= COLLISION_LEFT;
-  }
-
-  /* Check right-top-right */
-  if (IsoTileGet(right, centerY + radius / 2.f) == 1)
-  {
-    Vector2D tilePos = { right + 0.5f, (FloatToInt)(centerY + radius / 2.f) + 0.5f };
-
-    if (CircleToRectCollTest(&colliderPos, radius, &tilePos, 1, 1))
-      collisionFields |= COLLISION_RIGHT;
-  }
-
-  /* Check right-bottom-right */
-  if (IsoTileGet(right, centerY - radius / 2.f) == 1)
-  {
-    Vector2D tilePos = { right + 0.5f, (FloatToInt)(centerY - radius / 2.f) + 0.5f };
-
-    if (CircleToRectCollTest(&colliderPos, radius, &tilePos, 1, 1))
-      collisionFields |= COLLISION_RIGHT;
-  }
-
-  /* Check bottom-bottom-left */
-  if (IsoTileGet(centerX - radius / 2.f, bottom) == 1)
-  {
-    Vector2D tilePos = { (FloatToInt)(centerX - radius / 2.f) + 0.5f, bottom + 0.5f };
-
-    if (CircleToRectCollTest(&colliderPos, radius, &tilePos, 1, 1))
-      collisionFields |= COLLISION_BOTTOM;
-  }
-
-  /* Check bottom-bottom-right */
-  if (IsoTileGet(centerX + radius / 2.f, bottom) == 1)
-  {
-    Vector2D tilePos = { (FloatToInt)(centerX + radius / 2.f) + 0.5f, bottom + 0.5f };
-
-    if (CircleToRectCollTest(&colliderPos, radius, &tilePos, 1, 1))
-      collisionFields |= COLLISION_BOTTOM;
-  }
-
-  /* Check the collision flags and act based on them */
-
-  /* If there is no collision, update the last known position to current and return */
-  if (!collisionFields)
-  {
-    _instance->lastValidPosition = Vec2(_instance->position.x, _instance->position.y);
-    return;
-  }
-
-  /* If colliding on leftt, snap position */
-  if (collisionFields & COLLISION_LEFT)
-  {
-    /* Snap the x position from the left */
-    SnaptoCell(&_instance->position.x, COLLISION_LEFT); 
-  }
-
-  /* If colliding on right, snap position */
-  else if (collisionFields & COLLISION_RIGHT)
-  {
-    /* Snap the x position from the right */
-    SnaptoCell(&_instance->position.x, COLLISION_RIGHT);
-  }
-
-  /* If colliding on top, snap position */
-  if (collisionFields & COLLISION_TOP)
-  {
-    /* Snap the y position from the top */
-    SnaptoCell(&_instance->position.y, COLLISION_TOP);
-  }
-
-  /* If colliding on bottom, snap position */
-  else if (collisionFields & COLLISION_BOTTOM)
-  {
-    /* Snap the y position from the bottom */
-    SnaptoCell(&_instance->position.y, COLLISION_BOTTOM); 
-  }
-
-  /* 
-    If the object has moved too far from its last known position due to snapping,
-    return it to the last known position.
-  */
-  if (Vector2DSquareDistance(&_instance->position, &_instance->lastValidPosition) > 0.1f)
-    _instance->position = Vec2(_instance->lastValidPosition.x, _instance->lastValidPosition.y);
-
-  /* Else, the snapping was successful, so update the last known position to current */
-  else
-    _instance->lastValidPosition = Vec2(_instance->position.x, _instance->position.y);
-  
-  // Deprecated code. Noah's code
-  ////Collision test for left
-  //if (IsoTileGet(
-  //  FloatToInt(instance->position.x), 
-  //  FloatToInt(instance->position.y + 0.25f)) == 1
-  //  ||
-  //  IsoTileGet(FloatToInt(instance->position.x), 
-  //    FloatToInt(instance->position.y + 0.75f)) == 1)
-  //{
-  //  //printf("left");
-  //  instance->position.x = IntToFloat(FloatToInt(instance->position.x + 0.5f));
-
-  //  // This chunk handles if the player would be inside the tilemap
-  //  // Basically more precise adjustments, same for all four directions
-  //  PhysicsIsInsideTile(instance);
-	 // if (instance->insideTile)
-	 // {
-  //    instance->position.x = IntToFloat(FloatToInt(instance->position.x + 0.5f));
-  //    instance->insideTile = 0;
-  //    printf("bounce FROM left");
-	 // }
-  //}
-
-  ////positive x (right):
-  //if (IsoTileGet(
-  //  FloatToInt(instance->position.x + 1),
-  //  FloatToInt(instance->position.y + 0.25f))
-  //  == 1 || IsoTileGet(
-  //    FloatToInt(instance->position.x + 1),
-  //    FloatToInt(instance->position.y + 0.75f))
-  //  == 1)
-  //{
-  //  //printf("right");
-  //  instance->position.x = IntToFloat(FloatToInt(instance->position.x + 0.5f));
-
-  //  PhysicsIsInsideTile(instance);
-	 // if (instance->insideTile)
-	 // {
-  //    instance->position.x = IntToFloat(FloatToInt(instance->position.x + -0.5f));
-  //    instance->insideTile = 0;
-  //    printf("bounce FROM right");
-	 // }
-  //}
-
-  ////positive y (up):
-  //if (IsoTileGet(
-  //  FloatToInt(instance->position.x + 0.25f),
-  //  FloatToInt(instance->position.y + 1))
-  //  == 1 || IsoTileGet(
-  //    FloatToInt(instance->position.x + 0.75f),
-  //    FloatToInt(instance->position.y + 1))
-  //  == 1)
-  //{
-  //  //printf("up");
-  //  instance->position.y = IntToFloat(FloatToInt(instance->position.y + 0.5f));
-
-  //  PhysicsIsInsideTile(instance);
-	 // if (instance->insideTile)
-	 // {
-  //    instance->position.y = instance->position.y = IntToFloat(FloatToInt(instance->position.y + -1.0f));
-  //    instance->insideTile = 0;
-  //    printf("bounce FROM up");
-	 // }
-  //}
-
-  ////negative y (down)
-  //if (IsoTileGet(FloatToInt(instance->position.x + 0.25f), FloatToInt(instance->position.y))== 1 
-  //  || IsoTileGet(FloatToInt(instance->position.x + 0.75f), FloatToInt(instance->position.y)) == 1)
-  //{
-  //  //printf("down");
-  //  instance->position.y = IntToFloat(FloatToInt(instance->position.y + 0.5f));
-
-  //  PhysicsIsInsideTile(instance);
-	 // if (instance->insideTile)
-	 // {
-  //    instance->position.y = IntToFloat(FloatToInt(instance->position.y + 1.0f));
-  //    instance->insideTile = 0;
-  //    printf("bounce FROM down");
-	 // }
-  //}
 }
 
 /*

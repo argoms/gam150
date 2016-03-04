@@ -61,7 +61,9 @@ Output        : No output.
 void Audio_PlaySoundSample(char *name, bool loop);
 
 /**************************************************************************************************
-Function      : Audio_PlayMusicStream
+Function      : 
+
+PlayMusicStream
 Description   : Plays a sound stream. Use for music.
 Input         : name is the name of the sound stream to play. Example: "sample.wav"
                 loop is whether or not to loop the stream.

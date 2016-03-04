@@ -39,7 +39,7 @@ void GameObjectInitialize()
 \param _type type of the new object
 \return Returns a pointer to the new gameobject.
 */
-GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _type, float _size)
+GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _type)
 {
   
   GameObject* newGameObject = (GameObject*) malloc(sizeof(GameObject));
@@ -74,7 +74,13 @@ GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _
 
   newGameObject->miscData = NULL; 
   newGameObject->simulate = NULL;
+  newGameObject->projectileLifeTime = 0;
   //printf("%f", newGameObject->entity);
+
+  if (_type == entity_enemyProjectile)
+  {
+    newGameObject->projectileLifeTime = 3;
+  }
 
   //update list:
   if (!gameObjectList.first)
