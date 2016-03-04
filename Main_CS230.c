@@ -81,7 +81,7 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
     MapCreator_ToFile("map3.txt", 64, 64, 0.1);
     MapCreator_ToFile("map4.txt", 64, 64, 0.1);
 
-  LevelLoad(level_mainMenu);
+  LevelLoad(level_splashScreen);
   //GInitialize();
 
 	// Changing the window title
