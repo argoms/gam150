@@ -167,7 +167,10 @@
   <ItemGroup>
     <ClCompile Include="Audio.c" />
     <ClCompile Include="Button.c" />
+    <ClCompile Include="Collision.c" />
     <ClCompile Include="conversions.c" />
+    <ClCompile Include="DeathScreen.c" />
+    <ClCompile Include="Dodge.c" />
     <ClCompile Include="Door.c" />
     <ClCompile Include="Enemy.c" />
     <ClCompile Include="EnemyAnimations.c" />
@@ -188,6 +191,7 @@
     <ClCompile Include="MyRandom.c" />
     <ClCompile Include="Physics.c" />
     <ClCompile Include="PlayerEntity.c" />
+    <ClCompile Include="SplashScreen.c" />
     <ClCompile Include="Text.c" />
     <ClCompile Include="TownScreen.c" />
     <ClCompile Include="Vector2D.c" />
@@ -195,7 +199,10 @@
   <ItemGroup>
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="Collision.h" />
     <ClInclude Include="conversions.h" />
+    <ClInclude Include="DeathScreen.h" />
+    <ClInclude Include="Dodge.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyAnimations.h" />
@@ -212,6 +219,7 @@
     <ClInclude Include="MyRandom.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PlayerEntity.h" />
+    <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TownScreen.h" />
     <ClInclude Include="Vector2D.h" />

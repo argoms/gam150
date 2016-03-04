@@ -465,6 +465,9 @@ Output        : No output.
 **************************************************************************************************/
 void Audio_PlaySoundSample(char *name, bool loop)//FMOD_SOUND *pSound)
 {
+  if (!Audio_SearchHashTable(&sampleLibrary, name, NO_HASH))
+    Audio_AddSoundSample(name);
+
   /* Get the FMOD sound object. */
   FMOD_SOUND *sound = Audio_SearchHashTable(&sampleLibrary, name, NO_HASH)->sound;
 
@@ -488,6 +491,9 @@ Output        : No output.
 **************************************************************************************************/
 void Audio_PlayMusicStream(char *name, bool loop)//FMOD_SOUND *pSound)
 {
+  if (!Audio_SearchHashTable(&musicLibrary, name, NO_HASH))
+    Audio_AddMusic(name);
+
   /* Get the FMOD sound object. */
   FMOD_SOUND *sound = Audio_SearchHashTable(&musicLibrary, name, NO_HASH)->sound;
 
