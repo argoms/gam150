@@ -117,11 +117,13 @@ GameObject* ImportEnemyData(float x, float y, const char *file, GameObject* play
 
       EntityInit(&enemyEntity);
 
-      newEnemy = EnemyCreate(PhysicsCreateObject(Vec2(x, y), size), GCreateSprite(0, 40, enemyAnimation, 1), enemyEntity, entity_enemy, enemyType,
+	  // Here the enemy is created using the text data
+	  // Physics component is initialized and the sprite/animation is initialized here as well
+      GameObject* newEnemy = EnemyCreate(PhysicsCreateObject(Vec2(x, y), size), GCreateSprite(0, 40, enemyAnimation, 1), enemyEntity, entity_enemy, enemyType,
         chaseSpeed, detectRange, knockbackForce, attackCooldown, attackCooldownLength,
         attackWindup, attackWindupLength, attackRange, attackKnockback, attackDamage, enemyProjectileSpeed);
 
-      //Now we initialize everything for that enemy
+      //Now we initialize function pointers and give our enemy a target
       newEnemy->physics->onCollision = &EnemyOnCollision;
       newEnemy->simulate = &EnemySimulate;
       newEnemy->initialize = &EnemyInitialize;
@@ -132,8 +134,16 @@ GameObject* ImportEnemyData(float x, float y, const char *file, GameObject* play
       newEnemy->entity->health = health;
 
       EnemyAnimationInitialize(newEnemy);
+      //newEnemy->physics->position.x = 2;
+      //newEnemy->physics->position.y = 2;
+	  printf("Created an enemy!");
+
+      //CLOSE THE FILE
+      fclose(infile);
+
+      return newEnemy;
     }
   }
 
-  return newEnemy;
+  
 }

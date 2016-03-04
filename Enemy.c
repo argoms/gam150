@@ -11,13 +11,15 @@
 static Animation* tracerAnimation;
 
 /*
-\brief Use this when you want to creat enemy game objects
+\brief
 It's prety huge but deal with it because we want full access to everything an enemy could ever possibly do....
 James' idea, not mine
 
+Don't actually call this method. Use the import enemy data function instead, which calls this anyways
+
 //KILL ME
 \param
-a metrik fuk ton
+	a metrik fuk ton
 */
 GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _type,
   int enemyType, float chaseSpeed, float detectRange, float knockback, float attackCooldown, float attackCooldownLength, float attackWindup, float attackWindupLength,
@@ -96,7 +98,7 @@ void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject)
     EnemyKnockBack(_thisObject, _otherObject);
     EntityTakeDamage(&(_otherObject->entity), 2);
 
-    printf("PLAYER TAKING DAMAGE \n");
+    //printf("PLAYER TAKING DAMAGE \n");
   }
 }
 
@@ -107,10 +109,10 @@ void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject)
 */
 void EnemyOnKilled(GameObject* _self)
 {
-  printf("\n *** \n ENEMY DIED WOO \n *** \n");
+  //printf("\n *** \n ENEMY DIED WOO \n *** \n");
   GameObjectDestroy(&_self);
-  printf("\n dflag: %i", (_self)->destroyFlag);
-  printf("type: %i \n", (_self)->type);
+  //printf("\n dflag: %i", (_self)->destroyFlag);
+  //printf("type: %i \n", (_self)->type);
 }
 
 void EnemyChangeAnimationFlag(EnemyContainer* enemyContainer, Vector2D* worldFacingDirection)
@@ -119,14 +121,14 @@ void EnemyChangeAnimationFlag(EnemyContainer* enemyContainer, Vector2D* worldFac
   double worldFacingAngle = atan2(worldFacingDirection->y, worldFacingDirection->x) * (180.0f / PI);
   //printf("%f\n", worldFacingAngle);
   enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & (~(ENEMY_LEFT + ENEMY_RIGHT + ENEMY_UP + ENEMY_DOWN));
-
+  
   if (worldFacingAngle < 67.5 && worldFacingAngle > -67.5)
   {
     //printf("right");
     //printf("%f\n", worldFacingAngle);
     enemyContainer->enemyAnimationState += ENEMY_RIGHT;
   }
-
+  
   if (worldFacingAngle > 112.5 || worldFacingAngle < -112.5)
   {
     //printf("left\n");
@@ -143,7 +145,7 @@ void EnemyChangeAnimationFlag(EnemyContainer* enemyContainer, Vector2D* worldFac
     //printf("down\n");
     enemyContainer->enemyAnimationState += ENEMY_DOWN;
   }
-
+  
 }
 
 /*
@@ -170,12 +172,41 @@ Vector2D EnemyMovement(GameObject* _thisObject, const float distanceToPlayer)
 
     _thisObject->physics->velocity.x = velocityVector.x;
     _thisObject->physics->velocity.y = velocityVector.y;
-
+   
     Vector2D worldFacing;
     worldFacing = IsoWorldToScreen(&facingDirection);
     EnemyChangeAnimationFlag(enemyContainer, &worldFacing);
 
     facingDirection = normalizedFacing;
+    Vector2D enemyToPlayer;
+    enemyToPlayer.x = _thisObject->target->physics->position.x - _thisObject->physics->position.x;
+    enemyToPlayer.y = _thisObject->target->physics->position.y - _thisObject->physics->position.y;
+
+    Vector2D normalVelocityVector;
+    normalVelocityVector.x = _thisObject->physics->velocity.y * -1.0f;
+    normalVelocityVector.y = _thisObject->physics->velocity.x;
+
+    float dotProduct = Vector2DDotProduct(&(normalVelocityVector), &(enemyToPlayer));
+    //printf("%f", dotProduct);
+
+    if (dotProduct > 0)
+    {
+      _thisObject->physics->angle += ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
+      //printf("ROTATION");
+    }
+    else if (dotProduct < 0)
+    {
+      _thisObject->physics->angle -= ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
+      //printf("ROTATION");
+    }
+
+    Vector2D newVelocityVector;
+    Vector2DFromAngleRad(&newVelocityVector, _thisObject->physics->angle);
+    facingDirection = newVelocityVector;
+    Vector2DScale(&newVelocityVector, &newVelocityVector, enemyContainer->chaseSpeed);
+
+    _thisObject->physics->velocity.x = newVelocityVector.x;
+    _thisObject->physics->velocity.y = newVelocityVector.y;
   }
   return facingDirection;
 }
@@ -213,7 +244,7 @@ void EnemyAttackDetect(GameObject* _thisObject)
         break;
       case ENEMY_TYPE_RANGED:
         EnemyRangedAttack(_thisObject, attackDirection, enemyContainer->projectileSpeed);
-        printf("%i, %i", attackDirection.x, attackDirection.y);
+        //printf("%i, %i", attackDirection.x, attackDirection.y);
         break;
       }
     }
@@ -254,7 +285,7 @@ void EnemyRangedAttack(GameObject* _thisObject, Vector2D attackDirection, float 
 void EnemyTracerProjectileCollision(GameObject* _thisObject, GameObject* _otherObject)
 {
   //EnemyContainer* enemyContainer = _thisObject->miscData;
-  if (_otherObject && _otherObject->type == entity_player)
+  if (_otherObject && _otherObject->type == entity_player && (_otherObject->entity->canBeDamaged))
   {
     printf("ENEMY HIT PLAYER %i DAMAGE\n", 10);
     EntityTakeDamage(&_otherObject->entity, 10);

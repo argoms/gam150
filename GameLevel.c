@@ -108,7 +108,6 @@ void GameLevelInit(void)
 
   //GameObject* hazard = GameObjectCreate(, , 0, entity_hazard);
   //Magical function that populates the world
-
 }
 
 //THE GAME LEVEL RUN FUNCTION WAS HERE AND MOVED TO LEVEL MANAGER BY TARRANT AND NOW IT IS BACK 

@@ -22,11 +22,12 @@
     <ClCompile Include="Text.c" />
     <ClCompile Include="TownScreen.c" />
     <ClCompile Include="Vector2D.c" />
+    <ClCompile Include="MapCreator.c" />
+    <ClCompile Include="MyRandom.c" />
+    <ClCompile Include="Collision.c" />
     <ClCompile Include="DeathScreen.c" />
     <ClCompile Include="SplashScreen.c" />
     <ClCompile Include="Dodge.c" />
-    <ClCompile Include="Collision.c" />
-    <ClCompile Include="WinScreen.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h" />
@@ -49,11 +50,12 @@
     <ClInclude Include="Text.h" />
     <ClInclude Include="TownScreen.h" />
     <ClInclude Include="Vector2D.h" />
+    <ClInclude Include="MapCreator.h" />
+    <ClInclude Include="MyRandom.h" />
+    <ClInclude Include="Collision.h" />
     <ClInclude Include="DeathScreen.h" />
     <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="Dodge.h" />
-    <ClInclude Include="Collision.h" />
-    <ClInclude Include="WinScreen.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="EnemyFiles">
