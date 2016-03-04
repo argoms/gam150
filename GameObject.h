@@ -75,6 +75,8 @@ struct GameObject
 */
 struct EnemyContainer
 {
+  unsigned int enemyAnimationState;
+
   int enemyType;
 
   int health;
@@ -92,8 +94,6 @@ struct EnemyContainer
   float attackRange;
   int attackDamage;
   float attackKnockbackForce;
-
-
 
   float projectileSpeed;
 };

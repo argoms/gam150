@@ -1,34 +1,40 @@
 #include <string.h> /* strlen, strcmp, strcpy              */
 #include <stdio.h>  /* FILE                                */
-#include "GameObject.h"
 #include "Enemy.h"
+#include "EnemyAnimations.h"
 #include "Physics.h"
 #include "Entity.h"
 #include "Vector2D.h"
 
 /*
 \brief
-Populates the game level with enemies from a text file
+Populates the game level with one enemy from a text file
 REFER TO EXAMPLE TEXT FILE AND COMMENTS IN THIS CODE TO SEE HOW IT WORKS
 
+\param x
+x
+\param y
+y position
 \param file
 Name of the text file
 \param player
 A pointer to the player
+
+\returns
+GameObject enemy created
 */
-int ImportEnemyData(const char *file, GameObject* player)
+GameObject* ImportEnemyData(float x, float y, const char *file, GameObject* player)
 {
+  GameObject* newEnemy;
   FILE *infile = fopen(file, "r");
   if (infile)
   {
     while (!feof(infile))
     {
       int enemyType;    /* Enemy type, refer to enum in GameObject.h | REMEMBER THIS TAKES AN INTEGER NUMBER NOT A STRING */
-      float positionX;  /* X position */
-      float positionY;  /* Y position */
       float size;       /* Size */
 
-      float health;         /* Duh */
+      int health;         /* Duh */
       float chaseSpeed;     /* Chasing speed */
       float patrolSpeed;    /* Default patroling state speed*/
       float detectRange;    /* Detect range */
@@ -89,7 +95,6 @@ int ImportEnemyData(const char *file, GameObject* player)
         break;
       }
 
-      fscanf(infile, "  POSITION - %f, %f\n", &positionX, &positionY);
       fscanf(infile, "  SIZE     - %f\n", &size);
       fscanf(infile, "  HEALTH   - %i\n", &health);
 
@@ -112,9 +117,13 @@ int ImportEnemyData(const char *file, GameObject* player)
 
       EntityInit(&enemyEntity);
 
+<<<<<<< HEAD
+      newEnemy = EnemyCreate(PhysicsCreateObject(Vec2(x, y), size), GCreateSprite(0, 40, enemyAnimation, 1), enemyEntity, entity_enemy, enemyType,
+=======
 	  // Here the enemy is created using the text data
 	  // Physics component is initialized and the sprite/animation is initialized here as well
       GameObject* newEnemy = EnemyCreate(PhysicsCreateObject(Vec2(positionX, positionY), size), GCreateSprite(0, 40, enemyAnimation, 1), enemyEntity, entity_enemy, enemyType,
+>>>>>>> refs/remotes/origin/master
         chaseSpeed, detectRange, knockbackForce, attackCooldown, attackCooldownLength,
         attackWindup, attackWindupLength, attackRange, attackKnockback, attackDamage, enemyProjectileSpeed);
 
@@ -126,9 +135,17 @@ int ImportEnemyData(const char *file, GameObject* player)
       newEnemy->target = player;
       newEnemy->initialize(newEnemy);
 
+<<<<<<< HEAD
+      newEnemy->entity->health = health;
+
+      EnemyAnimationInitialize(newEnemy);
+=======
       //newEnemy->physics->position.x = 2;
       //newEnemy->physics->position.y = 2;
 	  printf("Created an enemy!");
+>>>>>>> refs/remotes/origin/master
     }
   }
+
+  return newEnemy;
 }
