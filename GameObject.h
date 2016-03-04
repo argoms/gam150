@@ -25,6 +25,7 @@ enum GameObjectNames {
   entity_button, /**< generic button */
   entity_hazard,   /* environmental hazards */
   //entity_health_bar /**< health bar */
+  entity_particle /*particle that doesn't affect other game objects*/
 };
 
 // SET THE NUMBERS IN COMMENTS FOR THE ENEMIES TEXT FILE
