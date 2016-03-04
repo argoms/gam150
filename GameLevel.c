@@ -60,7 +60,7 @@ void GameLevelInit(void)
 
   //set up player object:
   Entity* playerEntity = malloc(sizeof(Entity));
-  playerEntity->maxHealth = 30;
+  playerEntity->maxHealth = 60;
   EntityInit(&playerEntity);
   player = GameObjectCreate(PhysicsCreateObject(Vec2(2, 2), 1), GCreateSprite(0, 40, anim, 1), playerEntity, entity_player);
   player->simulate = &PlayerSimulate;
