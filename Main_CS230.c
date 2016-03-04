@@ -76,10 +76,10 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
   //----------------------------------------------------------------------------
   //TESTING MAP GENERATION
   //----------------------------------------------------------------------------
-    MapCreator_ToFile("map1.txt", 64, 64, 0.1);
+    MapCreator_ToFile("map1.txt", 64, 64, 0.05);
     MapCreator_ToFile("map2.txt", 64, 64, 0.1);
-    MapCreator_ToFile("map3.txt", 64, 64, 0.1);
-    MapCreator_ToFile("map4.txt", 64, 64, 0.1);
+    MapCreator_ToFile("map3.txt", 64, 64, 0.2);
+    MapCreator_ToFile("map4.txt", 64, 64, 0.3);
 
   LevelLoad(level_mainMenu);
   //GInitialize();
