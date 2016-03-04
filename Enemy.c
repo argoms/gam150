@@ -285,7 +285,7 @@ void EnemyRangedAttack(GameObject* _thisObject, Vector2D attackDirection, float 
 void EnemyTracerProjectileCollision(GameObject* _thisObject, GameObject* _otherObject)
 {
   //EnemyContainer* enemyContainer = _thisObject->miscData;
-  if (_otherObject && _otherObject->type == entity_player && (_otherObject->entity->canBeDamaged))
+  if (_otherObject && _otherObject->type == entity_player && (_otherObject->entity && _otherObject->entity->canBeDamaged))
   {
     printf("ENEMY HIT PLAYER %i DAMAGE\n", 10);
     EntityTakeDamage(&_otherObject->entity, 10);

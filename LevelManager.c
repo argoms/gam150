@@ -37,6 +37,8 @@ extern int gGameRunning; /**< used to interface with main file*/
 
 double frameTime;
 
+extern int level;
+
 /*
 \brief loads given level
 \param _level level to be loaded
@@ -49,15 +51,20 @@ void LevelLoad(int _level)
   {
   case level_level1:
     Level1Init();
+    //Audio_PauseMusicStream("music_sample3.ogg");
+    //Audio_PlayMusicStream("music_sample2A.ogg", 1);
     break;
   case level_mainMenu:
     MainMenuInit();
+    Audio_PlayMusicStream("music_sample3.ogg", 0);
     break;
   case level_town:
     TownScreenInit();
     break;
   case level_deathScreen:
     DeathScreenInit();
+    level = 1;
+    Audio_PauseMusicStream("music_sample2A.ogg");
     break;
   case level_splashScreen:
     SplashScreenInit();
@@ -131,6 +138,8 @@ void LevelUnload()
 */
 void MainMenuInit()
 {
+
+
   AEGfxSetCamPosition(0, 0);
   static AEGfxVertexList*	newmesh;				// Pointer to Mesh (Model)
   newmesh = GCreateMesh(16, 24, 16, 16);
@@ -220,9 +229,9 @@ void MainMenuRun()
   PhysicsSimulate();
   GameObjectsPostStep();
   //debug
+
   if (AEInputCheckReleased(VK_SPACE))
   {
-    
     switch (currentLevel)
     {
     case level_level1:
@@ -230,6 +239,8 @@ void MainMenuRun()
       break;
     case level_mainMenu:
       nextLevel = level_level1;
+      Audio_PauseMusicStream("music_sample3.ogg");
+      Audio_PlayMusicStream("music_sample2A.ogg", 1);
       break;
     }
   }
