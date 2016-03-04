@@ -27,4 +27,5 @@ void EnemyAttackDetect(GameObject* _thisObject);
 void EnemyMeleeAttack(GameObject* _thisObject, Vector2D attackDirection);
 void EnemyRangedAttack(GameObject* _thisObject, Vector2D attackDirection, float projectileSpeed);
 void EnemyTracerProjectileCollision(GameObject* _thisObject, GameObject* _otherObject);
+void EnemyTracerSimulate(GameObject* _thisTracer);
 static void EnemyKnockBack(GameObject* _thisObject, GameObject* _otherObject);
