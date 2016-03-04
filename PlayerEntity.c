@@ -375,7 +375,7 @@ void PlayerInput()
       stepSoundTimer -= frameTime;
       if(stepSoundTimer < 0)
       {
-       Audio_PlaySoundSample("ButtonClick.ogg", 0);
+       Audio_PlaySoundSample("FootstepPlayer1.ogg", 0);
        stepSoundTimer = 0.3;
       }
       Vector2DNormalize(&input, &input);
@@ -514,8 +514,13 @@ static void PlayerAttack()
 
   //HARD CODING MAGIC NUMBERS SPOOOOOKY
   //these are half screen height/widths
+  /*
   mouseX += -400;
   mouseY += -300;
+  */
+  mouseX += (AEGfxGetWinMaxX() - AEGfxGetWinMinX()) / -2;
+  mouseY += (AEGfxGetWinMaxY() - AEGfxGetWinMinY()) / -2;
+  //printf("%f", (AEGfxGetWinMaxX() - AEGfxGetWinMinX()) / -2);
   /***/
 
   //printf("%i, %i|||", mouseX, mouseY);

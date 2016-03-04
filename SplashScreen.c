@@ -21,12 +21,13 @@ void SplashScreenInit()
   GCreateSprite(0, 0, GCreateAnimation(1, GCreateTexture("splash.png"), GCreateMesh(800, 600, 1, 1), 1), 1);
   TextCreateString("", -300, -50);
   //printf("AAA");
-
+  printf("AAA");
   Audio_AddSoundSample("SwordSwing1.ogg");
   Audio_AddSoundSample("SwordClash1.ogg");
   Audio_AddSoundSample("SwordSwing2.ogg");
   Audio_AddSoundSample("ButtonClick.ogg");
   Audio_AddSoundSample("ButtonClick2.ogg");
+  Audio_AddSoundSample("FootstepPlayer1.ogg");
   Audio_AddSoundSample("music_sample1.ogg");
   Audio_PlayMusicStream("music_sample1.ogg", 0);
 }
