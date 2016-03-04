@@ -47,17 +47,16 @@ void GRender()
     while (spriteIndex)
     {
       AEGfxSetPosition(spriteIndex->x + spriteIndex->offset.x, spriteIndex->y + spriteIndex->offset.y);//set draw position
+                                                       
+      SimAnimation(spriteIndex); //update sprite texture offsets according to animation
       
-      
-
-                                                       //update sprite texture offsets according to animation
-      SimAnimation(spriteIndex);
       AEGfxTextureSet(spriteIndex->animation->texture,
         spriteIndex->animation->frameOffsetX * (spriteIndex->frame % spriteIndex->animation->frameWidth) - 1,
         spriteIndex->animation->frameOffsetY * (spriteIndex->frame / spriteIndex->animation->frameWidth) - 1);
 
-
-      AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
+      AEGfxSetBlendMode(spriteIndex->blendMode);
+      
+      AEGfxSetTintColor(spriteIndex->tint.red, spriteIndex->tint.green, spriteIndex->tint.blue, spriteIndex->tint.alpha);
       if (spriteIndex->specialFX != NULL)
       {
         spriteIndex->specialFX();
@@ -90,8 +89,15 @@ void GRender()
       AEGfxTextureSet(spriteIndex->animation->texture,
         spriteIndex->animation->frameOffsetX * (spriteIndex->frame % spriteIndex->animation->frameWidth) - 1,
         spriteIndex->animation->frameOffsetY * (spriteIndex->frame / spriteIndex->animation->frameWidth) - 1);
+      
+      AEGfxSetTintColor(spriteIndex->tint.red, spriteIndex->tint.green, spriteIndex->tint.blue, spriteIndex->tint.alpha);
+
       AEGfxSetTransparency(1.0f);
+
+      AEGfxSetBlendMode(spriteIndex->blendMode);
+      
       AEGfxMeshDraw(spriteIndex->animation->mesh, AE_GFX_MDM_TRIANGLES);
+      
       spriteIndex = spriteIndex->lowerSprite;
 
 
@@ -279,6 +285,8 @@ Sprite* GCreateSprite(float _spriteX, float _spriteY, Animation* _animation, flo
   newSprite->isHud = 0;
   newSprite->offset.x = 0;
   newSprite->offset.y = 0;
+  newSprite->blendMode = AE_GFX_BM_BLEND;
+  newSprite->tint = GTint(1.0f, 1.0f, 1.0f, 1.0f);
 
   //newSprite->animation->mesh
   //update sprite list:
@@ -347,7 +355,8 @@ Sprite* GCreateHudSprite(float _spriteX, float _spriteY, Animation* _animation, 
   newSprite->isHud = 1;
   newSprite->offset.x = 0;
   newSprite->offset.y = 0;
-
+  newSprite->blendMode = AE_GFX_BM_BLEND;
+  newSprite->tint = GTint(1.0f, 1.0f, 1.0f, 1.0f);
 
   if (!hudLayer->first) //if first, set first in list
   {
@@ -579,4 +588,21 @@ void GSortSprite(Sprite* _sprite, float _direction)
     }
   }
 
+}
+
+/*!
+\brief Creates a tint struct.
+\param r Red value of tint
+\param g Green value of tint
+\param b Blue value of tint
+\return Returns new tint object (by value)
+*/
+Tint GTint(float r, float g, float b, float a)
+{
+  Tint newTint;
+  newTint.red = r;
+  newTint.green = g;
+  newTint.blue = b;
+  newTint.alpha = a;
+  return newTint;
 }

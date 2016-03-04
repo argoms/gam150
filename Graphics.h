@@ -13,6 +13,20 @@ typedef struct Sprite Sprite;
 typedef struct SpriteList SpriteList;
 typedef struct MeshList MeshList;
 typedef struct TextureList TextureList;
+typedef struct Tint Tint;
+
+/*!
+\struct Tint
+\brief Contains all info for a given tint.
+*/
+struct Tint
+{
+  float red;
+  float green;
+  float blue;
+  float alpha;
+  //AEGfxSetTintColor()
+};
 
 /*!
 \struct Sprite
@@ -40,8 +54,12 @@ struct Sprite
   float Xscale; /**< width of sprite  */
   float Yscale; /**< height of sprite */
 
+  unsigned int blendMode; /**< blend mode for sprite rendering*/
+  struct Tint tint; /**<tint for rendering*/
+
   void(*specialFX)(void);
 };
+
 
 
 /*!
@@ -117,3 +135,5 @@ Sprite* GCreateHudSprite(float _spriteX, float _spriteY, Animation* _animation, 
 struct AEGfxVertexList* GCreateMesh(float _width, float _height, float _numFramesX, float _numFramesY); //call to create a mesh
 
 struct AEGfxTexture* GCreateTexture(char* _textureName); //call to create a texture
+
+Tint GTint(float r, float g, float b, float a); //fast constructor for tint object
