@@ -375,7 +375,7 @@ void PlayerInput()
       stepSoundTimer -= frameTime;
       if(stepSoundTimer < 0)
       {
-       Audio_PlaySoundSample("ButtonClick.ogg", 0);
+       Audio_PlaySoundSample("FootstepPlayer1.ogg", 0);
        stepSoundTimer = 0.3;
       }
       Vector2DNormalize(&input, &input);
