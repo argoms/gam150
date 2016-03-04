@@ -15,6 +15,9 @@ void EntityInit(Entity** _entity)
 {
   (*_entity)->health = (*_entity)->maxHealth;
   (*_entity)->onEntityKilled = 0;
+  (*_entity)->canBeDamaged = 1;
+  (*_entity)->invincibilityTime = 1;
+  (*_entity)->invincibilityRecoveryTime = 0;
 
 }
 
@@ -28,11 +31,15 @@ void EntityTakeDamage(Entity** _entity, int _damage)
 {
   if (*_entity)
   {
-    (*_entity)->health -= _damage;
-    //printf("OW, %i left", (*_entity)->health);
-    if ((*_entity)->health < 1)
+    //allow it to take damage if its flag saying that itcanbedamaged is false
+    if ( (*_entity)->canBeDamaged != 0)
     {
-      (*_entity)->onEntityKilled(((*_entity)->owner));
+      (*_entity)->health -= _damage;
+      //printf("OW, %i left", (*_entity)->health);
+      if ((*_entity)->health < 1)
+      {
+        (*_entity)->onEntityKilled(((*_entity)->owner));
+      }
     }
   }
 }

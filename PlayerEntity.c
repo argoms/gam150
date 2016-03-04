@@ -8,6 +8,7 @@
 #include <math.h>
 #include "Text.h"
 #include <string.h>
+#include "Dodge.h"
 
 extern double frameTime;
 
@@ -273,6 +274,15 @@ void PlayerSimulate()
   PlayerAnimations();
   //8
   
+  //update the i frames
+  UpdateEntityIFs(player);
+
+  //check key
+  int key = VK_SPACE;
+  Dodge(key, player); //check if the key is pressed if so then dodge
+  
+
+
   //alpha dumb hardcoding
   {
     char hpstring[20] = "Health:            ";

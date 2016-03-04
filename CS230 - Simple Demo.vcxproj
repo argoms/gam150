@@ -170,6 +170,7 @@
     <ClCompile Include="Collision.c" />
     <ClCompile Include="conversions.c" />
     <ClCompile Include="DeathScreen.c" />
+    <ClCompile Include="Dodge.c" />
     <ClCompile Include="Door.c" />
     <ClCompile Include="Enemy.c" />
     <ClCompile Include="Entity.c" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Collision.h" />
     <ClInclude Include="conversions.h" />
     <ClInclude Include="DeathScreen.h" />
+    <ClInclude Include="Dodge.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />

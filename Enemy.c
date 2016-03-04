@@ -95,7 +95,7 @@ void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject)
 
     EnemyKnockBack(_thisObject, _otherObject);
 
-    printf("PLAYER TAKING DAMAGE \n");
+    //printf("PLAYER TAKING DAMAGE \n");
   }
 }
 
@@ -106,10 +106,10 @@ void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject)
 */
 void EnemyOnKilled(GameObject* _self)
 {
-  printf("\n *** \n ENEMY DIED WOO \n *** \n");
+  //printf("\n *** \n ENEMY DIED WOO \n *** \n");
   GameObjectDestroy(&_self);
-  printf("\n dflag: %i", (_self)->destroyFlag);
-  printf("type: %i \n", (_self)->type);
+  //printf("\n dflag: %i", (_self)->destroyFlag);
+  //printf("type: %i \n", (_self)->type);
 }
 
 /*
@@ -134,7 +134,7 @@ Vector2D EnemyMovement(GameObject* _thisObject, const float distanceToPlayer)
     normalVelocityVector.y = _thisObject->physics->velocity.x;
 
     float dotProduct = Vector2DDotProduct(&(normalVelocityVector), &(enemyToPlayer));
-    printf("%f", dotProduct);
+    //printf("%f", dotProduct);
 
     if (dotProduct > 0)
     {
@@ -233,7 +233,7 @@ void EnemyRangedAttack(GameObject* _thisObject, Vector2D attackDirection, float 
 void EnemyTracerProjectileCollision(GameObject* _thisObject, GameObject* _otherObject)
 {
   //EnemyContainer* enemyContainer = _thisObject->miscData;
-  if (_otherObject && _otherObject->type == entity_player)
+  if (_otherObject && _otherObject->type == entity_player && (_otherObject->entity->canBeDamaged))
   {
     printf("ENEMY HIT PLAYER %i DAMAGE\n", 10);
     EntityTakeDamage(&_otherObject->entity, 10);

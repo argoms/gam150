@@ -32,7 +32,7 @@ void SplashScreenInit()
 void SplashScreenRun()
 {
   //printf("AAA");
-  if (AEInputCheckTriggered(VK_SPACE))
+  if (AEInputCheckReleased(VK_SPACE))
   {
     LevelSetNext(level_mainMenu);
     //Audio_PlaySoundSample("SwordSwing1.ogg", 0);
