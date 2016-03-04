@@ -26,6 +26,7 @@
     <ClCompile Include="SplashScreen.c" />
     <ClCompile Include="Dodge.c" />
     <ClCompile Include="Collision.c" />
+    <ClCompile Include="WinScreen.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h" />
@@ -52,6 +53,7 @@
     <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="Dodge.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="WinScreen.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="EnemyFiles">

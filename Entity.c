@@ -29,7 +29,7 @@ void EntityInit(Entity** _entity)
 */
 void EntityTakeDamage(Entity** _entity, int _damage)
 {
-  if (*_entity)
+  if (_entity)
   {
     //allow it to take damage if its flag saying that itcanbedamaged is false
     if ( (*_entity)->canBeDamaged != 0)

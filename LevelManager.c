@@ -14,6 +14,7 @@ Basic level/gamestate manager implementation.
 #include "Button.h"
 #include "DeathScreen.h"
 #include "SplashScreen.h"
+#include "WinScreen.h"
 #include "Audio.h"
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
 static AEGfxVertexList*	pMesh2;				/**< EXAMPLE VAR*/
@@ -61,6 +62,9 @@ void LevelLoad(int _level)
   case level_splashScreen:
     SplashScreenInit();
     break;
+  case level_winScreen:
+    WinScreenInit();
+    break;
   }
 
 }
@@ -88,6 +92,9 @@ void LevelRun()
     break;
   case level_splashScreen:
     SplashScreenRun();
+    break;
+  case level_winScreen:
+    WinScreenRun();
     break;
   }
 
