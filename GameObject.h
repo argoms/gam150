@@ -69,6 +69,7 @@ struct GameObject
   GameObject* next; /**< pointer to previous object in list*/
   GameObject* prev; /**< pointer to next object in list*/
   void* miscData;   /**< void pointer to whatever we want*/
+  float projectileLifeTime;
 };
 
 /*

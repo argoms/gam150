@@ -74,7 +74,13 @@ GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _
 
   newGameObject->miscData = NULL; 
   newGameObject->simulate = NULL;
+  newGameObject->projectileLifeTime = 0;
   //printf("%f", newGameObject->entity);
+
+  if (_type == entity_enemyProjectile)
+  {
+    newGameObject->projectileLifeTime = 3;
+  }
 
   //update list:
   if (!gameObjectList.first)

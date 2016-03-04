@@ -101,8 +101,8 @@ void GameLevelInit(void)
   //create door object:
   do
   {
-    x = RandIntRange(16, 24);
-    y = RandIntRange(16, 24);
+    x = RandIntRange(15, 20);
+    y = RandIntRange(15, 20);
   } while (IsoTileGet(x, y) || (player->physics->position.x == x && player->physics->position.y == y));
 
   GameObject* door = GameObjectCreate(PhysicsCreateObject(Vec2(x, y), 1), GCreateSprite(0, 40, anim2, 1), 0, entity_door);
@@ -132,7 +132,7 @@ void GameLevelInit(void)
   //PhysicsRemoveObject(&a);
 
   int numEnemies;
-  int enemiesToCreate = 10;
+  int enemiesToCreate = 6;
 
   for (numEnemies = 0; numEnemies < enemiesToCreate; numEnemies += 2)
   {

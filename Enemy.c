@@ -214,7 +214,7 @@ void EnemyAttackDetect(GameObject* _thisObject)
       switch (enemyContainer->enemyType)
       {
       case ENEMY_TYPE_MELEE:
-        EnemyMeleeAttack(_thisObject, attackDirection);
+        //EnemyMeleeAttack(_thisObject, attackDirection);
         //printf("%i, %i", attackDirection.x, attackDirection.y);
         break;
       case ENEMY_TYPE_RANGED:
@@ -253,7 +253,7 @@ void EnemyRangedAttack(GameObject* _thisObject, Vector2D attackDirection, float 
   tracer->physics->velocity.y = attackDirection.y * projectileSpeed;
 
   tracer->syncSpritePhysics = 1;
-  //tracer->simulate = &TracerSimulate;
+  tracer->simulate = &EnemyTracerSimulate;
   tracer->physics->onCollision = &EnemyTracerProjectileCollision;
 }
 
@@ -265,6 +265,16 @@ void EnemyTracerProjectileCollision(GameObject* _thisObject, GameObject* _otherO
     printf("ENEMY HIT PLAYER %i DAMAGE\n", 10);
     EntityTakeDamage(&_otherObject->entity, 10);
     GameObjectDestroy(&_thisObject);
+  }
+}
+
+void EnemyTracerSimulate(GameObject* _thisTracer)
+{
+  _thisTracer->projectileLifeTime -= (float)AEFrameRateControllerGetFrameTime();
+
+  if (_thisTracer->projectileLifeTime < 0)
+  {
+    GameObjectDestroy(&_thisTracer);
   }
 }
 
