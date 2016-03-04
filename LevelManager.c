@@ -16,6 +16,8 @@ Basic level/gamestate manager implementation.
 #include "SplashScreen.h"
 #include "WinScreen.h"
 #include "Audio.h"
+#include "ParticleSystems(Redo).h"
+
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
 static AEGfxVertexList*	pMesh2;				/**< EXAMPLE VAR*/
 static AEGfxTexture *pTex1;/**< EXAMPLE VAR*/
@@ -45,6 +47,8 @@ extern int level;
 */
 void LevelLoad(int _level)
 {
+	LoadAll_PS();
+
   GInitialize();
 
   switch (_level)
@@ -120,6 +124,12 @@ void LevelRun()
       break;
     }
   }
+
+  if (frameTime > 0.5)
+  {
+	  frameTime = 0.016;
+  }
+  UpdateAllPS_Inst((float)frameTime);
 }
 
 /*
@@ -129,6 +139,7 @@ void LevelUnload()
 {
   AEGfxSetCamPosition(0, 0);
   GameObjectFree();
+  UnloadAll_PS();
   GFree();
 }
 

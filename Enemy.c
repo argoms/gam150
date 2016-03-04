@@ -7,6 +7,7 @@
 #include "AEEngine.h"
 #include <stdio.h>
 #include <math.h>
+#include "ParticleSystems(Redo).h"
 
 static Animation* tracerAnimation;
 
@@ -111,6 +112,9 @@ void EnemyOnKilled(GameObject* _self)
 {
   //printf("\n *** \n ENEMY DIED WOO \n *** \n");
   GameObjectDestroy(&_self);
+  pPS_B->PS_Burst->StartPosX = _self->physics->position.x;
+  pPS_B->PS_Burst->StartPosY = _self->physics->position.y;
+  Start_PS(pPS_B);
   //printf("\n dflag: %i", (_self)->destroyFlag);
   //printf("type: %i \n", (_self)->type);
 }
@@ -176,6 +180,8 @@ Vector2D EnemyMovement(GameObject* _thisObject, const float distanceToPlayer)
     Vector2D worldFacing;
     worldFacing = IsoWorldToScreen(&facingDirection);
     EnemyChangeAnimationFlag(enemyContainer, &worldFacing);
+
+    facingDirection = normalizedFacing;
   }
   return facingDirection;
 }

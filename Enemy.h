@@ -2,11 +2,6 @@
 #include "GameObject.h"
 
 #define PI 3.1415926535897
-#define ENEMY_ROTATION_SPEED  (PI / 2.0f)
-#define ENEMY_CHASE_SPEED     .05f
-#define ENEMY_DETECT_RANGE    10.0f
-#define ENEMY_KNOCKBACK_FORCE 0.25
-#define ENEMY_ROTATION_SPEED  (2.0f*PI + 1)
 
 enum
 {

@@ -19,6 +19,7 @@
 #include "Hazard.h"
 #include "Button.h"
 #include "ImportData.h"
+#include "ParticleSystems(Redo).h"
 #include "MyRandom.h"
 
 #define MAP_WIDTH 64
@@ -28,6 +29,10 @@
 int level; 
 //
 
+//test particle effect istances
+PS_Instance *pPS_C;
+PS_Instance *pPS_B;
+
 //extern int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
 static GameObject* player; /**< pointer to player object*/
 
@@ -36,6 +41,16 @@ static GameObject* player; /**< pointer to player object*/
 */
 void GameLevelInit(void)
 {
+	pPS_C = Create_PS_Continuous(2.0f, 5.0f, -1);
+
+	pPS_C->PS_Continuous->StartPosX = 2;
+	pPS_C->PS_Continuous->StartPosY = 2;
+
+	pPS_B = Create_PS_Burst(2.0f, 20);
+
+	//pPS_B->PS_Burst->StartPosX = 2;
+	//pPS_B->PS_Burst->StartPosY = 2;
+
   printf("game level init\n");
   PhysicsInit();
   IsoInit(MAP_WIDTH, MAP_HEIGHT);
@@ -166,6 +181,15 @@ void GameLevelInit(void)
 
 void GameLevelRun(void)
 {
+
+	if (AEInputCheckTriggered('Y'))
+	{
+		Start_PS(pPS_C);
+	}
+	if (AEInputCheckTriggered('H'))
+	{
+		Stop_PS(pPS_C);
+	}
 
   //Vector2D a = Vec2(2, 2);
   

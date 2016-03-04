@@ -40,6 +40,7 @@ struct Sprite
   float Xscale; /**< width of sprite  */
   float Yscale; /**< height of sprite */
 
+  void(*specialFX)(void);
 };
 
 

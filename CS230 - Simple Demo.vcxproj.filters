@@ -28,6 +28,8 @@
     <ClCompile Include="DeathScreen.c" />
     <ClCompile Include="SplashScreen.c" />
     <ClCompile Include="Dodge.c" />
+    <ClCompile Include="WinScreen.c" />
+    <ClCompile Include="ParticleSystems(Redo).c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h" />
@@ -56,6 +58,8 @@
     <ClInclude Include="DeathScreen.h" />
     <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="Dodge.h" />
+    <ClInclude Include="WinScreen.h" />
+    <ClInclude Include="ParticleSystems(Redo).h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="EnemyFiles">

@@ -189,6 +189,7 @@
     <ClCompile Include="MapCreator.c" />
     <ClCompile Include="MapGen.c" />
     <ClCompile Include="MyRandom.c" />
+    <ClCompile Include="ParticleSystems(Redo).c" />
     <ClCompile Include="Physics.c" />
     <ClCompile Include="PlayerEntity.c" />
     <ClCompile Include="SplashScreen.c" />
@@ -218,6 +219,7 @@
     <ClInclude Include="MapCreator.h" />
     <ClInclude Include="MapGen.h" />
     <ClInclude Include="MyRandom.h" />
+    <ClInclude Include="ParticleSystems(Redo).h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PlayerEntity.h" />
     <ClInclude Include="SplashScreen.h" />
