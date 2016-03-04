@@ -8,6 +8,7 @@
 #include <math.h>
 #include "Text.h"
 #include <string.h>
+#include "Dodge.h"
 
 extern double frameTime;
 
@@ -58,6 +59,7 @@ static Animation* animSwordUpLeft;
 static Animation* animSwordUpRight;
 
 static Sprite* playerSprite;
+static float stepSoundTimer;
 
 //the following enums are used for the player action bit field:
 static enum directions 
@@ -74,6 +76,23 @@ static enum actions
   PLAYER_WALK = 32,
   PLAYER_SWORD = 64
 };
+/*
+typedef struct
+{
+  unsigned int action;
+  const char *filename;
+  Animation *animation;
+} AnimationDefinition;
+
+static AnimationDefinition animations[] =
+{
+  { PLAYER_WALK + PLAYER_LEFT + PLAYER_DOWN, "anims/walkLD.png",  NULL },
+  { PLAYER_WALK + PLAYER_RIGHT + PLAYER_DOWN, "anims/walkRD.png",  NULL }
+  { PLAYER_IDLE + PLAYER_LEFT + PLAYER_DOWN, "anims/idleLD.png", NULL },
+  { PLAYER_IDLE + PLAYER_RIGHT + PLAYER_DOWN, "anims/idleRD.png", NULL }
+
+};
+*/
 
 static unsigned int playerAction; //bit field for player action flags:
 /*!
@@ -92,8 +111,8 @@ void PlayerInit()
   
   player = GetPlayerObject();
   attackCooldown = 0;
-  attackCooldownLength = 0.75;
-  attackDamage = 100;
+  attackCooldownLength = 0.5;
+  attackDamage = 50;
   tracerAnimation = GCreateAnimation(1,
     GCreateTexture("isotilePlaceholder1.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
@@ -112,7 +131,30 @@ void PlayerInit()
   int walkFrames = 12; //number of frames in walk animation
   int idleFrames = 1; //number of frames in idle animation
   int swordFrames = 13;
-
+  /*
+  int numAnimations = sizeof(animations) / sizeof(AnimationDefinition);
+  int i = 0;
+  for (i = 0; i < numAnimations; ++i)
+  {
+    int frames;
+    AEGfxVertexList *mesh;
+    switch (animations[i].action)
+    {
+    case PLAYER_IDLE:
+      frames = idleFrames;
+      mesh = idleMesh;
+      break;
+    case PLAYER_WALK:
+      frames = walkFrames;
+      mesh = walkMesh;
+      break;
+    }
+    animations[i].animation = GCreateAnimation(frames,
+      GCreateTexture(animations[i].filename),
+      mesh,
+      1);
+  }
+  */
   //load walking:
   animWalkDown = GCreateAnimation(walkFrames,
     GCreateTexture("animations/player/walkDown.png"),
@@ -252,7 +294,7 @@ void PlayerInit()
   int count = 0;
   while (tempHP > 0)
   {
-    printf("a");
+    //printf("a");
     count++;
     hpstring[6 + count] = '*';
     tempHP -= 10;
@@ -272,6 +314,15 @@ void PlayerSimulate()
   PlayerAnimations();
   //8
   
+  //update the i frames
+  UpdateEntityIFs(player);
+
+  //check key
+  int key = VK_SPACE;
+  Dodge(key, player); //check if the key is pressed if so then dodge
+  
+
+
   //alpha dumb hardcoding
   {
     char hpstring[20] = "Health:            ";
@@ -318,8 +369,15 @@ void PlayerInput()
     mouseY += -300;
     /***/
 
+    
     if (input.x != 0 || input.y != 0)
     {
+      stepSoundTimer -= frameTime;
+      if(stepSoundTimer < 0)
+      {
+       Audio_PlaySoundSample("ButtonClick.ogg", 0);
+       stepSoundTimer = 0.3;
+      }
       Vector2DNormalize(&input, &input);
       Vector2DScale(&input, &input, 10);
 
@@ -347,7 +405,10 @@ void PlayerInput()
     }
     else
     {
-
+<<<<<<< HEAD
+=======
+      stepSoundTimer = 0.1;
+>>>>>>> refs/remotes/origin/master
       //if idle, set idle flag and remove walk flag
       if (!(playerAction & PLAYER_IDLE)) //called on the frame where player goes from walk to idle
       {
@@ -434,6 +495,15 @@ static void SnapVector(Vector2D* _input)
 */
 static void PlayerAttack()
 {
+  //randomly pick sword sound
+  if (AERandFloat() < 0.5)
+  {
+    Audio_PlaySoundSample("SwordSwing1.ogg", 0);
+  }
+  else
+  {
+    Audio_PlaySoundSample("SwordSwing2.ogg", 0);
+  }
   //set up animation:
   playerAction = playerAction & (PLAYER_DOWN + PLAYER_UP + PLAYER_LEFT + PLAYER_RIGHT); //strip direction from current flags
   playerAction += PLAYER_SWORD;
@@ -488,8 +558,13 @@ void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _oth
 
   if (_otherObject && _otherObject->type == entity_enemy)
   {
+    Audio_PlaySoundSample("SwordClash1.ogg", 0);
     printf("YOU HIT ENEMY FOR %i DAMAGE\n", attackDamage);
     EntityTakeDamage(&_otherObject->entity, attackDamage);
+  }
+
+  if (_otherObject->entity->health <= 0)
+  {
     GameObjectDestroy(&_thisObject);
   }
 }
@@ -499,6 +574,17 @@ void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _oth
 */
 void PlayerAnimations()
 {
+  /*
+  int numAnimations = sizeof(animations) / sizeof(AnimationDefinition);
+  for (int i = 0; i < numAnimations; ++i)
+  {
+    if ((playerAction == animations[i].action) && (animations[i].animation != NULL))
+    {
+      playerSprite->animation = animations[i].animation;
+      break;
+    }
+  }
+  */
   //printf("%i", playerAction);
   switch (playerAction)
   {

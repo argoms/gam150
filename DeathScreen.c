@@ -24,7 +24,7 @@ void DeathScreenInit()
 
 void DeathScreenRun()
 {
-  if (AEInputCheckTriggered(VK_SPACE))
+  if (AEInputCheckReleased(VK_SPACE))
   {
     LevelSetNext(level_mainMenu);
   }

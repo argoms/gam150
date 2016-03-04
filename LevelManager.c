@@ -13,7 +13,8 @@ Basic level/gamestate manager implementation.
 #include "TownScreen.h"
 #include "Button.h"
 #include "DeathScreen.h"
-
+#include "SplashScreen.h"
+#include "Audio.h"
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
 static AEGfxVertexList*	pMesh2;				/**< EXAMPLE VAR*/
 static AEGfxTexture *pTex1;/**< EXAMPLE VAR*/
@@ -42,6 +43,7 @@ double frameTime;
 void LevelLoad(int _level)
 {
   GInitialize();
+
   switch (_level)
   {
   case level_level1:
@@ -56,6 +58,9 @@ void LevelLoad(int _level)
   case level_deathScreen:
     DeathScreenInit();
     break;
+  case level_splashScreen:
+    SplashScreenInit();
+    break;
   }
 
 }
@@ -66,9 +71,9 @@ void LevelLoad(int _level)
 void LevelRun()
 {
   frameTime = AEFrameRateControllerGetFrameTime();
-
   switch (currentLevel)
   {
+    
   case level_level1:
     GameLevelRun();
     break;
@@ -81,6 +86,9 @@ void LevelRun()
   case level_deathScreen:
     DeathScreenRun();
     break;
+  case level_splashScreen:
+    SplashScreenRun();
+    break;
   }
 
   if (currentLevel != nextLevel)
@@ -91,6 +99,7 @@ void LevelRun()
       gGameRunning = 0;
       break;
     default:
+      Audio_PlaySoundSample("ButtonClick2.ogg", 0);
       LevelUnload();
       currentLevel = nextLevel;
       LevelLoad(nextLevel);
@@ -140,7 +149,7 @@ void MainMenuInit()
 
   //BUTTONS------------------------------------------------------
   int button_type = LEVEL_ONE_BUTTON;             /* type of button  */
-  float button1x = -360;                          /* x position      */
+  float button1x = -200;                          /* x position      */
   float button1y = -100;                          /* y position      */
   float mesh1x = 128.0f;                          /* mesh x          */
   float mesh1y = 64.0f;                           /* mesh y          */
@@ -148,9 +157,12 @@ void MainMenuInit()
   static AEGfxVertexList*	button_mesh;				    /* mesh ptr        */
   button_mesh = GCreateMesh(mesh1x, mesh1y, 1, 1);/* create the mesh */
 
+  TextString *main_menu_text;
+  main_menu_text = TextCreateHUDString("Level 1", button1x, button1y);
+  //GCreateTexture("isotilePlaceholder1.png")
   //load button:
   Animation* anim_button1 = GCreateAnimation(1,
-    GCreateTexture("isotilePlaceholder1.png"),
+    NULL,
     button_mesh,
     1);
 
@@ -158,13 +170,6 @@ void MainMenuInit()
   //PhysicsObject *button1_physics = PhysicsCreateObject(Vec2(button1x,button1y),1);
 
   GameObject* button = CreateButton(0, button1_sprite, NULL, button_type, button1size, mesh1x, mesh1y);
-  /*
-  PhysicsObject *button_physics = PhysicsCreateObject(Vec2(-360, 100), 1);
-  Sprite *sprite_object_button = GCreateSprite(0, 40, anim2, 1);
-  //int entity_butt = entity_button;
-  int button_type = MAIN_MENU_BUTTON;
-  GameObject* button = CreateButton(button_physics, sprite_object_button, NULL, button_type);
-  */
 
   //END BUTTONS-------------------------------------------------------------
 
@@ -207,7 +212,7 @@ void MainMenuRun()
   PhysicsSimulate();
   GameObjectsPostStep();
   //debug
-  if (AEInputCheckTriggered(VK_SPACE))
+  if (AEInputCheckReleased(VK_SPACE))
   {
     
     switch (currentLevel)

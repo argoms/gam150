@@ -8,11 +8,13 @@ Basic level/gamestate manager implementation.
 #pragma once
 
 enum LevelStates {
+  level_splashScreen, /**< DigiPen splash screen*/
   level_mainMenu, /**< main menu level*/
   level_level1, /**< level 1 (in-game level*/
   level_exit, /**< closes the game*/
   level_town, /**< town screen for intermission.*/
   level_deathScreen /**< death screen*/
+  
 };
 void LevelLoad();
 void LevelUnload();
