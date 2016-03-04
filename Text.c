@@ -73,6 +73,51 @@ TextString* TextCreateString(char* _string, float _x, float _y)
 }
 
 /*!
+\brief Creates a text string at given position on the hud layer
+\param _string text to be created
+\param _x x position of text
+\param _y y position of text
+\return Returns a pointer to the new text string.
+*/
+TextString* TextCreateHUDString(char* _string, float _x, float _y)
+{
+  int i = 0; /*! index var*/
+  TextString* result = malloc(sizeof(TextString));
+  TextChar* latestChar = NULL;
+  //result->length = strlen(_string);
+  //
+  while (_string[i])
+  {
+    
+    //create new letter & sprite
+    Sprite* newChar = GCreateHudSprite(_x + i * textWidth, _y, charAnim, 1);
+    TextChar* newTextChar = malloc(sizeof(TextChar));
+    newTextChar->sprite = newChar;
+    newChar->frame = _string[i];
+    newChar->paused = 1;
+
+    //printf("%c|", _string[i]);
+
+    //update the character linked lists:
+    newTextChar->value = _string[i];
+    newTextChar->next = NULL;
+
+    if (latestChar)
+    {
+      latestChar->next = newTextChar;
+      latestChar = newTextChar;
+    }
+    else {
+      result->first = newTextChar;
+      latestChar = newTextChar;
+    }
+    i++;
+  }
+
+  return result;
+}
+
+/*!
 \brief moves a given text string to a given position
 
 \param _textString TextString object to move
@@ -127,4 +172,20 @@ void TextStringSet(TextString** _textString, char* _string)
   TextRemoveString(*_textString);
   //free(*_textString);
   *_textString = TextCreateString(_string, tempX, tempY);
+}
+
+/*!
+\brief sets text HUD string to given string
+
+\param _textString address of the text string (type &textPointer, not textPointer)
+\param _string string to overwrite
+*/
+void TextHUDStringSet(TextString** _textString, char* _string)
+{
+  float tempX = (*_textString)->x;
+  float tempY = (*_textString)->y;
+  TextRemoveString(*_textString);
+  //free(*_textString);
+  *_textString = TextCreateHUDString(_string, tempX, tempY);
+  printf("hudset");
 }

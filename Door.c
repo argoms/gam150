@@ -12,6 +12,7 @@ Contains functionality for doors to move between levels on contact.
 #include <stdio.h>
 
 
+extern int level;
 /*!
 \brief Functionality for doors switching levels upon contact.
 
@@ -27,6 +28,11 @@ void DoorDefaultOnCollision(GameObject* _thisObject, GameObject* _otherObject)
   {
     //GameObjectDestroy(&_thisObject);
     LevelSetNext(level_town);
+    
     printf("DOOR ME");
+
+    //alpha hardcoding:
+    level++;
+
   }
 }

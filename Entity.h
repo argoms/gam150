@@ -17,10 +17,12 @@ struct Entity
 {
   GameObject* owner; /**< pointer to owner gameobject of this entity instance*/
 
-  int health; /**< number of hitpoints remaining*/
-  int maxHealth; /**< maximum number of hitpoints*/
-  
-  void(*onEntityKilled)(); /**< called when entity dies*/
+  int health;                   /**< number of hitpoints remaining      */
+  int maxHealth;                /**< maximum number of hitpoints        */
+  int invincibilityTime;        /**< frames for invincibility           */
+  int canBeDamaged;             /**< flag if we can damage the entity   */
+  int invincibilityRecoveryTime;/**< frames for recovering              */  
+  void(*onEntityKilled)();      /**< called when entity dies            */
 };
 
 void EntityInit(Entity** _entity);

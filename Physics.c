@@ -108,6 +108,7 @@ void PhysicsSimulate()
       PhysicsObject* collisionTest = instance->next;
       while (collisionTest)
       {
+
         float distBetweenSQ = Vector2DSquareDistance(&collisionTest->position, &instance->position);
        
         if (distBetweenSQ <= ((collisionTest->size + instance->size) / 2) * ((collisionTest->size + instance->size) / 2))
@@ -131,6 +132,8 @@ void PhysicsSimulate()
 
         collisionTest = collisionTest->next;
       }
+
+
 
       Vector2DAdd(&instance->position, &instance->position, &instance->velocity);
       PhysicsTileCollisions(instance);
@@ -528,7 +531,7 @@ Input         : _instance is the physics object,
                 y is the y velocity.
 Output        : No output.
 **************************************************************************************************/
-int PhysicsSetVelocity(PhysicsObject* _instance, float x, float y)
+void PhysicsSetVelocity(PhysicsObject* _instance, float x, float y)
 {
   _instance->velocity.x = x;
   _instance->velocity.y = y;

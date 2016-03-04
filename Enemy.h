@@ -2,10 +2,14 @@
 #include "GameObject.h"
 
 #define PI 3.1415926535897
+<<<<<<< HEAD
 #define ENEMY_ROTATION_SPEED  (PI / 2.0f)
 #define ENEMY_CHASE_SPEED     .05f
 #define ENEMY_DETECT_RANGE    10.0f
 #define ENEMY_KNOCKBACK_FORCE 0.25
+=======
+#define ENEMY_ROTATION_SPEED  (2.0f*PI + 1)
+>>>>>>> refs/remotes/origin/master
 
 enum
 {
@@ -15,16 +19,24 @@ enum
 };
 
 GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _type,
+<<<<<<< HEAD
   int enemyType, float chaseSpeed, float detectRange, float knockback, float attackCooldown, float attackCooldownLength, float attackWindup, float attackWindupLength,
   float attackRange, float attackKnockbackForce, int attackDamage, float projectileSpeed);
+=======
+	int enemyType, float chaseSpeed, float detectRange, float knockback, float attackCooldown, float attackCooldownLength, float attackWindup, float attackWindupLength,
+	float attackRange, float attackKnockbackForce, int attackDamage, float projectileSpeed);
+>>>>>>> refs/remotes/origin/master
 void EnemyInitialize(GameObject* _thisObject);
 void EnemySimulate(GameObject* _thisObject);
 void EnemySimulateAI(GameObject* _thisObject);
 void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject);
 void EnemyOnKilled(GameObject* _self);
 
+<<<<<<< HEAD
 void EnemyChangeAnimationFlag(EnemyContainer*, Vector2D* worldFacingDirection);
 
+=======
+>>>>>>> refs/remotes/origin/master
 Vector2D EnemyMovement(GameObject* _thisObject, const float distanceToPlayer);
 void EnemyAttackDetect(GameObject* _thisObject);
 void EnemyMeleeAttack(GameObject* _thisObject, Vector2D attackDirection);
