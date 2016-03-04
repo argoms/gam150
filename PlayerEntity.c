@@ -514,8 +514,13 @@ static void PlayerAttack()
 
   //HARD CODING MAGIC NUMBERS SPOOOOOKY
   //these are half screen height/widths
+  /*
   mouseX += -400;
   mouseY += -300;
+  */
+  mouseX += (AEGfxGetWinMaxX() - AEGfxGetWinMinX()) / -2;
+  mouseY += (AEGfxGetWinMaxY() - AEGfxGetWinMinY()) / -2;
+  //printf("%f", (AEGfxGetWinMaxX() - AEGfxGetWinMinX()) / -2);
   /***/
 
   //printf("%i, %i|||", mouseX, mouseY);
