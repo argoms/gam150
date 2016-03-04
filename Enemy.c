@@ -176,37 +176,6 @@ Vector2D EnemyMovement(GameObject* _thisObject, const float distanceToPlayer)
     Vector2D worldFacing;
     worldFacing = IsoWorldToScreen(&facingDirection);
     EnemyChangeAnimationFlag(enemyContainer, &worldFacing);
-
-    facingDirection = normalizedFacing;
-    Vector2D enemyToPlayer;
-    enemyToPlayer.x = _thisObject->target->physics->position.x - _thisObject->physics->position.x;
-    enemyToPlayer.y = _thisObject->target->physics->position.y - _thisObject->physics->position.y;
-
-    Vector2D normalVelocityVector;
-    normalVelocityVector.x = _thisObject->physics->velocity.y * -1.0f;
-    normalVelocityVector.y = _thisObject->physics->velocity.x;
-
-    float dotProduct = Vector2DDotProduct(&(normalVelocityVector), &(enemyToPlayer));
-    //printf("%f", dotProduct);
-
-    if (dotProduct > 0)
-    {
-      _thisObject->physics->angle += ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
-      //printf("ROTATION");
-    }
-    else if (dotProduct < 0)
-    {
-      _thisObject->physics->angle -= ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
-      //printf("ROTATION");
-    }
-
-    Vector2D newVelocityVector;
-    Vector2DFromAngleRad(&newVelocityVector, _thisObject->physics->angle);
-    facingDirection = newVelocityVector;
-    Vector2DScale(&newVelocityVector, &newVelocityVector, enemyContainer->chaseSpeed);
-
-    _thisObject->physics->velocity.x = newVelocityVector.x;
-    _thisObject->physics->velocity.y = newVelocityVector.y;
   }
   return facingDirection;
 }
