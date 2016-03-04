@@ -167,6 +167,7 @@ void MainMenuInit()
     1);
 
   Sprite *button1_sprite = GCreateSprite(button1x, button1y, anim_button1, 1);
+  button1_sprite->offset.y = 10000;
   //PhysicsObject *button1_physics = PhysicsCreateObject(Vec2(button1x,button1y),1);
 
   GameObject* button = CreateButton(0, button1_sprite, NULL, button_type, button1size, mesh1x, mesh1y);

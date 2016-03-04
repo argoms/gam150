@@ -405,10 +405,7 @@ void PlayerInput()
     }
     else
     {
-<<<<<<< HEAD
-=======
       stepSoundTimer = 0.1;
->>>>>>> refs/remotes/origin/master
       //if idle, set idle flag and remove walk flag
       if (!(playerAction & PLAYER_IDLE)) //called on the frame where player goes from walk to idle
       {
