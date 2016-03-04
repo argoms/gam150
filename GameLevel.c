@@ -88,12 +88,11 @@ void GameLevelInit(void)
  
   //PhysicsRemoveObject(&a);
 
-<<<<<<< HEAD
   ImportEnemyData(7, 8, "Level1EnemyMelee1.txt", player);
   ImportEnemyData(10, 10, "Level1EnemyMelee1.txt", player);
 
   ImportEnemyData(10, 8, "Level1EnemyRanged2.txt", player);
-=======
+
   /*************************
   BUTTONS
   ************************/
@@ -101,8 +100,6 @@ void GameLevelInit(void)
 
   //GameObject* hazard = GameObjectCreate(, , 0, entity_hazard);
   //Magical function that populates the world
-  ImportEnemyData("EnemiesLevel1.txt", player);
->>>>>>> refs/remotes/origin/master
 }
 
 //THE GAME LEVEL RUN FUNCTION WAS HERE AND MOVED TO LEVEL MANAGER BY TARRANT AND NOW IT IS BACK 

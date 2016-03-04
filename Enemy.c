@@ -161,7 +161,6 @@ Vector2D EnemyMovement(GameObject* _thisObject, const float distanceToPlayer)
 
   if (distanceToPlayer <= enemyContainer->attackRange)
   {
-<<<<<<< HEAD
     enemyContainer->enemyAnimationState = ENEMY_WALK;
     facingDirection.x = _thisObject->target->physics->position.x - _thisObject->physics->position.x;
     facingDirection.y = _thisObject->target->physics->position.y - _thisObject->physics->position.y;
@@ -179,7 +178,6 @@ Vector2D EnemyMovement(GameObject* _thisObject, const float distanceToPlayer)
     EnemyChangeAnimationFlag(enemyContainer, &worldFacing);
 
     facingDirection = normalizedFacing;
-=======
     Vector2D enemyToPlayer;
     enemyToPlayer.x = _thisObject->target->physics->position.x - _thisObject->physics->position.x;
     enemyToPlayer.y = _thisObject->target->physics->position.y - _thisObject->physics->position.y;
@@ -209,7 +207,6 @@ Vector2D EnemyMovement(GameObject* _thisObject, const float distanceToPlayer)
 
     _thisObject->physics->velocity.x = newVelocityVector.x;
     _thisObject->physics->velocity.y = newVelocityVector.y;
->>>>>>> refs/remotes/origin/master
   }
   return facingDirection;
 }
