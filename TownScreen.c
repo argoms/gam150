@@ -40,7 +40,7 @@ void TownScreenInit()
 
 void TownScreenRun()
 {
-  if (AEInputCheckTriggered(VK_SPACE))
+  if (AEInputCheckReleased(VK_SPACE))
   {
     LevelSetNext(level_level1);
   }

@@ -149,7 +149,7 @@ void MainMenuInit()
 
   //BUTTONS------------------------------------------------------
   int button_type = LEVEL_ONE_BUTTON;             /* type of button  */
-  float button1x = -360;                          /* x position      */
+  float button1x = -200;                          /* x position      */
   float button1y = -100;                          /* y position      */
   float mesh1x = 128.0f;                          /* mesh x          */
   float mesh1y = 64.0f;                           /* mesh y          */
@@ -157,9 +157,12 @@ void MainMenuInit()
   static AEGfxVertexList*	button_mesh;				    /* mesh ptr        */
   button_mesh = GCreateMesh(mesh1x, mesh1y, 1, 1);/* create the mesh */
 
+  TextString *main_menu_text;
+  main_menu_text = TextCreateHUDString("Level 1", button1x, button1y);
+  //GCreateTexture("isotilePlaceholder1.png")
   //load button:
   Animation* anim_button1 = GCreateAnimation(1,
-    GCreateTexture("isotilePlaceholder1.png"),
+    NULL,
     button_mesh,
     1);
 
@@ -167,13 +170,6 @@ void MainMenuInit()
   //PhysicsObject *button1_physics = PhysicsCreateObject(Vec2(button1x,button1y),1);
 
   GameObject* button = CreateButton(0, button1_sprite, NULL, button_type, button1size, mesh1x, mesh1y);
-  /*
-  PhysicsObject *button_physics = PhysicsCreateObject(Vec2(-360, 100), 1);
-  Sprite *sprite_object_button = GCreateSprite(0, 40, anim2, 1);
-  //int entity_butt = entity_button;
-  int button_type = MAIN_MENU_BUTTON;
-  GameObject* button = CreateButton(button_physics, sprite_object_button, NULL, button_type);
-  */
 
   //END BUTTONS-------------------------------------------------------------
 
@@ -216,7 +212,7 @@ void MainMenuRun()
   PhysicsSimulate();
   GameObjectsPostStep();
   //debug
-  if (AEInputCheckTriggered(VK_SPACE))
+  if (AEInputCheckReleased(VK_SPACE))
   {
     
     switch (currentLevel)
