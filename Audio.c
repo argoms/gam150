@@ -525,6 +525,22 @@ void Audio_PauseSound(char *name)
 }
 
 /**************************************************************************************************
+Function      : Audio_PauseMusicStream
+Description   : Pauses playback of a stream.
+Input         : name is the name of the stream to pause. Example: "sample.wav"
+Output        : No output.
+**************************************************************************************************/
+void Audio_PauseMusicStream(char *name)
+{
+  /* Get the FMOD sound object. */
+  FMOD_SOUND *sound = Audio_SearchHashTable(&musicLibrary, name, NO_HASH)->sound;
+
+  /* Pause playback of the sound. */
+  result = FMOD_System_PlaySound(fmodSystem, sound, NULL, true, &channel);
+  Audio_CheckFmodErrors(result, "Audio_PauseSound error.\n");
+}
+
+/**************************************************************************************************
 Function      : Audio_UpdatePlayback
 Description   : Updates the audio system for playback.
 Input         : No input.

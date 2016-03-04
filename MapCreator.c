@@ -119,7 +119,7 @@ SWITCHES
 
 bool SHOW_ERRORS = true;    /* Whether or not to display error messages */
 
-bool USE_FIXED_TLES = true; /* Whether or not to use fixed tiles */
+bool USE_FIXED_TLES = false; /* Whether or not to use fixed tiles */
 /*-------------------------------------------------------------------------------------------------
 END SWItCHES
 -------------------------------------------------------------------------------------------------*/
@@ -870,7 +870,11 @@ bool MapCreator_ToFile(char *targetFile, int width, int height, float wallDensit
   {
     for (column = 0; column < width; ++column)
     {
-      fprintf_s(destinationFile, "%i ", tileGenMap->map[tileGenMap->height - row - 1][column].isWall);
+      //fprintf_s(destinationFile, "%i ", tileGenMap->map[tileGenMap->height - row - 1][column].isWall);
+      if (tileGenMap->map[tileGenMap->height - row - 1][column].isWall)
+        fprintf_s(destinationFile, "# ");
+      else
+        fprintf_s(destinationFile, ". ");
     }
     fprintf_s(destinationFile, "\n");
   }
