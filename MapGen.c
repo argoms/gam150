@@ -26,7 +26,9 @@ void GenerateMap(IsoMap* inputMap)
         IsoTileSet(i, j, 0);
         //printf("a");
       }
+      IsoTileSet(i, j, 0);
       j++;
+      
     }
     i++;
   }
