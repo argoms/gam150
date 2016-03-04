@@ -118,8 +118,6 @@ SWITCHES
 -------------------------------------------------------------------------------------------------*/
 
 bool SHOW_ERRORS = true;    /* Whether or not to display error messages */
-
-bool SET_MAP_SEED = true;   /* Whether or not to use the same seed for the RNG */
 /*-------------------------------------------------------------------------------------------------
 END SWItCHES
 -------------------------------------------------------------------------------------------------*/
@@ -131,9 +129,6 @@ STATIC VARIABLES
 
 /* The look up table for the tile groups. */
 static TILE_GROUP_MANAGER tileGroupManager;
-
-unsigned int TILE_MAP_SEED = 713;   /* Seed used by the RNG if setting the seed */
-
 /*-------------------------------------------------------------------------------------------------
 END STATIC VARIABLES
 -------------------------------------------------------------------------------------------------*/
@@ -350,8 +345,8 @@ static bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
   /*
     First, count the number of active connections.
     If there are less than 2, then there is room to add a tile.
-    If there are more than 3, then there are too many tiles, so don't put in a tile.
-    If there are between 2 to 3, then this may be a pathway, so we need to check the tiles.
+    If there are more than 6, then this is a closed area, so it is okay to put in a tile.
+    If there are between 2 to 6, then this may be a pathway, so we need to check the tiles.
   */
 
   int activeConnections = 0;  /* The number of active tile connections */
@@ -367,13 +362,9 @@ static bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
     }
   }
 
-  /* If there are less than 2 active connections, we're safe to build here. Return false. */
-  if (activeConnections < 2)
+  /* If there are less than 2 or more than 6 active connections, we're safe to build here. Return false. */
+  if ((activeConnections < 2) || (activeConnections > 6))
     return false;
-
-  /* If there are more than 3 active connections, then there are too many tiles. Return true. */
-  if (activeConnections > 2)
-    return true;
 
   /*
     Else, we have to check the layout of the tiles.
@@ -390,8 +381,6 @@ static bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
     bottom_left = false,
     bottom_right = false;
 
-  bool onEdge = true;
-
   /*
   Get the states of the tiles.
   If the tile is a collision tile and is connected to the edge,
@@ -400,78 +389,43 @@ static bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
 
   /* Get the top tile. */
   if (tile->connections[TILE_TOP])
-  {
-    top = true;
-
-    if (!tile->connections[TILE_TOP]->connectedToEdge)
-      onEdge = false;
-  }
+    if (tile->connections[TILE_TOP]->connectedToEdge)
+      top = true;
 
   /* Get the left tile. */
   if (tile->connections[TILE_LEFT])
-  {
-    left = true;
-
-    if (!tile->connections[TILE_LEFT]->connectedToEdge)
-      onEdge = false;
-  }
-
+    if (tile->connections[TILE_LEFT]->connectedToEdge)
+      left = true;
 
   /* Get the right tile. */
   if (tile->connections[TILE_RIGHT])
-  {
-    right = true;
-    
-    if (!tile->connections[TILE_RIGHT]->connectedToEdge)
-      onEdge = false;
-  }
-
+    if (tile->connections[TILE_RIGHT]->connectedToEdge)
+      right = true;
 
   /* Get the bottom tile. */
   if (tile->connections[TILE_BOTTOM])
-  {
-    bottom = true;
- 
-    if (!tile->connections[TILE_BOTTOM]->connectedToEdge)
-      onEdge = false;
-  }
+    if (tile->connections[TILE_BOTTOM]->connectedToEdge)
+      bottom = true;
 
   /* Get the top-left tile. */
   if (tile->connections[TILE_TOP_LEFT])
-  {
-    top_left = true;
-
-    if (!tile->connections[TILE_TOP_LEFT]->connectedToEdge)
-      onEdge = false;
-  }
+    if (tile->connections[TILE_TOP_LEFT]->connectedToEdge)
+      top_left = true;
 
   /* Get the top-right tile. */
   if (tile->connections[TILE_TOP_RIGHT])
-  {
-    top_right = true;
-    
-    if (!tile->connections[TILE_TOP_RIGHT]->connectedToEdge)
-      onEdge = false;
-  }
+    if (tile->connections[TILE_TOP_RIGHT]->connectedToEdge)
+      top_right = true;
 
   /* Get the bottom-left tile. */
   if (tile->connections[TILE_BOTTOM_LEFT])
-  {
-    bottom_left = true;
-    
-    if (!tile->connections[TILE_BOTTOM_LEFT]->connectedToEdge)
-      onEdge = false;
-  }
+    if (tile->connections[TILE_BOTTOM_LEFT]->connectedToEdge)
+      bottom_left = true;
 
   /* Get the bottom-right tile. */
   if (tile->connections[TILE_BOTTOM_RIGHT])
-  {
-    bottom_right = true;
-    
-    if (!tile->connections[TILE_BOTTOM_RIGHT]->connectedToEdge)
-      onEdge = false;
-  }
-
+    if (tile->connections[TILE_BOTTOM_RIGHT]->connectedToEdge)
+      bottom_right = true;
 
   /*
     In the below diagrams, X is our tile, 1 is collision tile, 0 is non-collision tile, - is nonspecified tile
@@ -493,10 +447,7 @@ static bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
     && (left || top_left || bottom_left)
     && (right || top_right || bottom_right))
   {
-    if (onEdge)
-      return true;
-    else
-      return false;
+    return true;
   }
 
   /*
@@ -515,10 +466,7 @@ static bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
     &&
     (bottom || bottom_left || bottom_right))
   {
-    if (onEdge)
-      return true;
-    else
-      return false;
+    return true;
   }
 
   /*
@@ -540,10 +488,7 @@ static bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
       ||
       (left || bottom_left)))
   {
-    if (onEdge)
-      return true;
-    else
-      return false;
+    return true;
   }
 
   /*
@@ -565,10 +510,7 @@ static bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
       ||
       (right || bottom_right)))
   {
-    if (onEdge)
-      return true;
-    else
-      return false;
+    return true;
   }
 
   /*
@@ -590,10 +532,7 @@ static bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
       ||
       (right || top_right)))
   {
-    if (onEdge)
-      return true;
-    else
-      return false;
+    return true;
   }
 
   /*
@@ -615,10 +554,7 @@ static bool MapCreator_Tile_CheckConnectionConflicts(TileGen_Tile *tile)
       ||
       (left || top_left)))
   {
-    if (onEdge)
-      return true;
-    else
-      return false;
+    return true;
   }
 
   /* If none of the problem cases arrived, then assume it is safe to build. Return false. */
@@ -647,7 +583,7 @@ static void MapCreator_Tile_Set(TileGen_Tile *tile, bool enableCollision)
 
   if (tile->connections[TILE_TOP])
     tile->connections[TILE_TOP]->connections[TILE_BOTTOM] = tSet;
-    
+
   if (tile->connections[TILE_LEFT])
     tile->connections[TILE_LEFT]->connections[TILE_RIGHT] = tSet;
 
@@ -700,27 +636,6 @@ static bool MapCreator_Tile_AssignCollision(TileGen_Tile *tile, bool enableColli
 }
 
 /**************************************************************************************************
-Function      : MapCreator_TileGroup_Join
-Description   : Joins two tile groups.
-Input         : tileGenMap is the map the tile groups belong to,
-                oldGroupID is the ID of this tile group,
-                newGroupID is the ID of the tile group to join this one to.
-Output        : No return.
-**************************************************************************************************/
-void MapCreator_TileGroup_Join(TileGen_Map *tileGenMap, unsigned int oldGroupID, unsigned int newGroupID)
-{
-  int row, column;
-
-  for (row = 0; row < tileGenMap->height; ++row)
-    for (column = 0; column < tileGenMap->width; ++column)
-    {
-      /* If the tile is in the group we're looking for, then assign the new ID. */
-      if (tileGenMap->map[row][column].tileGroup == oldGroupID)
-        tileGenMap->map[row][column].tileGroup = newGroupID;
-    }   
-}
-
-/**************************************************************************************************
 Function      : MapCreator_Map_GenerateValues
 Description   : Generates data for tiles inside of a map.
 Input         : tileMap is the map to use,
@@ -769,145 +684,31 @@ static void MapCreator_Map_GenerateValues(TileGen_Map *tileMap, float wallDensit
 
   /* Set the values of the map. */
 
+  int i;
+
   /* Seeds the random number generator. ONLY FOR PLAY-TESTING AND PRESENTATION PURPOSES. */
-  if (SET_MAP_SEED)
-    RandSeed(TILE_MAP_SEED);
+  RandSeed(1);
 
-  /*
-  Algorithm: Start at a random position in the map.
-  Create a wall tile, then move to a nearby tile and create a wall tile.
-  Repeat until the edge or a group connecting to the edge is formed,
-  then start a new chain.
-  */
-
-  /* Generate walls while there are still walls to create. */
-  do
+  for (i = 0; i < wallsToCreate; ++i)
   {
-    /* Get random position inside the tilemap. */
-    int x;
-    int y;
-
-    int currentTileGroup = 1;
-
-    bool result;  /* Result of tile set attemp. */
-
+    bool result;  /* Holds result of tile assignment operation. */
+    
     int attemps = TILEGEN_ATTEMPTS;   /* Number of attempts allowed for assignment. */
 
-    /* Try to set a starting tile until successful or out of attempts. */
+    /* Try to set a tile until successful or out of attempts. */
     do
     {
-      /* Get random starting position inside the tilemap. */
-      x = RandIntRange(1, tileMap->height - 1);
-      y = RandIntRange(1, tileMap->width - 1);
-
-      /* Set the tile group. */
-      tileMap->map[x][y].tileGroup = currentTileGroup;
-
-      /* Try to set the tile and update result. */
-      result = MapCreator_Tile_AssignCollision(&tileMap->map[x][y], true);     
+      /* Set a tile in a random position and update result. */
+      int x = RandIntRange(1, tileMap->height - 1);
+      int y = RandIntRange(1, tileMap->width - 1);
+      result = MapCreator_Tile_AssignCollision(&tileMap->map[x][y], true);
 
       /* Decrease the number of attempts. */
       --attemps;
     } while (!result || (attemps > 0));
 
-    /* Created a tile, decrement counter. */
-    --wallsToCreate;
-
-    /* If no more walls to create, break from loop. */
-    if (wallsToCreate < 1)
-      break;
-
-    /* Begin chaining walls from this point */
-    do
-    {
-      //int maxWallLen = (tileMap->height + tileMap->width) / 2;
-      //int walls = 1;
-
-      /* Reset the attempt counter. */
-      attemps = TILEGEN_ATTEMPTS;
-
-      /* Create one tile. */
-      do
-      {
-        /* Delta values for shifting the tile. */
-        int xDelta;
-        int yDelta = 0;
-
-        /* Generate delta values for the position to change. One delta must equal 1 or -1, and the other must equal 0. */
-        do
-        {
-          xDelta = RandIntRange(-1, 1);
-
-          /* If there is no x delta, generate a y delta. */
-          if (!xDelta)
-            yDelta = RandIntRange(-1, 1);
-
-        } while ((xDelta && yDelta) || !(xDelta || yDelta));
-
-        /* Shift the tile. */
-        x += xDelta;
-        y += yDelta;
-
-        /* Clamp value of x to positive. */
-        if (x < 0)
-          x = 0;
-
-        /* Clamp value of x under height. */
-        if (x >= tileMap->height)
-          x = tileMap->height - 1;
-
-        /* Clamp value of y to positive or 0. */
-        if (y < 0)
-          y = 0;
-
-        /* Clamp value of y under width. */
-        if (y >= tileMap->width)
-          y = tileMap->width - 1;
-
-        /* Set tile group. */
-        tileMap->map[x][y].tileGroup = currentTileGroup;
-
-        /* Try to set the tile and update result. */
-        result = MapCreator_Tile_AssignCollision(&tileMap->map[x][y], true);
-
-        /* Decrease the number of attempts. */
-        --attemps;
-      } while (!result || (attemps > 0));
-      
-      /* If successfully set tile, then decrement wall counter. */
-      if (result)
-      {
-        --wallsToCreate;
-        //++walls;
-      }
-
-    } while (!tileMap->map[x][y].connectedToEdge);
-
-  } while (wallsToCreate > 0);
-
-  //DEPRECATED. DOESN'T WorK WELL
-  //
-  //int i;
-  //
-  //for (i = 0; i < wallsToCreate; ++i)
-  //{
-  //  bool result;  /* Holds result of tile assignment operation. */
-  //  
-  //  int attemps = TILEGEN_ATTEMPTS;   /* Number of attempts allowed for assignment. */
-
-  //  /* Try to set a tile until successful or out of attempts. */
-  //  do
-  //  {
-  //    /* Set a tile in a random position and update result. */
-  //    int x = RandIntRange(1, tileMap->height - 1);
-  //    int y = RandIntRange(1, tileMap->width - 1);
-  //    result = MapCreator_Tile_AssignCollision(&tileMap->map[x][y], true);
-
-  //    /* Decrease the number of attempts. */
-  //    --attemps;
-  //  } while (!result || (attemps > 0));
-
-  //}
+    //tileMap->map[x][y].isWall = 1;
+  }
 
 }
 
@@ -1066,11 +867,7 @@ bool MapCreator_ToFile(char *targetFile, int width, int height, float wallDensit
   {
     for (column = 0; column < width; ++column)
     {
-      //fprintf_s(destinationFile, "%i ", tileGenMap->map[tileGenMap->height - row - 1][column].isWall);
-      if (tileGenMap->map[tileGenMap->height - row - 1][column].isWall)
-        fprintf_s(destinationFile, "# ");
-      else
-        fprintf_s(destinationFile, ". ");
+      fprintf_s(destinationFile, "%i ", tileGenMap->map[tileGenMap->height - row - 1][column].isWall);
     }
     fprintf_s(destinationFile, "\n");
   }
