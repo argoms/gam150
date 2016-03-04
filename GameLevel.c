@@ -88,6 +88,14 @@ void GameLevelInit(void)
  
   //PhysicsRemoveObject(&a);
 
+  int numEnemies;
+  int enemiesToCreate = 20;
+
+  for (numEnemies = 0; numEnemies < enemiesToCreate; ++numEnemies)
+  {
+
+  }
+
   ImportEnemyData(7, 8, "Level1EnemyMelee1.txt", player);
   ImportEnemyData(10, 10, "Level1EnemyMelee1.txt", player);
 
