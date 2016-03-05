@@ -331,7 +331,7 @@ Sprite* GCreateSprite(float _spriteX, float _spriteY, Animation* _animation, flo
 /*!
 \brief creates a hud sprite with given parameters
 Sprite is appended to last on the list (more recently created elements are rendered first.
-
++
 \param _spriteX is the x position of the created sprite
 \param _spriteY is the y position of the created sprite
 \param _animation is the animation for the new sprite

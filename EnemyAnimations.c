@@ -33,7 +33,7 @@ static AnimationDefinition animationSpiderWolf[] =
 void EnemyAnimationInitialize(GameObject* enemy)
 {
   int walkFrames = 16;
-  int idleFrames = 16;
+  int idleFrames = 1;
   AEGfxVertexList* walkMesh = GCreateMesh(256.f, 256.f, walkFrames, 1);
   AEGfxVertexList* idleMesh = GCreateMesh(256.f, 256.f, idleFrames, 1);
 
