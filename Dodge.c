@@ -1,6 +1,8 @@
 #include "Dodge.h"
 // CALL THIS EVERY FRAME
 
+static int color_changed = 0;
+
 /*************************************************************************/
 /*!
 \par   Function: UpdateEntityIFs
@@ -33,6 +35,8 @@ void UpdateEntityIFs(GameObject *obj)
     return;
   }
 
+
+
   /*
   * if the entity has its vulnerabilty flag set
   * decrement the Iframe recovery so the entity can have the option to dodge
@@ -60,6 +64,21 @@ void UpdateEntityIFs(GameObject *obj)
     if (ent->invincibilityTime > 0) //still invincibility
     {
       ent->invincibilityTime--;                               /* decrement invincibility duration */
+
+
+      if (!color_changed)
+      {
+        obj->sprite->tint.alpha = obj->sprite->tint.alpha * DODGE_ALPHA_MODIFIER;//change alpha color
+        obj->sprite->tint.red = obj->sprite->tint.red * DODGE_RED_MODIFIER;      //change red color
+        obj->sprite->tint.blue = obj->sprite->tint.blue * DODGE_BLUE_MODIFIER;   //change blue color
+        obj->sprite->tint.green = obj->sprite->tint.green * DODGE_GREEN_MODIFIER;//change green color
+
+        //update flag
+        color_changed = 1;
+      }
+
+ 
+    
       //Vector2DScale(&(obj->physics->velocity), &(obj->physics->velocity), SPEED_BONUS_MODIFIER);  /* scale the velocity of the object */ //ask if there are any other movement modifications we can do  
       //printf("invincible\n");
     }
@@ -68,7 +87,16 @@ void UpdateEntityIFs(GameObject *obj)
       ent->canBeDamaged = 1;                                   /* make the entity damagable          */
       ent->invincibilityRecoveryTime = PLAYER_IFRAME_RECOVORY; /* set the entity to start recovering */
       //Vector2DZero(obj_vel);                                   /* set the velocity to zero           */
-      printf("NO LONGER INVINCIBLE\n");
+
+      //reset color
+      ResetColor(obj);
+      //obj->sprite->tint.alpha = player_alpha;//change alpha color
+      //obj->sprite->tint.red = player_red;    //change red color
+      //obj->sprite->tint.blue = player_blue;  //change blue color
+      //obj->sprite->tint.green = player_green;//change green color
+
+      //obj->sprite->tint = Gtint(player_red, player_green, player_blue, player_alpha);
+      //printf("NO LONGER INVINCIBLE\n");
     }        
   }
 }
@@ -99,6 +127,12 @@ void Dodge(int input_key, GameObject *obj)
   {
     Vector2DScale(&(obj->physics->velocity), &(obj->physics->velocity), 8);
 
+    //save original values
+    float player_red = obj->sprite->tint.red;
+    float player_blue = obj->sprite->tint.blue;
+    float player_green = obj->sprite->tint.green;
+    float player_alpha = obj->sprite->tint.alpha;
+
     //obj->physics->velocity.x = obj->physics->velocity.x * SPEED_BONUS_MODIFIER;
     //obj->physics->velocity.y = obj->physics->velocity.y * SPEED_BONUS_MODIFIER;
     // do particle effects
@@ -106,5 +140,32 @@ void Dodge(int input_key, GameObject *obj)
     obj->entity->invincibilityTime = PLAYER_IFRAMES;
     printf("dodged, is invincibleLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL\n");
   }
+}
+
+void ResetColor(GameObject *GameObj)
+{
+  if (GameObj == NULL)
+  {
+    return;
+  }
+
+  if (GameObj->entity == NULL)
+  {
+    return;
+  }
+
+
+  if (GameObj->sprite == NULL)
+  {
+    return;
+  }
+
+  Sprite *obj_sprite = GameObj->sprite;
+
+  obj_sprite->tint.red   = obj_sprite->tint.red   / DODGE_RED_MODIFIER;
+  obj_sprite->tint.green = obj_sprite->tint.green / DODGE_GREEN_MODIFIER;
+  obj_sprite->tint.blue = obj_sprite->tint.blue   / DODGE_BLUE_MODIFIER;
+  obj_sprite->tint.alpha = obj_sprite->tint.alpha / DODGE_ALPHA_MODIFIER;
+  color_changed = 0;
 }
 
