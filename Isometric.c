@@ -14,6 +14,8 @@ Isometric tilemap implementation. Contains functions relating to tilemaps and is
 
 static IsoMap* gameMap; /**< contains currently active game map*/
 
+
+
 /*!
 \brief initializes isometric map system
 Sets the private gameMap var to a newly generated array with dimensions specified by the function's parameters. 
@@ -28,9 +30,9 @@ void IsoInit(int _mapHeight, int _mapWidth)
 
   int i = 0;
   int j = 0;
-  MapCreator_ToMap(gameMap, 0.1f);
+  //MapCreator_ToMap(gameMap, 0.1f);
   
-  //GenerateMap(gameMap);
+  GenerateMap(gameMap);
 
   /*
   //create borders:
@@ -149,6 +151,10 @@ void IsoSpawnMap()
     GCreateTexture("isotile.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
     1);
+  Animation* tileAnim2 = GCreateAnimation(1,
+    GCreateTexture("isocircleRed.png"),
+    GCreateMesh(128.f, 64.f, 1, 1),
+    1);
 
   //playerSprite = GCreateSprite(0, 40, anim, 1);
 
@@ -165,6 +171,17 @@ void IsoSpawnMap()
         //printf("(%i, %i)", i, j);
         GCreateSprite(tileX, tileY, tileAnim, 0);
         
+      }
+
+      //FOR DEBUG PURPOSES:
+      if (IsoTileGet(i, j) == 2)
+      {
+        Vector2D tilePos = Vec2(i, j);
+        float tileX = IsoWorldToScreen(&tilePos).x;
+        float tileY = IsoWorldToScreen(&tilePos).y;
+        //printf("(%i, %i)", i, j);
+        Sprite* newObj = GCreateSprite(tileX, tileY, tileAnim2, 0);
+        newObj->tint.alpha = 0.1;
       }
       j++;
     }

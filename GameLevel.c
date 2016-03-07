@@ -53,7 +53,7 @@ void GameLevelInit(void)
 
   printf("game level init\n");
   PhysicsInit();
-  IsoInit(MAP_WIDTH, MAP_HEIGHT);
+  
   
 
   AEGfxSetBackgroundColor(1.0f, 1.0f, 1.0f);
@@ -82,21 +82,27 @@ void GameLevelInit(void)
 
   //set up player object:
 
+  
+
+  Entity* playerEntity = malloc(sizeof(Entity));
+  playerEntity->maxHealth = 60;
+  EntityInit(&playerEntity);
+  player = GameObjectCreate(PhysicsCreateObject(Vec2(4, 4), 1), GCreateSprite(0, 40, anim, 1), playerEntity, entity_player);
+  player->simulate = &PlayerSimulate;
+  player->entity->onEntityKilled = &OnPlayerKilled;
+  
+  PlayerInit();
+
+  //map generation actually happens at the end because it needs the player and shit.
+  IsoInit(MAP_WIDTH, MAP_HEIGHT);
+
+
   int x, y;
   do
   {
     x = RandIntRange(1, 8);
     y = RandIntRange(1, 8);
   } while (IsoTileGet(x, y));
-
-  Entity* playerEntity = malloc(sizeof(Entity));
-  playerEntity->maxHealth = 60;
-  EntityInit(&playerEntity);
-  player = GameObjectCreate(PhysicsCreateObject(Vec2(x, y), 1), GCreateSprite(0, 40, anim, 1), playerEntity, entity_player);
-  player->simulate = &PlayerSimulate;
-  player->entity->onEntityKilled = &OnPlayerKilled;
-  
-  PlayerInit();
 
   //create door object:
   do
@@ -131,6 +137,7 @@ void GameLevelInit(void)
  
   //PhysicsRemoveObject(&a);
 
+  /*
   int numEnemies;
   int enemiesToCreate = 6;
 
@@ -162,7 +169,7 @@ void GameLevelInit(void)
   //ImportEnemyData(10, 10, "Level1EnemyMelee1.txt", player);
 
   //ImportEnemyData(10, 8, "Level1EnemyRanged2.txt", player);
-
+  */
   /*************************
   BUTTONS
   ************************/
@@ -170,6 +177,8 @@ void GameLevelInit(void)
 
   //GameObject* hazard = GameObjectCreate(, , 0, entity_hazard);
   //Magical function that populates the world
+
+  
 }
 
 //THE GAME LEVEL RUN FUNCTION WAS HERE AND MOVED TO LEVEL MANAGER BY TARRANT AND NOW IT IS BACK 
