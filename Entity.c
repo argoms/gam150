@@ -35,6 +35,8 @@ void EntityTakeDamage(Entity** _entity, int _damage)
     if ( (*_entity)->canBeDamaged != 0)
     {
       (*_entity)->health -= _damage;
+      (*_entity)->wasDamaged = 1; // just got damaged
+      //BriefInvulnerability((*_entity)->owner, ONLY_PLAYER_BREIF_INVINCIBILITY_AFTER_DAMAGED);  //make the owner briefly invulnerable after taking damage
       //printf("OW, %i left", (*_entity)->health);
       if ((*_entity)->health < 1)
       {

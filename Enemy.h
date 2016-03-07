@@ -1,6 +1,6 @@
 #pragma once
 #include "GameObject.h"
-
+#include "Dodge.h"
 #define PI 3.1415926535897
 
 enum

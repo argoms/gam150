@@ -44,6 +44,7 @@ void UpdateEntityIFs(GameObject *obj)
   * while canBeDamaged is 0, it is invincible and health cannot be reduced
   * the entity gets a speed bouns while invincible
   */
+  //VULNERABLE
   if (ent->canBeDamaged) //if can be damaged
   {
     if (ent->invincibilityRecoveryTime > 0)  //if recovering
@@ -61,7 +62,7 @@ void UpdateEntityIFs(GameObject *obj)
   else if (ent->canBeDamaged == 0)  //cant be damaged, invincible
   {
     //remember to set the invincibility time to whatever i defined it to be
-    if (ent->invincibilityTime > 0) //still invincibility
+    if (ent->invincibilityTime > 0) //still INVINCIBLE
     {
       ent->invincibilityTime--;                               /* decrement invincibility duration */
 
@@ -75,10 +76,7 @@ void UpdateEntityIFs(GameObject *obj)
 
         //update flag
         color_changed = 1;
-      }
-
- 
-    
+      }    
       //Vector2DScale(&(obj->physics->velocity), &(obj->physics->velocity), SPEED_BONUS_MODIFIER);  /* scale the velocity of the object */ //ask if there are any other movement modifications we can do  
       //printf("invincible\n");
     }
@@ -167,5 +165,48 @@ void ResetColor(GameObject *GameObj)
   obj_sprite->tint.blue = obj_sprite->tint.blue   / DODGE_BLUE_MODIFIER;
   obj_sprite->tint.alpha = obj_sprite->tint.alpha / DODGE_ALPHA_MODIFIER;
   color_changed = 0;
+}
+
+void BriefInvulnerability(GameObject *GameObj, int PlayerOnly)
+{
+  if (GameObj == NULL)
+  {
+    return;
+  }
+
+  if (GameObj->sprite == NULL)
+  {
+    return;
+  }
+
+  if (GameObj->entity == NULL)
+  {
+    return;
+  }
+
+  //do it only if we have it set for the player only
+  if (!(PlayerOnly && GameObj->type == entity_player))
+  {
+    return;
+  }
+
+
+  if (GameObj->entity->health == NULL)
+  {
+    return;
+  }
+
+  //already invincible
+  //if (GameObj->entity->invincibilityTime > 0)
+  //{
+   // return;
+  //}
+
+  Entity *ent = GameObj->entity;
+  ent->canBeDamaged = 0;  //make it invulnerable
+  ent->invincibilityTime = BRIEF_IFRAMES;
+  //ent->wasDamaged = 0;
+  
+
 }
 
