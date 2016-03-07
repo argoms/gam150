@@ -2,15 +2,36 @@
 #include "Vector2D.h"
 #include "Isometric.h"
 #include "AEEngine.h"
+#include "ImportData.h"
+#include "GameLevel.h"
 
-#define ROOM_SIZE 12
+//private info (would be defines but you can't make those private?
+static int ROOM_SIZE = 14; /**< Room size, subtract 2 from this due to increased wall thickness*/
 
+//static enums/structs:
+static enum directions
+{
+  dir_left,
+  dir_right,
+  dir_up,
+  dir_down
+};
+
+//static function prototypes:
+static void FillLine(Vector2D position1, Vector2D position2, int newValue);
+static Vector2D directionOffsetGet(int dir);
+static void FillArea(int x, int y);
+static int isValid(Vector2D position, IsoMap* map);
+
+//implementation:
 void GenerateMap(IsoMap* inputMap)
 {
   int mapHeight = inputMap->mapHeight;
   int mapWidth = inputMap->mapWidth;
   int i = 0;
   int j = 0;
+
+  //borders:
   while (i < mapWidth)
   {
     j = 0;
@@ -26,7 +47,6 @@ void GenerateMap(IsoMap* inputMap)
         IsoTileSet(i, j, 0);
         //printf("a");
       }
-      IsoTileSet(i, j, 0);
       j++;
       
     }
@@ -35,6 +55,7 @@ void GenerateMap(IsoMap* inputMap)
 
   i = 1;
   j = 1;
+
   //create some walls around arbitrary rooms:
   while (i < mapWidth - 1)
   {
@@ -42,7 +63,9 @@ void GenerateMap(IsoMap* inputMap)
     while (j < mapHeight - 1)
     {
       //printf("%iaa", j);
-      if ((i % ROOM_SIZE == 0 || j % ROOM_SIZE == 0) && AERandFloat() > 0.6f)
+      if ((i % ROOM_SIZE == 0 || j % ROOM_SIZE == 0)
+        || ((i + 1) % ROOM_SIZE == 0 || (j + 1) % ROOM_SIZE == 0)
+        || ((i - 1) % ROOM_SIZE == 0 || (j - 1) % ROOM_SIZE == 0))
       {
         IsoTileSet(i, j, 1);
       }
@@ -50,4 +73,117 @@ void GenerateMap(IsoMap* inputMap)
     }
     i++;
   }
+
+  //create path of rooms:
+  Vector2D cursor = Vec2(ROOM_SIZE / 2, ROOM_SIZE / 2);
+  int rooms_created = 0;
+  int tries; //infinite loop killer
+
+  while (rooms_created < 8 && tries++ < 100)
+  {
+    int direction = (int)(AERandFloat() * 4); //random direction
+    Vector2D offset = directionOffsetGet(direction);
+    Vector2DScale(&offset, &offset, ROOM_SIZE);
+
+    Vector2D newCursorPosition;
+    Vector2DAdd(&newCursorPosition, &cursor, &offset);
+
+    if (isValid(newCursorPosition, inputMap) && IsoTileGet((int)newCursorPosition.x, (int)newCursorPosition.y) != 2)
+    {
+      printf("x: %f, y: %f, valid apparently. \n", newCursorPosition.x, newCursorPosition.y);
+      FillLine(cursor, newCursorPosition, 2);
+      cursor = newCursorPosition;
+
+      //a room has been created! what do?
+      {
+        //placeholder: spawn one enemy.
+        ImportEnemyData(cursor.x, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
+
+      }
+      rooms_created++;
+    }
+    else
+    {
+      continue; //as if I have to tell you, you silly program.
+    }
+  }
+  if (tries > 100)
+  {
+    printf("seriously your algorithm is fucked, look at it.");
+  }
+
+  
+  
+}
+
+/*!
+\brief Fills a line between two given vector2Ds
+*/
+static void FillLine(Vector2D position1, Vector2D position2, int newValue)
+{
+  int dist = (int)Vector2DSquareDistance(&position1, &position2);
+  Vector2D unitVector;
+  Vector2DSub(&unitVector, &position2, &position1);
+  Vector2DNormalize(&unitVector, &unitVector);
+
+  int i = 0; //because we're technically using c, right?
+  while (i * i < dist)
+  {
+    Vector2DAdd(&position1, &position1, &unitVector);
+    IsoTileSet((int)position1.x, (int)position1.y, newValue);
+    i++; //fuck your ++i
+  }
+}
+
+/*!
+\brief Checks wheter or not a given position is within the bounds of the map.
+
+\return Returns boolean (aka 1/0).
+*/
+static int isValid(Vector2D position, IsoMap* map)
+{
+  if (position.x < 0 || position.y < 0 || position.x > map->mapWidth + 1 || position.y > map->mapHeight + 1)
+  {
+    return 0;
+  }
+  else
+  {
+    return 1;
+  }
+}
+
+/*!
+\brief Turns a direction enum into a vector2D equivalent unit vector.
+
+\return Returns vector2D by value.
+*/
+static Vector2D directionOffsetGet(int dir)
+{
+  Vector2D offset;
+  switch (dir)
+  {
+  case dir_up:
+    offset.x = 0;
+    offset.y = 1;
+    break;
+  case dir_down:
+    offset.x = 0;
+    offset.y = -1;
+    break;
+  case dir_left:
+    offset.x = -1;
+    offset.y = 0;
+    break;
+  case dir_right:
+    offset.x = 1;
+    offset.y = 0;
+    break;
+  }
+  return offset;
+}
+
+//meant to fill area for floor tiles, unused for now
+static void FillArea(int x, int y, int tileType)
+{
+
 }

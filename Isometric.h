@@ -6,8 +6,16 @@
 Isometric tilemap implementation. Contains functions relating to tilemaps and isometric conversions.
 */
 #pragma once
-
 #include "Vector2D.h"
+/*
+enum tileTypes
+{
+  empty = 0,
+  wall = 1,
+  floor = 2
+};*/
+
+
 
 typedef struct IsoMap IsoMap;
 
