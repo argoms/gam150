@@ -70,7 +70,8 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
   /*----------------------------------------------------------------------------
   AUDIO TEST  PART 1/3  INITIALIZING
   -----------------------------------------------------------------------------*/
-    TestAudioINIT();
+    //TestAudioINIT();
+    Audio_Initialize(64);
 
 
   //----------------------------------------------------------------------------
