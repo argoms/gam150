@@ -55,12 +55,12 @@ void LevelLoad(int _level)
   {
   case level_level1:
     Level1Init();
+    //Audio_PlayMusicStream("music_sample4.ogg", 1);
     //Audio_PauseMusicStream("music_sample3.ogg");
-    //Audio_PlayMusicStream("music_sample2A.ogg", 1);
     break;
   case level_mainMenu:
     MainMenuInit();
-    Audio_PlayMusicStream("music_sample3.ogg", 1);
+    Audio_PlayMusicStream("music_sample3.ogg", 0);
     break;
   case level_town:
     TownScreenInit();
@@ -68,7 +68,8 @@ void LevelLoad(int _level)
   case level_deathScreen:
     DeathScreenInit();
     level = 1;
-    //Audio_PauseMusicStream("music_sample2A.ogg");
+    Audio_PauseMusicStream("music_sample2A.ogg");
+    Audio_PauseMusicStream("music_sample4.ogg");
     break;
   case level_splashScreen:
     SplashScreenInit();
@@ -250,11 +251,10 @@ void MainMenuRun()
       break;
     case level_mainMenu:
       nextLevel = level_level1;
-      
-      //Audio_PauseMusicStream("music_sample3.ogg");
-      //Audio_PlayMusicStream("music_sample2A.ogg", 1);
       break;
     }
+    Audio_PlayMusicStream("music_sample2A.ogg", 1);
+    Audio_PauseMusicStream("music_sample3.ogg");
   }
   //
 }
