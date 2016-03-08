@@ -15,7 +15,7 @@ Functions for procedurally generating game levels.
 
 //private info (would be defines but you can't make those private?
 
-#define NUM_ROOMS 8
+#define NUM_ROOMS 5
 
 //Think of this as MAX room size, not just room size.
 static int ROOM_SIZE = 18; /**< Room size, subtract 2 from this due to increased wall thickness*/

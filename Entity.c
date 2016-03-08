@@ -35,6 +35,7 @@ void EntityTakeDamage(Entity** _entity, int _damage)
     if ( (*_entity)->canBeDamaged != 0)
     {
       (*_entity)->health -= _damage;
+      DamageTextCreate((*_entity)->owner->physics->position, _damage);
       //printf("OW, %i left", (*_entity)->health);
       if ((*_entity)->health < 1)
       {
