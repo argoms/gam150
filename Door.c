@@ -13,6 +13,8 @@ Contains functionality for doors to move between levels on contact.
 
 
 extern int level;
+
+static GameObject* levelDoor;
 /*!
 \brief Functionality for doors switching levels upon contact.
 
@@ -43,3 +45,43 @@ void DoorDefaultOnCollision(GameObject* _thisObject, GameObject* _otherObject)
 
   }
 }
+
+/*!
+\brief Creates a door object at the given position, updating door static var.
+
+\param position Position to spawn door at.
+\return Returns a pointer to the door object.
+*/
+GameObject* DoorCreateDoorAt(Vector2D position)
+{
+  Animation* anim2 = GCreateAnimation(1,
+    GCreateTexture("isoTileGreen.png"),
+    GCreateMesh(128.f, 64.f, 1, 1),
+    1);
+  GameObject* door = GameObjectCreate(PhysicsCreateObject(Vec2(position.x, position.y), 1), GCreateSprite(0, 40, anim2, 1), 0, entity_door);
+  door->physics->onCollision = &DoorDefaultOnCollision;
+  door->simulate = NULL;
+
+  levelDoor = door;
+  return door;
+}
+
+/*!
+\brief Getter function for the current level's door
+
+\return Returns a pointer to the current level's door.
+*/
+GameObject* DoorGetDoor()
+{
+
+  if (levelDoor) //not sure if this check works as intended atm
+  {
+    return levelDoor;
+  } 
+  else
+  {
+    return NULL;
+  }
+
+}
+

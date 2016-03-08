@@ -11,11 +11,15 @@ Functions for procedurally generating game levels.
 #include "AEEngine.h"
 #include "ImportData.h"
 #include "GameLevel.h"
+#include "Door.h"
 
 //private info (would be defines but you can't make those private?
 
 #define NUM_ROOMS 8
-static int ROOM_SIZE = 14; /**< Room size, subtract 2 from this due to increased wall thickness*/
+
+//Think of this as MAX room size, not just room size.
+static int ROOM_SIZE = 18; /**< Room size, subtract 2 from this due to increased wall thickness*/
+
 
 //static enums/structs:
 static enum directions
@@ -155,6 +159,11 @@ void GenerateMap(IsoMap* inputMap)
       //a room has been created! what do?
       //arbitrary scope to help visualize things:
       {
+        if (rooms_created == NUM_ROOMS - 1)
+        {
+          DoorCreateDoorAt(cursor);
+        }
+
         //placeholder: spawn one enemy.
         ImportEnemyData(cursor.x, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
 
@@ -168,7 +177,8 @@ void GenerateMap(IsoMap* inputMap)
   }
   if (tries > NUM_ROOMS * 100)
   {
-    printf("MapGen.c: seriously your algorithm is fucked, look at it.");
+    printf("MapGen.c: seriously your algorithm is fucked, look at it. Re-generating map.");
+    //GenerateMap(inputMap); //comment this back in for release, but while debugging keep it out to avoid recursion.
   }
 
   

@@ -10,3 +10,5 @@ Contains functionality for doors to move between levels on contact.
 #include "GameObject.h"
 #include "LevelManager.h"
 void DoorDefaultOnCollision(GameObject* _thisObject, GameObject* _otherObject);
+GameObject* DoorCreateDoorAt(Vector2D position);
+GameObject* DoorGetDoor();

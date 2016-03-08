@@ -111,20 +111,19 @@ void GameLevelInit(void)
     y = RandIntRange(15, 20);
   } while (IsoTileGet(x, y) || (player->physics->position.x == x && player->physics->position.y == y));
 
-  GameObject* door = GameObjectCreate(PhysicsCreateObject(Vec2(x, y), 1), GCreateSprite(0, 40, anim2, 1), 0, entity_door);
-  door->physics->onCollision = &DoorDefaultOnCollision;
-  door->simulate = NULL;
+  
 
   /**********************
   HAZARDS
   ***************************/
+  /*
   do
   {
     x = RandIntRange(9, 14);
     y = RandIntRange(9, 14);
   } while (IsoTileGet(x, y) || (player->physics->position.x == x && player->physics->position.y == y)
-    || (door->physics->position.x == x && door->physics->position.y == y));
-
+    || (door->physics->position.x == x && door->physics->position.y == y));*/
+  /*
   GameObject* hazard = GameObjectCreate(PhysicsCreateObject(Vec2(x, y), 1), GCreateSprite(0, 40, anim3, 1), 0, entity_hazard);
   Vector2D pushForce = { 5.f, 8.f };
   unsigned int hType = 0;
@@ -133,7 +132,7 @@ void GameLevelInit(void)
   hType |= HAZARD_WARP;
   ComponentAdd_Hazard(hazard, 4, 3, 1, pushForce, hType);
   hazard->physics->onCollision = &Hazard_OnCollision;
-  hazard->simulate = NULL;
+  hazard->simulate = NULL;*/
  
   //PhysicsRemoveObject(&a);
 
