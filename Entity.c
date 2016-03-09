@@ -7,6 +7,9 @@ Contains functionality for entities- objects that can take/receive damage.
 */
 #include "Entity.h"
 #include "GameObject.h"
+
+#define BREIF_INVULNERABILITY_ENABLED  1    /* allow breif invulnerability after a hit    */
+#define BREIF_INVULNERABILITY_DISABLED 0    /* disallow brief invunerability after a hit  */
 /*!
 \brief initializes entity vars
 \param _entity Pointer to pointer to entity object to initialize
@@ -36,7 +39,13 @@ void EntityTakeDamage(Entity** _entity, int _damage)
     {
       (*_entity)->health -= _damage;
       (*_entity)->wasDamaged = 1; // just got damaged
-      //BriefInvulnerability((*_entity)->owner, ONLY_PLAYER_BREIF_INVINCIBILITY_AFTER_DAMAGED);  //make the owner briefly invulnerable after taking damage
+
+      if (BREIF_INVULNERABILITY_ENABLED)//if we allow brief invulnerability
+      {
+        BriefInvulnerability((*_entity)->owner, ONLY_PLAYER_BREIF_INVINCIBILITY_AFTER_DAMAGED);  //make the owner briefly invulnerable after taking damage
+        (*_entity)->invincibilityRecoveryTime = 0; /* if it was recovering make it invincible */
+      }
+        
       //printf("OW, %i left", (*_entity)->health);
       if ((*_entity)->health < 1)
       {

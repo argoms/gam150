@@ -318,9 +318,28 @@ void PlayerSimulate()
   UpdateEntityIFs(player);
 
   //check key
-  int key = VK_SPACE;
+  int key = VK_SPACE;  
   Dodge(key, player); //check if the key is pressed if so then dodge
-  
+  /*
+  int inc_drag_key = 'H'; //set this equal to whatever key   
+  if (AEInputCheckTriggered(inc_drag_key))
+  {
+    playerDrag = 0.5f;
+    //printf("%f dragggg", playerDrag);
+  }
+
+  int dec_drag_key = 'G';
+  if (AEInputCheckTriggered(dec_drag_key))
+  {
+    playerDrag = 0.9f;
+  }
+
+  int reset_drag_key = 'F';
+  if (AEInputCheckTriggered(reset_drag_key))
+  {
+    playerDrag = 0.7f;
+  }
+  */
 
 
   //alpha dumb hardcoding
@@ -676,3 +695,26 @@ void PlayerAnimations()
   playerSprite->y = player->sprite->y;
 }
 
+void IncrementPlayerDrag()
+{
+  playerDrag++;
+}
+
+void DecrementPlayerDrag()
+{
+  if (playerDrag <= 1.0)
+  {
+    return;//cap it
+  }
+  playerDrag--;
+}
+
+void SetPlayerDrag(float drag)
+{
+  playerDrag = drag;
+}
+
+int  GetPlayerDrag()
+{
+  return playerDrag;
+}
