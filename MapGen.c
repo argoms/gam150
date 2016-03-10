@@ -18,7 +18,7 @@ Functions for procedurally generating game levels.
 #define NUM_ROOMS 5
 
 //Think of this as MAX room size, not just room size.
-static int ROOM_SIZE = 18; /**< Room size, subtract 2 from this due to increased wall thickness*/
+static int ROOM_SIZE = 22; /**< Room size, subtract 2 from this due to increased wall thickness*/
 
 
 //static enums/structs:
@@ -36,6 +36,7 @@ static Vector2D directionOffsetGet(int dir);
 static void FillArea(int x, int y);
 static int isValid(Vector2D position, IsoMap* map);
 static void IsoSquareSet(Vector2D position, int newValue);
+static void Room_BasicEnemies(Vector2D cursor);
 
 //implementation:
 void GenerateMap(IsoMap* inputMap)
@@ -165,7 +166,7 @@ void GenerateMap(IsoMap* inputMap)
         }
 
         //placeholder: spawn one enemy.
-        ImportEnemyData(cursor.x, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
+        Room_BasicEnemies(cursor);
 
       }
       rooms_created++;
@@ -274,4 +275,15 @@ static Vector2D directionOffsetGet(int dir)
 static void FillArea(int x, int y, int tileType)
 {
 
+}
+
+/*!
+\brief Spawns a room of basic enemies
+*/
+static void Room_BasicEnemies(Vector2D cursor)
+{
+  ImportEnemyData(cursor.x, cursor.y, "Level1EnemyRanged2.txt", GetPlayerObject());
+
+  ImportEnemyData(cursor.x + 5, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
+  ImportEnemyData(cursor.x - 5, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
 }
