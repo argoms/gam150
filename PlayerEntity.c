@@ -22,6 +22,7 @@ static Animation* tracerAnimation;
 signed long mouseX;
 signed long mouseY;
 
+
 static float playerMaxSpeed;
 static float playerAccel;
 static float playerDrag;
@@ -60,6 +61,8 @@ static Animation* animSwordUpRight;
 
 static Sprite* playerSprite;
 static float stepSoundTimer;
+
+static int dodge_key = VK_SPACE;
 
 //the following enums are used for the player action bit field:
 static enum directions 
@@ -318,8 +321,27 @@ void PlayerSimulate()
   UpdateEntityIFs(player);
 
   //check key
-  int key = VK_SPACE;  
-  Dodge(key, player); //check if the key is pressed if so then dodge
+  //int key = VK_SPACE;  
+
+  
+  //int key;
+  //key = RIGHT_CLICK;
+
+  if (AEInputCheckTriggered('Z'))
+  {
+    printf("%d\n", dodge_key);
+    if (dodge_key == RIGHT_CLICK)
+    {
+      dodge_key = VK_SPACE;
+    }
+    else if (dodge_key == VK_SPACE)
+    {
+      dodge_key = RIGHT_CLICK;
+    }
+  }
+
+
+  Dodge(dodge_key, player); //check if the key is pressed if so then dodge
   /*
   int inc_drag_key = 'H'; //set this equal to whatever key   
   if (AEInputCheckTriggered(inc_drag_key))
@@ -714,7 +736,7 @@ void SetPlayerDrag(float drag)
   playerDrag = drag;
 }
 
-int  GetPlayerDrag()
+float  GetPlayerDrag()
 {
   return playerDrag;
 }

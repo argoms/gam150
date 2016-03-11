@@ -7,6 +7,7 @@
 //#include "Enemy.h"
 #include "PlayerEntity.h"
 
+
 #define BRIEF_IFRAMES_RECOVERY             10  /* frames for recovery before granting brief invulnerability */
 #define BRIEF_IFRAMES                      30  /* i frames granted after taking damage                      */
 #define PLAYER_IFRAMES                     30  /* frames for player to be invincible                        */
@@ -17,6 +18,8 @@
 #define DODGE_BLUE_MODIFIER               0.35f
 #define DODGE_GREEN_MODIFIER              0.35f
 #define EPSILON                           0.00001f
+#define DODGE_FORCE                       4.0f
+#define DODGE_VELOCITY_SCALE              0.90f
 
 
 void UpdateEntityIFs(GameObject *obj);
