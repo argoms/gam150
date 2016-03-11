@@ -62,7 +62,7 @@ GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _
   if (_entity == entity_enemy)
   {
     newGameObject->enemyAI = (EnemyAI*)malloc(sizeof(EnemyAI));
-    newGameObject->enemyAI->enemyState = ENEMY_STATE_PATROL;
+    newGameObject->enemyAI->currentEnemyState = ENEMY_STATE_PATROL;
   }
 
   newGameObject->type = _type;
