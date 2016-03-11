@@ -1,12 +1,25 @@
+/*!
+\file   MapGen.c
+\author James Do
+\par    email: j.do\@digipen.edu
+\brief
+Functions for procedurally generating game levels.
+*/
 //#include "MapGen.h"
 #include "Vector2D.h"
 #include "Isometric.h"
 #include "AEEngine.h"
 #include "ImportData.h"
 #include "GameLevel.h"
+#include "Door.h"
 
 //private info (would be defines but you can't make those private?
-static int ROOM_SIZE = 14; /**< Room size, subtract 2 from this due to increased wall thickness*/
+
+#define NUM_ROOMS 5
+
+//Think of this as MAX room size, not just room size.
+static int ROOM_SIZE = 22; /**< Room size, subtract 2 from this due to increased wall thickness*/
+
 
 //static enums/structs:
 static enum directions
@@ -22,6 +35,8 @@ static void FillLine(Vector2D position1, Vector2D position2, int newValue);
 static Vector2D directionOffsetGet(int dir);
 static void FillArea(int x, int y);
 static int isValid(Vector2D position, IsoMap* map);
+static void IsoSquareSet(Vector2D position, int newValue);
+static void Room_BasicEnemies(Vector2D cursor);
 
 //implementation:
 void GenerateMap(IsoMap* inputMap)
@@ -31,6 +46,8 @@ void GenerateMap(IsoMap* inputMap)
   int i = 0;
   int j = 0;
 
+
+  /*
   //borders:
   while (i < mapWidth)
   {
@@ -73,31 +90,83 @@ void GenerateMap(IsoMap* inputMap)
     }
     i++;
   }
+  */
+  //the following code combines the upper two things into one loop. Seriously, that's like half the number of operations, it's not premature optimization :I 
+  //create borders and ROOM_SIZE-sized rooms:
+  while (i < mapWidth)
+  {
+    j = 0;
+    while (j < mapHeight)
+    {
+      //printf("%iaa", j);
+      if (i == 0 || i == mapWidth - 1 || j == 0 || j == mapHeight - 1 || (i % ROOM_SIZE == 0 || j % ROOM_SIZE == 0)
+        || ((i + 1) % ROOM_SIZE == 0 || (j + 1) % ROOM_SIZE == 0)
+        || ((i - 1) % ROOM_SIZE == 0 || (j - 1) % ROOM_SIZE == 0))
+      {
+        IsoTileSet(i, j, 1);
+      }
+      else
+      {
+        IsoTileSet(i, j, 0);
+        //printf("a");
+      }
+      j++;
+
+    }
+    i++;
+  }
 
   //create path of rooms:
-  Vector2D cursor = Vec2(ROOM_SIZE / 2, ROOM_SIZE / 2);
-  int rooms_created = 0;
-  int tries; //infinite loop killer
 
-  while (rooms_created < 8 && tries++ < 100)
+  Vector2D cursor = Vec2(ROOM_SIZE / 2, ROOM_SIZE / 2); //create a "cursor" for the rooms, starting at the spawn room
+  int rooms_created = 0;
+  int tries = 0; //infinite loop killer
+
+  //start creating rooms:
+  while (rooms_created < NUM_ROOMS && tries++ < NUM_ROOMS * 100)
   {
     int direction = (int)(AERandFloat() * 4); //random direction
-    Vector2D offset = directionOffsetGet(direction);
+    Vector2D offset = directionOffsetGet(direction); //turn that random stupid number into an actual random direction
     Vector2DScale(&offset, &offset, ROOM_SIZE);
 
     Vector2D newCursorPosition;
-    Vector2DAdd(&newCursorPosition, &cursor, &offset);
+    Vector2DAdd(&newCursorPosition, &cursor, &offset); //travel one room size in that random direction
 
-    if (isValid(newCursorPosition, inputMap) && IsoTileGet((int)newCursorPosition.x, (int)newCursorPosition.y) != 2)
+    if (isValid(newCursorPosition, inputMap) && IsoTileGet((int)newCursorPosition.x, (int)newCursorPosition.y) != 1)
     {
-      printf("x: %f, y: %f, valid apparently. \n", newCursorPosition.x, newCursorPosition.y);
+      printf("MapGen.c: x: %f, y: %f, valid apparently. \n", newCursorPosition.x, newCursorPosition.y);
+      
+      
+      //now bear with me here, first we're checking if the room we want to go into already exists
+      if (IsoTileGet((int)newCursorPosition.x, (int)newCursorPosition.y) == 2)
+      {
+        //if it does, there's a 50% chance that we don't do anything with it
+        if (AERandFloat() < 0.5)
+        {
+          continue;
+        }
+        else
+        {
+          //otherwise, we branch back into it (this doesn't count as creating a room)
+          rooms_created--;
+        }
+      }
+
+      //fill the path between rooms:
       FillLine(cursor, newCursorPosition, 2);
       cursor = newCursorPosition;
 
+
       //a room has been created! what do?
+      //arbitrary scope to help visualize things:
       {
+        if (rooms_created == NUM_ROOMS - 1)
+        {
+          DoorCreateDoorAt(cursor);
+        }
+
         //placeholder: spawn one enemy.
-        ImportEnemyData(cursor.x, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
+        Room_BasicEnemies(cursor);
 
       }
       rooms_created++;
@@ -107,9 +176,10 @@ void GenerateMap(IsoMap* inputMap)
       continue; //as if I have to tell you, you silly program.
     }
   }
-  if (tries > 100)
+  if (tries > NUM_ROOMS * 100)
   {
-    printf("seriously your algorithm is fucked, look at it.");
+    printf("MapGen.c: seriously your algorithm is fucked, look at it. Re-generating map.");
+    //GenerateMap(inputMap); //comment this back in for release, but while debugging keep it out to avoid recursion.
   }
 
   
@@ -130,11 +200,29 @@ static void FillLine(Vector2D position1, Vector2D position2, int newValue)
   while (i * i < dist)
   {
     Vector2DAdd(&position1, &position1, &unitVector);
-    IsoTileSet((int)position1.x, (int)position1.y, newValue);
+    //IsoTileSet((int)position1.x, (int)position1.y, newValue);
+    IsoSquareSet(position1, newValue);
     i++; //fuck your ++i
   }
 }
 
+/*!
+\brief Fills in a 3x3 square around a given area.
+*/
+static void IsoSquareSet(Vector2D position, int newValue)
+{
+  IsoTileSet((int)position.x, (int)position.y, newValue);
+  IsoTileSet((int)position.x + 1, (int)position.y, newValue);
+  IsoTileSet((int)position.x - 1, (int)position.y, newValue);
+
+  IsoTileSet((int)position.x, (int)position.y - 1, newValue);
+  IsoTileSet((int)position.x + 1, (int)position.y - 1, newValue);
+  IsoTileSet((int)position.x - 1, (int)position.y - 1, newValue);
+
+  IsoTileSet((int)position.x, (int)position.y + 1, newValue);
+  IsoTileSet((int)position.x + 1, (int)position.y + 1, newValue);
+  IsoTileSet((int)position.x - 1, (int)position.y + 1, newValue);
+}
 /*!
 \brief Checks wheter or not a given position is within the bounds of the map.
 
@@ -183,7 +271,19 @@ static Vector2D directionOffsetGet(int dir)
 }
 
 //meant to fill area for floor tiles, unused for now
+//I wonder what the best fill algorithm would be.
 static void FillArea(int x, int y, int tileType)
 {
 
+}
+
+/*!
+\brief Spawns a room of basic enemies
+*/
+static void Room_BasicEnemies(Vector2D cursor)
+{
+  ImportEnemyData(cursor.x, cursor.y, "Level1EnemyRanged2.txt", GetPlayerObject());
+
+  ImportEnemyData(cursor.x + 5, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
+  ImportEnemyData(cursor.x - 5, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
 }

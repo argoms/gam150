@@ -1,0 +1,42 @@
+MUSIC
+
+music_sample1.ogg
+music_sample2.ogg
+music_sample2A.ogg
+music_sample3.ogg
+music_sample4.ogg
+
+SAMPLES
+
+Ambient Pad.ogg
+ButtonClick.ogg
+ButtonClick2.ogg
+Drawing Sword.ogg
+FootstepPlayer1.ogg
+Footsteps Male.ogg
+Footsteps On Grass.ogg
+Footsteps On Gravel.ogg
+Mixed Beat 2.ogg
+new_grass_footsteps.ogg
+new_gravel_footsteps.ogg
+new_male_footstep.ogg
+Newspaper Opens.ogg
+Pads 1.ogg
+Piano 1.ogg
+Piano 2.ogg
+sample1.ogg
+sample2.ogg
+sample3.ogg
+single_grass_footstep.ogg
+single_gravel_footstep.ogg
+swordclash1.ogg
+swordclash2.ogg
+SwordScrape.ogg
+SwordSwing1.ogg
+SwordSwing2.ogg
+Trance Pad 2.ogg
+Trumpet Phrase Fade In.ogg
+Trumpets 3.ogg
+Trumpets 5.ogg
+Trumpets 7.ogg
+Wind Strong 1.ogg

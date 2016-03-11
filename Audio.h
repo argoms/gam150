@@ -36,22 +36,6 @@ Output        : No output.
 void Audio_FreeSystem(void);
 
 /**************************************************************************************************
-Function      : Audio_AddMusic
-Description   : Adds a new stream to the music/stream library.
-Input         : sound is the name of the sound. Example: "sample.wav"
-Output        : No return.
-**************************************************************************************************/
-void Audio_AddMusic(char *sound);
-
-/**************************************************************************************************
-Function      : Audio_AddSoundSample
-Description   : Adds a new sound sample to the SFX sample library.
-Input         : sound is the name of the sound. Example: "sample.wav"
-Output        : No return.
-**************************************************************************************************/
-void Audio_AddSoundSample(char *sound);
-
-/**************************************************************************************************
 Function      : Audio_PlaySoundSample
 Description   : Plays a sound sample. Use for sound effects.
 Input         : name is the name of the sound to play. Example: "sample.wav"
@@ -77,7 +61,15 @@ Description   : Pauses playback of a sound.
 Input         : name is the name of the sound to pause. Example: "sample.wav"
 Output        : No output.
 **************************************************************************************************/
-void Audio_PauseSound(char *name);
+void Audio_PauseSoundSample(char *name);
+
+/**************************************************************************************************
+Function      : Audio_PauseMusicStream
+Description   : Pauses playback of a stream.
+Input         : name is the name of the stream to pause. Example: "sample.wav"
+Output        : No output.
+**************************************************************************************************/
+void Audio_PauseMusicStream(char *name);
 
 /**************************************************************************************************
 Function      : Audio_UpdatePlayback

@@ -169,6 +169,7 @@
     <ClCompile Include="Button.c" />
     <ClCompile Include="Collision.c" />
     <ClCompile Include="conversions.c" />
+    <ClCompile Include="DamageNumbers.c" />
     <ClCompile Include="DeathScreen.c" />
     <ClCompile Include="Dodge.c" />
     <ClCompile Include="Door.c" />
@@ -177,6 +178,7 @@
     <ClCompile Include="Entity.c" />
     <ClCompile Include="GameLevel.c" />
     <ClCompile Include="GameObject.c" />
+    <ClCompile Include="Gate.c" />
     <ClCompile Include="Graphics.c" />
     <ClCompile Include="Hazard.c" />
     <ClCompile Include="ImportData.c" />
@@ -203,6 +205,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="conversions.h" />
+    <ClInclude Include="DamageNumbers.h" />
     <ClInclude Include="DeathScreen.h" />
     <ClInclude Include="Dodge.h" />
     <ClInclude Include="Door.h" />
@@ -211,6 +214,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="GameLevel.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Gate.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Hazard.h" />
     <ClInclude Include="ImportData.h" />

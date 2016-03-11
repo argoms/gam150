@@ -1,69 +1,201 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Audio.c" />
-    <ClCompile Include="Button.c" />
-    <ClCompile Include="conversions.c" />
-    <ClCompile Include="Door.c" />
-    <ClCompile Include="Enemy.c" />
-    <ClCompile Include="EnemyAnimations.c" />
     <ClCompile Include="Entity.c" />
     <ClCompile Include="GameLevel.c" />
     <ClCompile Include="GameObject.c" />
-    <ClCompile Include="Graphics.c" />
-    <ClCompile Include="Hazard.c" />
-    <ClCompile Include="ImportData.c" />
-    <ClCompile Include="Isometric.c" />
-    <ClCompile Include="LevelManager.c" />
     <ClCompile Include="Main_CS230.c" />
-    <ClCompile Include="MapGen.c" />
-    <ClCompile Include="Physics.c" />
-    <ClCompile Include="PlayerEntity.c" />
-    <ClCompile Include="Text.c" />
-    <ClCompile Include="TownScreen.c" />
-    <ClCompile Include="Vector2D.c" />
-    <ClCompile Include="MapCreator.c" />
-    <ClCompile Include="MyRandom.c" />
-    <ClCompile Include="Collision.c" />
-    <ClCompile Include="DeathScreen.c" />
-    <ClCompile Include="SplashScreen.c" />
-    <ClCompile Include="Dodge.c" />
-    <ClCompile Include="WinScreen.c" />
     <ClCompile Include="ParticleSystems(Redo).c" />
+    <ClCompile Include="Audio.c">
+      <Filter>Back End</Filter>
+    </ClCompile>
+    <ClCompile Include="conversions.c">
+      <Filter>Back End</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics.c">
+      <Filter>Back End</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyAnimations.c">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.c">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.c">
+      <Filter>Menu/UI</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathScreen.c">
+      <Filter>Menu/UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ImportData.c">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Isometric.c">
+      <Filter>Back End</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelManager.c">
+      <Filter>Back End</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics.c">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.c">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="SplashScreen.c">
+      <Filter>Menu/UI</Filter>
+    </ClCompile>
+    <ClCompile Include="WinScreen.c">
+      <Filter>Menu/UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector2D.c">
+      <Filter>Back End</Filter>
+    </ClCompile>
+    <ClCompile Include="TownScreen.c">
+      <Filter>Menu/UI</Filter>
+    </ClCompile>
+    <ClCompile Include="MapGen.c">
+      <Filter>MapGen</Filter>
+    </ClCompile>
+    <ClCompile Include="MapCreator.c">
+      <Filter>MapGen</Filter>
+    </ClCompile>
+    <ClCompile Include="MyRandom.c">
+      <Filter>MapGen</Filter>
+    </ClCompile>
+    <ClCompile Include="Dodge.c">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerEntity.c">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.c">
+      <Filter>Text</Filter>
+    </ClCompile>
+    <ClCompile Include="DamageNumbers.c">
+      <Filter>Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Door.c">
+      <Filter>Environmental Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Hazard.c">
+      <Filter>Environmental Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Gate.c">
+      <Filter>Environmental Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Audio.h" />
-    <ClInclude Include="Button.h" />
-    <ClInclude Include="conversions.h" />
-    <ClInclude Include="Door.h" />
-    <ClInclude Include="Enemy.h" />
-    <ClInclude Include="EnemyAnimations.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="GameLevel.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="Graphics.h" />
-    <ClInclude Include="Hazard.h" />
-    <ClInclude Include="ImportData.h" />
-    <ClInclude Include="Isometric.h" />
-    <ClInclude Include="LevelManager.h" />
-    <ClInclude Include="MapGen.h" />
-    <ClInclude Include="Physics.h" />
-    <ClInclude Include="PlayerEntity.h" />
-    <ClInclude Include="Text.h" />
-    <ClInclude Include="TownScreen.h" />
-    <ClInclude Include="Vector2D.h" />
-    <ClInclude Include="MapCreator.h" />
-    <ClInclude Include="MyRandom.h" />
-    <ClInclude Include="Collision.h" />
-    <ClInclude Include="DeathScreen.h" />
-    <ClInclude Include="SplashScreen.h" />
-    <ClInclude Include="Dodge.h" />
-    <ClInclude Include="WinScreen.h" />
     <ClInclude Include="ParticleSystems(Redo).h" />
+    <ClInclude Include="Audio.h">
+      <Filter>Back End</Filter>
+    </ClInclude>
+    <ClInclude Include="conversions.h">
+      <Filter>Back End</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>Back End</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyAnimations.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Menu/UI</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathScreen.h">
+      <Filter>Menu/UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ImportData.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Isometric.h">
+      <Filter>Back End</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelManager.h">
+      <Filter>Back End</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="SplashScreen.h">
+      <Filter>Menu/UI</Filter>
+    </ClInclude>
+    <ClInclude Include="WinScreen.h">
+      <Filter>Menu/UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2D.h">
+      <Filter>Back End</Filter>
+    </ClInclude>
+    <ClInclude Include="TownScreen.h">
+      <Filter>Menu/UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MapGen.h">
+      <Filter>MapGen</Filter>
+    </ClInclude>
+    <ClInclude Include="MapCreator.h">
+      <Filter>MapGen</Filter>
+    </ClInclude>
+    <ClInclude Include="MyRandom.h">
+      <Filter>MapGen</Filter>
+    </ClInclude>
+    <ClInclude Include="Dodge.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerEntity.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Text</Filter>
+    </ClInclude>
+    <ClInclude Include="DamageNumbers.h">
+      <Filter>Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Door.h">
+      <Filter>Environmental Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Hazard.h">
+      <Filter>Environmental Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Gate.h">
+      <Filter>Environmental Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="EnemyFiles">
       <UniqueIdentifier>{1da9aae2-fd68-4b9b-8226-2800ac14ceca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Back End">
+      <UniqueIdentifier>{e461faf4-4fd7-4b51-86be-32d100cb3a91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies">
+      <UniqueIdentifier>{ef83058e-9d09-4e42-95b0-224d9a01de25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Menu/UI">
+      <UniqueIdentifier>{39296692-a01e-4d02-84b8-dd41f41145c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{9fe239f0-106d-4777-8364-840bc473a9e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MapGen">
+      <UniqueIdentifier>{b6215c8e-4882-4b5c-8e8d-7ae8ab0ade9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player">
+      <UniqueIdentifier>{214a3901-0d28-4fca-b187-3e716dd74b9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Text">
+      <UniqueIdentifier>{e79eaa54-537f-4a05-90db-6538057a1c38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Environmental Objects">
+      <UniqueIdentifier>{d4af4932-55d9-4719-bd1e-9c61ed2c2f95}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

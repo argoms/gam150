@@ -160,7 +160,8 @@ void TextRemoveString(TextString* _textString)
 }
 
 /*!
-\brief sets text string to given string
+\brief sets text string to given string, currently broken? Stopped working some point after testing
+
 
 \param _textString address of the text string (type &textPointer, not textPointer)
 \param _string string to overwrite
@@ -188,4 +189,20 @@ void TextHUDStringSet(TextString** _textString, char* _string)
   //free(*_textString);
   *_textString = TextCreateHUDString(_string, tempX, tempY);
   printf("hudset");
+}
+
+void TextStringAddOffset(TextString* _textString, Vector2D offset)
+{
+  TextChar* textChar = _textString->first;
+  int i = 0;
+ // _textString->x = _x;
+ // _textString->y = _y;
+
+  while (textChar)
+  {
+    textChar->sprite->offset.x += offset.x;
+    textChar->sprite->offset.y += offset.y;
+    i++;
+    textChar = textChar->next;
+  }
 }

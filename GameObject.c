@@ -136,6 +136,11 @@ static void GameObjectRemove(GameObject** _input)
   {
     free((*_input)->enemyAI);
   }
+  if ((*_input)->miscData)
+  {
+    free((*_input)->miscData);
+  }
+
 
   if ((*_input)->prev)
   {
