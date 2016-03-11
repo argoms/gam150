@@ -7,6 +7,8 @@ Contains prototypes/declarations for entities- objects that can take/receive dam
 */
 #pragma once
 #include "Vector2D.h"
+
+#define ONLY_PLAYER_BREIF_INVINCIBILITY_AFTER_DAMAGED 1
 typedef struct Entity Entity;
 typedef struct GameObject GameObject;
 /*!
@@ -17,12 +19,13 @@ struct Entity
 {
   GameObject* owner; /**< pointer to owner gameobject of this entity instance*/
 
-  int health;                   /**< number of hitpoints remaining      */
-  int maxHealth;                /**< maximum number of hitpoints        */
-  int invincibilityTime;        /**< frames for invincibility           */
-  int canBeDamaged;             /**< flag if we can damage the entity   */
-  int invincibilityRecoveryTime;/**< frames for recovering              */  
-  void(*onEntityKilled)();      /**< called when entity dies            */
+  int health;                   /**< number of hitpoints remaining       */
+  int maxHealth;                /**< maximum number of hitpoints         */
+  int invincibilityTime;        /**< frames for invincibility            */
+  int canBeDamaged;             /**< flag if we can damage the entity    */
+  int wasDamaged;               /**< flag if we were damaged by an enemy */
+  int invincibilityRecoveryTime;/**< frames for recovering               */  
+  void(*onEntityKilled)();      /**< called when entity dies             */
 };
 
 void EntityInit(Entity** _entity);
