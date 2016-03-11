@@ -175,6 +175,7 @@
     <ClCompile Include="Door.c" />
     <ClCompile Include="Enemy.c" />
     <ClCompile Include="EnemyAnimations.c" />
+    <ClCompile Include="EnemyStateMachine.c" />
     <ClCompile Include="Entity.c" />
     <ClCompile Include="GameLevel.c" />
     <ClCompile Include="GameObject.c" />
@@ -211,6 +212,7 @@
     <ClInclude Include="Door.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyAnimations.h" />
+    <ClInclude Include="EnemyStateMachine.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="GameLevel.h" />
     <ClInclude Include="GameObject.h" />

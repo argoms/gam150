@@ -7,7 +7,8 @@ enum
 {
   ENEMY_STATE_IDLE,
   ENEMY_STATE_PATROL,
-  ENEMY_STATE_CHASE
+  ENEMY_STATE_CHASE,
+  ENEMY_STATE_ATTACK
 };
 
 GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _type,

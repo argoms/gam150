@@ -9,6 +9,7 @@ Functions for game objects.
 #include "Entity.h"
 #include "Graphics.h"
 #include "Physics.h"
+//#include "EnemyStateMachine.h"
 
 typedef struct GameObject GameObject;
 
@@ -38,7 +39,7 @@ enum EnemyType {
   ENEMY_TYPE_RANGED_ARC,    // 5
   ENEMY_TYPE_RANGED_HOMING, // 6
 
-                            /* Special enemies */
+  /* Special enemies */
   ENEMY_TYPE_HEALER, // 7
   ENEMY_TYPE_SLIME,  // 8
   ENEMY_TYPE_SHIELD, // 9
@@ -46,7 +47,10 @@ enum EnemyType {
 
 struct EnemyAI
 {
-  int enemyState;
+  int currentEnemyState;       /* Current state */
+  int newEnemyState;    /* Internal usage, no touch */
+  int currentEnemyStateIndex;  /* Stack index of the current state the enemy is in */
+  //EnemyStateBehavior enemyAiStack[5]; /* AI stack */
 };
 
 /*!
@@ -89,7 +93,8 @@ struct EnemyContainer
 
   float detectRange;
   float knockback;
-
+  
+  float animationCooldown; /*Placeholder until better solution*/
   float attackCooldown; /**< timer before player can attack again*/
   float attackCooldownLength; /**< defined minimum time between attacks (attackCooldown is the timer)*/
   float attackWindup;  /* Wind up timer */
