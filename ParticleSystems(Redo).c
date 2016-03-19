@@ -27,6 +27,78 @@ AEGfxVertexList *pTempParticleMesh;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*!
+\brief
+creates a particle for a Dodge Smoke
+\param i
+int for the ID of the particle.
+\param pPS_Inst
+PS_Instance * for the owner continuous PS.
+*/
+void Particle_Create_DodgeSmoke(int i, PS_Instance *pPS_Inst)
+{
+	//you need to create and initialize these to make the particles work properly
+	float RandomAngle = RANDOM_ANGLE;
+	float RandomAngle2 = RANDOM_ANGLE;
+	float RandomScale = (float)((rand() / (float)RAND_MAX));
+	float RandomScale2 = (float)((rand() / (float)RAND_MAX));
+	Vector2D ParticlePosition;
+	Vector2D InitialVelocity;
+	PhysicsObject *ParticlePhysics;
+	Animation *ParticleAnimation;
+	Sprite *ParticleSprite;
+	GameObject *NewParticle;
+
+	//spawn particles at the position of the PS.
+	ParticlePosition.x = pPS_Inst->PS_Burst->StartPosX + (float)(RandomScale * 0.5 * cos(RandomAngle));
+	ParticlePosition.y = pPS_Inst->PS_Burst->StartPosY + (float)(RandomScale * 0.5 * sin(RandomAngle));
+	//launch particles in a random direction at a constant speed
+	InitialVelocity.x = (float)(RandomScale2 * 0.005 * cos(RandomAngle2));
+	InitialVelocity.y = (float)(RandomScale2 * 0.005 * sin(RandomAngle2));
+	
+	//NECESSARY SET-UP STUFF
+	ParticlePhysics = PhysicsCreateObject(ParticlePosition, 1.0f);
+	ParticlePhysics->velocity = InitialVelocity;
+	ParticlePhysics->active = 0;
+	ParticleAnimation = GCreateAnimation(1, GCreateTexture("isotile.png"), GCreateMesh(20, 20, 1, 1), 1);
+	ParticleSprite = GCreateSprite(ParticlePosition.x, ParticlePosition.y, ParticleAnimation, 0.0f);
+	ParticleSprite->specialFX = Particle_Special_FX_DodgeSmoke;
+	ParticleSprite->blendMode = AE_GFX_BM_ADD;
+	NewParticle = GameObjectCreate(ParticlePhysics, ParticleSprite, NULL, entity_particle);
+	NewParticle->simulate = Particle_Simulate_DodgeSmoke;
+	pPS_Inst->PS_Burst->Particle[i] = NewParticle;
+}
+
+/*!
+\brief
+particle update behavior for Dodge Smoke
+*/
+void Particle_Simulate_DodgeSmoke(void)
+{
+	
+}
+
+/*!
+\brief
+particle special visual effect for Dodge Smoke
+*/
+void Particle_Special_FX_DodgeSmoke(void)
+{
+	int i;
+
+	for (i = 0; i < 4; i++)
+	{
+		if (pDodgeSmoke[i]->PS_Burst->DeathTimer > 1.0f)
+		{
+			AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 0.1f);
+		}
+		else
+		{
+			AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 0.5f * pDodgeSmoke[i]->PS_Burst->DeathTimer / pDodgeSmoke[i]->PS_Burst->LifeTime);
+		}
+	}
+}
+
+/*!
 \brief 
 	creates a particle for a continuous PS when called.
 \param i

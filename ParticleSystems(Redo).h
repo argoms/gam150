@@ -92,6 +92,10 @@ void Default_Particle_Special_FX_Burst(void);
 void Default_Particle_Simulate(void);
 //default PS behavior functions
 
+//other PS behavior functions
+void Particle_Create_DodgeSmoke(int i, PS_Instance *pPS_Inst);
+void Particle_Simulate_DodgeSmoke(void);
+void Particle_Special_FX_DodgeSmoke(void);
 
 void LoadAll_PS(void);	//call in level load function in level manager
 
@@ -112,5 +116,7 @@ void UnloadAll_PS(void);			//frees all memory occupied by PSs.
 PS_Instance *pPS_C;
 PS_Instance *pPS_B;
 
+//regular particle effect instances
+PS_Instance *pDodgeSmoke[4];
 
 #endif

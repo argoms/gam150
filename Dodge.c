@@ -1,4 +1,5 @@
 #include "Dodge.h"
+#include "ParticleSystems(Redo).h"
 // CALL THIS EVERY FRAME
 
 static int color_changed = 0;
@@ -84,9 +85,20 @@ void UpdateEntityIFs(GameObject *obj)
     }
     else if (ent->invincibilityTime <= 0) // no longer invincible
     {
+		int i;
+
       ent->canBeDamaged = 1;                                   /* make the entity damagable          */
       ent->invincibilityRecoveryTime = PLAYER_IFRAME_RECOVORY; /* set the entity to start recovering */
       //Vector2DZero(obj_vel);                                   /* set the velocity to zero           */
+
+	  for (i = 0; i < 4; i++)
+	  {
+		  if (pDodgeSmoke[i]->PS_Burst->ShutDown)
+		  {
+			  Start_PS(pDodgeSmoke[i]);
+			  break;
+		  }
+	  }
 
       //reset color
       ResetColor(obj);
@@ -117,6 +129,8 @@ void UpdateEntityIFs(GameObject *obj)
 /*************************************************************************/
 void Dodge(int input_key, GameObject *obj)
 {
+	int i;
+
   //if the key is pressed and is NOT CURRENTLY INVINCIBLE, IT CAN BE DAMAGED
   if (AEInputCheckReleased(input_key))
   {
@@ -139,6 +153,15 @@ void Dodge(int input_key, GameObject *obj)
     obj->entity->canBeDamaged = 0; /* activate invincibility */
     obj->entity->invincibilityTime = PLAYER_IFRAMES;
     printf("dodged, is invincibleLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL\n");
+
+	for (i = 0; i < 4; i++)
+	{
+		if (pDodgeSmoke[i]->PS_Burst->ShutDown)
+		{
+			Start_PS(pDodgeSmoke[i]);
+			break;
+		}
+	}
   }
 }
 
