@@ -59,6 +59,20 @@ void GameLevelInit(void)
 		pDodgeSmoke[i]->PS_Burst->vpParticle_Create = Particle_Create_DodgeSmoke;
 	}
 
+	for (i = 0; i < 2; i++)
+	{
+		pFireHazard[i] = Create_PS_Continuous(1.0f, 10, -1);
+		pFireHazard[i]->PS_Continuous->vpParticle_Create = Particle_Create_FireHazard;
+	}
+
+	pFireHazard[0]->PS_Continuous->StartPosX = 5;
+	pFireHazard[0]->PS_Continuous->StartPosY = 3;
+	Start_PS(pFireHazard[0]);
+
+	pFireHazard[1]->PS_Continuous->StartPosX = 3;
+	pFireHazard[1]->PS_Continuous->StartPosY = 5;
+	Start_PS(pFireHazard[1]);
+
   printf("game level init\n");
   PhysicsInit();
   

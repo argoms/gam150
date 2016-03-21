@@ -95,6 +95,8 @@ void UpdateEntityIFs(GameObject *obj)
 	  {
 		  if (pDodgeSmoke[i]->PS_Burst->ShutDown)
 		  {
+			  pDodgeSmoke[i]->PS_Burst->StartPosX = obj->sprite->x;
+			  pDodgeSmoke[i]->PS_Burst->StartPosY = obj->sprite->y;
 			  Start_PS(pDodgeSmoke[i]);
 			  break;
 		  }
@@ -158,6 +160,8 @@ void Dodge(int input_key, GameObject *obj)
 	{
 		if (pDodgeSmoke[i]->PS_Burst->ShutDown)
 		{
+			pDodgeSmoke[i]->PS_Burst->StartPosX = obj->sprite->x;
+			pDodgeSmoke[i]->PS_Burst->StartPosY = obj->sprite->y;
 			Start_PS(pDodgeSmoke[i]);
 			break;
 		}
