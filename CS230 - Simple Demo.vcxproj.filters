@@ -87,6 +87,7 @@
     <ClCompile Include="EnemyStateMachine.c">
       <Filter>Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="EntityAnimation.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -174,6 +175,8 @@
     <ClInclude Include="EnemyStateMachine.h">
       <Filter>Enemies</Filter>
     </ClInclude>
+    <ClInclude Include="EntityAnimation.h" />
+    <ClInclude Include="PlayerAnimations.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="EnemyFiles">

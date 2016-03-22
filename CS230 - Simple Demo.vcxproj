@@ -177,6 +177,7 @@
     <ClCompile Include="EnemyAnimations.c" />
     <ClCompile Include="EnemyStateMachine.c" />
     <ClCompile Include="Entity.c" />
+    <ClCompile Include="EntityAnimation.c" />
     <ClCompile Include="GameLevel.c" />
     <ClCompile Include="GameObject.c" />
     <ClCompile Include="Gate.c" />
@@ -214,6 +215,7 @@
     <ClInclude Include="EnemyAnimations.h" />
     <ClInclude Include="EnemyStateMachine.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="EntityAnimation.h" />
     <ClInclude Include="GameLevel.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gate.h" />
@@ -227,6 +229,7 @@
     <ClInclude Include="MyRandom.h" />
     <ClInclude Include="ParticleSystems(Redo).h" />
     <ClInclude Include="Physics.h" />
+    <ClInclude Include="PlayerAnimations.h" />
     <ClInclude Include="PlayerEntity.h" />
     <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="Text.h" />
