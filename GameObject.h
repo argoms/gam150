@@ -6,10 +6,12 @@
 Functions for game objects.
 */
 #pragma once
+
 #include "Entity.h"
 #include "Graphics.h"
 #include "Physics.h"
-//#include "EnemyStateMachine.h"
+
+#define AISTACKSIZE 3
 
 typedef struct GameObject GameObject;
 
@@ -30,6 +32,13 @@ enum GameObjectNames {
   entity_damageText
 };
 
+/**************************************************************************************************
+    
+    ENEMY SPECIFIC STUFF STARTS HERE
+    Mostly Noah's stuff
+      
+**************************************************************************************************/
+
 // SET THE NUMBERS IN COMMENTS FOR THE ENEMIES TEXT FILE
 enum EnemyType {
   ENEMY_TYPE_MELEE,         // 1
@@ -49,32 +58,9 @@ struct EnemyAI
 {
   int currentEnemyState;       /* Current state */
   int newEnemyState;    /* Internal usage, no touch */
-  int currentEnemyStateIndex;  /* Stack index of the current state the enemy is in */
-  //EnemyStateBehavior enemyAiStack[5]; /* AI stack */
-};
-
-/*!
-\struct GameObject
-\brief Game objects (mobs, pressure plates etc.)
-*/
-struct GameObject
-{
-  Sprite* sprite; /**< graphical component*/
-  PhysicsObject* physics; /**< physics component*/
-  Entity* entity; /**< entity component*/
-  void(*simulate)(); /**< function to run every frame*/
-  void(*initialize)(); /* Initialize values*/
-  int syncSpritePhysics; /**< whether or not to sync the graphical component with the world position of the gameobject (leave it at 1 unless you're doing something weird)*/
-  int type; /**< type of entity that the gameobject is (refer to enum list)*/
-
-  EnemyAI* enemyAI;
-  GameObject* target;
-
-  int destroyFlag; /**< internal, used for removing game objects*/
-  GameObject* next; /**< pointer to previous object in list*/
-  GameObject* prev; /**< pointer to next object in list*/
-  void* miscData;   /**< void pointer to whatever we want*/
-  float projectileLifeTime;
+  void(*EnemyStateStart)();
+  void(*EnemyStateUpdate)();
+  void(*EnemyStateExit)();
 };
 
 /*
@@ -104,6 +90,36 @@ struct EnemyContainer
   float attackKnockbackForce;
 
   float projectileSpeed;
+};
+
+/**************************************************************************************************
+
+ENEMY SPECIFIC STUFF ENDS HERE
+
+**************************************************************************************************/
+
+/*!
+\struct GameObject
+\brief Game objects (mobs, pressure plates etc.)
+*/
+struct GameObject
+{
+  Sprite* sprite; /**< graphical component*/
+  PhysicsObject* physics; /**< physics component*/
+  Entity* entity; /**< entity component*/
+  void(*simulate)(); /**< function to run every frame*/
+  void(*initialize)(); /* Initialize values*/
+  int syncSpritePhysics; /**< whether or not to sync the graphical component with the world position of the gameobject (leave it at 1 unless you're doing something weird)*/
+  int type; /**< type of entity that the gameobject is (refer to enum list)*/
+
+  EnemyAI* enemyAI;
+  GameObject* target;
+
+  int destroyFlag; /**< internal, used for removing game objects*/
+  GameObject* next; /**< pointer to previous object in list*/
+  GameObject* prev; /**< pointer to next object in list*/
+  void* miscData;   /**< void pointer to whatever we want*/
+  float projectileLifeTime;
 };
 
 

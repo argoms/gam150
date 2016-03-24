@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "ParticleSystems(Redo).h"
+#include "EnemyAIMeleeBehavior.h"
 
 static Animation* tracerAnimation;
 
@@ -30,6 +31,7 @@ GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entit
 
   enemy->enemyAI = (EnemyAI*)malloc(sizeof(EnemyAI));
   enemy->enemyAI->currentEnemyState = ENEMY_STATE_PATROL;
+  enemy->enemyAI->EnemyStateStart = EnemyAI_Melee_PatrolStart;
 
   EnemyContainer* enemyContainer = (EnemyContainer*)malloc(sizeof(EnemyContainer));
   enemyContainer->enemyType = enemyType;
@@ -72,6 +74,7 @@ void EnemySimulate(GameObject* _thisObject)
 {
   EnemySimulateAI(_thisObject);
   EnemyAnimationStateManager(_thisObject);
+  ESMachineRun(_thisObject);
 }
 
 /*
