@@ -121,7 +121,7 @@ void PlayerInit()
   {
     //printf("a");
     count++;
-    hpstring[6 + count] = '*';
+    hpstring[6 + count] = 3;
     tempHP -= 10;
   }
   healthText =  TextCreateHUDString(hpstring, -300, -200);
@@ -194,7 +194,7 @@ void PlayerSimulate()
     while (tempHP > 0)
     {
       count++;
-      hpstring[6 + count] = '*';
+      hpstring[6 + count] = 3;
       tempHP -= 10;
     }
     TextRemoveString(healthText);

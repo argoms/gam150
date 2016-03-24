@@ -157,7 +157,7 @@ void IsoSpawnMap()
     1);
 
   Animation* floor = GCreateAnimation(1,
-    GCreateTexture("animations/world/basicFloor2.png"),
+    GCreateTexture("animations/world/basicFloor4.png"),
     GCreateMesh(512.f, 512.f, 1, 1),
     1);
 
