@@ -225,11 +225,6 @@ void PlayerInput()
     
 
     AEInputGetCursorPosition(&mouseX, &mouseY);
-    
-    //HARD CODING MAGIC NUMBERS SPOOOOOKY
-    mouseX += -400;
-    mouseY += -300;
-    /***/
 
     
     if (input.x != 0 || input.y != 0)
@@ -245,25 +240,6 @@ void PlayerInput()
 
       //set player animation flags:
       playerAction = PLAYER_WALK;
-
-      //player directions:
-      if (input.x > 0)
-      {
-     //   playerAction += PLAYER_RIGHT;
-      }
-      else if (input.x < 0)
-      {
-      //  playerAction += PLAYER_LEFT;
-      }
-
-      if (input.y > 0)
-      {
-       // playerAction += PLAYER_UP;
-      }
-      else if (input.y < 0)
-      {
-        //playerAction += PLAYER_DOWN;
-      }
     }
     else
     {
@@ -284,6 +260,13 @@ void PlayerInput()
   }
   else if(playerAction & PLAYER_SWORD)
   {
+    Vector2D input = Vec2(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41),
+      ((float)(AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53)) / 2));
+    Vector2DScale(&input, &input, 5);
+    player->physics->velocity.x += IsoScreenToWorld(&input).x * playerAccel; 
+    player->physics->velocity.y += IsoScreenToWorld(&input).y * playerAccel;
+
+
     playerSprite->frameDelay = 1;
     //printf("AAA");
     //stop animation after it's done
