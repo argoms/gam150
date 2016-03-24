@@ -83,6 +83,9 @@ typedef struct PS_Instance
 //PS object instance list
 PS_Instance		goiaPS_ObjectInstanceList[PS_OBJ_INST_MAX];
 
+//PS spawn functions
+void SpawnDodgeSmokePS(float StartPosX, float StartPosY);
+
 //default PS behavior functions
 void Default_Particle_Create_Continuous(int i, PS_Instance *pPS_Inst);
 void Default_Particle_Create_Burst(int i, PS_Instance *pPS_Inst);
