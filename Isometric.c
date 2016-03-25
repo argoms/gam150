@@ -156,6 +156,16 @@ void IsoSpawnMap()
     GCreateMesh(128.f, 64.f, 1, 1),
     1);
 
+  Animation* floor = GCreateAnimation(1,
+    GCreateTexture("animations/world/basicFloor4.png"),
+    GCreateMesh(512.f, 512.f, 1, 1),
+    1);
+
+  Animation* wall = GCreateAnimation(1,
+    GCreateTexture("animations/world/basicWall2.png"),
+    GCreateMesh(512.f, 512.f, 1, 1),
+    1);
+
   //playerSprite = GCreateSprite(0, 40, anim, 1);
 
   while (i < mapWidth)
@@ -169,8 +179,20 @@ void IsoSpawnMap()
         float tileX = IsoWorldToScreen(&tilePos).x;
         float tileY = IsoWorldToScreen(&tilePos).y;
         //printf("(%i, %i)", i, j);
-        GCreateSprite(tileX, tileY, tileAnim, 0);
-        
+        //GCreateSprite(tileX, tileY, tileAnim, 0);
+        Sprite* newObj = GCreateSprite(tileX, tileY + 105, wall, 0);
+        newObj->offset.y = -9;
+      }
+
+      if (IsoTileGet(i, j) == 0)
+      {
+        Vector2D tilePos = Vec2(i, j);
+        float tileX = IsoWorldToScreen(&tilePos).x;
+        float tileY = IsoWorldToScreen(&tilePos).y;
+        //printf("(%i, %i)", i, j);
+        Sprite* newObj = GCreateSprite(tileX, tileY + 100, floor, 0);
+        newObj->offset.y = -4;
+
       }
 
       //FOR DEBUG PURPOSES:

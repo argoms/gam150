@@ -21,7 +21,7 @@ static int textWidth; /**< width of font*/
 */
 void TextInit()
 {
-  charFont = GCreateTexture("dffont.png");
+  charFont = GCreateTexture("animations/dffont.png");
   charMesh = GCreateMesh(32, 48, 16, 16);
   charAnim = GCreateAnimation(16, charFont, charMesh, 16);
   textHeight = 48;

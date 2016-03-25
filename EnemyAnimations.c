@@ -27,15 +27,26 @@ static AnimationDefinition animationSpiderWolf[] =
   { ENEMY_IDLE + ENEMY_RIGHT, "animations/spiderwolf/idleRight.png",  NULL },
   { ENEMY_IDLE + ENEMY_UP, "animations/spiderwolf/idleUp.png",  NULL },
   { ENEMY_IDLE + ENEMY_UP + ENEMY_LEFT, "animations/spiderwolf/idleUpLeft.png",  NULL },
-  { ENEMY_IDLE + ENEMY_UP + ENEMY_RIGHT, "animations/spiderwolf/idleUpRight.png",  NULL }
+  { ENEMY_IDLE + ENEMY_UP + ENEMY_RIGHT, "animations/spiderwolf/idleUpRight.png",  NULL },
+
+  { ENEMY_ATTACK + ENEMY_DOWN, "animations/spiderwolf/SwipeDown.png",  NULL },
+  { ENEMY_ATTACK + ENEMY_DOWN + ENEMY_LEFT, "animations/spiderwolf/SwipeDownLeft.png",  NULL },
+  { ENEMY_ATTACK + ENEMY_DOWN + ENEMY_RIGHT, "animations/spiderwolf/SwipeDownRight.png",  NULL },
+  { ENEMY_ATTACK + ENEMY_LEFT, "animations/spiderwolf/SwipeLeft.png",  NULL },
+  { ENEMY_ATTACK + ENEMY_RIGHT, "animations/spiderwolf/SwipeRight.png",  NULL },
+  { ENEMY_ATTACK + ENEMY_UP, "animations/spiderwolf/SwipeUp.png",  NULL },
+  { ENEMY_ATTACK + ENEMY_UP + ENEMY_LEFT, "animations/spiderwolf/SwipeUpLeft.png",  NULL },
+  { ENEMY_ATTACK + ENEMY_UP + ENEMY_RIGHT, "animations/spiderwolf/SwipeUpRight.png",  NULL }
 };
 
 void EnemyAnimationInitialize(GameObject* enemy)
 {
   int walkFrames = 16;
   int idleFrames = 1;
-  AEGfxVertexList* walkMesh = GCreateMesh(256.f, 256.f, walkFrames, 1);
-  AEGfxVertexList* idleMesh = GCreateMesh(256.f, 256.f, idleFrames, 1);
+  int attackFrames = 18;
+  AEGfxVertexList* walkMesh   = GCreateMesh(256.f, 256.f, walkFrames,   1);
+  AEGfxVertexList* idleMesh   = GCreateMesh(256.f, 256.f, idleFrames,   1);
+  AEGfxVertexList* attackMesh = GCreateMesh(256.f, 256.f, attackFrames, 1);
 
   int numAnimations = sizeof(animationSpiderWolf) / sizeof(AnimationDefinition);
 
@@ -44,7 +55,7 @@ void EnemyAnimationInitialize(GameObject* enemy)
   {
     int frames;
     AEGfxVertexList *mesh;
-    unsigned int maskedFlag = animationSpiderWolf[i].action & (ENEMY_IDLE + ENEMY_WALK);
+    unsigned int maskedFlag = animationSpiderWolf[i].action & (ENEMY_IDLE + ENEMY_WALK + ENEMY_ATTACK);
     switch (maskedFlag)
     {
     case ENEMY_IDLE:
@@ -55,18 +66,15 @@ void EnemyAnimationInitialize(GameObject* enemy)
       frames = walkFrames;
       mesh = walkMesh;
       break;
+    case ENEMY_ATTACK:
+      frames = attackFrames;
+      mesh = attackMesh;
     }
     animationSpiderWolf[i].animation = GCreateAnimation(frames, GCreateTexture(animationSpiderWolf[i].filename), mesh, 1);
   }
 
   enemy->sprite->animation = animationSpiderWolf[8].animation;
   enemy->sprite->offset.y = 60.0f;
-  /* Test code
-  enemy->sprite->animation = GCreateAnimation(idleFrames,
-  GCreateTexture("animations/spiderwolf/walkDown.png"),
-  idleMesh,
-  1);
-  */
 }
 
 void EnemyAnimationStateManager(GameObject* enemy)

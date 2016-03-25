@@ -18,6 +18,7 @@ Basic level/gamestate manager implementation.
 #include "Audio.h"
 #include "ParticleSystems(Redo).h"
 
+
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
 static AEGfxVertexList*	pMesh2;				/**< EXAMPLE VAR*/
 static AEGfxTexture *pTex1;/**< EXAMPLE VAR*/
@@ -60,22 +61,27 @@ void LevelLoad(int _level)
     break;
   case level_mainMenu:
     MainMenuInit();
-    Audio_PlayMusicStream("music_sample3.ogg", 0);
+    Audio_PlayMusicStream("EPOCH_main_theme.ogg", 1);
+    Audio_PauseMusicStream("music_sample3.ogg");
     break;
   case level_town:
     TownScreenInit();
     break;
   case level_deathScreen:
     DeathScreenInit();
-    level = 1;
-    Audio_PauseMusicStream("music_sample2A.ogg");
-    Audio_PauseMusicStream("music_sample4.ogg");
+    level = 0;
+    //Audio_PauseMusicStream("music_sample2A.ogg");
+    //Audio_PauseMusicStream("music_sample4.ogg");
+    Audio_PauseMusicStream("EPOCH_theme_funky.ogg");
     break;
   case level_splashScreen:
+    Audio_PlayMusicStream("music_sample3.ogg", 0);
     SplashScreenInit();
     break;
   case level_winScreen:
     WinScreenInit();
+    level = 0;
+    Audio_PauseMusicStream("EPOCH_theme_funky.ogg");
     break;
   }
 
@@ -253,8 +259,10 @@ void MainMenuRun()
       nextLevel = level_level1;
       break;
     }
-    Audio_PlayMusicStream("music_sample2A.ogg", 1);
-    Audio_PauseMusicStream("music_sample3.ogg");
+    //Audio_PlayMusicStream("music_sample4.ogg", 1);
+    //Audio_PauseMusicStream("music_sample3.ogg");
+    Audio_PauseMusicStream("EPOCH_main_theme.ogg");
+    Audio_PlayMusicStream("EPOCH_theme_funky.ogg", 1);
   }
   //
 }

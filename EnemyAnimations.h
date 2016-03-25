@@ -12,7 +12,7 @@ enum actions
 {
   ENEMY_IDLE = 16,
   ENEMY_WALK = 32,
-  ENEMY_SWORD = 64
+  ENEMY_ATTACK = 64
 };
 
 void EnemyAnimationInitialize(GameObject* enemy);
