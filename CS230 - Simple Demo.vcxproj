@@ -195,6 +195,7 @@
     <ClCompile Include="MyRandom.c" />
     <ClCompile Include="ParticleSystems(Redo).c" />
     <ClCompile Include="Physics.c" />
+    <ClCompile Include="PlayerAnimations.c" />
     <ClCompile Include="PlayerEntity.c" />
     <ClCompile Include="SplashScreen.c" />
     <ClCompile Include="Text.c" />

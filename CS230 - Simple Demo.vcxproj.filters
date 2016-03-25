@@ -88,6 +88,7 @@
       <Filter>Enemies</Filter>
     </ClCompile>
     <ClCompile Include="EntityAnimation.c" />
+    <ClCompile Include="PlayerAnimations.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -185,9 +186,6 @@
     <Filter Include="Back End">
       <UniqueIdentifier>{e461faf4-4fd7-4b51-86be-32d100cb3a91}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Enemies">
-      <UniqueIdentifier>{ef83058e-9d09-4e42-95b0-224d9a01de25}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Menu/UI">
       <UniqueIdentifier>{39296692-a01e-4d02-84b8-dd41f41145c3}</UniqueIdentifier>
     </Filter>
@@ -205,6 +203,9 @@
     </Filter>
     <Filter Include="Environmental Objects">
       <UniqueIdentifier>{d4af4932-55d9-4719-bd1e-9c61ed2c2f95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies">
+      <UniqueIdentifier>{ef83058e-9d09-4e42-95b0-224d9a01de25}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -77,6 +77,11 @@ void PlayerInit()
 
 
   player = GetPlayerObject();
+
+  //set up player health:
+  player->entity->health = 100;
+  //
+
   attackCooldown = 0;
   attackCooldownLength = 0.5;
   attackDamage = 50;
@@ -194,7 +199,7 @@ void PlayerSimulate()
     while (tempHP > 0)
     {
       count++;
-      hpstring[6 + count] = 2;
+      hpstring[6 + count] = 3;
       tempHP -= 10;
     }
     TextRemoveString(healthText);
