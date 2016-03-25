@@ -8,6 +8,7 @@ Contains functionality for entities- objects that can take/receive damage.
 #include "Entity.h"
 #include "GameObject.h"
 #include "DamageNumbers.h"
+#include "Dodge.h"
 
 #define BREIF_INVULNERABILITY_ENABLED  1    /* allow breif invulnerability after a hit    */
 #define BREIF_INVULNERABILITY_DISABLED 0    /* disallow brief invunerability after a hit  */

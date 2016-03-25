@@ -5,7 +5,7 @@
 \brief
 Prototypes for Particle Systems
 */
-
+#pragma once
 #ifndef PS_H
 #define PS_H
 
