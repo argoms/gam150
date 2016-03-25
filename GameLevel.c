@@ -41,6 +41,8 @@ static GameObject* player; /**< pointer to player object*/
 */
 void GameLevelInit(void)
 {
+	int i;
+
 	pPS_C = Create_PS_Continuous(2.0f, 5.0f, -1);
 
 	pPS_C->PS_Continuous->StartPosX = 2;
@@ -50,6 +52,29 @@ void GameLevelInit(void)
 
 	//pPS_B->PS_Burst->StartPosX = 2;
 	//pPS_B->PS_Burst->StartPosY = 2;
+
+	for (i = 0; i < 4; i++)
+	{
+		pDodgeSmoke[i] = Create_PS_Burst(2.0f, 10);
+		pDodgeSmoke[i]->PS_Burst->vpParticle_Create = Particle_Create_DodgeSmoke;
+	}
+
+	
+	for (i = 0; i < 2; i++)
+	{
+		pFireHazard[i] = Create_PS_Continuous(1.0f, 10, -1);
+		pFireHazard[i]->PS_Continuous->vpParticle_Create = Particle_Create_FireHazard;
+	}
+	
+	
+	pFireHazard[0]->PS_Continuous->StartPosX = 5;
+	pFireHazard[0]->PS_Continuous->StartPosY = 3;
+	Start_PS(pFireHazard[0]);
+
+	pFireHazard[1]->PS_Continuous->StartPosX = 3;
+	pFireHazard[1]->PS_Continuous->StartPosY = 5;
+	Start_PS(pFireHazard[1]);
+	
 
   printf("game level init\n");
   PhysicsInit();

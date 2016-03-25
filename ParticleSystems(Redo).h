@@ -10,7 +10,7 @@ Prototypes for Particle Systems
 #define PS_H
 
 //number of PSes to use.  THIS NUMBER MUST BE EQUAL TO THE TOTAL AMOUNT OF PS ASSETS YOU ARE CREATING
-#define PS_OBJ_INST_MAX 2
+#define PS_OBJ_INST_MAX 8
 
 typedef struct PS_Instance PS_Instance;
 typedef struct GameObject GameObject;
@@ -83,6 +83,9 @@ typedef struct PS_Instance
 //PS object instance list
 PS_Instance		goiaPS_ObjectInstanceList[PS_OBJ_INST_MAX];
 
+//PS spawn functions
+void SpawnDodgeSmokePS(float StartPosX, float StartPosY);
+
 //default PS behavior functions
 void Default_Particle_Create_Continuous(int i, PS_Instance *pPS_Inst);
 void Default_Particle_Create_Burst(int i, PS_Instance *pPS_Inst);
@@ -91,6 +94,41 @@ void Default_Particle_System_Update_Burst(PS_Instance *pPS_Inst, float frameTime
 void Default_Particle_Special_FX_Burst(void);
 void Default_Particle_Simulate(void);
 //default PS behavior functions
+
+//other PS behavior functions
+void Particle_Create_HitSplash(int i, PS_Instance *pPS_Inst);
+void Particle_Simulate_HitSplash(void);
+void Particle_Special_FX_HitSplash(void);
+
+void Particle_Create_DodgeSmoke(int i, PS_Instance *pPS_Inst);
+void Particle_Simulate_DodgeSmoke(void);
+void Particle_Special_FX_DodgeSmoke0(void);
+void Particle_Special_FX_DodgeSmoke1(void);
+void Particle_Special_FX_DodgeSmoke2(void);
+void Particle_Special_FX_DodgeSmoke3(void);
+
+void Particle_Create_FireHazard(int i, PS_Instance *pPS_Inst);
+void Particle_Simulate_FireHazard(void);
+void Particle_Special_FX_FireHazard0_0(void);
+void Particle_Special_FX_FireHazard1_0(void);
+void Particle_Special_FX_FireHazard0_1(void);
+void Particle_Special_FX_FireHazard1_1(void);
+void Particle_Special_FX_FireHazard0_2(void);
+void Particle_Special_FX_FireHazard1_2(void);
+void Particle_Special_FX_FireHazard0_3(void);
+void Particle_Special_FX_FireHazard1_3(void);
+void Particle_Special_FX_FireHazard0_4(void);
+void Particle_Special_FX_FireHazard1_4(void);
+void Particle_Special_FX_FireHazard0_5(void);
+void Particle_Special_FX_FireHazard1_5(void);
+void Particle_Special_FX_FireHazard0_6(void);
+void Particle_Special_FX_FireHazard1_6(void);
+void Particle_Special_FX_FireHazard0_7(void);
+void Particle_Special_FX_FireHazard1_7(void);
+void Particle_Special_FX_FireHazard0_8(void);
+void Particle_Special_FX_FireHazard1_8(void);
+void Particle_Special_FX_FireHazard0_9(void);
+void Particle_Special_FX_FireHazard1_9(void);
 
 
 void LoadAll_PS(void);	//call in level load function in level manager
@@ -112,5 +150,8 @@ void UnloadAll_PS(void);			//frees all memory occupied by PSs.
 PS_Instance *pPS_C;
 PS_Instance *pPS_B;
 
+//regular particle effect instances
+PS_Instance *pDodgeSmoke[4];
+PS_Instance *pFireHazard[2];
 
 #endif
