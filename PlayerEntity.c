@@ -194,7 +194,7 @@ void PlayerSimulate()
     while (tempHP > 0)
     {
       count++;
-      hpstring[6 + count] = 3;
+      hpstring[6 + count] = 2;
       tempHP -= 10;
     }
     TextRemoveString(healthText);
@@ -376,6 +376,8 @@ static void PlayerAttack()
   mousePos = IsoScreenToWorld(&mousePos);
   Vector2DNormalize(&mousePos, &mousePos);
   playerDirection = mousePos;
+
+  
   
   //EntityApplyKnockback(player->entity, &mousePos);
 
@@ -389,6 +391,8 @@ static void PlayerAttack()
   tracer->simulate = &TracerSimulate;
   tracer->physics->onCollision = &TracerFriendlyProjectileCollision;
 
+  Vector2DScale(&mousePos, &mousePos, 0.25);
+  EntityApplyKnockback(player->entity, &mousePos);
   printf("M1\n");
 }
 /*!
