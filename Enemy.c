@@ -32,6 +32,8 @@ GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entit
   enemy->enemyAI = (EnemyAI*)malloc(sizeof(EnemyAI));
   enemy->enemyAI->currentEnemyState = ENEMY_STATE_PATROL;
   enemy->enemyAI->EnemyStateStart = EnemyAI_Melee_PatrolStart;
+  enemy->enemyAI->EnemyStateUpdate = EnemyAI_Melee_PatrolUpdate;
+  enemy->enemyAI->EnemyStateExit = EnemyAI_Melee_PatrolExit;
 
   EnemyContainer* enemyContainer = (EnemyContainer*)malloc(sizeof(EnemyContainer));
   enemyContainer->enemyType = enemyType;
