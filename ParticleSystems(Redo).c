@@ -1265,7 +1265,7 @@ void UpdateAllPS_Inst(float frameTime)
 				if ((!(pPS_Inst->PS_Continuous->ShutDown)) && (pPS_Inst->PS_Continuous->EmitTimer < 0.0f) && (pPS_Inst->PS_Continuous->Particle[j] == NULL))
 				{
 					(pPS_Inst->PS_Continuous->vpParticle_Create)(j, pPS_Inst);
-					printf("Particle Create at %.3f x and %.3f y\n", pPS_Inst->PS_Continuous->Particle[j]->sprite->x, pPS_Inst->PS_Continuous->Particle[j]->sprite->y);
+					//printf("Particle Create at %.3f x and %.3f y\n", pPS_Inst->PS_Continuous->Particle[j]->sprite->x, pPS_Inst->PS_Continuous->Particle[j]->sprite->y);
 
 					pPS_Inst->PS_Continuous->RefreshTimer[j] = pPS_Inst->PS_Continuous->LifeTime;
 

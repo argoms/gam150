@@ -213,7 +213,7 @@ void PlayerSimulate()
 */
 void PlayerInput()
 {
-  printf("frame %i \n", playerSprite->frame);
+  //printf("frame %i \n", playerSprite->frame);
   //attacking:
   if (attackCooldown < 0 && AEInputCheckCurr(1))
   {

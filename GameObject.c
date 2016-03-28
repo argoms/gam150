@@ -43,12 +43,22 @@ GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _
 {
   
   GameObject* newGameObject = (GameObject*) malloc(sizeof(GameObject));
-  newGameObject->sprite = _sprite;
-  
+  if (_sprite)
+  {
+    newGameObject->sprite = _sprite;
+  }
+  else
+  {
+    newGameObject->sprite = NULL;
+  }
   if (_physics)
   {
     newGameObject->physics = _physics;
     newGameObject->physics->owner = newGameObject;
+  }
+  else
+  {
+    newGameObject->physics = NULL;
   }
 
   newGameObject->entity = _entity;

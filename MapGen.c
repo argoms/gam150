@@ -12,14 +12,40 @@ Functions for procedurally generating game levels.
 #include "ImportData.h"
 #include "GameLevel.h"
 #include "Door.h"
+#include "Gate.h"
 
 //private info (would be defines but you can't make those private?
 
-#define NUM_ROOMS 2
+#define NUM_ROOMS 5
 
 //Think of this as MAX room size, not just room size.
 static int ROOM_SIZE = 22; /**< Room size, subtract 2 from this due to increased wall thickness*/
 
+
+//state enums for each room
+enum MapGen_RoomStates
+{
+  roomstate_inactive, 
+  roomstate_active,
+  roomstate_cleared
+};
+
+enum MapGen_RoomTypes
+{
+  roomtype_simple
+};
+
+typedef struct MapRoom MapRoom;
+/*!
+\struct MapRoom
+\brief contains a full room of objects
+*/
+struct MapRoom
+{
+  int type;
+  int state;
+  GameObject* gates[4];
+};
 
 //static enums/structs:
 static enum directions
@@ -46,51 +72,6 @@ void GenerateMap(IsoMap* inputMap)
   int i = 0;
   int j = 0;
 
-
-  /*
-  //borders:
-  while (i < mapWidth)
-  {
-    j = 0;
-    while (j < mapHeight)
-    {
-      //printf("%iaa", j);
-      if (i == 0 || i == mapWidth - 1 || j == 0 || j == mapHeight - 1)
-      {
-        IsoTileSet(i, j, 1);
-      }
-      else
-      {
-        IsoTileSet(i, j, 0);
-        //printf("a");
-      }
-      j++;
-      
-    }
-    i++;
-  }
-
-  i = 1;
-  j = 1;
-
-  //create some walls around arbitrary rooms:
-  while (i < mapWidth - 1)
-  {
-    j = 1;
-    while (j < mapHeight - 1)
-    {
-      //printf("%iaa", j);
-      if ((i % ROOM_SIZE == 0 || j % ROOM_SIZE == 0)
-        || ((i + 1) % ROOM_SIZE == 0 || (j + 1) % ROOM_SIZE == 0)
-        || ((i - 1) % ROOM_SIZE == 0 || (j - 1) % ROOM_SIZE == 0))
-      {
-        IsoTileSet(i, j, 1);
-      }
-      j++;
-    }
-    i++;
-  }
-  */
   //the following code combines the upper two things into one loop. Seriously, that's like half the number of operations, it's not premature optimization :I 
   //create borders and ROOM_SIZE-sized rooms:
   while (i < mapWidth)
@@ -153,7 +134,12 @@ void GenerateMap(IsoMap* inputMap)
       }
 
       //fill the path between rooms:
+      //tile 2 (path) for default, tile 3 (gate) for door areas
       FillLine(cursor, newCursorPosition, 2);
+      if (IsoTileGet(cursor.x, cursor.y))
+      {
+        printf("MAP TILE", IsoTileGet(cursor.x, cursor.y));
+      }
       cursor = newCursorPosition;
 
 
@@ -176,9 +162,12 @@ void GenerateMap(IsoMap* inputMap)
       continue; //as if I have to tell you, you silly program.
     }
   }
+
+  //discount exceptions
   if (tries > NUM_ROOMS * 100)
   {
     printf("MapGen.c: seriously your algorithm is fucked, look at it. Re-generating map.");
+    abort();
     //GenerateMap(inputMap); //comment this back in for release, but while debugging keep it out to avoid recursion.
   }
 
@@ -201,7 +190,9 @@ static void FillLine(Vector2D position1, Vector2D position2, int newValue)
   {
     Vector2DAdd(&position1, &position1, &unitVector);
     //IsoTileSet((int)position1.x, (int)position1.y, newValue);
+    
     IsoSquareSet(position1, newValue);
+    //IsoSquareSet(position1, IsoTileGet(position1.x + unitVector.x * 2, position1.y + unitVector.y * 2) == 1 ? 3 : 2);
     i++; //fuck your ++i
   }
 }
@@ -282,8 +273,38 @@ static void FillArea(int x, int y, int tileType)
 */
 static void Room_BasicEnemies(Vector2D cursor)
 {
+  
+  GameObject* newRoom = GameObjectCreate(0, 0, 0, 999); //999 is placeholder, should be enum later
+  newRoom->simulate = &GateRoomSimulate;
+
+  MapRoom* newMiscData = malloc(sizeof(MapRoom));
+  newMiscData->state = roomstate_inactive;
+  //newMiscData->gates[0] = 1;
+
+  newRoom->miscData = newMiscData;
+  
+
+  
   ImportEnemyData(cursor.x, cursor.y, "Level1EnemyRanged2.txt", GetPlayerObject());
 
   ImportEnemyData(cursor.x + 5, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
-  ImportEnemyData(cursor.x - 5, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
+  //ImportEnemyData(cursor.x - 5, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
+
+  if (IsoTileGet(cursor.x + ROOM_SIZE / 2, cursor.y) == 2)
+  {
+    //GameObject* CreateWorldGate(Vector2D position);
+    IsoTileSet(cursor.x + ROOM_SIZE / 2, cursor.y, 3);
+  }
+  if (IsoTileGet(cursor.x - ROOM_SIZE / 2, cursor.y) == 2)
+  {
+    IsoTileSet(cursor.x - ROOM_SIZE / 2, cursor.y, 3);
+  }
+  if (IsoTileGet(cursor.x, cursor.y - ROOM_SIZE / 2) == 2)
+  {
+    IsoTileSet(cursor.x, cursor.y - ROOM_SIZE / 2, 3);
+  }
+  if (IsoTileGet(cursor.x, cursor.y - ROOM_SIZE / 2) == 2)
+  {
+    IsoTileSet(cursor.x, cursor.y - ROOM_SIZE / 2, 3);
+  }
 }

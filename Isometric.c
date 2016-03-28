@@ -11,7 +11,7 @@ Isometric tilemap implementation. Contains functions relating to tilemaps and is
 #include <stdlib.h>
 #include "MapGen.h"
 #include "MapCreator.h"
-
+#include "Gate.h"
 static IsoMap* gameMap; /**< contains currently active game map*/
 
 
@@ -204,6 +204,12 @@ void IsoSpawnMap()
         //printf("(%i, %i)", i, j);
         Sprite* newObj = GCreateSprite(tileX, tileY, tileAnim2, 0);
         newObj->tint.alpha = 0.1;
+      }
+
+      if (IsoTileGet(i, j) == 3)
+      {
+        Vector2D tilePos = Vec2(i, j);
+        CreateWorldGate(tilePos);
       }
       j++;
     }
