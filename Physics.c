@@ -137,7 +137,10 @@ void PhysicsSimulate()
 
       Vector2DAdd(&instance->position, &instance->position, &instance->velocity);
       PhysicsTileCollisions(instance);
-      GSortSprite(instance->owner->sprite, 0);
+      if (instance->owner->sprite)
+      {
+        GSortSprite(instance->owner->sprite, 0);
+      }
       
       
       //printf("%3f | %3f", instance->position.x, instance->position.y);
@@ -474,7 +477,7 @@ static void PhysicsIsInsideTile(PhysicsObject* _instance)
 Because seriously, passing by pointer just makes things more annoying when the object you're passing is exactly 8 bytes in size anyway.
 \return Returns the distance between _pos1 and _pos2 squared.
 */
-static float PhysicsDistSQ(Vector2D _pos1, Vector2D _pos2)
+float PhysicsDistSQ(Vector2D _pos1, Vector2D _pos2)
 {
   //printf("%f", (_pos1.x - _pos2.x) * (_pos1.x - _pos2.x) + (_pos1.y - _pos2.y) * (_pos1.y - _pos2.y));
   return (_pos1.x - _pos2.x) * (_pos1.x - _pos2.x) + (_pos1.y - _pos2.y) * (_pos1.y - _pos2.y);

@@ -1,11 +1,9 @@
 #include "Gate.h"
 #include "GameObject.h"
 #include "Isometric.h"
-enum WorldGateStates
-{
-  closed,
-  open
-};
+#include "GameLevel.h"
+#include "Physics.h"
+#include "MapGen.h"
 
 struct WorldGate
 {
@@ -35,8 +33,15 @@ GameObject* CreateWorldGate(Vector2D position)
   newGate->miscData = (WorldGate*)malloc(sizeof(WorldGate));
   ((WorldGate*)(newGate->miscData))->positionX = position.x;
   ((WorldGate*)(newGate->miscData))->positionY = position.y;
-  IsoTileSet(position.x, position.y, 1);
+
+  newGate->sprite->tint.alpha = 0.1f;
+
+  printf("created a gate.\n");
+  return newGate;
+  //IsoTileSet(position.x, position.y, 1);
 }
+
+
 
 /*!
 \brief Killed the gate! D:
@@ -69,4 +74,19 @@ void GateAddEnemy(GameObject* Target)
 */
 void GateRoomSimulate(GameObject* instance)
 {
+  if (instance->type != entity_room)
+  {
+    printf("You've assigned gateroomsimulate badly. Oops.");
+    abort();
+  }
+
+  int roomRadius = (GetRoomSize(instance) - 2) / 2;
+  if (PhysicsDistSQ(GetPlayerObject()->physics->position, instance->physics->position) < roomRadius * roomRadius)
+  {
+    //clear the sim function on gameobject after one execution:
+    instance->simulate = NULL;
+    CloseRoom(instance);
+    printf("\n \n *** \n room closed \n \n *** \n");
+  }
+  //GetPlayerObject()->physics->position;
 }

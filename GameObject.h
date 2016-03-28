@@ -28,7 +28,8 @@ enum GameObjectNames {
   //entity_health_bar /**< health bar */
   entity_particle, /**< particle that doesn't affect other game objects*/
   entity_damageText, /**< visual indicator for damage dealt*/
-  entity_gate /**< opens after clearing a room*/
+  entity_gate, /**< opens after clearing a room*/
+  entity_room /**< used for entire rooms*/
 };
 
 // SET THE NUMBERS IN COMMENTS FOR THE ENEMIES TEXT FILE

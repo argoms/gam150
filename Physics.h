@@ -55,5 +55,6 @@ void PhysicsSimulate();
 static void PhysicsTileCollisions(PhysicsObject* _instance);
 static void PhysicsIsInsideTile(PhysicsObject* _instance);
 void PhysicsRemoveObject(PhysicsObject** _input);
+float PhysicsDistSQ(Vector2D _pos1, Vector2D _pos2);
 
 void PhysicsSetVelocity(PhysicsObject* _instance, float x, float y);

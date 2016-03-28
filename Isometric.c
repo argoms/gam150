@@ -132,9 +132,12 @@ int IsoTileGet(int _x, int _y)
 */
 void IsoTileSet(int _x, int _y, int _newValue)
 {
-  //printf("%i|", gameMap->map[_x + (_y * gameMap->mapWidth)]);
-  gameMap->map[_x + (_y * gameMap->mapWidth)] = _newValue;
-  //printf("%i|", gameMap->map[_x + (_y * gameMap->mapWidth)]);
+  if (_x > -1 && _y > -1 && _x < gameMap->mapWidth && _y < gameMap->mapHeight)
+  {
+    //printf("%i|", gameMap->map[_x + (_y * gameMap->mapWidth)]);
+    gameMap->map[_x + (_y * gameMap->mapWidth)] = _newValue;
+    //printf("%i|", gameMap->map[_x + (_y * gameMap->mapWidth)]);
+  }
 }
 
 /*!
