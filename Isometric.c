@@ -183,8 +183,8 @@ void IsoSpawnMap()
         float tileY = IsoWorldToScreen(&tilePos).y;
         //printf("(%i, %i)", i, j);
         //GCreateSprite(tileX, tileY, tileAnim, 0);
-        Sprite* newObj = GCreateSprite(tileX, tileY + 105, wall, 0);
-        newObj->offset.y = -9;
+       // Sprite* newObj = GCreateSprite(tileX, tileY + 105, wall, 0);
+     //   newObj->offset.y = -9;
       }
 
       if (IsoTileGet(i, j) == 0)

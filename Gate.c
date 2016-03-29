@@ -4,6 +4,7 @@
 #include "GameLevel.h"
 #include "Physics.h"
 #include "MapGen.h"
+#include "Text.h"
 
 struct WorldGate
 {
@@ -36,7 +37,7 @@ GameObject* CreateWorldGate(Vector2D position)
 
   newGate->sprite->tint.alpha = 0.1f;
 
-  printf("created a gate.\n");
+  printf("created a gate. %f, %f\n", position.x, position.y);
   return newGate;
   //IsoTileSet(position.x, position.y, 1);
 }
@@ -88,5 +89,6 @@ void GateRoomSimulate(GameObject* instance)
     CloseRoom(instance);
     printf("\n \n *** \n room closed \n \n *** \n");
   }
-  //GetPlayerObject()->physics->position;
+
+
 }

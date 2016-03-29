@@ -16,12 +16,12 @@ Functions for procedurally generating game levels.
 
 //private info (would be defines but you can't make those private?
 
-#define NUM_ROOMS 2
+#define NUM_ROOMS 5
 
 //Think of this as MAX room size, not just room size.
-static int ROOM_SIZE = 22; /**< Room size, subtract 2 from this due to increased wall thickness*/
+static int ROOM_SIZE = 17;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/
 
-
+typedef struct MapRoom MapRoom;
 //state enums for each room
 enum MapGen_RoomStates
 {
@@ -32,10 +32,11 @@ enum MapGen_RoomStates
 
 enum MapGen_RoomTypes
 {
-  roomtype_simple
+  roomtype_simple,
+  roomtype_start
 };
 
-typedef struct MapRoom MapRoom;
+
 /*!
 \struct MapRoom
 \brief contains a full room of objects
@@ -43,10 +44,14 @@ typedef struct MapRoom MapRoom;
 struct MapRoom
 {
   int type;
-  int state;
-  int size;
+  int state; //see MapGen_RoomStates enum
+  int size; //height/width of room (square rooms)
+  int numEnemies; // number of enemies still alive in room
+  
   Vector2D position;
   GameObject* gates[4];
+
+  int roomNum; //internal, order of creation
 };
 
 //static enums/structs:
@@ -65,6 +70,8 @@ static void FillArea(int x, int y);
 static int isValid(Vector2D position, IsoMap* map);
 static void IsoSquareSet(Vector2D position, int newValue);
 static void Room_BasicEnemies(Vector2D cursor);
+static void RoomTemplate(Vector2D cursor, int spawnGates);
+static void Room_StartRoom(Vector2D cursor);
 
 //implementation:
 void GenerateMap(IsoMap* inputMap)
@@ -105,8 +112,16 @@ void GenerateMap(IsoMap* inputMap)
   //create path of rooms:
 
   Vector2D cursor = Vec2(ROOM_SIZE / 2, ROOM_SIZE / 2); //create a "cursor" for the rooms, starting at the spawn room
-  int rooms_created = 0;
+  int rooms_created = 1;
   int tries = 0; //infinite loop killer
+
+  //generate a room for start
+  rooms[roomsNum].type = roomtype_start;
+  rooms[roomsNum].position.x = cursor.x;
+  rooms[roomsNum].position.y = cursor.y;
+  printf("room: %f, %f, int %i START ROOM\n", rooms[roomsNum].position.x, rooms[roomsNum].position.y, roomsNum);
+
+  roomsNum++;
 
   //start creating rooms:
   while (rooms_created < NUM_ROOMS && tries++ < NUM_ROOMS * 100)
@@ -186,11 +201,27 @@ void GenerateMap(IsoMap* inputMap)
 
   //spawn rooms:
   i = 0;
-  while (i < roomsNum - 1)
+  while (i < NUM_ROOMS)
   {
-    Room_BasicEnemies(rooms[i].position);
+    if (rooms[i].type == roomtype_start)
+    {
+      Room_StartRoom(rooms[i].position);
+      printf("startroom");
+    }
+    else
+    {
+      Room_BasicEnemies(rooms[i].position);
+    }
     printf("room: %f, %f, %i \n \n", rooms[i].position.x, rooms[i].position.y, rooms[i].type);
     i++;
+    /*
+
+    else if (i == 1)
+    {
+    printf("whyisthisdoingnothing");
+    DoorCreateDoorAt(rooms[i].position);
+    }
+    */
   }
   
 }
@@ -288,14 +319,26 @@ static void FillArea(int x, int y, int tileType)
 
 }
 
-/*!
-\brief Spawns a room of basic enemies
-*/
 static void Room_BasicEnemies(Vector2D cursor)
+{
+  RoomTemplate(cursor, 1);
+}
+
+static void Room_StartRoom(Vector2D cursor)
+{
+  RoomTemplate(cursor, 0);
+}
+
+/*!
+\brief Basic room setup/initialization
+\param cursor Location to set up room.
+\param spawnGates whether or not to spawn gate objects.
+*/
+static void RoomTemplate(Vector2D cursor, int spawnGates)
 {
   
   GameObject* newRoom = GameObjectCreate(PhysicsCreateObject(cursor, 0), 0, 0, entity_room); //999 is placeholder, should be enum later
-  newRoom->simulate = &GateRoomSimulate;
+  
   newRoom->syncSpritePhysics = 0;
 
   MapRoom* newMiscData = malloc(sizeof(MapRoom));
@@ -305,49 +348,59 @@ static void Room_BasicEnemies(Vector2D cursor)
   
   //ImportEnemyData(cursor.x, cursor.y, "Level1EnemyRanged2.txt", GetPlayerObject());
 
-  //ImportEnemyData(cursor.x + 5, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
+  ImportEnemyData(cursor.x + 5, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
   //ImportEnemyData(cursor.x - 5, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
 
-
-  if (IsoTileGet(cursor.x + ROOM_SIZE / 2, cursor.y) == 2)
+  if (spawnGates) //assign gates where space exists
   {
-    //GameObject* CreateWorldGate(Vector2D position);
+    newRoom->simulate = &GateRoomSimulate;
+    if (IsoTileGet(cursor.x + ROOM_SIZE / 2, cursor.y) == 2)
+    {
+      //GameObject* CreateWorldGate(Vector2D position);
 
-    newMiscData->gates[0] = CreateWorldGate(Vec2(cursor.x + ROOM_SIZE / 2, cursor.y));
-    //IsoTileSet(cursor.x + ROOM_SIZE / 2, cursor.y, 3);
+      newMiscData->gates[0] = CreateWorldGate(Vec2(cursor.x + ROOM_SIZE / 2, cursor.y));
+      //IsoTileSet(cursor.x + ROOM_SIZE / 2, cursor.y, 3);
+    }
+    else
+    {
+      newMiscData->gates[0] = NULL;
+    }
+
+    if (IsoTileGet(cursor.x - ROOM_SIZE / 2, cursor.y) == 2)
+    {
+      newMiscData->gates[1] = CreateWorldGate(Vec2(cursor.x - ROOM_SIZE / 2, cursor.y));
+    }
+    else
+    {
+      newMiscData->gates[1] = NULL;
+    }
+
+    if (IsoTileGet(cursor.x, cursor.y - ROOM_SIZE / 2) == 2)
+    {
+      newMiscData->gates[2] = CreateWorldGate(Vec2(cursor.x, cursor.y - ROOM_SIZE / 2));
+    }
+    else
+    {
+      newMiscData->gates[2] = NULL;
+    }
+
+    if (IsoTileGet(cursor.x, cursor.y + ROOM_SIZE / 2) == 2)
+    {
+      newMiscData->gates[3] = CreateWorldGate(Vec2(cursor.x, cursor.y + ROOM_SIZE / 2));
+    }
+    else
+    {
+      newMiscData->gates[3] = NULL;
+    }
   }
   else
   {
-    newMiscData->gates[0] = NULL;
+    newRoom->simulate = NULL;
+    for (int i = 0; i < 4; i++)
+    {
+      newMiscData->gates[i] = NULL;
+    }
   }
-
-  if (IsoTileGet(cursor.x - ROOM_SIZE / 2, cursor.y) == 2)
-  {
-    newMiscData->gates[1] = CreateWorldGate(Vec2(cursor.x - ROOM_SIZE / 2, cursor.y));
-  }
-  else
-  {
-    newMiscData->gates[1] = NULL;
-  }
-
-  if (IsoTileGet(cursor.x, cursor.y - ROOM_SIZE / 2) == 2)
-  {
-    newMiscData->gates[2] = CreateWorldGate(Vec2(cursor.x, cursor.y - ROOM_SIZE / 2));
-  }
-  else
-  {
-    newMiscData->gates[2] = NULL;
-  }
-
-  if (IsoTileGet(cursor.x, cursor.y - ROOM_SIZE / 2) == 2)
-  {
-    newMiscData->gates[3] = CreateWorldGate(Vec2(cursor.x, cursor.y - ROOM_SIZE / 2));
-  }
-  else
-  {
-    newMiscData->gates[3] = NULL;
-  }
-
   newRoom->miscData = newMiscData;
 }
 
@@ -386,7 +439,7 @@ void CloseRoom(GameObject* room)
   //safety
   if (room->type != entity_room)
   {
-    printf("Why are you opening a non-room object");
+    printf("Why are you closing a non-room object");
     abort();
   }
 
@@ -405,8 +458,6 @@ void CloseRoom(GameObject* room)
     }
     i++;
   }
-
-
 }
 
 /*!
@@ -421,4 +472,14 @@ int GetRoomSize(GameObject* room)
 
   MapRoom* roomData = (MapRoom*)(room->miscData);
   return roomData->size;
+}
+
+
+void EnemyKilled(GameObject* room)
+{
+  MapRoom* roomData = (MapRoom*)(room->miscData);
+  if (roomData->numEnemies < 1)
+  {
+    OpenRoom(room);
+  }
 }
