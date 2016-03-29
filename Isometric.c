@@ -102,6 +102,10 @@ int IsoTileGet(int _x, int _y)
   {
     return gameMap->map[_x + (_y * gameMap->mapWidth)];
   }
+  else
+  {
+    return tile_error;
+  }
 }
 
 /*!

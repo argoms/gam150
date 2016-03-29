@@ -16,7 +16,7 @@ Functions for procedurally generating game levels.
 
 //private info (would be defines but you can't make those private?
 
-#define NUM_ROOMS 5
+#define NUM_ROOMS 6
 
 //Think of this as MAX room size, not just room size.
 static int ROOM_SIZE = 17;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/
@@ -72,6 +72,7 @@ static void IsoSquareSet(Vector2D position, int newValue);
 static void Room_BasicEnemies(Vector2D cursor);
 static void RoomTemplate(Vector2D cursor, int spawnGates);
 static void Room_StartRoom(Vector2D cursor);
+static void SetupBaseMap(int mapWidth, int mapHeight);
 
 //implementation:
 void GenerateMap(IsoMap* inputMap)
@@ -84,31 +85,8 @@ void GenerateMap(IsoMap* inputMap)
   int roomsNum = 0;
   MapRoom rooms[NUM_ROOMS];
 
-  //the following code combines the upper two things into one loop. Seriously, that's like half the number of operations, it's not premature optimization :I 
-  //create borders and ROOM_SIZE-sized rooms:
-  while (i < mapWidth)
-  {
-    j = 0;
-    while (j < mapHeight)
-    {
-      //printf("%iaa", j);
-      if (i == 0 || i == mapWidth - 1 || j == 0 || j == mapHeight - 1 || (i % ROOM_SIZE == 0 || j % ROOM_SIZE == 0)
-        || ((i + 1) % ROOM_SIZE == 0 || (j + 1) % ROOM_SIZE == 0)
-        || ((i - 1) % ROOM_SIZE == 0 || (j - 1) % ROOM_SIZE == 0))
-      {
-        IsoTileSet(i, j, 1);
-      }
-      else
-      {
-        IsoTileSet(i, j, 0);
-        //printf("a");
-      }
-      j++;
-
-    }
-    i++;
-  }
-
+  
+  SetupBaseMap(mapWidth, mapHeight);
   //create path of rooms:
 
   Vector2D cursor = Vec2(ROOM_SIZE / 2, ROOM_SIZE / 2); //create a "cursor" for the rooms, starting at the spawn room
@@ -226,6 +204,36 @@ void GenerateMap(IsoMap* inputMap)
   
 }
 
+/*!
+\brief Sets up a basic map grid with ROOM_SIZE-sized rooms.
+*/
+static void SetupBaseMap(int mapWidth, int mapHeight)
+{
+  int i = 0;
+  int j = 0;
+  while (i < mapWidth)
+  {
+    j = 0;
+    while (j < mapHeight)
+    {
+      //printf("%iaa", j);
+      if (i == 0 || i == mapWidth - 1 || j == 0 || j == mapHeight - 1 || (i % ROOM_SIZE == 0 || j % ROOM_SIZE == 0)
+        || ((i + 1) % ROOM_SIZE == 0 || (j + 1) % ROOM_SIZE == 0)
+        || ((i - 1) % ROOM_SIZE == 0 || (j - 1) % ROOM_SIZE == 0))
+      {
+        IsoTileSet(i, j, 1);
+      }
+      else
+      {
+        IsoTileSet(i, j, 0);
+        //printf("a");
+      }
+      j++;
+
+    }
+    i++;
+  }
+}
 /*!
 \brief Fills a line between two given vector2Ds
 */

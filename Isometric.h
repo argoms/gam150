@@ -10,6 +10,7 @@ Isometric tilemap implementation. Contains functions relating to tilemaps and is
 
 enum tileTypes
 {
+  tile_error = -4357,
   tile_empty = -1,
   tile_floor = 0,
   tile_wall = 1,
