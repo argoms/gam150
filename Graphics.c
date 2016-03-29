@@ -59,7 +59,7 @@ void GRender()
       AEGfxSetTintColor(spriteIndex->tint.red, spriteIndex->tint.green, spriteIndex->tint.blue, spriteIndex->tint.alpha);
       if (spriteIndex->specialFX != NULL)
       {
-        spriteIndex->specialFX();
+        spriteIndex->specialFX(spriteIndex);
       }
 
       AEGfxSetTransparency(1.0f);

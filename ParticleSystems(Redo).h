@@ -10,10 +10,11 @@ Prototypes for Particle Systems
 #define PS_H
 
 //number of PSes to use.  THIS NUMBER MUST BE EQUAL TO THE TOTAL AMOUNT OF PS ASSETS YOU ARE CREATING
-#define PS_OBJ_INST_MAX 8
+#define PS_OBJ_INST_MAX 128
 
 typedef struct PS_Instance PS_Instance;
 typedef struct GameObject GameObject;
+typedef struct Sprite Sprite;
 
 //state-perserved, continuous PS
 typedef struct PS_Continuous
@@ -82,33 +83,43 @@ typedef struct PS_Instance
 
 //PS object instance list
 PS_Instance		goiaPS_ObjectInstanceList[PS_OBJ_INST_MAX];
+float           VectorX, VectorY;
 
 //PS spawn functions
 void SpawnDodgeSmokePS(float StartPosX, float StartPosY);
+void SpawnDodgeSmokePS2(float StartPosX, float StartPosY);
+void SpawnFireHazardPS(float StartPosX, float StartPosY);
+void SpawnHitSplashPS(float StartPosX, float StartPosY);
 
 //default PS behavior functions
 void Default_Particle_Create_Continuous(int i, PS_Instance *pPS_Inst);
 void Default_Particle_Create_Burst(int i, PS_Instance *pPS_Inst);
 void Default_Particle_System_Update_Continuous(PS_Instance *pPS_Inst, float frameTime);
 void Default_Particle_System_Update_Burst(PS_Instance *pPS_Inst, float frameTime);
-void Default_Particle_Special_FX_Burst(void);
+void Default_Particle_Special_FX_Burst(Sprite *Owner);
 void Default_Particle_Simulate(void);
 //default PS behavior functions
 
 //other PS behavior functions
 void Particle_Create_HitSplash(int i, PS_Instance *pPS_Inst);
 void Particle_Simulate_HitSplash(void);
-void Particle_Special_FX_HitSplash(void);
+void Particle_Special_FX_HitSplash(Sprite *Owner);
+
+void Particle_Create_DodgeSmoke2(int i, PS_Instance *pPS_Inst);
+void Particle_Simulate_DodgeSmoke2(void);
+void Particle_Special_FX_DodgeSmoke2(Sprite *Owner);
 
 void Particle_Create_DodgeSmoke(int i, PS_Instance *pPS_Inst);
 void Particle_Simulate_DodgeSmoke(void);
-void Particle_Special_FX_DodgeSmoke0(void);
-void Particle_Special_FX_DodgeSmoke1(void);
-void Particle_Special_FX_DodgeSmoke2(void);
-void Particle_Special_FX_DodgeSmoke3(void);
+void Particle_Special_FX_DodgeSmoke(Sprite *Owner);
+//void Particle_Special_FX_DodgeSmoke0(void);
+//void Particle_Special_FX_DodgeSmoke1(void);
+//void Particle_Special_FX_DodgeSmoke2(void);
+//void Particle_Special_FX_DodgeSmoke3(void);
 
 void Particle_Create_FireHazard(int i, PS_Instance *pPS_Inst);
 void Particle_Simulate_FireHazard(void);
+void Particle_Special_FX_FireHazard(Sprite *Owner);
 void Particle_Special_FX_FireHazard0_0(void);
 void Particle_Special_FX_FireHazard1_0(void);
 void Particle_Special_FX_FireHazard0_1(void);
@@ -152,6 +163,7 @@ PS_Instance *pPS_B;
 
 //regular particle effect instances
 PS_Instance *pDodgeSmoke[4];
+PS_Instance *pHitSplash[4];
 PS_Instance *pFireHazard[2];
 
 #endif
