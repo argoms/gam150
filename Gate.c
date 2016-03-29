@@ -19,6 +19,7 @@ struct WorldGate
 */
 GameObject* CreateWorldGate(Vector2D position)
 {
+
   Entity* gateEntity = malloc(sizeof(Entity));
   gateEntity->health = 5;
 
