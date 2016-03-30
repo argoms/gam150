@@ -13,13 +13,15 @@ Functions for procedurally generating game levels.
 #include "GameLevel.h"
 #include "Door.h"
 #include "Gate.h"
+#include "MyRandom.h"
 
 //private info (would be defines but you can't make those private?
 
 #define NUM_ROOMS 6
 
 //Think of this as MAX room size, not just room size.
-static int ROOM_SIZE = 17;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/
+static int ROOM_SIZE = 12;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/
+static int MAP_SEED = 5;
 
 typedef struct MapRoom MapRoom;
 //state enums for each room
@@ -82,10 +84,14 @@ void GenerateMap(IsoMap* inputMap)
   int i = 0;
   int j = 0;
 
+  
+
+  RandSeed(MAP_SEED);
+  printf("\n \n \n GENERATING MAP WITH SEED %i, rands: %f %f %f \n \n \n", MAP_SEED, RandFloat(), RandFloat(), RandFloat());
+  
   int roomsNum = 0;
   MapRoom rooms[NUM_ROOMS];
 
-  
   SetupBaseMap(mapWidth, mapHeight);
   //create path of rooms:
 
@@ -104,7 +110,7 @@ void GenerateMap(IsoMap* inputMap)
   //start creating rooms:
   while (rooms_created < NUM_ROOMS && tries++ < NUM_ROOMS * 100)
   {
-    int direction = (int)(AERandFloat() * 4); //random direction
+    int direction = (int)(RandFloat() * 4); //random direction
     Vector2D offset = directionOffsetGet(direction); //turn that random stupid number into an actual random direction
     Vector2DScale(&offset, &offset, ROOM_SIZE);
 
@@ -120,7 +126,7 @@ void GenerateMap(IsoMap* inputMap)
       if (IsoTileGet((int)newCursorPosition.x, (int)newCursorPosition.y) == 2)
       {
         //if it does, there's a 50% chance that we don't do anything with it
-        if (AERandFloat() < 0.5)
+        if (RandFloat() < 0.5)
         {
           continue;
         }
@@ -190,7 +196,7 @@ void GenerateMap(IsoMap* inputMap)
     {
       Room_BasicEnemies(rooms[i].position);
     }
-    printf("room: %f, %f, %i \n \n", rooms[i].position.x, rooms[i].position.y, rooms[i].type);
+    //printf("room: %f, %f, %i \n \n", rooms[i].position.x, rooms[i].position.y, rooms[i].type);
     i++;
     /*
 
@@ -354,9 +360,9 @@ static void RoomTemplate(Vector2D cursor, int spawnGates)
   newMiscData->size = ROOM_SIZE;
   //newMiscData->gates[0] = 1;
   
-  //ImportEnemyData(cursor.x, cursor.y, "Level1EnemyRanged2.txt", GetPlayerObject());
+  ImportEnemyData(cursor.x, cursor.y, "Level1EnemyRanged2.txt", GetPlayerObject());
 
-  ImportEnemyData(cursor.x + 5, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
+  //ImportEnemyData(cursor.x, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
   //ImportEnemyData(cursor.x - 5, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
 
   if (spawnGates) //assign gates where space exists

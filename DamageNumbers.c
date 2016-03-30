@@ -63,7 +63,7 @@ GameObject* DamageTextCreate(Vector2D position, int damage)
 */
 void DamageTextSimulate(GameObject* instance)
 {
-  printf("3TEXTY5YOU");
+  //printf("3TEXTY5YOU");
   DamageText* instanceData = (DamageText*)(instance->miscData);
   TextStringAddOffset(instanceData->text, Vec2(0, 1));
   
