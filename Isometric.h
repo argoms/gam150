@@ -7,13 +7,15 @@ Isometric tilemap implementation. Contains functions relating to tilemaps and is
 */
 #pragma once
 #include "Vector2D.h"
-/*
+
 enum tileTypes
 {
-  empty = 0,
-  wall = 1,
-  floor = 2
-};*/
+  tile_error = -4357,
+  tile_empty = -1,
+  tile_floor = 0,
+  tile_wall = 1,
+  tile_path = 2
+};
 
 
 

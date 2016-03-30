@@ -41,6 +41,7 @@ static GameObject* player; /**< pointer to player object*/
 */
 void GameLevelInit(void)
 {
+  Entity* playerEntity;
 	int i;
 
 	pPS_C = Create_PS_Continuous(2.0f, 5.0f, -1);
@@ -109,7 +110,7 @@ void GameLevelInit(void)
 
   
 
-  Entity* playerEntity = malloc(sizeof(Entity));
+  playerEntity = malloc(sizeof(Entity));
   playerEntity->maxHealth = 60;
   EntityInit(&playerEntity);
   player = GameObjectCreate(PhysicsCreateObject(Vec2(4, 4), 1), GCreateSprite(0, 40, anim, 1), playerEntity, entity_player);
@@ -121,7 +122,7 @@ void GameLevelInit(void)
   //map generation actually happens at the end because it needs the player and shit.
   IsoInit(MAP_WIDTH, MAP_HEIGHT);
 
-
+  /*
   int x, y;
   do
   {
@@ -134,7 +135,7 @@ void GameLevelInit(void)
   {
     x = RandIntRange(15, 20);
     y = RandIntRange(15, 20);
-  } while (IsoTileGet(x, y) || (player->physics->position.x == x && player->physics->position.y == y));
+  } while (IsoTileGet(x, y) || (player->physics->position.x == x && player->physics->position.y == y));*/
 
   
 
