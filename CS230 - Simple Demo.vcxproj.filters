@@ -84,6 +84,12 @@
     <ClCompile Include="Gate.c">
       <Filter>Environmental Objects</Filter>
     </ClCompile>
+    <ClCompile Include="ControlScreen.c">
+      <Filter>Menu/UI</Filter>
+    </ClCompile>
+    <ClCompile Include="CreditsScreen.c">
+      <Filter>Menu/UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -167,6 +173,12 @@
     </ClInclude>
     <ClInclude Include="Gate.h">
       <Filter>Environmental Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="ControlScreen.h">
+      <Filter>Menu/UI</Filter>
+    </ClInclude>
+    <ClInclude Include="CreditsScreen.h">
+      <Filter>Menu/UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

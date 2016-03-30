@@ -180,6 +180,57 @@ void Dodge(int input_key, GameObject *obj)
   }
 }
 
+
+void Dodge2(int keys[], GameObject *obj, int list_size)
+{
+  int input_key;
+  int i;
+  for (i = 0; i < list_size; i++)
+  {
+    if (AEInputCheckReleased(keys[i]))
+    {
+      input_key = keys[i];
+    }
+  }
+
+
+  // If value is between -EPSILON and +EPSILON, make it 0.0
+  if (obj->physics->velocity.x > -EPSILON && obj->physics->velocity.x < EPSILON)
+    obj->physics->velocity.x = 0.0f;
+
+  // If value is between -EPSILON and +EPSILON, make it 0.0
+  if (obj->physics->velocity.y > -EPSILON && obj->physics->velocity.y < EPSILON)
+    obj->physics->velocity.y = 0.0f;
+
+  // if the player is not moving 
+  if (obj->physics->velocity.x == 0.0f && obj->physics->velocity.y == 0.0f)
+  {
+    return;
+    //IdleDodge(obj); // call idle dodge
+  }
+
+
+
+  if (AEInputCheckReleased(input_key) && obj->entity->canBeDamaged == 1 && obj->entity->invincibilityRecoveryTime <= 0)
+  {
+
+    Vector2DScale(&(obj->physics->velocity), &(obj->physics->velocity), DODGE_FORCE);
+
+    //save original values
+    float player_red = obj->sprite->tint.red;
+    float player_blue = obj->sprite->tint.blue;
+    float player_green = obj->sprite->tint.green;
+    float player_alpha = obj->sprite->tint.alpha;
+
+    //obj->physics->velocity.x = obj->physics->velocity.x * SPEED_BONUS_MODIFIER;
+    //obj->physics->velocity.y = obj->physics->velocity.y * SPEED_BONUS_MODIFIER;
+    // do particle effects
+    obj->entity->canBeDamaged = 0; /* activate invincibility */
+    obj->entity->invincibilityTime = PLAYER_IFRAMES;
+    printf("dodged, is invincibleLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL\n");
+  }
+}
+
 void ResetColor(GameObject *GameObj)
 {
   if (GameObj == NULL)
@@ -251,6 +302,8 @@ void BriefInvulnerability(GameObject *GameObj, int PlayerOnly)
 void IdleDodge(GameObject *GameObj)
 {
   // do nothing on idle dodge
+
+  
 }
 
 void CheckDrag()

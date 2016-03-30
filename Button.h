@@ -3,6 +3,11 @@
 #include "LevelManager.h"
 #include "Collision.h"
 
+#define BUTTON_ALPHA_MODIFIER              0.65f
+#define BUTTON_RED_MODIFIER                0.65f
+#define BUTTON_BLUE_MODIFIER               0.65f
+#define BUTTON_GREEN_MODIFIER              0.65f
+
 enum ButtonTypes 
 {
   MAIN_MENU_BUTTON = 0,    /* Button that will take you to the main menu    */
@@ -25,6 +30,7 @@ typedef struct
   float Xscale;           /* x scale of the sprite              */
   float Yscale;           /* y scale of the sprite              */
   float size;             /* size of the button                 */
+  int isSelected;         /* is the button pressed              */
 }Button;
 
 GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _button_type, float _size, float _scalex, float _scaley);
@@ -35,3 +41,5 @@ void PlayButtonReleasedAnimation(GameObject *button);
 void ChangeButtonNextLevel(GameObject *button, int level);
 void ChangeButtonType(GameObject *button, int type);
 void ButtonSimulate(GameObject *button);
+void ScaleButtonSpriteColor(GameObject *button);
+void UnscaleButtonSpriteColor(GameObject *button);

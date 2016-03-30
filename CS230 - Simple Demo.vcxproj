@@ -168,7 +168,9 @@
     <ClCompile Include="Audio.c" />
     <ClCompile Include="Button.c" />
     <ClCompile Include="Collision.c" />
+    <ClCompile Include="ControlScreen.c" />
     <ClCompile Include="conversions.c" />
+    <ClCompile Include="CreditsScreen.c" />
     <ClCompile Include="DamageNumbers.c" />
     <ClCompile Include="DeathScreen.c" />
     <ClCompile Include="Dodge.c" />
@@ -204,7 +206,9 @@
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="ControlScreen.h" />
     <ClInclude Include="conversions.h" />
+    <ClInclude Include="CreditsScreen.h" />
     <ClInclude Include="DamageNumbers.h" />
     <ClInclude Include="DeathScreen.h" />
     <ClInclude Include="Dodge.h" />

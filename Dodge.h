@@ -24,6 +24,7 @@
 
 void UpdateEntityIFs(GameObject *obj);
 void Dodge(int input_key, GameObject *obj);
+void Dodge2(int keys[], GameObject *obj, int list_size);
 void ResetColor(GameObject *GameObj);
 void BriefInvulnerability(GameObject *GameObj, int EntityType);
 void IdleDodge(GameObject *GameObj);
