@@ -74,21 +74,10 @@ void EnemyInitialize(GameObject* _thisObject)
 
 void EnemySimulate(GameObject* _thisObject)
 {
-  EnemySimulateAI(_thisObject);
-  EnemyAnimationStateManager(_thisObject);
   ESMachineRun(_thisObject);
+  EnemyAnimationStateManager(_thisObject);
 }
 
-/*
-\brief
-Handles enemy AI
-\param _thisObject
-The game object we want to simulate ai
-*/
-void EnemySimulateAI(GameObject* _thisObject)
-{
-  EnemyAttackDetect(_thisObject);
-}
 
 /*!
 \brief example/default collision event function
@@ -98,15 +87,10 @@ void EnemySimulateAI(GameObject* _thisObject)
 */
 void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject)
 {
-  //printf("%i||", _thisObject->type);
   if (_thisObject->type == entity_enemy && _otherObject->type == entity_player)
   {
-    //GameObjectDestroy(&_thisObject);
-    //LevelSetNext(level_mainMenu);
     EnemyKnockBack(_thisObject, _otherObject);
     EntityTakeDamage(&(_otherObject->entity), 2);
-
-    //printf("PLAYER TAKING DAMAGE \n");
   }
 }
 
@@ -125,7 +109,6 @@ void EnemyOnKilled(GameObject* _self)
 
 void EnemyChangeAnimationFlag(EnemyContainer* enemyContainer, Vector2D* worldFacingDirection)
 {
-
   double worldFacingAngle = atan2(worldFacingDirection->y, worldFacingDirection->x) * (180.0f / PI);
   //printf("%f\n", worldFacingAngle);
   enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & (~(ENEMY_LEFT + ENEMY_RIGHT + ENEMY_UP + ENEMY_DOWN));
@@ -156,118 +139,6 @@ void EnemyChangeAnimationFlag(EnemyContainer* enemyContainer, Vector2D* worldFac
   
 }
 
-/*
-\brief Handles enemy movement
-\param _thisObject the enemy that moves
-\returns
-Its current facing direction
-*/
-Vector2D EnemyMovement(GameObject* _thisObject, const float distanceToPlayer)
-{
-  Vector2D facingDirection = _thisObject->physics->velocity;
-  EnemyContainer* enemyContainer = _thisObject->miscData;
-
-  if (_thisObject->enemyAI->currentEnemyState == ENEMY_STATE_ATTACK)
-  {
-    _thisObject->physics->velocity.x = 0;
-    _thisObject->physics->velocity.y = 0;
-      facingDirection.x = _thisObject->target->physics->position.x - _thisObject->physics->position.x;
-      facingDirection.y = _thisObject->target->physics->position.y - _thisObject->physics->position.y;
-      Vector2DNormalize(&facingDirection, &facingDirection);
-  }
-  else if (distanceToPlayer <= enemyContainer->detectRange && distanceToPlayer >= enemyContainer->attackRange)
-  {
-    enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~ENEMY_IDLE;
-    enemyContainer->enemyAnimationState = ENEMY_WALK;
-    facingDirection.x = _thisObject->target->physics->position.x - _thisObject->physics->position.x;
-    facingDirection.y = _thisObject->target->physics->position.y - _thisObject->physics->position.y;
-
-    Vector2DNormalize(&facingDirection, &facingDirection);
-    Vector2DScale(&(_thisObject->physics->velocity), &facingDirection, enemyContainer->chaseSpeed);
-  }
-  else
-  {
-    _thisObject->physics->velocity.x = 0;
-    _thisObject->physics->velocity.y = 0;
-    enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~ENEMY_WALK;
-    
-    if (distanceToPlayer <= enemyContainer->attackRange)
-    {
-      facingDirection.x = _thisObject->target->physics->position.x - _thisObject->physics->position.x;
-      facingDirection.y = _thisObject->target->physics->position.y - _thisObject->physics->position.y;
-      Vector2DNormalize(&facingDirection, &facingDirection);
-    }
-    else
-    {
-      facingDirection.x = -1;
-      facingDirection.y = -1;
-    }
-    enemyContainer->enemyAnimationState = ENEMY_IDLE;
-  }
-
-  Vector2D worldFacing;
-  worldFacing = IsoWorldToScreen(&facingDirection);
-  EnemyChangeAnimationFlag(enemyContainer, &worldFacing);
-  return facingDirection;
-}
-
-void EnemyAttackDetect(GameObject* _thisObject)
-{
-  EnemyContainer* enemyContainer = _thisObject->miscData;
-  float distanceToPlayer = Vector2DSquareDistance(&(_thisObject->physics->position), &(_thisObject->target->physics->position));
-  Vector2D attackDirection = EnemyMovement(_thisObject, distanceToPlayer);
-
-  if (enemyContainer->animationCooldown <= 0 && _thisObject->enemyAI->currentEnemyState == ENEMY_STATE_ATTACK && distanceToPlayer <= enemyContainer->detectRange)
-  {
-    _thisObject->enemyAI->currentEnemyState = ENEMY_STATE_PATROL;
-    enemyContainer->animationCooldown = .2f;
-  }
-
-  if (enemyContainer->animationCooldown > 0 && _thisObject->enemyAI->currentEnemyState == ENEMY_STATE_ATTACK)
-  {
-    enemyContainer->animationCooldown -= AEFrameRateControllerGetFrameTime();
-  }
-
-  if (distanceToPlayer <= enemyContainer->attackRange)
-  {
-    if (enemyContainer->attackWindup > 0)
-    {
-      enemyContainer->attackWindup -= AEFrameRateControllerGetFrameTime();
-    }
-
-    if (enemyContainer->attackWindup <= 0)
-    {
-      enemyContainer->attackCooldown -= AEFrameRateControllerGetFrameTime();
-    }
-
-    printf("%f,", enemyContainer->attackCooldown);
-
-    if (enemyContainer->attackWindup < 0 && enemyContainer->attackCooldown < 0)
-    {
-      //printf("ENEMY ATTACK");
-      enemyContainer->attackCooldown = enemyContainer->attackCooldownLength;
-      enemyContainer->attackWindup = enemyContainer->attackWindupLength;
-      enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~(ENEMY_WALK + ENEMY_IDLE);
-      enemyContainer->enemyAnimationState = ENEMY_ATTACK;
-      _thisObject->enemyAI->currentEnemyState = ENEMY_STATE_ATTACK;
-
-      switch (enemyContainer->enemyType)
-      {
-      case ENEMY_TYPE_MELEE:
-        EnemyMeleeAttack(_thisObject, attackDirection);
-        break;
-      case ENEMY_TYPE_RANGED:
-        EnemyRangedAttack(_thisObject, attackDirection, enemyContainer->projectileSpeed);
-        break;
-      }
-    }
-  }
-  else
-  {
-    enemyContainer->attackWindup = enemyContainer->attackWindupLength;
-    enemyContainer->attackCooldown = 0;
-  }
-}
 
 void EnemyMeleeAttack(GameObject* _thisObject, Vector2D attackDirection)
 {
@@ -275,7 +146,6 @@ void EnemyMeleeAttack(GameObject* _thisObject, Vector2D attackDirection)
     PhysicsCreateObject(Vec2(_thisObject->physics->position.x + attackDirection.x, _thisObject->physics->position.y + attackDirection.y), 1),
     GCreateSprite(0, 40, tracerAnimation, 1), 0, entity_enemyProjectile);
   tracer->syncSpritePhysics = 1;
-  //tracer->simulate = &TracerSimulate;
   tracer->physics->onCollision = &EnemyTracerProjectileCollision;
 }
 
@@ -284,8 +154,6 @@ void EnemyRangedAttack(GameObject* _thisObject, Vector2D attackDirection, float 
   GameObject* tracer = GameObjectCreate(
     PhysicsCreateObject(Vec2(_thisObject->physics->position.x + attackDirection.x, _thisObject->physics->position.y + attackDirection.y), 1),
     GCreateSprite(0, 40, tracerAnimation, 1), 0, entity_enemyProjectile);
-
-  //Vector2DNormalize(&(attackDirection), &(attackDirection));
 
   tracer->physics->velocity.x = attackDirection.x * projectileSpeed;
   tracer->physics->velocity.y = attackDirection.y * projectileSpeed;
@@ -297,7 +165,6 @@ void EnemyRangedAttack(GameObject* _thisObject, Vector2D attackDirection, float 
 
 void EnemyTracerProjectileCollision(GameObject* _thisObject, GameObject* _otherObject)
 {
-  //EnemyContainer* enemyContainer = _thisObject->miscData;
   if (_otherObject && _otherObject->type == entity_player && (_otherObject->entity && _otherObject->entity->canBeDamaged))
   {
     printf("ENEMY HIT PLAYER %i DAMAGE\n", 10);

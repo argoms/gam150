@@ -17,13 +17,13 @@
 
 void ESMachineRun(GameObject* enemy);
 
-void ESMachineStart(GameObject* enemy);
+void ESMachineStart(GameObject* enemy, EnemyContainer* enemyContainer);
 
-void ESMachineUpdate(GameObject* enemy);
+void ESMachineUpdate(GameObject* enemy, EnemyContainer* enemyContainer);
 
-void ESMachineExit(GameObject* enemy);
+void ESMachineExit(GameObject* enemy, EnemyContainer* enemyContainer);
 
-void ESMachineStateChange(GameObject* enemy);
+void ESMachineStateChange(GameObject* enemy, EnemyContainer* enemyContainer);
 
 void ESMachineMeleeStateChange(GameObject* enemy);
 

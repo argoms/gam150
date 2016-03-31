@@ -9,7 +9,8 @@ enum
   ENEMY_STATE_IDLE,
   ENEMY_STATE_PATROL,
   ENEMY_STATE_CHASE,
-  ENEMY_STATE_ATTACK
+  ENEMY_STATE_ATTACK,
+  ENEMY_STATE_COOLDOWN
 };
 
 GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _type,
@@ -18,14 +19,11 @@ GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entit
 
 void EnemyInitialize(GameObject* _thisObject);
 void EnemySimulate(GameObject* _thisObject);
-void EnemySimulateAI(GameObject* _thisObject);
 void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject);
 void EnemyOnKilled(GameObject* _self);
 
 void EnemyChangeAnimationFlag(EnemyContainer* container, Vector2D* worldFacingDirection);
 
-Vector2D EnemyMovement(GameObject* _thisObject, const float distanceToPlayer);
-void EnemyAttackDetect(GameObject* _thisObject);
 void EnemyMeleeAttack(GameObject* _thisObject, Vector2D attackDirection);
 void EnemyRangedAttack(GameObject* _thisObject, Vector2D attackDirection, float projectileSpeed);
 void EnemyTracerProjectileCollision(GameObject* _thisObject, GameObject* _otherObject);

@@ -10,35 +10,35 @@
 */
 void ESMachineRun(GameObject* enemy)
 {
+  EnemyContainer* enemyContainer = enemy->miscData;
   if (enemy->enemyAI->currentEnemyState != enemy->enemyAI->newEnemyState)
   {
-    ESMachineExit(enemy);
+    ESMachineExit(enemy, enemyContainer);
     enemy->enemyAI->currentEnemyState = enemy->enemyAI->newEnemyState;
-    ESMachineStateChange(enemy);
-    ESMachineStart(enemy);
+    ESMachineStateChange(enemy, enemyContainer);
+    ESMachineStart(enemy, enemyContainer);  
   }
 
-  ESMachineUpdate(enemy);
+  ESMachineUpdate(enemy, enemyContainer);
 }
 
-void ESMachineStart(GameObject* enemy)
+void ESMachineStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
-  (enemy->enemyAI->EnemyStateStart)(enemy);
+  (enemy->enemyAI->EnemyStateStart)(enemy, enemyContainer);
 }
 
-void ESMachineUpdate(GameObject* enemy)
+void ESMachineUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
-  (enemy->enemyAI->EnemyStateUpdate)(enemy);
+  (enemy->enemyAI->EnemyStateUpdate)(enemy, enemyContainer);
 }
 
-void ESMachineExit(GameObject* enemy)
+void ESMachineExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
-  (enemy->enemyAI->EnemyStateExit)(enemy);
+  (enemy->enemyAI->EnemyStateExit)(enemy, enemyContainer);
 }
 
-void ESMachineStateChange(GameObject* enemy)
+void ESMachineStateChange(GameObject* enemy, EnemyContainer* enemyContainer)
 {
-  EnemyContainer* enemyContainer = enemy->miscData;
   switch (enemyContainer->enemyType)
   {
     case ENEMY_TYPE_MELEE:
@@ -74,6 +74,11 @@ void ESMachineMeleeStateChange(GameObject* enemy)
     enemy->enemyAI->EnemyStateUpdate = EnemyAI_Melee_AttackUpdate;
     enemy->enemyAI->EnemyStateExit = EnemyAI_Melee_AttackExit;
     break;
+  case ENEMY_STATE_COOLDOWN:
+    enemy->enemyAI->EnemyStateStart = EnemyAI_Melee_CooldownStart;
+    enemy->enemyAI->EnemyStateUpdate = EnemyAI_Melee_CooldownUpdate;
+    enemy->enemyAI->EnemyStateExit = EnemyAI_Melee_CooldownExit;
+    break;
   }
 }
 
@@ -100,6 +105,11 @@ void ESMachineRangedStateChange(GameObject* enemy)
     enemy->enemyAI->EnemyStateStart = EnemyAI_Ranged_AttackStart;
     enemy->enemyAI->EnemyStateUpdate = EnemyAI_Ranged_AttackUpdate;
     enemy->enemyAI->EnemyStateExit = EnemyAI_Ranged_AttackExit;
+    break;
+  case ENEMY_STATE_COOLDOWN:
+    enemy->enemyAI->EnemyStateStart = EnemyAI_Ranged_CooldownStart;
+    enemy->enemyAI->EnemyStateUpdate = EnemyAI_Ranged_CooldownUpdate;
+    enemy->enemyAI->EnemyStateExit = EnemyAI_Ranged_CooldownExit;
     break;
   }
 }
