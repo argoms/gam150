@@ -1,9 +1,12 @@
 /*!
+Project (working title): Epoch
 \file   WinScreen.c
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
-Functions handling the death screen
+Functions handling the victory screen
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "Graphics.h"
 #include "AEEngine.h"

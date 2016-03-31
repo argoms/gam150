@@ -1,9 +1,12 @@
 /*!
-\file   DeathScreen.c
+Project (working title): Epoch
+\file   SplashScreen.c
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
-Functions handling the splash screen
+Functions handling the starting splash screen
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "Graphics.h"
 #include "AEEngine.h"

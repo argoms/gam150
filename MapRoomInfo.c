@@ -1,10 +1,14 @@
 /*!
+Project (working title): Epoch
 \file   MapRoomInfo.c
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
 Implementation for MapRoomInfo linked list objects containing information used during mapgen in MapGen.c
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
+
 #include "MapRoomInfo.h"
 /*
 struct MapRoomInfo

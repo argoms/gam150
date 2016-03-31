@@ -1,9 +1,12 @@
 /*!
+Project (working title): Epoch
 \file   Text.c
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
 Functions for creating/moving/setting text objects (groups of sprites).
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "Graphics.h"
 #include "Text.h"

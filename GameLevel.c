@@ -1,9 +1,12 @@
 /*!
+Project (working title): Epoch
 \file   GameLevel.c
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
   Contains functions for 'in-dungeon' game levels.
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "GameLevel.h"
 #include "Physics.h"

@@ -1,3 +1,16 @@
+/*!
+Project (working title): Epoch
+\file   PlayerEntity.c
+\author James Do
+\par    email: j.do\@digipen.edu
+\brief
+Handles player-related functionality:
+  -controls (movement/attacking)
+  -animation
+  -health display
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+*/
 #include "PlayerEntity.h"
 #include "GameObject.h"
 #include "Physics.h"

@@ -1,9 +1,16 @@
 /*!
+Project (working title): Epoch
 \file   GameObject.c
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
-Functions for in-world game objects.
+Functions for in-world game objects. Objects contain components such as:
+-physics (movement/collision)
+-graphics (sprite)
+-entity (health)
+-misc
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 
 #include "GameObject.h"

@@ -1,9 +1,12 @@
 /*!
+Project (working title): Epoch
 \file   DamageNumbers.c
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
 Implementation for text popups when entities take damage.
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "GameObject.h"
 #include "Text.h"

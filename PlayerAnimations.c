@@ -1,3 +1,13 @@
+/*!
+Project (working title): Epoch
+\file   PlayerAnimations.c
+\author James Do
+\par    email: j.do\@digipen.edu
+\brief
+Stores animation object constructor info for player's animations.
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+*/
 #include "Graphics.h"
 #include "AEEngine.h"
 #include "EntityAnimation.h"
@@ -5,11 +15,11 @@ AnimationSet* PlayerAnimationCreateWalk()
 {
   //load animations:
   AEGfxVertexList* walkMesh = GCreateMesh(256.f, 256.f, 12, 1); //mesh for walking (12 frames)
-  AEGfxVertexList* swordMesh = GCreateMesh(256.f, 256.f, 1, 13); //mesh for sword (13 frames)
-  AEGfxVertexList* idleMesh = GCreateMesh(256.f, 256.f, 1, 1); //mesh for idle (1 frames)
+  //AEGfxVertexList* swordMesh = GCreateMesh(256.f, 256.f, 1, 13); //mesh for sword (13 frames)
+  //AEGfxVertexList* idleMesh = GCreateMesh(256.f, 256.f, 1, 1); //mesh for idle (1 frames)
   int walkFrames = 12; //number of frames in walk animation
-  int idleFrames = 1; //number of frames in idle animation
-  int swordFrames = 13;
+  //int idleFrames = 1; //number of frames in idle animation
+  //int swordFrames = 13;
 
   Animation* walkAnims[16] = {
     GCreateAnimation(walkFrames,

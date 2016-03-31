@@ -1,3 +1,14 @@
+/*!
+Project (working title): Epoch
+\file   EntityAnimation.c
+\author James Do
+\par    email: j.do\@digipen.edu
+\brief
+Wrapper around graphics animations objects to allow for easier animation setting for game objects that face multiple directions (e.g. player).
+Stores groups of animation objects and outputs the appropriate one given a direction vector.
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+*/
 #include "EntityAnimation.h"
 
 //private list struct for storage of all active animations (and memory freeing)
