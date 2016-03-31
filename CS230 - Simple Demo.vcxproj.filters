@@ -84,17 +84,14 @@
     <ClCompile Include="Gate.c">
       <Filter>Environmental Objects</Filter>
     </ClCompile>
-    <ClCompile Include="ControlScreen.c">
-      <Filter>Menu/UI</Filter>
+    <ClCompile Include="EnemyAIMeleeBehavior.c">
+      <Filter>Enemies\EnemyAI</Filter>
     </ClCompile>
-    <ClCompile Include="CreditsScreen.c">
-      <Filter>Menu/UI</Filter>
+    <ClCompile Include="EnemyStateMachine.c">
+      <Filter>Enemies\EnemyAI</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyStateMachine.c" />
-    <ClCompile Include="EntityAnimation.c" />
-    <ClCompile Include="PlayerAnimations.c" />
-    <ClCompile Include="MapRoomInfo.c">
-      <Filter>MapGen</Filter>
+    <ClCompile Include="EnemyAIRangedBehavior.c">
+      <Filter>Enemies\EnemyAI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -180,17 +177,14 @@
     <ClInclude Include="Gate.h">
       <Filter>Environmental Objects</Filter>
     </ClInclude>
-    <ClInclude Include="ControlScreen.h">
-      <Filter>Menu/UI</Filter>
+    <ClInclude Include="EnemyAIMeleeBehavior.h">
+      <Filter>Enemies\EnemyAI</Filter>
     </ClInclude>
-    <ClInclude Include="CreditsScreen.h">
-      <Filter>Menu/UI</Filter>
+    <ClInclude Include="EnemyStateMachine.h">
+      <Filter>Enemies\EnemyAI</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyStateMachine.h" />
-    <ClInclude Include="EntityAnimation.h" />
-    <ClInclude Include="PlayerAnimations.h" />
-    <ClInclude Include="MapRoomInfo.h">
-      <Filter>MapGen</Filter>
+    <ClInclude Include="EnemyAIRangedBehavior.h">
+      <Filter>Enemies\EnemyAI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -220,6 +214,9 @@
     </Filter>
     <Filter Include="Environmental Objects">
       <UniqueIdentifier>{d4af4932-55d9-4719-bd1e-9c61ed2c2f95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemies\EnemyAI">
+      <UniqueIdentifier>{1f5add3b-5ec5-4370-a712-b9f36955f6fb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -1,3 +1,4 @@
+#pragma once
 #include "EnemyAnimations.h"
 #include "Graphics.h"
 #include "AEEngine.h"
