@@ -1,9 +1,16 @@
 /*!
-\file   GameObject.c
+Project (working title): Epoch
+\file   GameObject.h
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
-Functions for game objects.
+Declarations for in-world game objects. Objects contain components such as:
+-physics (movement/collision)
+-graphics (sprite)
+-entity (health)
+-misc
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #pragma once
 
@@ -28,8 +35,10 @@ enum GameObjectNames {
   entity_button, /**< generic button */
   entity_hazard,   /* environmental hazards */
   //entity_health_bar /**< health bar */
-  entity_particle, /*particle that doesn't affect other game objects*/
-  entity_damageText
+  entity_particle, /**< particle that doesn't affect other game objects*/
+  entity_damageText, /**< visual indicator for damage dealt*/
+  entity_gate, /**< opens after clearing a room*/
+  entity_room /**< used for entire rooms*/
 };
 
 /**************************************************************************************************

@@ -1,19 +1,25 @@
 /*!
+Project (working title): Epoch
 \file   Isometric.h
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
 Isometric tilemap implementation. Contains functions relating to tilemaps and isometric conversions.
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #pragma once
 #include "Vector2D.h"
-/*
+
 enum tileTypes
 {
-  empty = 0,
-  wall = 1,
-  floor = 2
-};*/
+  tile_error = -4357,
+  tile_any = -742,
+  tile_empty = -1,
+  tile_floor = 0,
+  tile_wall = 1,
+  tile_path = 2
+};
 
 
 

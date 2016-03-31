@@ -168,7 +168,9 @@
     <ClCompile Include="Audio.c" />
     <ClCompile Include="Button.c" />
     <ClCompile Include="Collision.c" />
+    <ClCompile Include="ControlScreen.c" />
     <ClCompile Include="conversions.c" />
+    <ClCompile Include="CreditsScreen.c" />
     <ClCompile Include="DamageNumbers.c" />
     <ClCompile Include="DeathScreen.c" />
     <ClCompile Include="Dodge.c" />
@@ -179,6 +181,7 @@
     <ClCompile Include="EnemyAnimations.c" />
     <ClCompile Include="EnemyStateMachine.c" />
     <ClCompile Include="Entity.c" />
+    <ClCompile Include="EntityAnimation.c" />
     <ClCompile Include="GameLevel.c" />
     <ClCompile Include="GameObject.c" />
     <ClCompile Include="Gate.c" />
@@ -193,9 +196,11 @@
     </ClCompile>
     <ClCompile Include="MapCreator.c" />
     <ClCompile Include="MapGen.c" />
+    <ClCompile Include="MapRoomInfo.c" />
     <ClCompile Include="MyRandom.c" />
     <ClCompile Include="ParticleSystems(Redo).c" />
     <ClCompile Include="Physics.c" />
+    <ClCompile Include="PlayerAnimations.c" />
     <ClCompile Include="PlayerEntity.c" />
     <ClCompile Include="SplashScreen.c" />
     <ClCompile Include="Text.c" />
@@ -207,7 +212,9 @@
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="ControlScreen.h" />
     <ClInclude Include="conversions.h" />
+    <ClInclude Include="CreditsScreen.h" />
     <ClInclude Include="DamageNumbers.h" />
     <ClInclude Include="DeathScreen.h" />
     <ClInclude Include="Dodge.h" />
@@ -218,6 +225,7 @@
     <ClInclude Include="EnemyAnimations.h" />
     <ClInclude Include="EnemyStateMachine.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="EntityAnimation.h" />
     <ClInclude Include="GameLevel.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gate.h" />
@@ -228,9 +236,11 @@
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="MapCreator.h" />
     <ClInclude Include="MapGen.h" />
+    <ClInclude Include="MapRoomInfo.h" />
     <ClInclude Include="MyRandom.h" />
     <ClInclude Include="ParticleSystems(Redo).h" />
     <ClInclude Include="Physics.h" />
+    <ClInclude Include="PlayerAnimations.h" />
     <ClInclude Include="PlayerEntity.h" />
     <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="Text.h" />

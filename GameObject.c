@@ -1,9 +1,16 @@
 /*!
+Project (working title): Epoch
 \file   GameObject.c
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
-Functions for in-world game objects.
+Functions for in-world game objects. Objects contain components such as:
+-physics (movement/collision)
+-graphics (sprite)
+-entity (health)
+-misc
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 
 #include "GameObject.h"
@@ -43,12 +50,22 @@ GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _
 {
   
   GameObject* newGameObject = (GameObject*) malloc(sizeof(GameObject));
-  newGameObject->sprite = _sprite;
-  
+  if (_sprite)
+  {
+    newGameObject->sprite = _sprite;
+  }
+  else
+  {
+    newGameObject->sprite = NULL;
+  }
   if (_physics)
   {
     newGameObject->physics = _physics;
     newGameObject->physics->owner = newGameObject;
+  }
+  else
+  {
+    newGameObject->physics = NULL;
   }
 
   newGameObject->entity = _entity;

@@ -34,5 +34,10 @@ Output        : No return.
 **************************************************************************************************/
 void RandSeed(unsigned int seed);
 
+/*
+written by james
+*/
+float RandFloat();
+
 #endif // !MY_RANDOM_H
 

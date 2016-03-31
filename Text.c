@@ -1,9 +1,12 @@
 /*!
+Project (working title): Epoch
 \file   Text.c
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
 Functions for creating/moving/setting text objects (groups of sprites).
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "Graphics.h"
 #include "Text.h"
@@ -21,7 +24,7 @@ static int textWidth; /**< width of font*/
 */
 void TextInit()
 {
-  charFont = GCreateTexture("dffont.png");
+  charFont = GCreateTexture("animations/dffont.png");
   charMesh = GCreateMesh(32, 48, 16, 16);
   charAnim = GCreateAnimation(16, charFont, charMesh, 16);
   textHeight = 48;

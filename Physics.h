@@ -1,4 +1,5 @@
 /*!
+Project (working title): Epoch
 \file   Physics.c
 \author James Do
 \par    email: j.do\@digipen.edu
@@ -11,6 +12,8 @@ This isn't strictly intended, and you're welcome to try and chang everything to 
 
 changes
 2/25/16   Matt - added setvelocity function
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #pragma once
 #include "Vector2D.h"
@@ -55,5 +58,6 @@ void PhysicsSimulate();
 static void PhysicsTileCollisions(PhysicsObject* _instance);
 static void PhysicsIsInsideTile(PhysicsObject* _instance);
 void PhysicsRemoveObject(PhysicsObject** _input);
+float PhysicsDistSQ(Vector2D _pos1, Vector2D _pos2);
 
 void PhysicsSetVelocity(PhysicsObject* _instance, float x, float y);

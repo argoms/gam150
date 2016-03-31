@@ -60,6 +60,7 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
   buttonComponent->Xscale = _scalex;                    /* set the x scale             */
   buttonComponent->Yscale = _scaley;                    /* set the y scale             */
   buttonComponent->size = _size;                        /* set the size                */
+  buttonComponent->isSelected = 0;                      /* set button to not selected  */
 
   /* the type will determine where the next level will be upon function call */
 
@@ -135,8 +136,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->next = level_mainMenu;
   }
   break;
-
-  
   }
   buttonObject->miscData = buttonComponent;
   return buttonObject;  //return the button object
@@ -286,6 +285,14 @@ void PlayButtonHoverAnimation(GameObject *button)
     return;
   }
   //printf("played hover animation");
+  //ScaleButtonSpriteColor(button);
+
+  // only change color if not pressed
+  if (button_data->isSelected != 1)
+  {
+    ScaleButtonSpriteColor(button);// change color
+    button_data->isSelected = 1;   // set the button is pressed
+  }
 }
 
 /*************************************************************************/
@@ -313,9 +320,12 @@ void PlayButtonReleasedAnimation(GameObject *button)
   }
 
   Button *button_data = button->miscData; /* get the micelaneous data */
+  //UnScaleButtonSpriteColor(button);       /* reset button color       */
   //printf("played released animation");    /* print                    */
   int level = button_data->next;          /* get the level            */
   LevelSetNext(level);                    /* set the next level       */
+
+
 }
 
 /*************************************************************************/
@@ -333,15 +343,21 @@ void PlayButtonReleasedAnimation(GameObject *button)
 /*************************************************************************/
 void ButtonSimulate(GameObject *button)
 {
+  // window size vars
   float winMaxX;            
   float winMaxY;
   float winMinX;
   float winMinY;
 
+  // get the window values
+ 
   winMaxX = AEGfxGetWinMaxX();
   winMaxY = AEGfxGetWinMaxY();
   winMinX = AEGfxGetWinMinX();
   winMinY = AEGfxGetWinMinY();
+  
+  float screenWidth  = winMaxX - winMinX;
+  float screenHeight = winMaxY - winMinY;
 
   if (button == NULL)
   {
@@ -367,13 +383,21 @@ void ButtonSimulate(GameObject *button)
   signed long mouse_x = 0.0f;                   /* mouse x position             */
   signed long mouse_y = 0.0f;                   /* mouse y position             */
   AEInputGetCursorPosition(&mouse_x, &mouse_y); /* modify the x and y positions */
-  mouse_x += - (winMaxX - winMinX) / 2;
-  mouse_y = -1 * mouse_y + (winMaxY - winMinY) / 2;
-  //mouse_y += - (mouse_y - (winMaxY - winMinY) / 2);
+  //mouse_x += - (winMaxX - winMinX) / 2;
+  //mouse_y = -1 * mouse_y + (winMaxY - winMinY) / 2;
+
+  //mouse_x = mouse_x + (screenWidth / 2);
+  //mouse_y = (screenHeight / 2) - mouse_y;
+
+  mouse_x = mouse_x - (screenWidth / 2);
+  mouse_y = (screenHeight / 2) - mouse_y;
 
   Vector2D point;                               /* vector for the mouse pos     */
   point.x = mouse_x;      /* set the x of the mouse       */
   point.y = mouse_y;      /* set the y of the mouse       */
+
+  //debug mose
+  printf("|Moux %f Mouy %f |Buttx %f  Butty %f W %f H %f\n", point.x, point.y, position.x, position.y, screenWidth, screenHeight);
 
   //AEGfxConvertScreenCoordinatesToWorld(mouse_x, mouse_y, &point.x,&point.y);
 
@@ -382,6 +406,16 @@ void ButtonSimulate(GameObject *button)
     int derp = 1 + 1;
   }
   
+  // if there is no collision reset button color
+  if (!(PointToRect(&point, &position, scalex, scaley)))
+  {
+    if (button_data->isSelected == 1)
+    {
+      UnscaleButtonSpriteColor(button);// change color
+      button_data->isSelected = 0;   // set the button is pressed
+    }
+  }
+
     //if a left click and collision of mouse position and button position
   if (AEInputCheckCurr(LEFT_CLICK) && PointToRect(&point, &position, scalex, scaley))
   {
@@ -393,6 +427,7 @@ void ButtonSimulate(GameObject *button)
   {
     //printf("left click and released \n");
     button_data->onRelease(button);     //call the on release function pointer
+
     
   }//if collision
   else if (PointToRect(&point, &position, scalex, scaley))
@@ -407,4 +442,51 @@ void ButtonSimulate(GameObject *button)
   {
     //printf("Mouse: %d  %d | sprite %f %f\ | diffY %f \n", mouse_x, mouse_y, x, y, winMaxY - winMinY);
   }
+}
+
+void ScaleButtonSpriteColor(GameObject *button)
+{
+  if (button == NULL)
+  {
+    return;
+  }
+
+  if (button->type != entity_button)
+  {
+    return;
+  }
+
+
+  Sprite* button_sprite = button->sprite;
+  button_sprite->tint.alpha = button_sprite->tint.alpha * BUTTON_ALPHA_MODIFIER;//change alpha color
+  button_sprite->tint.red = button_sprite->tint.red * BUTTON_RED_MODIFIER;      //change red color
+  button_sprite->tint.blue = button_sprite->tint.blue * BUTTON_BLUE_MODIFIER;   //change blue color
+  button_sprite->tint.green = button_sprite->tint.green * BUTTON_GREEN_MODIFIER;//change green color
+}
+
+void UnscaleButtonSpriteColor(GameObject *button)
+{
+  if (button == NULL)
+  {
+    return;
+  }
+
+  if (button->type != entity_button)
+  {
+    return;
+  }
+
+  if (BUTTON_ALPHA_MODIFIER == 0.0f ||
+      BUTTON_RED_MODIFIER == 0.0f ||
+      BUTTON_BLUE_MODIFIER == 0.0f ||
+      BUTTON_GREEN_MODIFIER == 0.0f)
+  {
+    return;
+  }
+
+  Sprite* button_sprite = button->sprite;
+  button_sprite->tint.alpha = button_sprite->tint.alpha / BUTTON_ALPHA_MODIFIER;//change alpha color
+  button_sprite->tint.red = button_sprite->tint.red / BUTTON_RED_MODIFIER;      //change red color
+  button_sprite->tint.blue = button_sprite->tint.blue / BUTTON_BLUE_MODIFIER;   //change blue color
+  button_sprite->tint.green = button_sprite->tint.green / BUTTON_GREEN_MODIFIER;//change green color
 }

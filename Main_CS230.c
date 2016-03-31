@@ -3,7 +3,7 @@
 // File Name		:	Main.cpp
 // Author			:	Antoine Abi Chacra
 // Creation Date	:	2012/01/11
-// Purpose			:	main entry point2 for the test programpotato
+// Purpose			:	entry point for program
 // History			:
 // - 2012/01/11		:	- initial implementation
 
