@@ -4,12 +4,13 @@ Project (working title): Epoch
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
-Implementation for MapRoomInfo linked list objects containing information used during mapgen in MapGen.c
-
+Implementation for functionality on the map-room scope of map generation.
+Includes MapRoomInfo linked list objects containing information used during mapgen in MapGen.c
 All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 
 #include "MapRoomInfo.h"
+#include "ImportData.h"
 /*
 struct MapRoomInfo
 {
@@ -64,4 +65,13 @@ void MapRoomInfoClear(MapRoomInfo* first)
     index = index->next;
     free(indexTemp);
   }
+}
+
+/*!
+\brief Called by a basic enemies room once it is opened
+*/
+void MapRoomBehavior_BasicEnemies(Vector2D cursor)
+{
+  printf("SPAWNING A FUCKING ENEMY");
+  ImportEnemyData(cursor.x, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());;
 }

@@ -25,7 +25,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #define NUM_ROOMS 16
 
 //Think of this as MAX room size, not just room size.
-static int ROOM_SIZE = 9;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/
+static int ROOM_SIZE = 13;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/
 static int MAP_SEED = 32;
 
 typedef struct MapRoom MapRoom;
@@ -79,7 +79,7 @@ static void FillArea(int x, int y);
 static int isValid(Vector2D position, IsoMap* map);
 static void IsoSquareSet(Vector2D position, int newValue);
 static void Room_BasicEnemies(Vector2D cursor);
-static void RoomTemplate(Vector2D cursor, int spawnGates);
+static GameObject* RoomTemplate(Vector2D cursor, int spawnGates);
 static void Room_StartRoom(Vector2D cursor);
 static void SetupBaseMap(int mapWidth, int mapHeight);
 static int RoomValid(Vector2D cursor, int mapW, int mapH);
@@ -98,8 +98,6 @@ void GenerateMap(IsoMap* inputMap)
   int mapWidth = inputMap->mapWidth;
   int i = 0;
   int j = 0;
-
-  
 
   MAP_SEED =  rand();
   RandSeed(MAP_SEED);
@@ -142,8 +140,6 @@ void GenerateMap(IsoMap* inputMap)
           continue;
         }
           //otherwise, we branch back into it (this doesn't count as creating a room)
-          //rooms_created--;
-
           //what this does is allows rooms to OCCASIONALLY loop onto themselves without always choosing to form loops
 
         //fill the path between rooms:
@@ -152,7 +148,6 @@ void GenerateMap(IsoMap* inputMap)
       }
       else
       {
-        
         //fill the path between rooms & update cursor:
         FillLine(cursor, newCursorPosition, tile_path);
         cursor = newCursorPosition;
@@ -167,15 +162,6 @@ void GenerateMap(IsoMap* inputMap)
 
         MapRoomInfoAdd(rooms, cursor, roomtype_simple);
         continue;
-        //MapRoom inst = rooms[roomsNum];
-        //rooms[roomsNum].type = roomtype_simple;
-        //rooms[roomsNum].position.x = cursor.x;
-        //rooms[roomsNum].position.y = cursor.y;
-        //printf("room: %f, %f, int %i PREGEN\n", rooms[roomsNum].position.x, rooms[roomsNum].position.y, roomsNum);
-        //  
-        //roomsNum++;
-
-        
       }
     }
   }
@@ -365,13 +351,17 @@ static void ReplaceTiles(Vector2D position, Vector2D size, int oldTile, int newT
 
 static void Room_BasicEnemies(Vector2D cursor)
 {
-  ImportEnemyData(cursor.x, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
-  RoomTemplate(cursor, 1);
+  
+  GameObject* room = RoomTemplate(cursor, 1);
+  MapRoom* roomData = (MapRoom*)(room->miscData);
+  roomData->type = roomtype_simple;
 }
 
 static void Room_StartRoom(Vector2D cursor)
 {
-  RoomTemplate(cursor, 0);
+  GameObject* room = RoomTemplate(cursor, 0);
+  MapRoom* roomData = (MapRoom*)(room->miscData);
+  roomData->type = roomtype_start;
 }
 
 /*!
@@ -379,7 +369,7 @@ static void Room_StartRoom(Vector2D cursor)
 \param cursor Location to set up room.
 \param spawnGates whether or not to spawn gate objects.
 */
-static void RoomTemplate(Vector2D cursor, int spawnGates)
+static GameObject* RoomTemplate(Vector2D cursor, int spawnGates)
 {
  
   ReplaceTiles(Vec2(cursor.x - ROOM_SIZE / 2, cursor.y - ROOM_SIZE / 2), Vec2(ROOM_SIZE, ROOM_SIZE), tile_empty, tile_floor);
@@ -390,6 +380,7 @@ static void RoomTemplate(Vector2D cursor, int spawnGates)
   MapRoom* newMiscData = malloc(sizeof(MapRoom));
   newMiscData->state = roomstate_inactive;
   newMiscData->size = ROOM_SIZE;
+  newMiscData->position = cursor;
   //newMiscData->gates[0] = 1;
   
   //ImportEnemyData(cursor.x, cursor.y, "Level1EnemyRanged2.txt", GetPlayerObject());
@@ -448,6 +439,8 @@ static void RoomTemplate(Vector2D cursor, int spawnGates)
     }
   }
   newRoom->miscData = newMiscData;
+
+  return newRoom;
 }
 
 /*!
@@ -466,6 +459,8 @@ void OpenRoom(GameObject* room)
 
   
   MapRoom* roomData = (MapRoom*)(room->miscData);
+
+  
   int i = 0;
   while (i < 4)
   {
@@ -492,8 +487,18 @@ void CloseRoom(GameObject* room)
     abort();
   }
 
+  
 
   MapRoom* roomData = (MapRoom*)(room->miscData);
+
+  
+  switch (roomData->type)
+  {
+  case roomtype_simple:
+    MapRoomBehavior_BasicEnemies(roomData->position);
+    break;
+  }
+
   int i = 0;
   while (i < 4)
   {

@@ -90,6 +90,12 @@
     <ClCompile Include="CreditsScreen.c">
       <Filter>Menu/UI</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyStateMachine.c" />
+    <ClCompile Include="EntityAnimation.c" />
+    <ClCompile Include="PlayerAnimations.c" />
+    <ClCompile Include="MapRoomInfo.c">
+      <Filter>MapGen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -179,6 +185,12 @@
     </ClInclude>
     <ClInclude Include="CreditsScreen.h">
       <Filter>Menu/UI</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyStateMachine.h" />
+    <ClInclude Include="EntityAnimation.h" />
+    <ClInclude Include="PlayerAnimations.h" />
+    <ClInclude Include="MapRoomInfo.h">
+      <Filter>MapGen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
