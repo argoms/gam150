@@ -89,6 +89,9 @@
     </ClCompile>
     <ClCompile Include="EntityAnimation.c" />
     <ClCompile Include="PlayerAnimations.c" />
+    <ClCompile Include="MapRoomInfo.c">
+      <Filter>MapGen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -178,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="EntityAnimation.h" />
     <ClInclude Include="PlayerAnimations.h" />
+    <ClInclude Include="MapRoomInfo.h">
+      <Filter>MapGen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="EnemyFiles">

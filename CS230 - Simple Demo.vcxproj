@@ -192,6 +192,7 @@
     </ClCompile>
     <ClCompile Include="MapCreator.c" />
     <ClCompile Include="MapGen.c" />
+    <ClCompile Include="MapRoomInfo.c" />
     <ClCompile Include="MyRandom.c" />
     <ClCompile Include="ParticleSystems(Redo).c" />
     <ClCompile Include="Physics.c" />
@@ -227,6 +228,7 @@
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="MapCreator.h" />
     <ClInclude Include="MapGen.h" />
+    <ClInclude Include="MapRoomInfo.h" />
     <ClInclude Include="MyRandom.h" />
     <ClInclude Include="ParticleSystems(Redo).h" />
     <ClInclude Include="Physics.h" />

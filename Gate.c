@@ -23,10 +23,7 @@ GameObject* CreateWorldGate(Vector2D position)
   Entity* gateEntity = malloc(sizeof(Entity));
   gateEntity->health = 5;
 
-  Animation* anim2 = GCreateAnimation(1,
-    GCreateTexture("isoTileGreen.png"),
-    GCreateMesh(128.f, 64.f, 1, 1),
-    1);
+  Animation* anim2 = GetGateAnimation();
   GameObject* newGate = GameObjectCreate(PhysicsCreateObject(Vec2(position.x, position.y), 1), GCreateSprite(position.x, position.y, anim2, 1), gateEntity, entity_gate);
   
   newGate->simulate = NULL;
@@ -38,7 +35,7 @@ GameObject* CreateWorldGate(Vector2D position)
 
   newGate->sprite->tint.alpha = 0.1f;
 
-  printf("created a gate. %f, %f\n", position.x, position.y);
+  //printf("created a gate. %f, %f\n", position.x, position.y);
   return newGate;
   //IsoTileSet(position.x, position.y, 1);
 }

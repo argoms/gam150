@@ -14,14 +14,15 @@ Functions for procedurally generating game levels.
 #include "Door.h"
 #include "Gate.h"
 #include "MyRandom.h"
+#include "MapRoomInfo.h"
 
 //private info (would be defines but you can't make those private?
 
-#define NUM_ROOMS 6
+#define NUM_ROOMS 8
 
 //Think of this as MAX room size, not just room size.
-static int ROOM_SIZE = 12;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/
-static int MAP_SEED = 5;
+static int ROOM_SIZE = 9;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/
+static int MAP_SEED = 32;
 
 typedef struct MapRoom MapRoom;
 //state enums for each room
@@ -56,6 +57,8 @@ struct MapRoom
   int roomNum; //internal, order of creation
 };
 
+
+
 //static enums/structs:
 static enum directions
 {
@@ -75,10 +78,17 @@ static void Room_BasicEnemies(Vector2D cursor);
 static void RoomTemplate(Vector2D cursor, int spawnGates);
 static void Room_StartRoom(Vector2D cursor);
 static void SetupBaseMap(int mapWidth, int mapHeight);
+static int RoomValid(Vector2D cursor, int mapW, int mapH);
+static void SpawnMapRooms(MapRoomInfo* rooms);
 
+static Animation* GateAnimation;
 //implementation:
 void GenerateMap(IsoMap* inputMap)
 {
+  GateAnimation = GCreateAnimation(1,
+    GCreateTexture("isoTileGreen.png"),
+    GCreateMesh(128.f, 64.f, 1, 1),
+    1);
   int mapHeight = inputMap->mapHeight;
   int mapWidth = inputMap->mapWidth;
   int i = 0;
@@ -87,11 +97,15 @@ void GenerateMap(IsoMap* inputMap)
   
 
   RandSeed(MAP_SEED);
-  printf("\n \n \n GENERATING MAP WITH SEED %i, rands: %f %f %f \n \n \n", MAP_SEED, RandFloat(), RandFloat(), RandFloat());
+  printf("\n \n \n GENERATING MAP WITH SEED %i AND %i ROOMS\n \n \n", MAP_SEED, NUM_ROOMS);
   
-  int roomsNum = 0;
-  MapRoom rooms[NUM_ROOMS];
+  //int roomsNum = 0;
+  //MapRoomInfo rooms[NUM_ROOMS];
+  //MapRoomInfo* rooms = NULL; //create a new list of rooms
 
+  
+
+  //MapRoom* rooms = malloc(sizeof(MapRoom) * NUM_ROOMS);
   SetupBaseMap(mapWidth, mapHeight);
   //create path of rooms:
 
@@ -99,13 +113,19 @@ void GenerateMap(IsoMap* inputMap)
   int rooms_created = 1;
   int tries = 0; //infinite loop killer
 
-  //generate a room for start
-  rooms[roomsNum].type = roomtype_start;
-  rooms[roomsNum].position.x = cursor.x;
-  rooms[roomsNum].position.y = cursor.y;
-  printf("room: %f, %f, int %i START ROOM\n", rooms[roomsNum].position.x, rooms[roomsNum].position.y, roomsNum);
 
-  roomsNum++;
+  MapRoomInfo* rooms = malloc(sizeof(MapRoomInfo));
+  rooms->next = NULL;
+  rooms->type = roomtype_start;
+  rooms->position = cursor;
+  //MapRoomInfoAdd(rooms, cursor, roomtype_start);
+  ////generate a room for start
+  //rooms[roomsNum].type = roomtype_start;
+  //rooms[roomsNum].position.x = cursor.x;
+  //rooms[roomsNum].position.y = cursor.y;
+  ////printf("room: %f, %f, int %i START ROOM\n", rooms[roomsNum].position.x, rooms[roomsNum].position.y, roomsNum);
+
+  //roomsNum++;
 
   //start creating rooms:
   while (rooms_created < NUM_ROOMS && tries++ < NUM_ROOMS * 100)
@@ -117,11 +137,8 @@ void GenerateMap(IsoMap* inputMap)
     Vector2D newCursorPosition;
     Vector2DAdd(&newCursorPosition, &cursor, &offset); //travel one room size in that random direction
 
-    if (isValid(newCursorPosition, inputMap) && IsoTileGet((int)newCursorPosition.x, (int)newCursorPosition.y) != 1)
+    if (isValid(newCursorPosition, inputMap) && RoomValid(newCursorPosition, mapWidth, mapHeight) && IsoTileGet((int)newCursorPosition.x, (int)newCursorPosition.y) != 1)
     {
-      printf("MapGen.c: x: %f, y: %f, valid apparently. \n", newCursorPosition.x, newCursorPosition.y);
-      
-      
       //now bear with me here, first we're checking if the room we want to go into already exists
       if (IsoTileGet((int)newCursorPosition.x, (int)newCursorPosition.y) == 2)
       {
@@ -133,41 +150,42 @@ void GenerateMap(IsoMap* inputMap)
         else
         {
           //otherwise, we branch back into it (this doesn't count as creating a room)
-          rooms_created--;
+          //rooms_created--;
+
+          //what this does is allows rooms to OCCASIONALLY loop onto themselves without always choosing to form loops
         }
+
+        //fill the path between rooms:
+        FillLine(cursor, newCursorPosition, tile_path);
+        cursor = newCursorPosition;
       }
-
-      //fill the path between rooms:
-      //tile 2 (path) for default, tile 3 (gate) for door areas
-      FillLine(cursor, newCursorPosition, 2);
-      if (IsoTileGet(cursor.x, cursor.y))
+      else
       {
-        //printf("MAP TILE", IsoTileGet(cursor.x, cursor.y));
-      }
-      cursor = newCursorPosition;
-
-
-      //a room has been created! what do?
-      //arbitrary scope to help visualize things:
-      {
-        if (rooms_created == NUM_ROOMS - 1)
+        
+        //fill the path between rooms & update cursor:
+        FillLine(cursor, newCursorPosition, tile_path);
+        cursor = newCursorPosition;
+        
+        //a room has been created! what do?
+        rooms_created++;
+        
+        if (rooms_created == NUM_ROOMS)
         {
           DoorCreateDoorAt(cursor);
         }
 
-        //placeholder: spawn one enemy.
-
+        MapRoomInfoAdd(rooms, cursor, roomtype_simple);
+        continue;
         //MapRoom inst = rooms[roomsNum];
-        rooms[roomsNum].type = roomtype_simple;
-        rooms[roomsNum].position.x = cursor.x;
-        rooms[roomsNum].position.y = cursor.y;
-        printf("room: %f, %f, int %i PREGEN\n", rooms[roomsNum].position.x, rooms[roomsNum].position.y, roomsNum);
+        //rooms[roomsNum].type = roomtype_simple;
+        //rooms[roomsNum].position.x = cursor.x;
+        //rooms[roomsNum].position.y = cursor.y;
+        //printf("room: %f, %f, int %i PREGEN\n", rooms[roomsNum].position.x, rooms[roomsNum].position.y, roomsNum);
+        //  
+        //roomsNum++;
 
-        roomsNum++;
-        //Room_BasicEnemies(cursor);
-
+        
       }
-      rooms_created++;
     }
     else
     {
@@ -175,41 +193,41 @@ void GenerateMap(IsoMap* inputMap)
     }
   }
 
-  //discount exceptions
+  //discount exceptions/infinite loop handling
   if (tries > NUM_ROOMS * 100)
   {
-    printf("MapGen.c: seriously your algorithm is fucked, look at it. Re-generating map.");
-    abort();
+    printf("MapGen.c: seriously your algorithm is fucked, look at it.");
+    //abort();
     //GenerateMap(inputMap); //comment this back in for release, but while debugging keep it out to avoid recursion.
   }
 
-  //spawn rooms:
-  i = 0;
-  while (i < NUM_ROOMS)
-  {
-    if (rooms[i].type == roomtype_start)
-    {
-      Room_StartRoom(rooms[i].position);
-      printf("startroom");
-    }
-    else
-    {
-      Room_BasicEnemies(rooms[i].position);
-    }
-    //printf("room: %f, %f, %i \n \n", rooms[i].position.x, rooms[i].position.y, rooms[i].type);
-    i++;
-    /*
-
-    else if (i == 1)
-    {
-    printf("whyisthisdoingnothing");
-    DoorCreateDoorAt(rooms[i].position);
-    }
-    */
-  }
+  SpawnMapRooms(rooms);
+  MapRoomInfoClear(rooms); //clean up after done
   
 }
 
+/*!
+\brief Given a linked list of MapRoomInfo objects, creates relevant map data
+*/
+static void SpawnMapRooms(MapRoomInfo* rooms)
+{
+  MapRoomInfo* index = rooms;
+  while (index)
+  {
+    switch (index->type)
+    {
+    case roomtype_start:
+      Room_StartRoom(index->position);
+      printf("made a start room");
+      break;
+    case roomtype_simple:
+      Room_BasicEnemies(index->position);
+      printf("enemyroom\n");
+      break;
+    }
+    index = index->next;
+  }
+}
 /*!
 \brief Sets up a basic map grid with ROOM_SIZE-sized rooms.
 */
@@ -335,6 +353,7 @@ static void FillArea(int x, int y, int tileType)
 
 static void Room_BasicEnemies(Vector2D cursor)
 {
+  ImportEnemyData(cursor.x, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
   RoomTemplate(cursor, 1);
 }
 
@@ -360,7 +379,7 @@ static void RoomTemplate(Vector2D cursor, int spawnGates)
   newMiscData->size = ROOM_SIZE;
   //newMiscData->gates[0] = 1;
   
-  ImportEnemyData(cursor.x, cursor.y, "Level1EnemyRanged2.txt", GetPlayerObject());
+  //ImportEnemyData(cursor.x, cursor.y, "Level1EnemyRanged2.txt", GetPlayerObject());
 
   //ImportEnemyData(cursor.x, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
   //ImportEnemyData(cursor.x - 5, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
@@ -496,4 +515,21 @@ void EnemyKilled(GameObject* room)
   {
     OpenRoom(room);
   }
+}
+
+/*!
+\brief Getter for a gate animation object so gates don't all have to create their own animations per create call.
+*/
+Animation* GetGateAnimation()
+{
+  return GateAnimation;
+}
+
+/*!
+\brief checks if an area around room vector is valid to place a room in
+*/
+static int RoomValid(Vector2D cursor, int mapW, int mapH)
+{
+  int roomRad = (ROOM_SIZE / 2);
+  return !(cursor.x - roomRad< 0 || cursor.y - roomRad < 0 || cursor.x + roomRad> mapW || cursor.y + roomRad> mapH);
 }
