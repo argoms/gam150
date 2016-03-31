@@ -185,26 +185,45 @@ void MainMenuInit()
   textString = TextCreateString("PRESS SPACE FOR LEVEL 1", -360, 0);
 
   //BUTTONS------------------------------------------------------
+  float winMaxX;
+  float winMaxY;
+  float winMinX;
+  float winMinY;
+
+  winMaxX = AEGfxGetWinMaxX();
+  winMaxY = AEGfxGetWinMaxY();
+  winMinX = AEGfxGetWinMinX();
+  winMinY = AEGfxGetWinMinY();
+
+  float screenWidth = winMaxX - winMinX;
+  float screenHeight = winMaxY - winMinY;
+
   int button_type = LEVEL_ONE_BUTTON;             /* type of button  */
+  //float button1x = -200;                          /* x position      */
+  //float button1y = -100;                          /* y position      */
   float button1x = -200;                          /* x position      */
   float button1y = -100;                          /* y position      */
-  float mesh1x = 128.0f;                          /* mesh x          */
+  float mesh1x = 256.0f;                          /* mesh x          */
   float mesh1y = 64.0f;                           /* mesh y          */
+  //float mesh1x = 128.0f;                        /* mesh x          */
+  //float mesh1y = 64.0f;                         /* mesh y          */
   float button1size = 1.0f;                       /* size            */
   static AEGfxVertexList*	button_mesh;				    /* mesh ptr        */
   button_mesh = GCreateMesh(mesh1x, mesh1y, 1, 1);/* create the mesh */
 
+  float text_offset = 90.0f;
+  //float text_offset = -90.0f;
   TextString *main_menu_text;
-  main_menu_text = TextCreateHUDString("Level 1", button1x, button1y);
-  //GCreateTexture("isotilePlaceholder1.png")
+  main_menu_text = TextCreateHUDString("Level 1", button1x - text_offset, button1y);
+  AEGfxTexture* button_texture = GCreateTexture("isocircleGreen.png");
   //load button:
   Animation* anim_button1 = GCreateAnimation(1,
-    NULL,
+    button_texture,   //was null
     button_mesh,
     1);
 
   Sprite *button1_sprite = GCreateSprite(button1x, button1y, anim_button1, 1);
-  button1_sprite->offset.y = 10000;
+  //button1_sprite->offset.y = 10000;
   //PhysicsObject *button1_physics = PhysicsCreateObject(Vec2(button1x,button1y),1);
 
   GameObject* button = CreateButton(0, button1_sprite, NULL, button_type, button1size, mesh1x, mesh1y);

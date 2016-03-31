@@ -160,6 +160,7 @@ void PlayerSimulate()
   //update the i frames
   UpdateEntityIFs(player);
 
+  //-------Tarrants code for dodge no touchie----------------------
   //check key
   //int key = VK_SPACE;  
 
@@ -167,6 +168,9 @@ void PlayerSimulate()
   //int key;
   //key = RIGHT_CLICK;
 
+  int dodge_keys[] = { RIGHT_CLICK, VK_SPACE };
+  int key_list_size = 2;
+  /*
   if (AEInputCheckTriggered('Z'))
   {
     printf("%d\n", dodge_key);
@@ -179,9 +183,11 @@ void PlayerSimulate()
       dodge_key = RIGHT_CLICK;
     }
   }
+  */
 
+  //Dodge(dodge_key, player); //check if the key is pressed if so then dodge
+  Dodge2(dodge_keys, player, key_list_size);
 
-  Dodge(dodge_key, player); //check if the key is pressed if so then dodge
   /*
   int inc_drag_key = 'H'; //set this equal to whatever key   
   if (AEInputCheckTriggered(inc_drag_key))
@@ -202,7 +208,7 @@ void PlayerSimulate()
     playerDrag = 0.7f;
   }
   */
-
+  //-------Tarrants code no touchie----------------------
 
   //alpha dumb hardcoding
   {
