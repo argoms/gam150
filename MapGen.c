@@ -19,6 +19,8 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Gate.h"
 #include "MyRandom.h"
 #include "MapRoomInfo.h"
+#include "GameObject.h"
+#include "MapGen.h"
 
 //private info (would be defines but you can't make those private?
 
@@ -28,7 +30,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 static int ROOM_SIZE = 13;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/
 static int MAP_SEED = 32;
 
-typedef struct MapRoom MapRoom;
+
 //state enums for each room
 enum MapGen_RoomStates
 {
@@ -44,22 +46,7 @@ enum MapGen_RoomTypes
 };
 
 
-/*!
-\struct MapRoom
-\brief contains a full room of objects
-*/
-struct MapRoom
-{
-  int type;
-  int state; //see MapGen_RoomStates enum
-  int size; //height/width of room (square rooms)
-  int numEnemies; // number of enemies still alive in room
-  
-  Vector2D position;
-  GameObject* gates[4];
 
-  int roomNum; //internal, order of creation
-};
 
 
 
@@ -395,7 +382,7 @@ static GameObject* RoomTemplate(Vector2D cursor, int spawnGates)
     {
       //GameObject* CreateWorldGate(Vector2D position);
 
-      newMiscData->gates[0] = CreateWorldGate(Vec2(cursor.x + ROOM_SIZE / 2, cursor.y));
+      newMiscData->gates[0] = CreateWorldGate(Vec2(cursor.x + ROOM_SIZE / 2, cursor.y), gate_vertical);
       //IsoTileSet(cursor.x + ROOM_SIZE / 2, cursor.y, 3);
     }
     else
@@ -405,7 +392,7 @@ static GameObject* RoomTemplate(Vector2D cursor, int spawnGates)
 
     if (IsoTileGet(cursor.x - ROOM_SIZE / 2, cursor.y) == 2)
     {
-      newMiscData->gates[1] = CreateWorldGate(Vec2(cursor.x - ROOM_SIZE / 2, cursor.y));
+      newMiscData->gates[1] = CreateWorldGate(Vec2(cursor.x - ROOM_SIZE / 2, cursor.y), gate_vertical);
     }
     else
     {
@@ -414,7 +401,7 @@ static GameObject* RoomTemplate(Vector2D cursor, int spawnGates)
 
     if (IsoTileGet(cursor.x, cursor.y - ROOM_SIZE / 2) == 2)
     {
-      newMiscData->gates[2] = CreateWorldGate(Vec2(cursor.x, cursor.y - ROOM_SIZE / 2));
+      newMiscData->gates[2] = CreateWorldGate(Vec2(cursor.x, cursor.y - ROOM_SIZE / 2), gate_horizontal);
     }
     else
     {
@@ -423,7 +410,7 @@ static GameObject* RoomTemplate(Vector2D cursor, int spawnGates)
 
     if (IsoTileGet(cursor.x, cursor.y + ROOM_SIZE / 2) == 2)
     {
-      newMiscData->gates[3] = CreateWorldGate(Vec2(cursor.x, cursor.y + ROOM_SIZE / 2));
+      newMiscData->gates[3] = CreateWorldGate(Vec2(cursor.x, cursor.y + ROOM_SIZE / 2), gate_horizontal);
     }
     else
     {
@@ -495,7 +482,7 @@ void CloseRoom(GameObject* room)
   switch (roomData->type)
   {
   case roomtype_simple:
-    MapRoomBehavior_BasicEnemies(roomData->position);
+    MapRoomBehavior_BasicEnemies(roomData);
     break;
   }
 
@@ -508,7 +495,19 @@ void CloseRoom(GameObject* room)
       printf("CLOSED");
       inst->sprite->tint.alpha = 1.f;
       inst->sprite->tint.red = 1.f;
-      IsoTileSet(inst->physics->position.x, inst->physics->position.y, 1);
+      IsoTileSet(inst->physics->position.x, inst->physics->position.y, tile_wall);
+      
+      switch(GetWorldGate(inst)->orientation)
+      {
+      case gate_horizontal:
+        IsoTileSet(inst->physics->position.x + 1, inst->physics->position.y, tile_wall);
+        IsoTileSet(inst->physics->position.x - 1, inst->physics->position.y, tile_wall);
+        break;
+      case gate_vertical:
+        IsoTileSet(inst->physics->position.x, inst->physics->position.y + 1, tile_wall);
+        IsoTileSet(inst->physics->position.x, inst->physics->position.y - 1, tile_wall);
+        break;
+      }
     }
     i++;
   }

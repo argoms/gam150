@@ -11,6 +11,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 
 #include "MapRoomInfo.h"
 #include "ImportData.h"
+#include "MapGen.h"
 /*
 struct MapRoomInfo
 {
@@ -70,8 +71,9 @@ void MapRoomInfoClear(MapRoomInfo* first)
 /*!
 \brief Called by a basic enemies room once it is opened
 */
-void MapRoomBehavior_BasicEnemies(Vector2D cursor)
+void MapRoomBehavior_BasicEnemies(MapRoom* roomData)
 {
-  printf("SPAWNING A FUCKING ENEMY");
+  Vector2D cursor = Vec2(roomData->position.x, roomData->position.y);
+  roomData->numEnemies = 1;
   ImportEnemyData(cursor.x, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());;
 }
