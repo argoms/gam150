@@ -96,6 +96,7 @@ void GateRoomSimulate(GameObject* instance)
     //clear the sim function on gameobject after one execution:
     instance->simulate = NULL;
     CloseRoom(instance);
+    //OpenRoom(instance);
     printf("\n \n *** \n room closed \n \n *** \n");
   }
 

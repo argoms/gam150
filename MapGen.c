@@ -22,7 +22,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 
 //private info (would be defines but you can't make those private?
 
-#define NUM_ROOMS 8
+#define NUM_ROOMS 16
 
 //Think of this as MAX room size, not just room size.
 static int ROOM_SIZE = 9;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/
@@ -101,7 +101,7 @@ void GenerateMap(IsoMap* inputMap)
 
   
 
-  MAP_SEED = rand();
+  MAP_SEED = 23296;//rand();
   RandSeed(MAP_SEED);
   printf("\n \n \n GENERATING MAP WITH SEED %i AND %i ROOMS\n \n \n", MAP_SEED, NUM_ROOMS);
 
@@ -470,7 +470,10 @@ void OpenRoom(GameObject* room)
   while (i < 4)
   {
     GameObject* inst = roomData->gates[i];
-    GateOpened(inst);
+    if (inst)
+    {
+      GateOpened(inst);
+    }
     i++;
   }
 }
