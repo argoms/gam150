@@ -141,13 +141,10 @@ void GenerateMap(IsoMap* inputMap)
         {
           continue;
         }
-        else
-        {
           //otherwise, we branch back into it (this doesn't count as creating a room)
           //rooms_created--;
 
           //what this does is allows rooms to OCCASIONALLY loop onto themselves without always choosing to form loops
-        }
 
         //fill the path between rooms:
         FillLine(cursor, newCursorPosition, tile_path);
