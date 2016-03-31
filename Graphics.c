@@ -1,9 +1,12 @@
 /*!
+Project (working title): Epoch
 \file   Graphics.c
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
 Graphics implementation front end handling sprite layering, dynamic sprite creation etc.
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "Graphics.h"
 #include "AEEngine.h"

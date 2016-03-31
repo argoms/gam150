@@ -1,3 +1,16 @@
+/*!
+Project (working title): Epoch
+\file   PlayerEntity.c
+\author James Do
+\par    email: j.do\@digipen.edu
+\brief
+Handles player-related functionality:
+  -controls (movement/attacking)
+  -animation
+  -health display
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+*/
 #include "PlayerEntity.h"
 #include "GameObject.h"
 #include "Physics.h"
@@ -9,6 +22,8 @@
 #include "Text.h"
 #include <string.h>
 #include "Dodge.h"
+#include "EntityAnimation.h"
+#include "PlayerAnimations.h"
 
 extern double frameTime;
 
@@ -31,34 +46,6 @@ static float playerDrag;
 static void PlayerAttack();
 static void SnapVector(Vector2D* _input);
 
-//animations:
-static Animation* animWalkDown;
-static Animation* animWalkLeft;
-static Animation* animWalkUp;
-static Animation* animWalkRight;
-static Animation* animWalkUpLeft;
-static Animation* animWalkUpRight;
-static Animation* animWalkDownRight;
-static Animation* animWalkDownLeft;
-
-static Animation* animIdleDown;
-static Animation* animIdleLeft;
-static Animation* animIdleRight;
-static Animation* animIdleUp;
-static Animation* animIdleDownLeft;
-static Animation* animIdleDownRight;
-static Animation* animIdleUpLeft;
-static Animation* animIdleUpRight;
-
-static Animation* animSwordDown;
-static Animation* animSwordLeft;
-static Animation* animSwordRight;
-static Animation* animSwordUp;
-static Animation* animSwordDownLeft;
-static Animation* animSwordDownRight;
-static Animation* animSwordUpLeft;
-static Animation* animSwordUpRight;
-
 static Sprite* playerSprite;
 static float stepSoundTimer;
 
@@ -79,27 +66,9 @@ static enum actions
   PLAYER_WALK = 32,
   PLAYER_SWORD = 64
 };
-/*
-typedef struct
-{
-  unsigned int action;
-  const char *filename;
-  Animation *animation;
-} AnimationDefinition;
-
-static AnimationDefinition animations[] =
-{
-  { PLAYER_WALK + PLAYER_LEFT + PLAYER_DOWN, "anims/walkLD.png",  NULL },
-  { PLAYER_WALK + PLAYER_RIGHT + PLAYER_DOWN, "anims/walkRD.png",  NULL }
-  { PLAYER_IDLE + PLAYER_LEFT + PLAYER_DOWN, "anims/idleLD.png", NULL },
-  { PLAYER_IDLE + PLAYER_RIGHT + PLAYER_DOWN, "anims/idleRD.png", NULL }
-
-};
-*/
 
 static unsigned int playerAction; //bit field for player action flags:
 /*!
-Bits 1-4 are for direction (going left/right/up/down or some combination of those)
 Bit 5 is active if the player is idle
 Bit 6 is active if the player is moving
 Bit 7 is active if the player is attacking
@@ -109,10 +78,23 @@ static TextString* healthText;
 /*!
 \brief Call at the start of a level to initialize player values.
 */
+
+static AnimationSet* playerWalkAnims;
+static AnimationSet* playerIdleAnims;
+static AnimationSet* playerSwordAnims;
+
+static Vector2D playerDirection;
 void PlayerInit()
 {
   
+
+
   player = GetPlayerObject();
+
+  //set up player health:
+  player->entity->health = 100;
+  //
+
   attackCooldown = 0;
   attackCooldownLength = 0.5;
   attackDamage = 50;
@@ -134,153 +116,11 @@ void PlayerInit()
   int walkFrames = 12; //number of frames in walk animation
   int idleFrames = 1; //number of frames in idle animation
   int swordFrames = 13;
-  /*
-  int numAnimations = sizeof(animations) / sizeof(AnimationDefinition);
-  int i = 0;
-  for (i = 0; i < numAnimations; ++i)
-  {
-    int frames;
-    AEGfxVertexList *mesh;
-    switch (animations[i].action)
-    {
-    case PLAYER_IDLE:
-      frames = idleFrames;
-      mesh = idleMesh;
-      break;
-    case PLAYER_WALK:
-      frames = walkFrames;
-      mesh = walkMesh;
-      break;
-    }
-    animations[i].animation = GCreateAnimation(frames,
-      GCreateTexture(animations[i].filename),
-      mesh,
-      1);
-  }
-  */
-  //load walking:
-  animWalkDown = GCreateAnimation(walkFrames,
-    GCreateTexture("animations/player/walkDown.png"),
-    walkMesh,
-    1);
 
-  animWalkLeft = GCreateAnimation(walkFrames,
-    GCreateTexture("animations/player/walkLeft.png"),
-    walkMesh,
-    1);
-
-  animWalkUp = GCreateAnimation(walkFrames,
-    GCreateTexture("animations/player/walkUp.png"),
-    walkMesh,
-    1);
-
-  animWalkRight = GCreateAnimation(walkFrames,
-    GCreateTexture("animations/player/walkRight.png"),
-    walkMesh,
-    1);
-
-  animWalkUpRight = GCreateAnimation(walkFrames,
-    GCreateTexture("animations/player/walkUpRight.png"),
-    walkMesh,
-    1);
-
-  animWalkUpLeft = GCreateAnimation(walkFrames,
-    GCreateTexture("animations/player/walkUpLeft.png"),
-    walkMesh,
-    1);
-
-  animWalkDownRight = GCreateAnimation(walkFrames,
-    GCreateTexture("animations/player/walkDownRight.png"),
-    walkMesh,
-    1);
-
-  animWalkDownLeft = GCreateAnimation(walkFrames,
-    GCreateTexture("animations/player/walkDownLeft.png"),
-    walkMesh,
-    1);
-
-  //idle:
-
-  animIdleDown = GCreateAnimation(idleFrames,
-    GCreateTexture("animations/player/idleDown.png"),
-    idleMesh,
-    1);
-
-  animIdleLeft = GCreateAnimation(idleFrames,
-    GCreateTexture("animations/player/idleLeft.png"),
-    idleMesh,
-    1);
-
-  animIdleUp = GCreateAnimation(idleFrames,
-    GCreateTexture("animations/player/idleUp.png"),
-    idleMesh,
-    1);
-
-  animIdleRight = GCreateAnimation(idleFrames,
-    GCreateTexture("animations/player/idleRight.png"),
-    idleMesh,
-    1);
-
-  animIdleUpRight = GCreateAnimation(idleFrames,
-    GCreateTexture("animations/player/idleUpRight.png"),
-    idleMesh,
-    1);
-
-  animIdleUpLeft = GCreateAnimation(idleFrames,
-    GCreateTexture("animations/player/idleUpLeft.png"),
-    idleMesh,
-    1);
-
-  animIdleDownRight = GCreateAnimation(idleFrames,
-    GCreateTexture("animations/player/idleDownRight.png"),
-    idleMesh,
-    1);
-
-  animIdleDownLeft = GCreateAnimation(idleFrames,
-    GCreateTexture("animations/player/idleDownLeft.png"),
-    idleMesh,
-    1);
-
-  //sword:
-  animSwordDown = GCreateAnimation(1,
-    GCreateTexture("animations/player/swordDown.png"),
-    swordMesh,
-    swordFrames);
-
-  animSwordLeft = GCreateAnimation(1,
-    GCreateTexture("animations/player/swordLeft.png"),
-    swordMesh,
-    swordFrames);
-
-  animSwordUp = GCreateAnimation(1,
-    GCreateTexture("animations/player/swordUp.png"),
-    swordMesh,
-    swordFrames);
-
-  animSwordRight = GCreateAnimation(1,
-    GCreateTexture("animations/player/swordRight.png"),
-    swordMesh,
-    swordFrames);
-
-  animSwordUpRight = GCreateAnimation(1,
-    GCreateTexture("animations/player/swordUpRight.png"),
-    swordMesh,
-    swordFrames);
-
-  animSwordUpLeft = GCreateAnimation(1,
-    GCreateTexture("animations/player/swordUpLeft.png"),
-    swordMesh,
-    swordFrames);
-
-  animSwordDownRight = GCreateAnimation(1,
-    GCreateTexture("animations/player/swordDownRight.png"),
-    swordMesh,
-    swordFrames);
-
-  animSwordDownLeft = GCreateAnimation(1,
-    GCreateTexture("animations/player/swordDownLeft.png"),
-    swordMesh,
-    swordFrames);
+  
+  playerWalkAnims = PlayerAnimationCreateWalk();
+  playerIdleAnims = PlayerAnimationCreateIdle();
+  playerSwordAnims = PlayerAnimationCreateSword();
 
   playerSprite = player->sprite;
   //playerSprite = GCreateSprite(0, 0, animWalkLeft, 2); //re-add this code instead of directly pointing to player sprite if you want collision shape under player
@@ -288,7 +128,7 @@ void PlayerInit()
   playerSprite->offset.x = 0;
   playerSprite->offset.y = 80;
 
-  playerAction = PLAYER_IDLE + PLAYER_DOWN;
+  playerAction = PLAYER_IDLE;
 
   //shitty alpha fast coding:
   TextInit();
@@ -299,7 +139,7 @@ void PlayerInit()
   {
     //printf("a");
     count++;
-    hpstring[6 + count] = '*';
+    hpstring[6 + count] = 3;
     tempHP -= 10;
   }
   healthText =  TextCreateHUDString(hpstring, -300, -200);
@@ -378,7 +218,7 @@ void PlayerSimulate()
     while (tempHP > 0)
     {
       count++;
-      hpstring[6 + count] = '*';
+      hpstring[6 + count] = 3;
       tempHP -= 10;
     }
     TextRemoveString(healthText);
@@ -392,8 +232,7 @@ void PlayerSimulate()
 */
 void PlayerInput()
 {
-  
-
+  //printf("frame %i \n", playerSprite->frame);
   //attacking:
   if (attackCooldown < 0 && AEInputCheckCurr(1))
   {
@@ -410,11 +249,6 @@ void PlayerInput()
     
 
     AEInputGetCursorPosition(&mouseX, &mouseY);
-    
-    //HARD CODING MAGIC NUMBERS SPOOOOOKY
-    mouseX += -400;
-    mouseY += -300;
-    /***/
 
     
     if (input.x != 0 || input.y != 0)
@@ -430,25 +264,6 @@ void PlayerInput()
 
       //set player animation flags:
       playerAction = PLAYER_WALK;
-
-      //player directions:
-      if (input.x > 0)
-      {
-        playerAction += PLAYER_RIGHT;
-      }
-      else if (input.x < 0)
-      {
-        playerAction += PLAYER_LEFT;
-      }
-
-      if (input.y > 0)
-      {
-        playerAction += PLAYER_UP;
-      }
-      else if (input.y < 0)
-      {
-        playerAction += PLAYER_DOWN;
-      }
     }
     else
     {
@@ -469,6 +284,13 @@ void PlayerInput()
   }
   else if(playerAction & PLAYER_SWORD)
   {
+    Vector2D input = Vec2(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41),
+      ((float)(AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53)) / 2));
+    Vector2DScale(&input, &input, 5);
+    player->physics->velocity.x += IsoScreenToWorld(&input).x * playerAccel; 
+    player->physics->velocity.y += IsoScreenToWorld(&input).y * playerAccel;
+
+
     playerSprite->frameDelay = 1;
     //printf("AAA");
     //stop animation after it's done
@@ -512,22 +334,22 @@ static void SnapVector(Vector2D* _input)
   printf("playeraction: %i", playerAction);
   if (_input->x > EPSILON)
   {
-    playerAction += PLAYER_RIGHT;
+    //playerAction += PLAYER_RIGHT;
     //printf("ri");
   }
   if (_input->x < -EPSILON)
   {
-    playerAction += PLAYER_LEFT;
+    //playerAction += PLAYER_LEFT;
    // printf("li");
   }
   if (_input->y > EPSILON)
   {
-    playerAction += PLAYER_UP;
+   // playerAction += PLAYER_UP;
     //printf("ui");
   }
   if (_input->y < -EPSILON)
   {
-    playerAction += PLAYER_DOWN;
+   // playerAction += PLAYER_DOWN;
     //printf("di");
   }
   
@@ -550,8 +372,8 @@ static void PlayerAttack()
     Audio_PlaySoundSample("SwordSwing2.ogg", 0);
   }
   //set up animation:
-  playerAction = playerAction & (PLAYER_DOWN + PLAYER_UP + PLAYER_LEFT + PLAYER_RIGHT); //strip direction from current flags
-  playerAction += PLAYER_SWORD;
+  //playerAction = playerAction & (PLAYER_DOWN + PLAYER_UP + PLAYER_LEFT + PLAYER_RIGHT); //strip direction from current flags
+  playerAction = PLAYER_SWORD;
   playerSprite->frame = 0;
 
   
@@ -573,11 +395,13 @@ static void PlayerAttack()
   //printf("%i, %i|||", mouseX, mouseY);
   //AEGfxConvertScreenCoordinatesToWorld(mouseX, mouseY, &(mousePos.x), &(mousePos.y));
   Vector2D mousePos = Vec2(mouseX, mouseY * -1);
-  SnapVector(&mousePos);
+  //SnapVector(&mousePos);
 
   mousePos = IsoScreenToWorld(&mousePos);
   Vector2DNormalize(&mousePos, &mousePos);
+  playerDirection = mousePos;
 
+  
   
   //EntityApplyKnockback(player->entity, &mousePos);
 
@@ -591,6 +415,8 @@ static void PlayerAttack()
   tracer->simulate = &TracerSimulate;
   tracer->physics->onCollision = &TracerFriendlyProjectileCollision;
 
+  Vector2DScale(&mousePos, &mousePos, 0.25);
+  EntityApplyKnockback(player->entity, &mousePos);
   printf("M1\n");
 }
 /*!
@@ -624,99 +450,20 @@ void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _oth
 */
 void PlayerAnimations()
 {
-  /*
-  int numAnimations = sizeof(animations) / sizeof(AnimationDefinition);
-  for (int i = 0; i < numAnimations; ++i)
-  {
-    if ((playerAction == animations[i].action) && (animations[i].animation != NULL))
-    {
-      playerSprite->animation = animations[i].animation;
-      break;
-    }
-  }
-  */
-  //printf("%i", playerAction);
   switch (playerAction)
   {
-  //PLAYER WALKING:
-  case PLAYER_WALK + PLAYER_DOWN:
-    playerSprite->animation = animWalkDown;
+    //PLAYER WALKING:
+  case PLAYER_WALK:
+    playerDirection = (player->physics->velocity);
+    playerSprite->animation = AnimationPlay(playerWalkAnims, &(player->physics->velocity));
     break;
-  case PLAYER_WALK + PLAYER_DOWN + PLAYER_LEFT:
-    playerSprite->animation = animWalkDownLeft;
+  case PLAYER_IDLE:
+    playerSprite->animation = AnimationPlay(playerIdleAnims, &playerDirection);
     break;
-  case PLAYER_WALK + PLAYER_LEFT:
-    playerSprite->animation = animWalkLeft;
-    break;
-  case PLAYER_WALK + PLAYER_DOWN + PLAYER_RIGHT:
-    playerSprite->animation = animWalkDownRight;
-    break;
-  case PLAYER_WALK + PLAYER_RIGHT:
-    playerSprite->animation = animWalkRight;
-    break;
-  case PLAYER_WALK + PLAYER_UP:
-    playerSprite->animation = animWalkUp;
-    break;
-  case PLAYER_WALK + PLAYER_UP + PLAYER_LEFT:
-    playerSprite->animation = animWalkUpLeft;
-    break;
-  case PLAYER_WALK + PLAYER_UP + PLAYER_RIGHT:
-    playerSprite->animation = animWalkUpRight;
-    break;
-
-
-  //PLAYER IDLE:
-    
-  case PLAYER_IDLE + PLAYER_DOWN:
-    playerSprite->animation = animIdleDown;
-    break;
-  case PLAYER_IDLE + PLAYER_DOWN + PLAYER_LEFT:
-    playerSprite->animation = animIdleDownLeft;
-    break;
-  case PLAYER_IDLE + PLAYER_LEFT:
-    playerSprite->animation = animIdleLeft;
-    break;
-  case PLAYER_IDLE + PLAYER_DOWN + PLAYER_RIGHT:
-    playerSprite->animation = animIdleDownRight;
-    break;
-  case PLAYER_IDLE + PLAYER_RIGHT:
-    playerSprite->animation = animIdleRight;
-    break;
-  case PLAYER_IDLE + PLAYER_UP:
-    playerSprite->animation = animIdleUp;
-    break;
-  case PLAYER_IDLE + PLAYER_UP + PLAYER_LEFT:
-    playerSprite->animation = animIdleUpLeft;
-    break;
-  case PLAYER_IDLE + PLAYER_UP + PLAYER_RIGHT:
-    playerSprite->animation = animIdleUpRight;
-    break;
-
     //PLAYER SWORD:
 
-  case PLAYER_SWORD + PLAYER_DOWN:
-    playerSprite->animation = animSwordDown;
-    break;
-  case PLAYER_SWORD + PLAYER_DOWN + PLAYER_LEFT:
-    playerSprite->animation = animSwordDownLeft;
-    break;
-  case PLAYER_SWORD + PLAYER_LEFT:
-    playerSprite->animation = animSwordLeft;
-    break;
-  case PLAYER_SWORD + PLAYER_DOWN + PLAYER_RIGHT:
-    playerSprite->animation = animSwordDownRight;
-    break;
-  case PLAYER_SWORD + PLAYER_RIGHT:
-    playerSprite->animation = animSwordRight;
-    break;
-  case PLAYER_SWORD + PLAYER_UP:
-    playerSprite->animation = animSwordUp;
-    break;
-  case PLAYER_SWORD + PLAYER_UP + PLAYER_LEFT:
-    playerSprite->animation = animSwordUpLeft;
-    break;
-  case PLAYER_SWORD + PLAYER_UP + PLAYER_RIGHT:
-    playerSprite->animation = animSwordUpRight;
+  case PLAYER_SWORD:
+    playerSprite->animation = AnimationPlay(playerSwordAnims, &playerDirection);
     break;
   }
   playerSprite->x = player->sprite->x;

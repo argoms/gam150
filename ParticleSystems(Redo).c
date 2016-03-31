@@ -23,8 +23,796 @@ PS_Instance		goiaPS_ObjectInstanceList[PS_OBJ_INST_MAX];
 
 AEGfxVertexList *pTempParticleMesh;
 
+//FUNCTIONS FOR SPAWNING SPECIFIC PSs
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!
+\brief
+Spawns a Dodge Smoke PS
+\param StartPosX
+float for the PS's Starting X Position.
+\param StartPosY
+float for the PS's Starting Y Position.
+*/
+void SpawnDodgeSmokePS(float StartPosX, float StartPosY)
+{
+	int i;
+
+	for (i = 0; i < 4; i++)
+	{
+		if (pDodgeSmoke[i]->PS_Burst->ShutDown)
+		{
+			pDodgeSmoke[i]->PS_Burst->StartPosX = StartPosX;
+			pDodgeSmoke[i]->PS_Burst->StartPosY = StartPosY;
+			Start_PS(pDodgeSmoke[i]);
+			break;
+		}
+	}
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //DEFAULT PS FUNCTIONS ARE ONLY HERE FOR SAFETY DEFAULTS AND SAMPLES FOR HOW TO WRITE YOUR OWN PS FUNCTIONS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!
+\brief
+creates a particle for a Hit Splash
+\param i
+int for the ID of the particle.
+\param pPS_Inst
+PS_Instance * for the owner continuous PS.
+*/
+void Particle_Create_HitSplash(int i, PS_Instance *pPS_Inst)
+{
+	//you need to create and initialize these to make the particles work properly
+	float RandomAngle = RANDOM_ANGLE;
+	float RandomAngle2 = RANDOM_ANGLE;
+	float RandomScale = (float)((rand() / (float)RAND_MAX));
+	float RandomScale2 = (float)((rand() / (float)RAND_MAX));
+	Vector2D ParticlePosition;
+	Vector2D InitialVelocity;
+	PhysicsObject *ParticlePhysics;
+	Animation *ParticleAnimation;
+	Sprite *ParticleSprite;
+	GameObject *NewParticle;
+
+	//spawn particles at the position of the PS.
+	ParticlePosition.x = pPS_Inst->PS_Burst->StartPosX + (float)(RandomScale * 0.5 * cos(RandomAngle));
+	ParticlePosition.y = pPS_Inst->PS_Burst->StartPosY + (float)(RandomScale * 0.5 * sin(RandomAngle));
+	//launch particles in a random direction at a constant speed
+	InitialVelocity.x = (float)(RandomScale2 * 0.01 * cos(RandomAngle2));
+	InitialVelocity.y = (float)(RandomScale2 * 0.01 * sin(RandomAngle2));
+
+	//NECESSARY SET-UP STUFF
+	ParticlePhysics = PhysicsCreateObject(ParticlePosition, 1.0f);
+	ParticlePhysics->velocity = InitialVelocity;
+	ParticlePhysics->active = 0;
+	ParticleAnimation = GCreateAnimation(1, GCreateTexture("isotile.png"), GCreateMesh(20, 20, 1, 1), 1);
+	ParticleSprite = GCreateSprite(ParticlePosition.x, ParticlePosition.y, ParticleAnimation, 0.0f);
+
+	NewParticle = GameObjectCreate(ParticlePhysics, ParticleSprite, NULL, entity_particle);
+	NewParticle->simulate = Particle_Simulate_DodgeSmoke;
+	pPS_Inst->PS_Burst->Particle[i] = NewParticle;
+}
+
+/*!
+\brief
+creates a particle for a Dodge Smoke
+\param i
+int for the ID of the particle.
+\param pPS_Inst
+PS_Instance * for the owner continuous PS.
+*/
+void Particle_Create_DodgeSmoke(int i, PS_Instance *pPS_Inst)
+{
+	int j;
+
+	//you need to create and initialize these to make the particles work properly
+	float RandomAngle = RANDOM_ANGLE;
+	float RandomAngle2 = RANDOM_ANGLE;
+	float RandomScale = (float)((rand() / (float)RAND_MAX));
+	float RandomScale2 = (float)((rand() / (float)RAND_MAX));
+	Vector2D ParticlePosition;
+	Vector2D InitialVelocity;
+	PhysicsObject *ParticlePhysics;
+	Animation *ParticleAnimation;
+	Sprite *ParticleSprite;
+	GameObject *NewParticle;
+
+	//spawn particles at the position of the PS.
+	ParticlePosition.x = pPS_Inst->PS_Burst->StartPosX + (float)(RandomScale * 0.5 * cos(RandomAngle));
+	ParticlePosition.y = pPS_Inst->PS_Burst->StartPosY + (float)(RandomScale * 0.5 * sin(RandomAngle));
+	//launch particles in a random direction at a constant speed
+	InitialVelocity.x = (float)(RandomScale2 * 0.01 * cos(RandomAngle2));
+	InitialVelocity.y = (float)(RandomScale2 * 0.01 * sin(RandomAngle2));
+	
+	//NECESSARY SET-UP STUFF
+	ParticlePhysics = PhysicsCreateObject(ParticlePosition, 1.0f);
+	ParticlePhysics->velocity = InitialVelocity;
+	ParticlePhysics->active = 0;
+	ParticleAnimation = GCreateAnimation(1, GCreateTexture("isotile.png"), GCreateMesh(20, 20, 1, 1), 1);
+	ParticleSprite = GCreateSprite(ParticlePosition.x, ParticlePosition.y, ParticleAnimation, 0.0f);
+
+	for (j = 0; j < 4; j++)
+	{
+		if (pDodgeSmoke[j] == pPS_Inst)
+		{
+			switch (j)
+			{
+			case 0:
+				ParticleSprite->specialFX = Particle_Special_FX_DodgeSmoke0;
+				break;
+			case 1:
+				ParticleSprite->specialFX = Particle_Special_FX_DodgeSmoke1;
+				break;
+			case 2:
+				ParticleSprite->specialFX = Particle_Special_FX_DodgeSmoke2;
+				break;
+			case 3:
+				ParticleSprite->specialFX = Particle_Special_FX_DodgeSmoke3;
+				break;
+			}
+		}
+	}
+
+	NewParticle = GameObjectCreate(ParticlePhysics, ParticleSprite, NULL, entity_particle);
+	NewParticle->simulate = Particle_Simulate_DodgeSmoke;
+	pPS_Inst->PS_Burst->Particle[i] = NewParticle;
+}
+
+/*!
+\brief
+particle update behavior for Dodge Smoke
+*/
+void Particle_Simulate_DodgeSmoke(void)
+{
+	
+}
+
+/*!
+\brief
+particle special visual effect for Dodge Smoke
+*/
+void Particle_Special_FX_DodgeSmoke0(void)
+{
+	if (pDodgeSmoke[0]->PS_Burst->DeathTimer > 1.0f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 0.5f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f * pDodgeSmoke[0]->PS_Burst->DeathTimer / pDodgeSmoke[0]->PS_Burst->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Dodge Smoke
+*/
+void Particle_Special_FX_DodgeSmoke1(void)
+{
+	if (pDodgeSmoke[1]->PS_Burst->DeathTimer > 1.0f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 0.5f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f * pDodgeSmoke[1]->PS_Burst->DeathTimer / pDodgeSmoke[1]->PS_Burst->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Dodge Smoke
+*/
+void Particle_Special_FX_DodgeSmoke2(void)
+{
+	if (pDodgeSmoke[2]->PS_Burst->DeathTimer > 1.0f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 0.5f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f * pDodgeSmoke[2]->PS_Burst->DeathTimer / pDodgeSmoke[2]->PS_Burst->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Dodge Smoke
+*/
+void Particle_Special_FX_DodgeSmoke3(void)
+{
+	if (pDodgeSmoke[3]->PS_Burst->DeathTimer > 1.0f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 0.5f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f * pDodgeSmoke[3]->PS_Burst->DeathTimer / pDodgeSmoke[3]->PS_Burst->LifeTime);
+	}
+}
+
+/*!
+\brief
+creates a particle for a Fire Hazard
+\param i
+int for the ID of the particle.
+\param pPS_Inst
+PS_Instance * for the owner continuous PS.
+*/
+void Particle_Create_FireHazard(int i, PS_Instance *pPS_Inst)
+{
+	int j;
+
+	//you need to create and initialize these to make the particles work properly
+	float RandomAngleUh = RANDOM_ANGLE;
+	float RandomScale = (float)((rand() / (float)RAND_MAX));
+	float RandomScale2 = (float)((rand() / (float)RAND_MAX));
+	Vector2D ParticlePosition;
+	Vector2D InitialVelocity;
+	PhysicsObject *ParticlePhysics;
+	Animation *ParticleAnimation;
+	Sprite *ParticleSprite;
+	GameObject *NewParticle;
+
+	//spawn particles at the position of the PS.
+	ParticlePosition.x = pPS_Inst->PS_Continuous->StartPosX + (float)(RandomScale * 0.5f);
+	ParticlePosition.y = pPS_Inst->PS_Continuous->StartPosY + (float)((1.0f - RandomScale) * 0.5f);
+	//launch particles in a random direction at a constant speed
+	InitialVelocity.x = (float)(RandomScale2 * 0.01 * cos(RandomAngleUh));
+	InitialVelocity.y = (float)(RandomScale2 * 0.01 * sin(RandomAngleUh));
+
+	//NECESSARY SET-UP STUFF
+	ParticlePhysics = PhysicsCreateObject(ParticlePosition, 1.0f);
+	ParticlePhysics->velocity = InitialVelocity;
+	ParticlePhysics->active = 0;
+	ParticleAnimation = GCreateAnimation(1, GCreateTexture("isotile.png"), GCreateMesh(20, 20, 1, 1), 1);
+	ParticleSprite = GCreateSprite(ParticlePosition.x, ParticlePosition.y, ParticleAnimation, 0.0f);
+
+	for (j = 0; j < 2; j++)
+	{
+		if (pFireHazard[j] == pPS_Inst)
+		{
+			switch (j)
+			{
+			case 0:
+				switch (i)
+				{
+				case 0:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard0_0;
+					break;
+				case 1:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard0_1;
+					break;
+				case 2:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard0_2;
+					break;
+				case 3:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard0_3;
+					break;
+				case 4:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard0_4;
+					break;
+				case 5:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard0_5;
+					break;
+				case 6:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard0_6;
+					break;
+				case 7:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard0_7;
+					break;
+				case 8:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard0_8;
+					break;
+				case 9:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard0_9;
+					break;
+				}
+				break;
+			case 1:
+				switch (i)
+				{
+				case 0:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard1_0;
+					break;
+				case 1:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard1_1;
+					break;
+				case 2:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard1_2;
+					break;
+				case 3:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard1_3;
+					break;
+				case 4:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard1_4;
+					break;
+				case 5:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard1_5;
+					break;
+				case 6:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard1_6;
+					break;
+				case 7:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard1_7;
+					break;
+				case 8:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard1_8;
+					break;
+				case 9:
+					ParticleSprite->specialFX = Particle_Special_FX_FireHazard1_9;
+					break;
+				}
+				break;
+			}
+		}
+	}
+
+	ParticleSprite->blendMode = AE_GFX_BM_BLEND;
+	NewParticle = GameObjectCreate(ParticlePhysics, ParticleSprite, NULL, entity_particle);
+	NewParticle->simulate = Particle_Simulate_FireHazard;
+	pPS_Inst->PS_Continuous->Particle[i] = NewParticle;
+}
+
+/*!
+\brief
+particle update behavior for Fire Hazard
+*/
+void Particle_Simulate_FireHazard(void)
+{
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*!
+\brief
+particle special visual effect for Fire Hazard
+*/
+void Particle_Special_FX_FireHazard0_0(void)
+{
+	if (pFireHazard[0]->PS_Continuous->Particle[0])
+	{
+		pFireHazard[0]->PS_Continuous->Particle[0]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[0]->PS_Continuous->RefreshTimer[0] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[0]->PS_Continuous->RefreshTimer[0] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[0] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[0] / pFireHazard[0]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[0] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[0] / pFireHazard[0]->PS_Continuous->LifeTime, 
+			5.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[0] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Fire Hazard Copy
+*/
+void Particle_Special_FX_FireHazard1_0(void)
+{
+	if (pFireHazard[1]->PS_Continuous->Particle[0])
+	{
+		pFireHazard[1]->PS_Continuous->Particle[0]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[1]->PS_Continuous->RefreshTimer[0] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[1]->PS_Continuous->RefreshTimer[0] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[0] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[0] / pFireHazard[1]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[0] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[0] / pFireHazard[1]->PS_Continuous->LifeTime, 
+			5.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[0] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Fire Hazard Copy
+*/
+void Particle_Special_FX_FireHazard0_1(void)
+{
+	if (pFireHazard[0]->PS_Continuous->Particle[1])
+	{
+		pFireHazard[0]->PS_Continuous->Particle[1]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[0]->PS_Continuous->RefreshTimer[1] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[0]->PS_Continuous->RefreshTimer[1] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[1] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[1] / pFireHazard[0]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[1] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[1] / pFireHazard[0]->PS_Continuous->LifeTime,
+			5.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[1] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Fire Hazard Copy
+*/
+void Particle_Special_FX_FireHazard1_1(void)
+{
+	if (pFireHazard[1]->PS_Continuous->Particle[1])
+	{
+		pFireHazard[1]->PS_Continuous->Particle[1]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[1]->PS_Continuous->RefreshTimer[1] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[1]->PS_Continuous->RefreshTimer[0] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[1] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[1] / pFireHazard[1]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[1] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[1] / pFireHazard[1]->PS_Continuous->LifeTime,
+			5.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[1] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Fire Hazard Copy
+*/
+void Particle_Special_FX_FireHazard0_2(void)
+{
+	if (pFireHazard[0]->PS_Continuous->Particle[2])
+	{
+		pFireHazard[0]->PS_Continuous->Particle[2]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[0]->PS_Continuous->RefreshTimer[2] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[0]->PS_Continuous->RefreshTimer[2] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[2] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[2] / pFireHazard[0]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[2] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[2] / pFireHazard[0]->PS_Continuous->LifeTime,
+			5.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[2] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Fire Hazard Copy
+*/
+void Particle_Special_FX_FireHazard1_2(void)
+{
+	if (pFireHazard[1]->PS_Continuous->Particle[2])
+	{
+		pFireHazard[1]->PS_Continuous->Particle[2]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[1]->PS_Continuous->RefreshTimer[2] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[1]->PS_Continuous->RefreshTimer[2] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[2] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[2] / pFireHazard[1]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[2] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[2] / pFireHazard[1]->PS_Continuous->LifeTime,
+			5.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[2] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Fire Hazard Copy
+*/
+void Particle_Special_FX_FireHazard0_3(void)
+{
+	if (pFireHazard[0]->PS_Continuous->Particle[3])
+	{
+		pFireHazard[0]->PS_Continuous->Particle[3]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[0]->PS_Continuous->RefreshTimer[3] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[0]->PS_Continuous->RefreshTimer[3] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[3] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[3] / pFireHazard[0]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[3] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[3] / pFireHazard[0]->PS_Continuous->LifeTime,
+			5.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[3] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Fire Hazard Copy
+*/
+void Particle_Special_FX_FireHazard1_3(void)
+{
+	if (pFireHazard[1]->PS_Continuous->Particle[3])
+	{
+		pFireHazard[1]->PS_Continuous->Particle[3]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[1]->PS_Continuous->RefreshTimer[3] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[1]->PS_Continuous->RefreshTimer[3] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[3] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[3] / pFireHazard[1]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[3] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[3] / pFireHazard[1]->PS_Continuous->LifeTime,
+			5.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[3] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Fire Hazard Copy
+*/
+void Particle_Special_FX_FireHazard0_4(void)
+{
+	if (pFireHazard[0]->PS_Continuous->Particle[4])
+	{
+		pFireHazard[0]->PS_Continuous->Particle[4]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[0]->PS_Continuous->RefreshTimer[4] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[0]->PS_Continuous->RefreshTimer[4] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[4] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[4] / pFireHazard[0]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[4] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[4] / pFireHazard[0]->PS_Continuous->LifeTime,
+			5.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[4] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Fire Hazard Copy
+*/
+void Particle_Special_FX_FireHazard1_4(void)
+{
+	if (pFireHazard[1]->PS_Continuous->Particle[4])
+	{
+		pFireHazard[1]->PS_Continuous->Particle[4]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[1]->PS_Continuous->RefreshTimer[4] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[1]->PS_Continuous->RefreshTimer[4] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[4] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[4] / pFireHazard[1]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[4] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[4] / pFireHazard[1]->PS_Continuous->LifeTime,
+			5.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[4] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Fire Hazard Copy
+*/
+void Particle_Special_FX_FireHazard0_5(void)
+{
+	if (pFireHazard[0]->PS_Continuous->Particle[5])
+	{
+		pFireHazard[0]->PS_Continuous->Particle[5]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[0]->PS_Continuous->RefreshTimer[5] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[0]->PS_Continuous->RefreshTimer[5] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[5] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[5] / pFireHazard[0]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[5] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[5] / pFireHazard[0]->PS_Continuous->LifeTime,
+			5.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[5] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Fire Hazard Copy
+*/
+void Particle_Special_FX_FireHazard1_5(void)
+{
+	if (pFireHazard[1]->PS_Continuous->Particle[5])
+	{
+		pFireHazard[1]->PS_Continuous->Particle[5]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[1]->PS_Continuous->RefreshTimer[5] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[1]->PS_Continuous->RefreshTimer[5] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[5] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[5] / pFireHazard[1]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[5] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[5] / pFireHazard[1]->PS_Continuous->LifeTime,
+			5.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[5] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Fire Hazard Copy
+*/
+void Particle_Special_FX_FireHazard0_6(void)
+{
+	if (pFireHazard[0]->PS_Continuous->Particle[6])
+	{
+		pFireHazard[0]->PS_Continuous->Particle[6]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[0]->PS_Continuous->RefreshTimer[6] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[0]->PS_Continuous->RefreshTimer[6] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[6] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[6] / pFireHazard[0]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[6] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[6] / pFireHazard[0]->PS_Continuous->LifeTime,
+			5.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[6] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Fire Hazard Copy
+*/
+void Particle_Special_FX_FireHazard1_6(void)
+{
+	if (pFireHazard[1]->PS_Continuous->Particle[6])
+	{
+		pFireHazard[1]->PS_Continuous->Particle[6]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[1]->PS_Continuous->RefreshTimer[6] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[1]->PS_Continuous->RefreshTimer[6] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[6] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[6] / pFireHazard[1]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[6] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[6] / pFireHazard[1]->PS_Continuous->LifeTime,
+			5.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[6] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Fire Hazard Copy
+*/
+void Particle_Special_FX_FireHazard0_7(void)
+{
+	if (pFireHazard[0]->PS_Continuous->Particle[7])
+	{
+		pFireHazard[0]->PS_Continuous->Particle[7]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[0]->PS_Continuous->RefreshTimer[7] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[0]->PS_Continuous->RefreshTimer[7] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[7] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[7] / pFireHazard[0]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[7] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[7] / pFireHazard[0]->PS_Continuous->LifeTime,
+			5.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[7] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Fire Hazard Copy
+*/
+void Particle_Special_FX_FireHazard1_7(void)
+{
+	if (pFireHazard[1]->PS_Continuous->Particle[7])
+	{
+		pFireHazard[1]->PS_Continuous->Particle[7]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[1]->PS_Continuous->RefreshTimer[7] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[1]->PS_Continuous->RefreshTimer[7] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[7] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[7] / pFireHazard[1]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[7] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[7] / pFireHazard[1]->PS_Continuous->LifeTime,
+			5.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[7] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Fire Hazard Copy
+*/
+void Particle_Special_FX_FireHazard0_8(void)
+{
+	if (pFireHazard[0]->PS_Continuous->Particle[8])
+	{
+		pFireHazard[0]->PS_Continuous->Particle[8]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[0]->PS_Continuous->RefreshTimer[8] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[0]->PS_Continuous->RefreshTimer[8] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[8] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[8] / pFireHazard[0]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[8] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[8] / pFireHazard[0]->PS_Continuous->LifeTime,
+			5.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[8] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Fire Hazard Copy
+*/
+void Particle_Special_FX_FireHazard1_8(void)
+{
+	if (pFireHazard[1]->PS_Continuous->Particle[8])
+	{
+		pFireHazard[1]->PS_Continuous->Particle[8]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[1]->PS_Continuous->RefreshTimer[8] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[1]->PS_Continuous->RefreshTimer[8] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[8] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[8] / pFireHazard[1]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[8] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[8] / pFireHazard[1]->PS_Continuous->LifeTime,
+			5.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[8] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Fire Hazard Copy
+*/
+void Particle_Special_FX_FireHazard0_9(void)
+{
+	if (pFireHazard[0]->PS_Continuous->Particle[9])
+	{
+		pFireHazard[0]->PS_Continuous->Particle[9]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[0]->PS_Continuous->RefreshTimer[9] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[0]->PS_Continuous->RefreshTimer[9] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[9] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[9] / pFireHazard[0]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[9] / pFireHazard[0]->PS_Continuous->LifeTime, 0.5f * pFireHazard[0]->PS_Continuous->RefreshTimer[9] / pFireHazard[0]->PS_Continuous->LifeTime,
+			5.0f * pFireHazard[0]->PS_Continuous->RefreshTimer[9] / pFireHazard[0]->PS_Continuous->LifeTime);
+	}
+}
+
+/*!
+\brief
+particle special visual effect for Fire Hazard Copy
+*/
+void Particle_Special_FX_FireHazard1_9(void)
+{
+	if (pFireHazard[1]->PS_Continuous->Particle[9])
+	{
+		pFireHazard[1]->PS_Continuous->Particle[9]->sprite->offset.y += 1.0f + (1.0f - pFireHazard[1]->PS_Continuous->RefreshTimer[9] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+
+	if (pFireHazard[1]->PS_Continuous->RefreshTimer[9] > 0.1f)
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[9] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[9] / pFireHazard[1]->PS_Continuous->LifeTime, 1.0f);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 1.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[9] / pFireHazard[1]->PS_Continuous->LifeTime, 0.5f * pFireHazard[1]->PS_Continuous->RefreshTimer[9] / pFireHazard[1]->PS_Continuous->LifeTime,
+			5.0f * pFireHazard[1]->PS_Continuous->RefreshTimer[9] / pFireHazard[1]->PS_Continuous->LifeTime);
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
 /*!
 \brief 
@@ -212,7 +1000,7 @@ PS_Instance * Create_PS_Continuous(float LifeTime, float EmitRate, int EmitCount
 			{
 				//allocate memory
 				pPS_Inst->PS_Continuous = (PS_Continuous *)calloc(1, sizeof(PS_Continuous));
-				if ((EmitCount > 0) && (EmitCount < (int)(EmitRate * LifeTime * 1.1f)))
+				if ((EmitCount > 0) && (EmitCount < (int)(EmitRate * LifeTime * 1.0001f)))
 				{
 					pPS_Inst->PS_Continuous->Particle = (GameObject**)calloc(EmitCount, sizeof(GameObject*));
 					pPS_Inst->PS_Continuous->RefreshTimer = (float *)calloc(EmitCount, sizeof(float));
@@ -477,7 +1265,7 @@ void UpdateAllPS_Inst(float frameTime)
 				if ((!(pPS_Inst->PS_Continuous->ShutDown)) && (pPS_Inst->PS_Continuous->EmitTimer < 0.0f) && (pPS_Inst->PS_Continuous->Particle[j] == NULL))
 				{
 					(pPS_Inst->PS_Continuous->vpParticle_Create)(j, pPS_Inst);
-					printf("Particle Create at %.3f x and %.3f y\n", pPS_Inst->PS_Continuous->Particle[j]->sprite->x, pPS_Inst->PS_Continuous->Particle[j]->sprite->y);
+					//printf("Particle Create at %.3f x and %.3f y\n", pPS_Inst->PS_Continuous->Particle[j]->sprite->x, pPS_Inst->PS_Continuous->Particle[j]->sprite->y);
 
 					pPS_Inst->PS_Continuous->RefreshTimer[j] = pPS_Inst->PS_Continuous->LifeTime;
 

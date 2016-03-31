@@ -1,9 +1,12 @@
 /*!
+Project (working title): Epoch
 \file   GameLevel.c
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
   Contains functions for 'in-dungeon' game levels.
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "GameLevel.h"
 #include "Physics.h"
@@ -41,6 +44,9 @@ static GameObject* player; /**< pointer to player object*/
 */
 void GameLevelInit(void)
 {
+  Entity* playerEntity;
+	int i;
+
 	pPS_C = Create_PS_Continuous(2.0f, 5.0f, -1);
 
 	pPS_C->PS_Continuous->StartPosX = 2;
@@ -50,6 +56,29 @@ void GameLevelInit(void)
 
 	//pPS_B->PS_Burst->StartPosX = 2;
 	//pPS_B->PS_Burst->StartPosY = 2;
+
+	for (i = 0; i < 4; i++)
+	{
+		pDodgeSmoke[i] = Create_PS_Burst(2.0f, 10);
+		pDodgeSmoke[i]->PS_Burst->vpParticle_Create = Particle_Create_DodgeSmoke;
+	}
+
+	
+	for (i = 0; i < 2; i++)
+	{
+		pFireHazard[i] = Create_PS_Continuous(1.0f, 10, -1);
+		pFireHazard[i]->PS_Continuous->vpParticle_Create = Particle_Create_FireHazard;
+	}
+	
+	
+	pFireHazard[0]->PS_Continuous->StartPosX = 5;
+	pFireHazard[0]->PS_Continuous->StartPosY = 3;
+	Start_PS(pFireHazard[0]);
+
+	pFireHazard[1]->PS_Continuous->StartPosX = 3;
+	pFireHazard[1]->PS_Continuous->StartPosY = 5;
+	Start_PS(pFireHazard[1]);
+	
 
   printf("game level init\n");
   PhysicsInit();
@@ -84,7 +113,7 @@ void GameLevelInit(void)
 
   
 
-  Entity* playerEntity = malloc(sizeof(Entity));
+  playerEntity = malloc(sizeof(Entity));
   playerEntity->maxHealth = 60;
   EntityInit(&playerEntity);
   player = GameObjectCreate(PhysicsCreateObject(Vec2(4, 4), 1), GCreateSprite(0, 40, anim, 1), playerEntity, entity_player);
@@ -96,7 +125,7 @@ void GameLevelInit(void)
   //map generation actually happens at the end because it needs the player and shit.
   IsoInit(MAP_WIDTH, MAP_HEIGHT);
 
-
+  /*
   int x, y;
   do
   {
@@ -109,7 +138,7 @@ void GameLevelInit(void)
   {
     x = RandIntRange(15, 20);
     y = RandIntRange(15, 20);
-  } while (IsoTileGet(x, y) || (player->physics->position.x == x && player->physics->position.y == y));
+  } while (IsoTileGet(x, y) || (player->physics->position.x == x && player->physics->position.y == y));*/
 
   
 

@@ -22,7 +22,7 @@ void UpdateEntityIFs(GameObject *obj)
   //check if it is null
   if (obj == NULL)
   {
-    
+
     return;
   }
 
@@ -34,7 +34,7 @@ void UpdateEntityIFs(GameObject *obj)
 
   Entity *ent = obj->entity; /* reference the entity */
 
-  //it should have been destroyed
+                             //it should have been destroyed
   if (ent->health == NULL || ent->maxHealth == NULL || ent->health <= 0)
   {
     return;
@@ -58,8 +58,8 @@ void UpdateEntityIFs(GameObject *obj)
       CheckDrag();
       ent->invincibilityRecoveryTime--; /* decrement recovery time */
       Vector2DScale(&(obj->physics->velocity), &(obj->physics->velocity), DODGE_VELOCITY_SCALE); //slow it down
-      //printf("recovering\n");
-      //SetPlayerDrag(0.7f);
+                                                                                                 //printf("recovering\n");
+                                                                                                 //SetPlayerDrag(0.7f);
     }
     else if (ent->invincibilityRecoveryTime <= 0) //done recovering
     {
@@ -75,7 +75,7 @@ void UpdateEntityIFs(GameObject *obj)
       //play a sound or something to indicate that it is done
       //SetPlayerDrag(0.7f);//reset the drag
 
-    }    
+    }
   }         //CANNOT BE DAMAGED
   else if (ent->canBeDamaged == 0)  //cant be damaged, invincible
   {
@@ -96,9 +96,9 @@ void UpdateEntityIFs(GameObject *obj)
         obj->sprite->tint.blue = obj->sprite->tint.blue * DODGE_BLUE_MODIFIER;   //change blue color
         obj->sprite->tint.green = obj->sprite->tint.green * DODGE_GREEN_MODIFIER;//change green color
 
-        //update flag
+                                                                                 //update flag
         color_changed = 1;
-      }    
+      }
       //Vector2DScale(&(obj->physics->velocity), &(obj->physics->velocity), SPEED_BONUS_MODIFIER);  /* scale the velocity of the object */ //ask if there are any other movement modifications we can do  
       //printf("invincible\n");
     }
@@ -106,9 +106,9 @@ void UpdateEntityIFs(GameObject *obj)
     {
       //SetPlayerDrag(0.3f);
       ent->canBeDamaged = 1;                                   /* make the entity damagable          */
-      ent->invincibilityRecoveryTime = PLAYER_IFRAME_RECOVORY; /* set the entity to start recovering */      
-      
-      //reset color
+      ent->invincibilityRecoveryTime = PLAYER_IFRAME_RECOVORY; /* set the entity to start recovering */
+
+                                                               //reset color
       ResetColor(obj);
       //obj->sprite->tint.alpha = player_alpha;//change alpha color
       //obj->sprite->tint.red = player_red;    //change red color
@@ -117,7 +117,7 @@ void UpdateEntityIFs(GameObject *obj)
 
       //obj->sprite->tint = Gtint(player_red, player_green, player_blue, player_alpha);
       //printf("NO LONGER INVINCIBLE\n");
-    }        
+    }
   }
 }
 
@@ -140,9 +140,9 @@ void Dodge(int input_key, GameObject *obj)
   //if the key is pressed and is NOT CURRENTLY INVINCIBLE, IT CAN BE DAMAGED
   if (AEInputCheckReleased(input_key))
   {
-   int poop = 1 + 1;
+    int poop = 1 + 1;
   }
-  
+
   // If value is between -EPSILON and +EPSILON, make it 0.0
   if (obj->physics->velocity.x > -EPSILON && obj->physics->velocity.x < EPSILON)
     obj->physics->velocity.x = 0.0f;
@@ -158,11 +158,11 @@ void Dodge(int input_key, GameObject *obj)
     //IdleDodge(obj); // call idle dodge
   }
 
-  
 
-  if(AEInputCheckReleased(input_key) && obj->entity->canBeDamaged == 1 && obj->entity->invincibilityRecoveryTime <= 0)
+
+  if (AEInputCheckReleased(input_key) && obj->entity->canBeDamaged == 1 && obj->entity->invincibilityRecoveryTime <= 0)
   {
-    
+
     Vector2DScale(&(obj->physics->velocity), &(obj->physics->velocity), DODGE_FORCE);
 
     //save original values
@@ -251,9 +251,9 @@ void ResetColor(GameObject *GameObj)
 
   Sprite *obj_sprite = GameObj->sprite;
 
-  obj_sprite->tint.red   = obj_sprite->tint.red   / DODGE_RED_MODIFIER;
+  obj_sprite->tint.red = obj_sprite->tint.red / DODGE_RED_MODIFIER;
   obj_sprite->tint.green = obj_sprite->tint.green / DODGE_GREEN_MODIFIER;
-  obj_sprite->tint.blue = obj_sprite->tint.blue   / DODGE_BLUE_MODIFIER;
+  obj_sprite->tint.blue = obj_sprite->tint.blue / DODGE_BLUE_MODIFIER;
   obj_sprite->tint.alpha = obj_sprite->tint.alpha / DODGE_ALPHA_MODIFIER;
   color_changed = 0;
 }
@@ -290,7 +290,7 @@ void BriefInvulnerability(GameObject *GameObj, int PlayerOnly)
   //already invincible
   //if (GameObj->entity->invincibilityTime > 0)
   //{
-   // return;
+  // return;
   //}
 
   Entity *ent = GameObj->entity;
@@ -316,17 +316,19 @@ void CheckDrag()
   {
     SetPlayerDrag(test_player_drag_high);
     printf("%f using high drag \n", GetPlayerDrag());
-  }else  
-  if (AEInputCheckTriggered(dec_drag_key))
-  {
-    SetPlayerDrag(test_player_drag_low);
-    printf("%f using low drag \n", GetPlayerDrag());
-  }else  
-  if (AEInputCheckTriggered(reset_drag_key))
-  {
-    SetPlayerDrag(test_player_drag_reset);
-    printf("%f using reset ",GetPlayerDrag());
   }
+  else
+    if (AEInputCheckTriggered(dec_drag_key))
+    {
+      SetPlayerDrag(test_player_drag_low);
+      printf("%f using low drag \n", GetPlayerDrag());
+    }
+    else
+      if (AEInputCheckTriggered(reset_drag_key))
+      {
+        SetPlayerDrag(test_player_drag_reset);
+        printf("%f using reset ", GetPlayerDrag());
+      }
 }
 
 

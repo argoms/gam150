@@ -29,7 +29,7 @@ GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entit
   GameObject* enemy = GameObjectCreate(_physics, _sprite, _entity, _type);
 
   enemy->enemyAI = (EnemyAI*)malloc(sizeof(EnemyAI));
-  enemy->enemyAI->enemyState = ENEMY_STATE_PATROL;
+  enemy->enemyAI->currentEnemyState = ENEMY_STATE_PATROL;
 
   EnemyContainer* enemyContainer = (EnemyContainer*)malloc(sizeof(EnemyContainer));
   enemyContainer->enemyType = enemyType;
@@ -44,6 +44,8 @@ GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entit
   enemyContainer->attackKnockbackForce = attackKnockbackForce;
   enemyContainer->attackDamage = attackDamage;
   enemyContainer->projectileSpeed = projectileSpeed;
+
+  enemyContainer->animationCooldown = .2f;
 
   enemy->miscData = enemyContainer;
 
@@ -110,13 +112,10 @@ void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject)
 */
 void EnemyOnKilled(GameObject* _self)
 {
-  //printf("\n *** \n ENEMY DIED WOO \n *** \n");
   GameObjectDestroy(&_self);
   pPS_B->PS_Burst->StartPosX = _self->physics->position.x;
   pPS_B->PS_Burst->StartPosY = _self->physics->position.y;
   Start_PS(pPS_B);
-  //printf("\n dflag: %i", (_self)->destroyFlag);
-  //printf("type: %i \n", (_self)->type);
 }
 
 void EnemyChangeAnimationFlag(EnemyContainer* enemyContainer, Vector2D* worldFacingDirection)
@@ -163,34 +162,66 @@ Vector2D EnemyMovement(GameObject* _thisObject, const float distanceToPlayer)
   Vector2D facingDirection = _thisObject->physics->velocity;
   EnemyContainer* enemyContainer = _thisObject->miscData;
 
-  if (distanceToPlayer <= enemyContainer->attackRange)
+  if (_thisObject->enemyAI->currentEnemyState == ENEMY_STATE_ATTACK)
   {
+    _thisObject->physics->velocity.x = 0;
+    _thisObject->physics->velocity.y = 0;
+      facingDirection.x = _thisObject->target->physics->position.x - _thisObject->physics->position.x;
+      facingDirection.y = _thisObject->target->physics->position.y - _thisObject->physics->position.y;
+      Vector2DNormalize(&facingDirection, &facingDirection);
+  }
+  else if (distanceToPlayer <= enemyContainer->detectRange && distanceToPlayer >= enemyContainer->attackRange)
+  {
+    enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~ENEMY_IDLE;
     enemyContainer->enemyAnimationState = ENEMY_WALK;
     facingDirection.x = _thisObject->target->physics->position.x - _thisObject->physics->position.x;
     facingDirection.y = _thisObject->target->physics->position.y - _thisObject->physics->position.y;
 
-    Vector2D normalizedFacing;
-    Vector2DNormalize(&normalizedFacing, &facingDirection);
-    Vector2D velocityVector;
-    Vector2DScale(&velocityVector, &normalizedFacing, enemyContainer->chaseSpeed);
-
-    _thisObject->physics->velocity.x = velocityVector.x;
-    _thisObject->physics->velocity.y = velocityVector.y;
-   
-    Vector2D worldFacing;
-    worldFacing = IsoWorldToScreen(&facingDirection);
-    EnemyChangeAnimationFlag(enemyContainer, &worldFacing);
-
-    facingDirection = normalizedFacing;
+    Vector2DNormalize(&facingDirection, &facingDirection);
+    Vector2DScale(&(_thisObject->physics->velocity), &facingDirection, enemyContainer->chaseSpeed);
   }
+  else
+  {
+    _thisObject->physics->velocity.x = 0;
+    _thisObject->physics->velocity.y = 0;
+    enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~ENEMY_WALK;
+    
+    if (distanceToPlayer <= enemyContainer->attackRange)
+    {
+      facingDirection.x = _thisObject->target->physics->position.x - _thisObject->physics->position.x;
+      facingDirection.y = _thisObject->target->physics->position.y - _thisObject->physics->position.y;
+      Vector2DNormalize(&facingDirection, &facingDirection);
+    }
+    else
+    {
+      facingDirection.x = -1;
+      facingDirection.y = -1;
+    }
+    enemyContainer->enemyAnimationState = ENEMY_IDLE;
+  }
+
+  Vector2D worldFacing;
+  worldFacing = IsoWorldToScreen(&facingDirection);
+  EnemyChangeAnimationFlag(enemyContainer, &worldFacing);
   return facingDirection;
 }
 
 void EnemyAttackDetect(GameObject* _thisObject)
 {
+  EnemyContainer* enemyContainer = _thisObject->miscData;
   float distanceToPlayer = Vector2DSquareDistance(&(_thisObject->physics->position), &(_thisObject->target->physics->position));
   Vector2D attackDirection = EnemyMovement(_thisObject, distanceToPlayer);
-  EnemyContainer* enemyContainer = _thisObject->miscData;
+
+  if (enemyContainer->animationCooldown <= 0 && _thisObject->enemyAI->currentEnemyState == ENEMY_STATE_ATTACK && distanceToPlayer <= enemyContainer->detectRange)
+  {
+    _thisObject->enemyAI->currentEnemyState = ENEMY_STATE_PATROL;
+    enemyContainer->animationCooldown = .2f;
+  }
+
+  if (enemyContainer->animationCooldown > 0 && _thisObject->enemyAI->currentEnemyState == ENEMY_STATE_ATTACK)
+  {
+    enemyContainer->animationCooldown -= AEFrameRateControllerGetFrameTime();
+  }
 
   if (distanceToPlayer <= enemyContainer->attackRange)
   {
@@ -199,27 +230,29 @@ void EnemyAttackDetect(GameObject* _thisObject)
       enemyContainer->attackWindup -= AEFrameRateControllerGetFrameTime();
     }
 
-    if (enemyContainer->attackWindup < 0)
+    if (enemyContainer->attackWindup <= 0)
     {
       enemyContainer->attackCooldown -= AEFrameRateControllerGetFrameTime();
     }
 
-    //printf("ATTACKWINDUP: %F \n", enemyContainer->attackWindup);
-    //printf("ATTACKCOOLDOWN: %F \n", enemyContainer->attackCooldown);
+    printf("%f,", enemyContainer->attackCooldown);
+
     if (enemyContainer->attackWindup < 0 && enemyContainer->attackCooldown < 0)
     {
       //printf("ENEMY ATTACK");
       enemyContainer->attackCooldown = enemyContainer->attackCooldownLength;
       enemyContainer->attackWindup = enemyContainer->attackWindupLength;
+      enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~(ENEMY_WALK + ENEMY_IDLE);
+      enemyContainer->enemyAnimationState = ENEMY_ATTACK;
+      _thisObject->enemyAI->currentEnemyState = ENEMY_STATE_ATTACK;
+
       switch (enemyContainer->enemyType)
       {
       case ENEMY_TYPE_MELEE:
-        //EnemyMeleeAttack(_thisObject, attackDirection);
-        //printf("%i, %i", attackDirection.x, attackDirection.y);
+        EnemyMeleeAttack(_thisObject, attackDirection);
         break;
       case ENEMY_TYPE_RANGED:
         EnemyRangedAttack(_thisObject, attackDirection, enemyContainer->projectileSpeed);
-        //printf("%i, %i", attackDirection.x, attackDirection.y);
         break;
       }
     }
@@ -293,36 +326,3 @@ static void EnemyKnockBack(GameObject* _thisObject, GameObject* _otherObject)
   //actually apply knockback:
   EntityApplyKnockback(_otherObject->entity, &knockbackVector);
 }
-
-
-// IGNORE THIS CRAP
-/*
-Vector2D enemyToPlayer;
-enemyToPlayer.x = _thisObject->target->physics->position.x - _thisObject->physics->position.x;
-enemyToPlayer.y = _thisObject->target->physics->position.y - _thisObject->physics->position.y;
-
-Vector2D normalVelocityVector;
-normalVelocityVector.x = _thisObject->physics->velocity.y * -1.0f;
-normalVelocityVector.y = _thisObject->physics->velocity.x;
-
-float dotProduct = Vector2DDotProduct(&(normalVelocityVector), &(enemyToPlayer));
-//printf("%f", dotProduct);
-
-if (dotProduct > 0)
-{
-_thisObject->physics->angle += ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
-//printf("ROTATION");
-}
-else if (dotProduct < 0)
-{
-_thisObject->physics->angle -= ENEMY_ROTATION_SPEED * (float)AEFrameRateControllerGetFrameTime();
-//printf("ROTATION");
-}
-
-Vector2D newVelocityVector;
-Vector2DFromAngleRad(&newVelocityVector, _thisObject->physics->angle);
-facingDirection = newVelocityVector;
-Vector2DScale(&newVelocityVector, &newVelocityVector, enemyContainer->chaseSpeed);
-_thisObject->physics->velocity.x = newVelocityVector.x;
-_thisObject->physics->velocity.y = newVelocityVector.y;
-*/

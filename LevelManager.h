@@ -1,9 +1,12 @@
 /*!
+Project (working title): Epoch
 \file   LevelManager.h
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
-Basic level/gamestate manager implementation.
+Basic level/gamestate manager definitions.
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #pragma once
 

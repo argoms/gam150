@@ -1,9 +1,12 @@
 /*!
+Project (working title): Epoch
 \file   DamageNumbers.c
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
 Implementation for text popups when entities take damage.
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "GameObject.h"
 #include "Text.h"
@@ -63,7 +66,7 @@ GameObject* DamageTextCreate(Vector2D position, int damage)
 */
 void DamageTextSimulate(GameObject* instance)
 {
-  printf("3TEXTY5YOU");
+  //printf("3TEXTY5YOU");
   DamageText* instanceData = (DamageText*)(instance->miscData);
   TextStringAddOffset(instanceData->text, Vec2(0, 1));
   

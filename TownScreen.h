@@ -1,9 +1,12 @@
 /*!
+Project (working title): Epoch
 \file   TownScreen.h
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
-Functions handling the town menu/screen portion of the game where the player restocks, changes equipment etc.
+Declarations for functions handling the intermission portion of the game between levels.
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #pragma once
 void TownScreenInit();

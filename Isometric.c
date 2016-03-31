@@ -1,17 +1,20 @@
 /*!
+Project (working title): Epoch
 \file   Isometric.c
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
 Isometric tilemap implementation. Contains functions relating to tilemaps and isometric conversions.
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "Vector2D.h"
 #include "Isometric.h"
 #include "Graphics.h"
 #include <stdlib.h>
 #include "MapGen.h"
-#include "MapCreator.h"
-
+//#include "MapCreator.h"
+#include "Gate.h"
 static IsoMap* gameMap; /**< contains currently active game map*/
 
 
@@ -34,29 +37,6 @@ void IsoInit(int _mapHeight, int _mapWidth)
   
   GenerateMap(gameMap);
 
-  /*
-  //create borders:
-  while (i < _mapWidth)
-  {
-    j = 0;
-    while (j < _mapHeight)
-    {
-      //printf("%iaa", j);
-      if (i == 0 || i == _mapWidth - 1 || j == 0 || j == _mapHeight - 1)
-      {
-        IsoTileSet(i, j, 1);
-      }
-      else
-      {
-        IsoTileSet(i, j, 0);
-        //printf("a");
-      }
-      j++;
-    }
-    i++;
-  }
-  
-  */
   IsoSpawnMap();
 }
 
@@ -121,7 +101,14 @@ IsoMap* IsoCreateNewMap(int _mapHeight, int _mapWidth)
 */
 int IsoTileGet(int _x, int _y)
 {
-  return gameMap->map[_x + (_y * gameMap->mapWidth)];
+  if (_x > -1 && _y > -1 && _x < gameMap->mapWidth && _y < gameMap->mapHeight)
+  {
+    return gameMap->map[_x + (_y * gameMap->mapWidth)];
+  }
+  else
+  {
+    return tile_error;
+  }
 }
 
 /*!
@@ -132,9 +119,12 @@ int IsoTileGet(int _x, int _y)
 */
 void IsoTileSet(int _x, int _y, int _newValue)
 {
-  //printf("%i|", gameMap->map[_x + (_y * gameMap->mapWidth)]);
-  gameMap->map[_x + (_y * gameMap->mapWidth)] = _newValue;
-  //printf("%i|", gameMap->map[_x + (_y * gameMap->mapWidth)]);
+  if (_x > -1 && _y > -1 && _x < gameMap->mapWidth && _y < gameMap->mapHeight)
+  {
+    //printf("%i|", gameMap->map[_x + (_y * gameMap->mapWidth)]);
+    gameMap->map[_x + (_y * gameMap->mapWidth)] = _newValue;
+    //printf("%i|", gameMap->map[_x + (_y * gameMap->mapWidth)]);
+  }
 }
 
 /*!
@@ -156,6 +146,16 @@ void IsoSpawnMap()
     GCreateMesh(128.f, 64.f, 1, 1),
     1);
 
+  Animation* floor = GCreateAnimation(1,
+    GCreateTexture("animations/world/basicFloor4.png"),
+    GCreateMesh(512.f, 512.f, 1, 1),
+    1);
+
+  Animation* wall = GCreateAnimation(1,
+    GCreateTexture("animations/world/basicWall2.png"),
+    GCreateMesh(512.f, 512.f, 1, 1),
+    1);
+
   //playerSprite = GCreateSprite(0, 40, anim, 1);
 
   while (i < mapWidth)
@@ -169,8 +169,20 @@ void IsoSpawnMap()
         float tileX = IsoWorldToScreen(&tilePos).x;
         float tileY = IsoWorldToScreen(&tilePos).y;
         //printf("(%i, %i)", i, j);
-        GCreateSprite(tileX, tileY, tileAnim, 0);
-        
+        //GCreateSprite(tileX, tileY, tileAnim, 0);
+       // Sprite* newObj = GCreateSprite(tileX, tileY + 105, wall, 0);
+     //   newObj->offset.y = -9;
+      }
+
+      if (IsoTileGet(i, j) == 0)
+      {
+        Vector2D tilePos = Vec2(i, j);
+        float tileX = IsoWorldToScreen(&tilePos).x;
+        float tileY = IsoWorldToScreen(&tilePos).y;
+        //printf("(%i, %i)", i, j);
+        Sprite* newObj = GCreateSprite(tileX, tileY + 100, floor, 0);
+        newObj->offset.y = -4;
+
       }
 
       //FOR DEBUG PURPOSES:
@@ -182,6 +194,12 @@ void IsoSpawnMap()
         //printf("(%i, %i)", i, j);
         Sprite* newObj = GCreateSprite(tileX, tileY, tileAnim2, 0);
         newObj->tint.alpha = 0.1;
+      }
+
+      if (IsoTileGet(i, j) == 3)
+      {
+        Vector2D tilePos = Vec2(i, j);
+        CreateWorldGate(tilePos);
       }
       j++;
     }

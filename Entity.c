@@ -1,12 +1,17 @@
 /*!
+Project (working title): Epoch
 \file   Entity.c
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
 Contains functionality for entities- objects that can take/receive damage.
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "Entity.h"
 #include "GameObject.h"
+#include "DamageNumbers.h"
+#include "Dodge.h"
 
 #define BREIF_INVULNERABILITY_ENABLED  1    /* allow breif invulnerability after a hit    */
 #define BREIF_INVULNERABILITY_DISABLED 0    /* disallow brief invunerability after a hit  */
@@ -37,6 +42,7 @@ void EntityTakeDamage(Entity** _entity, int _damage)
     //allow it to take damage if its flag saying that itcanbedamaged is false
     if ( (*_entity)->canBeDamaged != 0)
     {
+      DamageTextCreate((*_entity)->owner->physics->position, _damage);
       (*_entity)->health -= _damage;
       (*_entity)->wasDamaged = 1; // just got damaged
 

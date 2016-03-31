@@ -1,14 +1,22 @@
 /*!
-\file   GameObject.c
+Project (working title): Epoch
+\file   GameObject.h
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
-Functions for game objects.
+Declarations for in-world game objects. Objects contain components such as:
+-physics (movement/collision)
+-graphics (sprite)
+-entity (health)
+-misc
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #pragma once
 #include "Entity.h"
 #include "Graphics.h"
 #include "Physics.h"
+//#include "EnemyStateMachine.h"
 
 typedef struct GameObject GameObject;
 
@@ -25,8 +33,10 @@ enum GameObjectNames {
   entity_button, /**< generic button */
   entity_hazard,   /* environmental hazards */
   //entity_health_bar /**< health bar */
-  entity_particle, /*particle that doesn't affect other game objects*/
-  entity_damageText
+  entity_particle, /**< particle that doesn't affect other game objects*/
+  entity_damageText, /**< visual indicator for damage dealt*/
+  entity_gate, /**< opens after clearing a room*/
+  entity_room /**< used for entire rooms*/
 };
 
 // SET THE NUMBERS IN COMMENTS FOR THE ENEMIES TEXT FILE
@@ -38,7 +48,7 @@ enum EnemyType {
   ENEMY_TYPE_RANGED_ARC,    // 5
   ENEMY_TYPE_RANGED_HOMING, // 6
 
-                            /* Special enemies */
+  /* Special enemies */
   ENEMY_TYPE_HEALER, // 7
   ENEMY_TYPE_SLIME,  // 8
   ENEMY_TYPE_SHIELD, // 9
@@ -46,7 +56,10 @@ enum EnemyType {
 
 struct EnemyAI
 {
-  int enemyState;
+  int currentEnemyState;       /* Current state */
+  int newEnemyState;    /* Internal usage, no touch */
+  int currentEnemyStateIndex;  /* Stack index of the current state the enemy is in */
+  //EnemyStateBehavior enemyAiStack[5]; /* AI stack */
 };
 
 /*!
@@ -89,7 +102,8 @@ struct EnemyContainer
 
   float detectRange;
   float knockback;
-
+  
+  float animationCooldown; /*Placeholder until better solution*/
   float attackCooldown; /**< timer before player can attack again*/
   float attackCooldownLength; /**< defined minimum time between attacks (attackCooldown is the timer)*/
   float attackWindup;  /* Wind up timer */
