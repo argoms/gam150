@@ -101,7 +101,7 @@ void GenerateMap(IsoMap* inputMap)
 
   
 
-  MAP_SEED = 23296;//rand();
+  MAP_SEED = rand();
   RandSeed(MAP_SEED);
   printf("\n \n \n GENERATING MAP WITH SEED %i AND %i ROOMS\n \n \n", MAP_SEED, NUM_ROOMS);
 

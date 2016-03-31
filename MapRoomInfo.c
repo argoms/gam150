@@ -55,12 +55,13 @@ void MapRoomInfoAdd(MapRoomInfo* first, Vector2D position, int type)
 void MapRoomInfoClear(MapRoomInfo* first)
 {
   MapRoomInfo* index = first;
-  MapRoomInfo* indexTemp;
+  MapRoomInfo* indexTemp = index;
 
   while (index)
   {
     indexTemp = index;
-    free(indexTemp);
+    
     index = index->next;
+    free(indexTemp);
   }
 }

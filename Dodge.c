@@ -183,7 +183,7 @@ void Dodge(int input_key, GameObject *obj)
 
 void Dodge2(int keys[], GameObject *obj, int list_size)
 {
-  int input_key;
+  int input_key = 0;
   int i;
   for (i = 0; i < list_size; i++)
   {
