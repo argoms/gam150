@@ -84,6 +84,7 @@ static void Room_StartRoom(Vector2D cursor);
 static void SetupBaseMap(int mapWidth, int mapHeight);
 static int RoomValid(Vector2D cursor, int mapW, int mapH);
 static void SpawnMapRooms(MapRoomInfo* rooms);
+static void ReplaceTiles(Vector2D position, Vector2D size, int oldTile, int newTile);
 
 static Animation* GateAnimation;
 //implementation:
@@ -100,14 +101,9 @@ void GenerateMap(IsoMap* inputMap)
 
   
 
+  MAP_SEED = rand();
   RandSeed(MAP_SEED);
   printf("\n \n \n GENERATING MAP WITH SEED %i AND %i ROOMS\n \n \n", MAP_SEED, NUM_ROOMS);
-  
-  //int roomsNum = 0;
-  //MapRoomInfo rooms[NUM_ROOMS];
-  //MapRoomInfo* rooms = NULL; //create a new list of rooms
-
-  
 
   //MapRoom* rooms = malloc(sizeof(MapRoom) * NUM_ROOMS);
   SetupBaseMap(mapWidth, mapHeight);
@@ -117,17 +113,11 @@ void GenerateMap(IsoMap* inputMap)
   int rooms_created = 1;
   int tries = 0; //infinite loop killer
 
-
+  //set up start room:
   MapRoomInfo* rooms = malloc(sizeof(MapRoomInfo));
   rooms->next = NULL;
   rooms->type = roomtype_start;
   rooms->position = cursor;
-  //MapRoomInfoAdd(rooms, cursor, roomtype_start);
-  ////generate a room for start
-  //rooms[roomsNum].type = roomtype_start;
-  //rooms[roomsNum].position.x = cursor.x;
-  //rooms[roomsNum].position.y = cursor.y;
-  ////printf("room: %f, %f, int %i START ROOM\n", rooms[roomsNum].position.x, rooms[roomsNum].position.y, roomsNum);
 
   //roomsNum++;
 
@@ -191,10 +181,6 @@ void GenerateMap(IsoMap* inputMap)
         
       }
     }
-    else
-    {
-      continue; //as if I have to tell you, you silly program.
-    }
   }
 
   //discount exceptions/infinite loop handling
@@ -249,11 +235,11 @@ static void SetupBaseMap(int mapWidth, int mapHeight)
         || ((i + 1) % ROOM_SIZE == 0 || (j + 1) % ROOM_SIZE == 0)
         || ((i - 1) % ROOM_SIZE == 0 || (j - 1) % ROOM_SIZE == 0))
       {
-        IsoTileSet(i, j, 1);
+        IsoTileSet(i, j, tile_wall);
       }
       else
       {
-        IsoTileSet(i, j, 0);
+        IsoTileSet(i, j, tile_empty);
         //printf("a");
       }
       j++;
@@ -352,7 +338,32 @@ static Vector2D directionOffsetGet(int dir)
 //I wonder what the best fill algorithm would be.
 static void FillArea(int x, int y, int tileType)
 {
+  
+}
 
+
+/*!
+\brief Replaces a given tile with another given tile in an area. If the tile to replace is tile_any, all tiles will be replaced
+*/
+static void ReplaceTiles(Vector2D position, Vector2D size, int oldTile, int newTile)
+{
+  int overrideAll = (oldTile == tile_any); //if overrideall, just replaces everything.
+  Vector2D index = size; // a 2D loop counter, yup.
+
+  while (index.x != 0 || index.y != 0)
+  {
+    Vector2D cursor = Vec2(position.x + index.x, position.y + index.y);
+    if (overrideAll || IsoTileGet(cursor.x, cursor.y) == oldTile)
+    {
+      IsoTileSet(cursor.x, cursor.y, newTile);
+    }
+    index.x--;
+    if (index.x < 0)
+    {
+      index.x = size.x;
+      index.y--;
+    }
+  }
 }
 
 static void Room_BasicEnemies(Vector2D cursor)
@@ -373,7 +384,8 @@ static void Room_StartRoom(Vector2D cursor)
 */
 static void RoomTemplate(Vector2D cursor, int spawnGates)
 {
-  
+ 
+  ReplaceTiles(Vec2(cursor.x - ROOM_SIZE / 2, cursor.y - ROOM_SIZE / 2), Vec2(ROOM_SIZE, ROOM_SIZE), tile_empty, tile_floor);
   GameObject* newRoom = GameObjectCreate(PhysicsCreateObject(cursor, 0), 0, 0, entity_room); //999 is placeholder, should be enum later
   
   newRoom->syncSpritePhysics = 0;

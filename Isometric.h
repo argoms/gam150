@@ -14,6 +14,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 enum tileTypes
 {
   tile_error = -4357,
+  tile_any = -742,
   tile_empty = -1,
   tile_floor = 0,
   tile_wall = 1,
