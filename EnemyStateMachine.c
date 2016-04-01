@@ -1,6 +1,7 @@
 #include "EnemyStateMachine.h"
 #include "EnemyAIMeleeBehavior.h"
 #include "EnemyAIRangedBehavior.h"
+#include "EnemyAIMeleeBigBehavior.h"
 
 /*
 /brief
@@ -46,6 +47,9 @@ void ESMachineStateChange(GameObject* enemy, EnemyContainer* enemyContainer)
       break;
     case ENEMY_TYPE_RANGED:
       ESMachineRangedStateChange(enemy);
+      break;
+    case ENEMY_TYPE_MELEE_BIG:
+      ESMachineMeleeBigStateChange(enemy);
       break;
   }
 }
@@ -110,6 +114,38 @@ void ESMachineRangedStateChange(GameObject* enemy)
     enemy->enemyAI->EnemyStateStart = EnemyAI_Ranged_CooldownStart;
     enemy->enemyAI->EnemyStateUpdate = EnemyAI_Ranged_CooldownUpdate;
     enemy->enemyAI->EnemyStateExit = EnemyAI_Ranged_CooldownExit;
+    break;
+  }
+}
+
+void ESMachineMeleeBigStateChange(GameObject* enemy)
+{
+  switch (enemy->enemyAI->currentEnemyState)
+  {
+  case ENEMY_STATE_IDLE:
+    enemy->enemyAI->EnemyStateStart = EnemyAI_MeleeBig_IdleStart;
+    enemy->enemyAI->EnemyStateUpdate = EnemyAI_MeleeBig_IdleUpdate;
+    enemy->enemyAI->EnemyStateExit = EnemyAI_MeleeBig_IdleExit;
+    break;
+  case ENEMY_STATE_PATROL:
+    enemy->enemyAI->EnemyStateStart = EnemyAI_MeleeBig_PatrolStart;
+    enemy->enemyAI->EnemyStateUpdate = EnemyAI_MeleeBig_PatrolUpdate;
+    enemy->enemyAI->EnemyStateExit = EnemyAI_MeleeBig_PatrolExit;
+    break;
+  case ENEMY_STATE_CHASE:
+    enemy->enemyAI->EnemyStateStart = EnemyAI_MeleeBig_ChaseStart;
+    enemy->enemyAI->EnemyStateUpdate = EnemyAI_MeleeBig_ChaseUpdate;
+    enemy->enemyAI->EnemyStateExit = EnemyAI_MeleeBig_ChaseExit;
+    break;
+  case ENEMY_STATE_ATTACK:
+    enemy->enemyAI->EnemyStateStart = EnemyAI_MeleeBig_AttackStart;
+    enemy->enemyAI->EnemyStateUpdate = EnemyAI_MeleeBig_AttackUpdate;
+    enemy->enemyAI->EnemyStateExit = EnemyAI_MeleeBig_AttackExit;
+    break;
+  case ENEMY_STATE_COOLDOWN:
+    enemy->enemyAI->EnemyStateStart = EnemyAI_MeleeBig_CooldownStart;
+    enemy->enemyAI->EnemyStateUpdate = EnemyAI_MeleeBig_CooldownUpdate;
+    enemy->enemyAI->EnemyStateExit = EnemyAI_MeleeBig_CooldownExit;
     break;
   }
 }

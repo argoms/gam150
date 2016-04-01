@@ -37,6 +37,7 @@ void GameObjectInitialize()
   gameObjectList.last = NULL;
   objectDestroyedFlag = 0;
 }
+
 /*!
 \brief creates a gameobject given relevant components
 
