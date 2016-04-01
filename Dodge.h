@@ -6,6 +6,7 @@
 //#include "Entity.h"
 //#include "Enemy.h"
 #include "PlayerEntity.h"
+#include "ParticleSystems(Redo).h"
 
 
 #define BRIEF_IFRAMES_RECOVERY             10  /* frames for recovery before granting brief invulnerability */
@@ -20,6 +21,7 @@
 #define EPSILON                           0.00001f
 #define DODGE_FORCE                       4.0f
 #define DODGE_VELOCITY_SCALE              0.90f
+#define FRAME_DELAY_DODGE_PARTICLES       10
 
 
 void UpdateEntityIFs(GameObject *obj);
