@@ -177,6 +177,8 @@
     <ClCompile Include="Dodge.c" />
     <ClCompile Include="Door.c" />
     <ClCompile Include="Enemy.c" />
+    <ClCompile Include="EnemyAIMeleeBehavior.c" />
+    <ClCompile Include="EnemyAIRangedBehavior.c" />
     <ClCompile Include="EnemyAnimations.c" />
     <ClCompile Include="EnemyStateMachine.c" />
     <ClCompile Include="Entity.c" />
@@ -221,6 +223,8 @@
     <ClInclude Include="Dodge.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyAIMeleeBehavior.h" />
+    <ClInclude Include="EnemyAIRangedBehavior.h" />
     <ClInclude Include="EnemyAnimations.h" />
     <ClInclude Include="EnemyStateMachine.h" />
     <ClInclude Include="Entity.h" />

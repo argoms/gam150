@@ -15,21 +15,16 @@
 #include "GameObject.h"
 #include "Enemy.h"
 
-typedef struct
-{
-  void(*EnemyStateStart)();
-  void(*EnemyStateUpdate)();
-  void(*EnemyStateExit)();
-}EnemyStateBehavior;
+void ESMachineRun(GameObject* enemy);
 
-void ESMachine(GameObject* enemy);
+void ESMachineStart(GameObject* enemy, EnemyContainer* enemyContainer);
 
-void ESMachineStart();
+void ESMachineUpdate(GameObject* enemy, EnemyContainer* enemyContainer);
 
-void ESMachineUpdate();
+void ESMachineExit(GameObject* enemy, EnemyContainer* enemyContainer);
 
-void ESMachineExit();
+void ESMachineStateChange(GameObject* enemy, EnemyContainer* enemyContainer);
 
-void ESMachinePop();
+void ESMachineMeleeStateChange(GameObject* enemy);
 
-void ESMachinePush();
+void ESMachineRangedStateChange(GameObject* enemy);

@@ -199,7 +199,7 @@ void IsoSpawnMap()
       if (IsoTileGet(i, j) == 3)
       {
         Vector2D tilePos = Vec2(i, j);
-        CreateWorldGate(tilePos);
+        //CreateWorldGate(tilePos);
       }
       j++;
     }

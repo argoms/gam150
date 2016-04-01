@@ -14,11 +14,24 @@ typedef struct WorldGate WorldGate;
 enum WorldGateStates
 {
   gate_closed,
-  gate_open
+  gate_open,
+  gate_vertical,
+  gate_horizontal
+};
+struct WorldGate
+{
+  int status;
+  int orientation;
+  int positionX;
+  int positionY;
 };
 
-GameObject* CreateWorldGate(Vector2D position);
+
+
+
+GameObject* CreateWorldGate(Vector2D position, int orientation);
 void GateOpened(GameObject* DeadGate);
 void GateRemoveEnemy(GameObject* Target);
 void GateAddEnemy(GameObject* Target);
 void GateRoomSimulate(GameObject* instance);
+WorldGate* GetWorldGate(GameObject* input);;
