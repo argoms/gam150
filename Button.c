@@ -410,7 +410,7 @@ void ButtonSimulate(GameObject *button)
   point.y = mouse_y;      /* set the y of the mouse       */
 
   //debug mose
-  printf("|Moux %f Mouy %f |Buttx %f  Butty %f W %f H %f\n", point.x, point.y, position.x, position.y, screenWidth, screenHeight);
+  //printf("|Moux %f Mouy %f |Buttx %f  Butty %f W %f H %f\n", point.x, point.y, position.x, position.y, screenWidth, screenHeight);
 
   //AEGfxConvertScreenCoordinatesToWorld(mouse_x, mouse_y, &point.x,&point.y);
 
