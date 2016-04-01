@@ -146,7 +146,10 @@ void EnemyMeleeAttack(GameObject* _thisObject, Vector2D attackDirection)
     PhysicsCreateObject(Vec2(_thisObject->physics->position.x + attackDirection.x, _thisObject->physics->position.y + attackDirection.y), 1),
     GCreateSprite(0, 40, tracerAnimation, 1), 0, entity_enemyProjectile);
   tracer->syncSpritePhysics = 1;
+  tracer->simulate = &EnemyTracerSimulate;
+  tracer->projectileLifeTime = 0;
   tracer->physics->onCollision = &EnemyTracerProjectileCollision;
+  tracer->parent = _thisObject;
 }
 
 void EnemyRangedAttack(GameObject* _thisObject, Vector2D attackDirection, float projectileSpeed)
@@ -161,13 +164,14 @@ void EnemyRangedAttack(GameObject* _thisObject, Vector2D attackDirection, float 
   tracer->syncSpritePhysics = 1;
   tracer->simulate = &EnemyTracerSimulate;
   tracer->physics->onCollision = &EnemyTracerProjectileCollision;
+  tracer->parent = _thisObject;
 }
 
 void EnemyTracerProjectileCollision(GameObject* _thisObject, GameObject* _otherObject)
 {
   if (_otherObject && _otherObject->type == entity_player && (_otherObject->entity && _otherObject->entity->canBeDamaged))
   {
-    printf("ENEMY HIT PLAYER %i DAMAGE\n", 10);
+    //EnemyContainer* enemyContainer = _thisObject->parent->miscData;
     EntityTakeDamage(&_otherObject->entity, 10);
     GameObjectDestroy(&_thisObject);
   }
@@ -175,12 +179,12 @@ void EnemyTracerProjectileCollision(GameObject* _thisObject, GameObject* _otherO
 
 void EnemyTracerSimulate(GameObject* _thisTracer)
 {
-  _thisTracer->projectileLifeTime -= (float)AEFrameRateControllerGetFrameTime();
-
   if (_thisTracer->projectileLifeTime < 0)
   {
     GameObjectDestroy(&_thisTracer);
   }
+  _thisTracer->projectileLifeTime -= (float)AEFrameRateControllerGetFrameTime();
+
 }
 
 /*

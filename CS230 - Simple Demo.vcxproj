@@ -178,6 +178,7 @@
     <ClCompile Include="Door.c" />
     <ClCompile Include="Enemy.c" />
     <ClCompile Include="EnemyAIMeleeBehavior.c" />
+    <ClCompile Include="EnemyAIMeleeBigBehavior.c" />
     <ClCompile Include="EnemyAIRangedBehavior.c" />
     <ClCompile Include="EnemyAnimations.c" />
     <ClCompile Include="EnemyStateMachine.c" />
@@ -224,6 +225,7 @@
     <ClInclude Include="Door.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyAIMeleeBehavior.h" />
+    <ClInclude Include="EnemyAIMeleeBigBehavior.h" />
     <ClInclude Include="EnemyAIRangedBehavior.h" />
     <ClInclude Include="EnemyAnimations.h" />
     <ClInclude Include="EnemyStateMachine.h" />
@@ -253,6 +255,7 @@
     <ClInclude Include="WinScreen.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="EnemyMeleeBig.txt" />
     <Text Include="Level1EnemyMelee1.txt" />
     <Text Include="Level1EnemyRanged2.txt" />
   </ItemGroup>
