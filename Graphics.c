@@ -11,6 +11,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Graphics.h"
 #include "AEEngine.h"
 #include "conversions.h"
+#include "Compass.h"
 
 static SpriteList* spriteList; //list of sprites for game layer
 static SpriteList* hudLayer; //list of sprites for hud layer
@@ -76,6 +77,10 @@ void GRender()
     }
   }
 
+  if (Compass_IsActive)
+  {
+    Compass_Draw();
+  }
 
   //render HUD in list starting from the first item
   if (hudLayer->first)
