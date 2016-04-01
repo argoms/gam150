@@ -86,12 +86,15 @@ void UpdateEntityIFs(GameObject *obj)
     if (ent->invincibilityTime > 0) //still INVINCIBLE
     {
       // create particles in during the i frames but make sure to do it once every so often 
+      //FIX THIS LATER TARRANT OR I WILL KILL U WRITTEN BY TARRANT
+      /*
       if (obj->type == entity_player && obj->entity->invincibilityTime % FRAME_DELAY_DODGE_PARTICLES == 0)
       {
         float player_x = obj->physics->position.x; // x position
         float player_y = obj->physics->position.y; // y position
         SpawnDodgeSmokePS(player_x, player_y);         // spawn particles where the player is
       }
+      */
 
       CheckDrag();
       //SetPlayerDrag(0.9);
