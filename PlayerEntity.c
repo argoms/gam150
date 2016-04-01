@@ -92,12 +92,12 @@ void PlayerInit()
   player = GetPlayerObject();
 
   //set up player health:
-  player->entity->health = 100;
+  player->entity->health = 30;
   //
 
   attackCooldown = 0;
   attackCooldownLength = 0.5;
-  attackDamage = 50;
+  attackDamage = 10;
   tracerAnimation = GCreateAnimation(1,
     GCreateTexture("isotilePlaceholder1.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
@@ -132,10 +132,11 @@ void PlayerInit()
 
   //shitty alpha fast coding:
   TextInit();
+  
   char hpstring[20] = "Health:            ";
   int tempHP = player->entity->health;
   int count = 0;
-  while (tempHP > 0)
+  while (tempHP > 0 && count < 10)
   {
     //printf("a");
     count++;
@@ -210,12 +211,17 @@ void PlayerSimulate()
   */
   //-------Tarrants code no touchie----------------------
 
+
+  if (AEInputCheckTriggered('1'))
+  {
+    player->entity->health = 100;
+  }
   //alpha dumb hardcoding
   {
     char hpstring[20] = "Health:            ";
     int tempHP = player->entity->health;
     int count = 0;
-    while (tempHP > 0)
+    while (tempHP > 0 && count < 10)
     {
       count++;
       hpstring[6 + count] = 3;

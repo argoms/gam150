@@ -24,7 +24,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 
 //private info (would be defines but you can't make those private?
 
-#define NUM_ROOMS 16
+#define NUM_ROOMS 8
 
 //Think of this as MAX room size, not just room size.
 static int ROOM_SIZE = 13;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/

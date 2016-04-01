@@ -1,6 +1,6 @@
 ENEMY - 4
   SIZE     - 1
-  HEALTH   - 100
+  HEALTH   - 20
 
   CHASE SPEED     - .01
   PATROL SPEED    - .01
