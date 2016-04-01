@@ -26,6 +26,7 @@ struct MapRoom
 
   Vector2D position;
   GameObject* gates[4];
+  GameObject* parent;
 
   int roomNum; //internal, order of creation
 };

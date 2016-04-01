@@ -368,6 +368,7 @@ static GameObject* RoomTemplate(Vector2D cursor, int spawnGates)
   newMiscData->state = roomstate_inactive;
   newMiscData->size = ROOM_SIZE;
   newMiscData->position = cursor;
+  newMiscData->parent = newRoom;
   //newMiscData->gates[0] = 1;
   
   //ImportEnemyData(cursor.x, cursor.y, "Level1EnemyRanged2.txt", GetPlayerObject());
@@ -530,7 +531,9 @@ int GetRoomSize(GameObject* room)
 
 void EnemyKilled(GameObject* room)
 {
+  //printf("\n thiswascalled \n \n");
   MapRoom* roomData = (MapRoom*)(room->miscData);
+  roomData->numEnemies--;
   if (roomData->numEnemies < 1)
   {
     OpenRoom(room);
