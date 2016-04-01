@@ -87,9 +87,10 @@ float           VectorX, VectorY;
 
 //PS spawn functions
 void SpawnDodgeSmokePS(float StartPosX, float StartPosY);
-void SpawnDodgeSmokePS2(float StartPosX, float StartPosY);
+void SpawnDodgeSmoke2PS(float StartPosX, float StartPosY);
 void SpawnFireHazardPS(float StartPosX, float StartPosY);
 void SpawnHitSplashPS(float StartPosX, float StartPosY);
+void SpawnHealthGatherPS(float StartPosX, float StartPosY);
 
 //default PS behavior functions
 void Default_Particle_Create_Continuous(int i, PS_Instance *pPS_Inst);
@@ -101,6 +102,10 @@ void Default_Particle_Simulate(void);
 //default PS behavior functions
 
 //other PS behavior functions
+void Particle_Create_HealthGather(int i, PS_Instance *pPS_Inst);
+void Particle_Simulate_HealthGather(void);
+void Particle_Special_FX_HealthGather(Sprite *Owner);
+
 void Particle_Create_HitSplash(int i, PS_Instance *pPS_Inst);
 void Particle_Simulate_HitSplash(void);
 void Particle_Special_FX_HitSplash(Sprite *Owner);
@@ -165,5 +170,6 @@ PS_Instance *pPS_B;
 PS_Instance *pDodgeSmoke[4];
 PS_Instance *pHitSplash[4];
 PS_Instance *pFireHazard[2];
+PS_Instance *pHealthGather[4];
 
 #endif

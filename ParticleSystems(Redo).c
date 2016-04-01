@@ -109,6 +109,30 @@ void SpawnHitSplashPS(float StartPosX, float StartPosY)
 	}
 }
 
+/*!
+\brief
+Spawns a Health Gather PS
+\param StartPosX
+float for the PS's Starting X Position.  Recommended to be the position of the health pick-up.
+\param StartPosY
+float for the PS's Starting Y Position.  Recommended to be the position of the health pick-up.
+*/
+void SpawnHealthGatherPS(float StartPosX, float StartPosY)
+{
+	int i;
+
+	for (i = 0; i < sizeof(pHealthGather) / sizeof(*pHealthGather); i++)
+	{
+		if (pHealthGather[i]->PS_Burst->ShutDown)
+		{
+			pHealthGather[i]->PS_Burst->StartPosX = StartPosX;
+			pHealthGather[i]->PS_Burst->StartPosY = StartPosY;
+			Start_PS(pHealthGather[i]);
+			break;
+		}
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //DEFAULT PS FUNCTIONS ARE ONLY HERE FOR SAFETY DEFAULTS AND SAMPLES FOR HOW TO WRITE YOUR OWN PS FUNCTIONS
