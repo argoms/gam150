@@ -14,6 +14,7 @@ This is the c source code file that contains the implementation of the particle 
 #include <stdio.h>
 #include "Graphics.h"
 #include "GameObject.h"
+#include "GameLevel.h"
 
 //based on float of pi * 2 = 6.2831853
 #define RANDOM_ANGLE (float) ((rand() / (float)RAND_MAX) * 6.2831853)
@@ -137,6 +138,111 @@ void SpawnHealthGatherPS(float StartPosX, float StartPosY)
 
 //DEFAULT PS FUNCTIONS ARE ONLY HERE FOR SAFETY DEFAULTS AND SAMPLES FOR HOW TO WRITE YOUR OWN PS FUNCTIONS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!
+\brief
+creates a particle for a Health Gather
+\param i
+int for the ID of the particle.
+\param pPS_Inst
+PS_Instance * for the owner continuous PS.
+*/
+void Particle_Create_HealthGather(int i, PS_Instance *pPS_Inst)
+{
+	int j;
+	//you need to create and initialize these to make the particles work properly
+	float RandomAngle = RANDOM_ANGLE;
+	float RandomScale = (float)((rand() / (float)RAND_MAX));
+	Vector2D ParticlePosition;
+	Vector2D InitialVelocity;
+	PhysicsObject *ParticlePhysics;
+	Animation *ParticleAnimation;
+	Sprite *ParticleSprite;
+	GameObject *NewParticle;
+
+	//spawn particles at the position of the PS.
+	ParticlePosition.x = pPS_Inst->PS_Burst->StartPosX;
+	ParticlePosition.y = pPS_Inst->PS_Burst->StartPosY;
+	//launch particles in a random direction at a constant speed
+	InitialVelocity.x = (float)(0.1 * cos(RandomAngle + i * PI / 4));
+	InitialVelocity.y = (float)(0.1 * sin(RandomAngle + i * PI / 4));
+
+	//NECESSARY SET-UP STUFF
+	ParticlePhysics = PhysicsCreateObject(ParticlePosition, 1.0f);
+	ParticlePhysics->velocity = InitialVelocity;
+	ParticlePhysics->active = 0;
+	ParticleAnimation = GCreateAnimation(1, GCreateTexture("WhiteBox.png"), GCreateMesh(10, 10, 1, 1), 1);
+	ParticleSprite = GCreateSprite(ParticlePosition.x, ParticlePosition.y, ParticleAnimation, 0.0f);
+	ParticleSprite->specialFX = Particle_Special_FX_HitSplash;
+	NewParticle = GameObjectCreate(ParticlePhysics, ParticleSprite, NULL, entity_particle);
+	NewParticle->simulate = Particle_Simulate_HitSplash;
+
+	NewParticle->miscData = malloc(sizeof(ParticleData));
+	((ParticleData *)(NewParticle->miscData))->ParticleID = i;
+	for (j = 0; j < sizeof(pHealthGather) / sizeof(*pHealthGather); j++)
+	{
+		if (pPS_Inst == pHealthGather[j])
+		{
+			((ParticleData *)(NewParticle->miscData))->PS_ID = j;
+			break;
+		}
+	}
+
+	pPS_Inst->PS_Burst->Particle[i] = NewParticle;
+}
+
+/*!
+\brief
+particle update behavior for Hit Splash
+*/
+void Particle_Simulate_HealthGather(void)
+{
+
+}
+
+/*!
+\brief
+particle special visual effect for Hit Splash
+*/
+void Particle_Special_FX_HealthGather(Sprite *Owner)
+{
+	float VisualMod = pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime * 0.5f;
+	float x = GetPlayerObject()->sprite->x - pHealthGather[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->StartPosX;
+	float y = GetPlayerObject()->sprite->y - pHealthGather[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->StartPosY;
+	float length = (float)sqrt(x * x + y * y);
+	x /= length;
+	y /= length;
+
+	Owner->owner->physics->velocity.x += x / 3000.0f;
+	Owner->owner->physics->velocity.y += y / 3000.0f;
+
+	AEGfxSetTintColor(0.5f + VisualMod, 1.0f, 0.5f + VisualMod, 0.8f);
+
+	/*
+	if (((ParticleData *)(Owner->owner->miscData))->ParticleID < 5)
+	{
+		if (pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer > 0.1f)
+		{
+			AEGfxSetTintColor(0.2f, 1.0f, 0.3f, 1.0f);
+		}
+		else
+		{
+			AEGfxSetTintColor(0.2f, 1.0f, 0.3f, 5.0f * pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime);
+		}
+	}
+	else
+	{
+		if (pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer > 0.1f)
+		{
+			AEGfxSetTintColor(1.0f, 0.5f, 0.0f, 1.0f);
+		}
+		else
+		{
+			AEGfxSetTintColor(1.0f, 0.5f, 0.0f, 5.0f * pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime);
+		}
+	}
+	*/
+}
 
 /*!
 \brief
