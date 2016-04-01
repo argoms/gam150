@@ -212,9 +212,34 @@ void PlayerSimulate()
   //-------Tarrants code no touchie----------------------
 
 
+  //cheat codes:
   if (AEInputCheckTriggered('1'))
   {
     player->entity->health = 100;
+  }
+
+  if (AEInputCheckTriggered('2'))
+  {
+    if (playerAccel < 0.3)
+    {
+      playerAccel = 0.5;
+    }
+    else
+    {
+      playerAccel = 0.2;
+    }
+  }
+
+  if (AEInputCheckTriggered('2'))
+  {
+    if (attackDamage < 15)
+    {
+      attackDamage = 9999;
+    }
+    else
+    {
+      attackDamage = 10;
+    }
   }
   //alpha dumb hardcoding
   {
