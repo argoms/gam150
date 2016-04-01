@@ -20,6 +20,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "WinScreen.h"
 #include "Audio.h"
 #include "ParticleSystems(Redo).h"
+#include "Compass.h"
 
 
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
@@ -59,8 +60,11 @@ void LevelLoad(int _level)
   {
   case level_level1:
     Level1Init();
-    //Audio_PlayMusicStream("music_sample4.ogg", 1);
-    //Audio_PauseMusicStream("music_sample3.ogg");
+    if (!(currentLevel == level_town))
+    {
+      Audio_PlayMusicStream("music_sample4.ogg", 1);
+      Audio_PauseMusicStream("EPOCH_main_theme.ogg");
+    }
     break;
   case level_mainMenu:
     MainMenuInit();
@@ -74,8 +78,8 @@ void LevelLoad(int _level)
     DeathScreenInit();
     level = 0;
     //Audio_PauseMusicStream("music_sample2A.ogg");
-    //Audio_PauseMusicStream("music_sample4.ogg");
-    Audio_PauseMusicStream("EPOCH_theme_funky.ogg");
+    Audio_PauseMusicStream("music_sample4.ogg");
+    //Audio_PauseMusicStream("EPOCH_theme_funky.ogg");
     break;
   case level_splashScreen:
     Audio_PlayMusicStream("music_sample3.ogg", 0);
@@ -84,8 +88,17 @@ void LevelLoad(int _level)
   case level_winScreen:
     WinScreenInit();
     level = 0;
-    Audio_PauseMusicStream("EPOCH_theme_funky.ogg");
+    Audio_PauseMusicStream("music_sample4.ogg");
+    //Audio_PauseMusicStream("EPOCH_theme_funky.ogg");
     break;
+  }
+
+  if (_level != level_level1)
+  {
+    //Matt's compass code
+    Compass_Free();
+    Compass_Unload();
+
   }
 
 }
@@ -125,12 +138,13 @@ void LevelRun()
     {
     case level_exit:
       gGameRunning = 0;
+      Compass_Unload();
       break;
     default:
       Audio_PlaySoundSample("ButtonClick2.ogg", 0);
       LevelUnload();
-      currentLevel = nextLevel;
       LevelLoad(nextLevel);
+      currentLevel = nextLevel;
       break;
     }
   }
@@ -283,8 +297,8 @@ void MainMenuRun()
     }
     //Audio_PlayMusicStream("music_sample4.ogg", 1);
     //Audio_PauseMusicStream("music_sample3.ogg");
-    Audio_PauseMusicStream("EPOCH_main_theme.ogg");
-    Audio_PlayMusicStream("EPOCH_theme_funky.ogg", 1);
+    //Audio_PauseMusicStream("EPOCH_main_theme.ogg");
+    //Audio_PlayMusicStream("EPOCH_theme_funky.ogg", 1);
   }
   //
 }

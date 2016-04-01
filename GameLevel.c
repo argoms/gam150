@@ -24,6 +24,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "ImportData.h"
 #include "ParticleSystems(Redo).h"
 #include "MyRandom.h"
+#include "Compass.h"
 
 #define MAP_WIDTH 64
 #define MAP_HEIGHT 64
@@ -121,6 +122,11 @@ void GameLevelInit(void)
   player->entity->onEntityKilled = &OnPlayerKilled;
   
   PlayerInit();
+
+  //create compass
+  Compass_Load();
+  Compass_Init();
+  
 
   //map generation actually happens at the end because it needs the player and shit.
   IsoInit(MAP_WIDTH, MAP_HEIGHT);
@@ -238,6 +244,8 @@ void GameLevelRun(void)
   //
   AEGfxSetCamPosition(player->sprite->x, player->sprite->y);
   
+  Compass_Update(&player->physics->position, &DoorGetDoor()->physics->position);
+
 }
 
 /*!
