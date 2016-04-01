@@ -66,6 +66,10 @@ GameObject* ImportEnemyData(float x, float y, const char *file, GameObject* play
 			break;
 		case 2:
 			enemyType = ENEMY_TYPE_MELEE_BIG;
+      enemyAnimation = GCreateAnimation(1,
+        GCreateTexture("isotilePlaceholder1.png"),
+        GCreateMesh(128.f, 64.f, 1, 1),
+        1);
 			break;
 		case 3:
 			enemyType = ENEMY_TYPE_MELEE_CHARGE;
@@ -134,11 +138,8 @@ GameObject* ImportEnemyData(float x, float y, const char *file, GameObject* play
 		newEnemy->entity->health = health;
 
 		EnemyAnimationInitialize(newEnemy);
-		//newEnemy->physics->position.x = 2;
-		//newEnemy->physics->position.y = 2;
 		printf("Created an enemy!");
 
-		//CLOSE THE FILE
 		fclose(infile);
 
 		return newEnemy;

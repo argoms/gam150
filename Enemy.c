@@ -115,25 +115,20 @@ void EnemyChangeAnimationFlag(EnemyContainer* enemyContainer, Vector2D* worldFac
   
   if (worldFacingAngle < 67.5 && worldFacingAngle > -67.5)
   {
-    //printf("right");
-    //printf("%f\n", worldFacingAngle);
     enemyContainer->enemyAnimationState += ENEMY_RIGHT;
   }
   
   if (worldFacingAngle > 112.5 || worldFacingAngle < -112.5)
   {
-    //printf("left\n");
     enemyContainer->enemyAnimationState += ENEMY_LEFT;
   }
 
   if (worldFacingAngle > 22.5 && worldFacingAngle < 157.5)
   {
-    //printf("up\n");
     enemyContainer->enemyAnimationState += ENEMY_UP;
   }
   if (worldFacingAngle < -22.5 && worldFacingAngle > -157.5)
   {
-    //printf("down\n");
     enemyContainer->enemyAnimationState += ENEMY_DOWN;
   }
   

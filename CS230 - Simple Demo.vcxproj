@@ -254,6 +254,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Level1EnemyMelee1.txt" />
+    <Text Include="Level1EnemyMeleeBig3.txt" />
     <Text Include="Level1EnemyRanged2.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -103,6 +103,8 @@
     <ClCompile Include="Matrix2D.c">
       <Filter>Back End</Filter>
     </ClCompile>
+    <ClCompile Include="ControlScreen.c" />
+    <ClCompile Include="CreditsScreen.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -206,6 +208,8 @@
     <ClInclude Include="Matrix2D.h">
       <Filter>Back End</Filter>
     </ClInclude>
+    <ClInclude Include="ControlScreen.h" />
+    <ClInclude Include="CreditsScreen.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="EnemyFiles">
@@ -244,6 +248,9 @@
       <Filter>EnemyFiles</Filter>
     </Text>
     <Text Include="Level1EnemyRanged2.txt">
+      <Filter>EnemyFiles</Filter>
+    </Text>
+    <Text Include="Level1EnemyMeleeBig3.txt">
       <Filter>EnemyFiles</Filter>
     </Text>
   </ItemGroup>

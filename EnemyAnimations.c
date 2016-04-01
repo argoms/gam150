@@ -40,57 +40,151 @@ static AnimationDefinition animationSpiderWolf[] =
   { ENEMY_ATTACK + ENEMY_UP + ENEMY_RIGHT, "animations/spiderwolf/SwipeUpRight.png",  NULL }
 };
 
+static AnimationDefinition animationChargeTato[] =
+{
+  { ENEMY_WALK + ENEMY_DOWN,                "animations/chargertato/Walk4.png",  NULL },
+  { ENEMY_WALK + ENEMY_DOWN + ENEMY_LEFT,   "animations/chargertato/Walk6.png",  NULL },
+  { ENEMY_WALK + ENEMY_DOWN + ENEMY_RIGHT,  "animations/chargertato/Walk2.png",  NULL },
+  { ENEMY_WALK + ENEMY_LEFT,                "animations/chargertato/Walk8.png",  NULL },
+  { ENEMY_WALK + ENEMY_RIGHT,               "animations/chargertato/Walk0.png",  NULL },
+  { ENEMY_WALK + ENEMY_UP,                  "animations/chargertato/Walk12.png",  NULL },
+  { ENEMY_WALK + ENEMY_UP + ENEMY_LEFT,     "animations/chargertato/Walk10.png",  NULL },
+  { ENEMY_WALK + ENEMY_UP + ENEMY_RIGHT,    "animations/chargertato/Walk14.png",  NULL },
+
+  { ENEMY_IDLE + ENEMY_DOWN,                "animations/chargertato/Idle4.png",  NULL },
+  { ENEMY_IDLE + ENEMY_DOWN + ENEMY_LEFT,   "animations/chargertato/Idle6.png",  NULL },
+  { ENEMY_IDLE + ENEMY_DOWN + ENEMY_RIGHT,  "animations/chargertato/Idle2.png",  NULL },
+  { ENEMY_IDLE + ENEMY_LEFT,                "animations/chargertato/Idle8.png",  NULL },
+  { ENEMY_IDLE + ENEMY_RIGHT,               "animations/chargertato/Idle0.png",  NULL },
+  { ENEMY_IDLE + ENEMY_UP,                  "animations/chargertato/Idle12.png",  NULL },
+  { ENEMY_IDLE + ENEMY_UP + ENEMY_LEFT,     "animations/chargertato/Idle10.png",  NULL },
+  { ENEMY_IDLE + ENEMY_UP + ENEMY_RIGHT,    "animations/chargertato/Idle14.png",  NULL },
+
+  { ENEMY_ATTACK + ENEMY_DOWN,                "animations/chargertato/Slam4.png",  NULL },
+  { ENEMY_ATTACK + ENEMY_DOWN + ENEMY_LEFT,   "animations/chargertato/Slam6.png",  NULL },
+  { ENEMY_ATTACK + ENEMY_DOWN + ENEMY_RIGHT,  "animations/chargertato/Slam2.png",  NULL },
+  { ENEMY_ATTACK + ENEMY_LEFT,                "animations/chargertato/Slam8.png",  NULL },
+  { ENEMY_ATTACK + ENEMY_RIGHT,               "animations/chargertato/Slam0.png",  NULL },
+  { ENEMY_ATTACK + ENEMY_UP,                  "animations/chargertato/Slam12.png",  NULL },
+  { ENEMY_ATTACK + ENEMY_UP + ENEMY_LEFT,     "animations/chargertato/Slam10.png",  NULL },
+  { ENEMY_ATTACK + ENEMY_UP + ENEMY_RIGHT,    "animations/chargertato/Slam14.png",  NULL }
+};
+
 void EnemyAnimationInitialize(GameObject* enemy)
 {
+  EnemyContainer* enemyContainer = enemy->miscData;
   int walkFrames = 16;
   int idleFrames = 1;
   int attackFrames = 18;
-  AEGfxVertexList* walkMesh   = GCreateMesh(256.f, 256.f, walkFrames,   1);
-  AEGfxVertexList* idleMesh   = GCreateMesh(256.f, 256.f, idleFrames,   1);
-  AEGfxVertexList* attackMesh = GCreateMesh(256.f, 256.f, attackFrames, 1);
 
-  int numAnimations = sizeof(animationSpiderWolf) / sizeof(AnimationDefinition);
+  int chargertatoWalkFrames = 17;
+  int chargertatoIdleFrames = 1;
+  int chargertatoAttackFrames = 19;
 
-  int i = 0;
-  for (i = 0; i < numAnimations; ++i)
+  if (enemyContainer->enemyType == ENEMY_TYPE_MELEE || enemyContainer->enemyType == ENEMY_TYPE_RANGED)
   {
-    int frames;
-    AEGfxVertexList *mesh;
-    unsigned int maskedFlag = animationSpiderWolf[i].action & (ENEMY_IDLE + ENEMY_WALK + ENEMY_ATTACK);
-    switch (maskedFlag)
-    {
-    case ENEMY_IDLE:
-      frames = idleFrames;
-      mesh = idleMesh;
-      break;
-    case ENEMY_WALK:
-      frames = walkFrames;
-      mesh = walkMesh;
-      break;
-    case ENEMY_ATTACK:
-      frames = attackFrames;
-      mesh = attackMesh;
-    }
-    animationSpiderWolf[i].animation = GCreateAnimation(frames, GCreateTexture(animationSpiderWolf[i].filename), mesh, 1);
-  }
+    AEGfxVertexList* walkMesh   = GCreateMesh(256.f, 256.f, walkFrames,   1);
+    AEGfxVertexList* idleMesh   = GCreateMesh(256.f, 256.f, idleFrames,   1);
+    AEGfxVertexList* attackMesh = GCreateMesh(256.f, 256.f, attackFrames, 1);
 
-  enemy->sprite->animation = animationSpiderWolf[8].animation;
-  enemy->sprite->offset.y = 60.0f;
+    int numAnimations = sizeof(animationSpiderWolf) / sizeof(AnimationDefinition);
+
+    int i = 0;
+    for (i = 0; i < numAnimations; ++i)
+    {
+      int frames;
+      AEGfxVertexList *mesh;
+      unsigned int maskedFlag = animationSpiderWolf[i].action & (ENEMY_IDLE + ENEMY_WALK + ENEMY_ATTACK);
+      switch (maskedFlag)
+      {
+      case ENEMY_IDLE:
+        frames = idleFrames;
+        mesh = idleMesh;
+        break;
+      case ENEMY_WALK:
+        frames = walkFrames;
+        mesh = walkMesh;
+        break;
+      case ENEMY_ATTACK:
+        frames = attackFrames;
+        mesh = attackMesh;
+      }
+      animationSpiderWolf[i].animation = GCreateAnimation(frames, GCreateTexture(animationSpiderWolf[i].filename), mesh, 1);
+    }
+
+    enemy->sprite->animation = animationSpiderWolf[8].animation;
+    enemy->sprite->offset.y = 60.0f;
+  }
+  if (enemyContainer->enemyType == ENEMY_TYPE_MELEE_BIG)
+  {
+    AEGfxVertexList* walkMesh = GCreateMesh(516.f, 516.f, chargertatoWalkFrames, 1);
+    AEGfxVertexList* idleMesh = GCreateMesh(516.f, 516.f, chargertatoIdleFrames, 1);
+    AEGfxVertexList* attackMesh = GCreateMesh(516.f, 516.f, 1, chargertatoAttackFrames);
+
+    int numAnimations = sizeof(animationChargeTato) / sizeof(AnimationDefinition);
+
+    int i = 0;
+    for (i = 0; i < numAnimations; ++i)
+    {
+      int frames;
+      AEGfxVertexList *mesh;
+      unsigned int maskedFlag = animationChargeTato[i].action & (ENEMY_IDLE + ENEMY_WALK + ENEMY_ATTACK);
+      switch (maskedFlag)
+      {
+      case ENEMY_IDLE:
+        frames = idleFrames;
+        mesh = idleMesh;
+        animationChargeTato[i].animation = GCreateAnimation(frames, GCreateTexture(animationChargeTato[i].filename), mesh, 1);
+        break;
+      case ENEMY_WALK:
+        frames = walkFrames;
+        mesh = walkMesh;
+        animationChargeTato[i].animation = GCreateAnimation(frames, GCreateTexture(animationChargeTato[i].filename), mesh, 1);
+        break;
+      case ENEMY_ATTACK:
+        frames = attackFrames;
+        mesh = attackMesh;
+        animationChargeTato[i].animation = GCreateAnimation(frames, GCreateTexture(animationChargeTato[i].filename), mesh, 1);
+        break;
+      }
+    }
+
+    enemy->sprite->animation = animationChargeTato[8].animation;
+    enemy->sprite->offset.y = 150.0f;
+  }
 }
 
 void EnemyAnimationStateManager(GameObject* enemy)
 {
   EnemyContainer* enemyContainer = enemy->miscData;
   unsigned int animationFlag = enemyContainer->enemyAnimationState;
-  int numAnimations = sizeof(animationSpiderWolf) / sizeof(AnimationDefinition);
 
-  for (int i = 0; i < numAnimations; ++i)
+  if (enemyContainer->enemyType == ENEMY_TYPE_MELEE || enemyContainer->enemyType == ENEMY_TYPE_RANGED)
   {
-    if ((animationFlag == animationSpiderWolf[i].action) && (animationSpiderWolf[i].animation != NULL))
+    int numAnimations = sizeof(animationSpiderWolf) / sizeof(AnimationDefinition);
+
+    for (int i = 0; i < numAnimations; ++i)
     {
-      enemy->sprite->animation = animationSpiderWolf[i].animation;
-      enemy->sprite->offset.y = 60.0f;
-      break;
+      if ((animationFlag == animationSpiderWolf[i].action) && (animationSpiderWolf[i].animation != NULL))
+      {
+        enemy->sprite->animation = animationSpiderWolf[i].animation;
+        enemy->sprite->offset.y = 60.0f;
+        break;
+      }
+    }
+  }
+  else if (enemyContainer->enemyType == ENEMY_TYPE_MELEE_BIG)
+  {
+    int numAnimations = sizeof(animationChargeTato) / sizeof(AnimationDefinition);
+
+    for (int i = 0; i < numAnimations; ++i)
+    {
+      if ((animationFlag == animationChargeTato[i].action) && (animationChargeTato[i].animation != NULL))
+      {
+        enemy->sprite->animation = animationChargeTato[i].animation;
+        enemy->sprite->offset.y = 150.0f;
+        break;
+      }
     }
   }
 }

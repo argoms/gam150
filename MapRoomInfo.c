@@ -74,6 +74,7 @@ void MapRoomInfoClear(MapRoomInfo* first)
 void MapRoomBehavior_BasicEnemies(MapRoom* roomData)
 {
   Vector2D cursor = Vec2(roomData->position.x, roomData->position.y);
-  roomData->numEnemies = 1;
-  ImportEnemyData(cursor.x, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());;
+  roomData->numEnemies = 2;
+  ImportEnemyData(cursor.x, cursor.y, "Level1EnemyMelee1.txt", GetPlayerObject());
+  ImportEnemyData(cursor.x, cursor.y, "Level1EnemyMeleeBig3.txt", GetPlayerObject());
 }
