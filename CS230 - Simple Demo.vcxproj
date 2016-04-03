@@ -198,6 +198,7 @@
     </ClCompile>
     <ClCompile Include="MapCreator.c" />
     <ClCompile Include="MapGen.c" />
+    <ClCompile Include="MapLevelSpawning.c" />
     <ClCompile Include="MapRoomInfo.c" />
     <ClCompile Include="Matrix2D.c" />
     <ClCompile Include="MyRandom.c" />
@@ -241,6 +242,7 @@
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="MapCreator.h" />
     <ClInclude Include="MapGen.h" />
+    <ClInclude Include="MapLevelSpawning.h" />
     <ClInclude Include="MapRoomInfo.h" />
     <ClInclude Include="Matrix2D.h" />
     <ClInclude Include="MyRandom.h" />

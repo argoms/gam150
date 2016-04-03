@@ -14,6 +14,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include <stdlib.h>
 #include "MapGen.h"
 #include "MyRandom.h"
+#include "MapLevelSpawning.h"
 //#include "MapCreator.h"
 #include "Gate.h"
 static IsoMap* gameMap; /**< contains currently active game map*/
@@ -133,6 +134,8 @@ void IsoTileSet(int _x, int _y, int _newValue)
 */
 void IsoSpawnMap()
 {
+  GenerateMapObjects();
+  /*
   int i = 0; //index
   int j = 0; //index
   int mapWidth = gameMap->mapWidth;
@@ -207,5 +210,14 @@ void IsoSpawnMap()
       j++;
     }
     i++;
-  }
+  }*/
+}
+
+/*!
+\brief Getter for the currently active isomap object (level tile data information)
+\return Returns pointer to isomap.
+*/
+IsoMap* GetGameMap()
+{
+  return gameMap;
 }

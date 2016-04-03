@@ -30,9 +30,6 @@
     <ClCompile Include="ImportData.c">
       <Filter>Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="Isometric.c">
-      <Filter>Back End</Filter>
-    </ClCompile>
     <ClCompile Include="LevelManager.c">
       <Filter>Back End</Filter>
     </ClCompile>
@@ -108,6 +105,12 @@
     <ClCompile Include="EnemyAIMeleeBigBehavior.c">
       <Filter>Enemies\EnemyAI</Filter>
     </ClCompile>
+    <ClCompile Include="MapLevelSpawning.c">
+      <Filter>MapGen</Filter>
+    </ClCompile>
+    <ClCompile Include="Isometric.c">
+      <Filter>MapGen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -137,9 +140,6 @@
     </ClInclude>
     <ClInclude Include="ImportData.h">
       <Filter>Enemies</Filter>
-    </ClInclude>
-    <ClInclude Include="Isometric.h">
-      <Filter>Back End</Filter>
     </ClInclude>
     <ClInclude Include="LevelManager.h">
       <Filter>Back End</Filter>
@@ -215,6 +215,12 @@
     <ClInclude Include="CreditsScreen.h" />
     <ClInclude Include="EnemyAIMeleeBigBehavior.h">
       <Filter>Enemies\EnemyAI</Filter>
+    </ClInclude>
+    <ClInclude Include="MapLevelSpawning.h">
+      <Filter>MapGen</Filter>
+    </ClInclude>
+    <ClInclude Include="Isometric.h">
+      <Filter>MapGen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
