@@ -246,7 +246,7 @@ void PlayerSimulate()
     char hpstring[20] = "Health:            ";
     int tempHP = player->entity->health;
     int count = 0;
-    while (tempHP > 0 && count < 10)
+    while (tempHP > 0 && count < 10)  // whoever hard coded this needs to stop
     {
       count++;
       hpstring[6 + count] = 3;
@@ -256,6 +256,15 @@ void PlayerSimulate()
     healthText = TextCreateHUDString(hpstring, -300, -200);
     //TextHUDStringSet(&healthText, "aaa");
   }
+
+  // cheat to restore hp, Tarrants code
+  if (AEInputCheckTriggered('M'))
+  {
+    RestoreHealth(player);
+    printf("restored hp\n");
+  }
+  
+ 
 }
 
 /*!
@@ -523,4 +532,25 @@ void SetPlayerDrag(float drag)
 float  GetPlayerDrag()
 {
   return playerDrag;
+}
+
+// tarrants cheat to restore hp
+// im gonna map m to this
+void RestoreHealth(GameObject* obj)
+{
+  if (obj == NULL)
+  {
+    return;
+  }
+
+  if (obj->entity == NULL)
+  {
+    return;
+  }
+
+  // who hardcoded ten, now i gotta do it
+  if (obj->entity->health < 10)
+  {
+    obj->entity->health = 10;
+  }
 }
