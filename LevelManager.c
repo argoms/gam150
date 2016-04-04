@@ -113,6 +113,14 @@ void LevelRun()
   {
     
   case level_level1:
+	  if (AEInputCheckTriggered(VK_SPACE))
+	  {
+		  SpawnDodgeSmokePS(4.0f, 4.0f);
+	  }
+	  if (AEInputCheckTriggered('T'))
+	  {
+		  SpawnHitSplashPS(4.0f, 4.0f, 1, 0);
+	  }
     GameLevelRun();
     break;
   case level_mainMenu:

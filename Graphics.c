@@ -63,7 +63,7 @@ void GRender()
       AEGfxSetTintColor(spriteIndex->tint.red, spriteIndex->tint.green, spriteIndex->tint.blue, spriteIndex->tint.alpha);
       if (spriteIndex->specialFX != NULL)
       {
-        spriteIndex->specialFX();
+        spriteIndex->specialFX(spriteIndex);
       }
 
       AEGfxSetTransparency(1.0f);
@@ -295,6 +295,7 @@ Sprite* GCreateSprite(float _spriteX, float _spriteY, Animation* _animation, flo
   newSprite->offset.y = 0;
   newSprite->blendMode = AE_GFX_BM_BLEND;
   newSprite->tint = GTint(1.0f, 1.0f, 1.0f, 1.0f);
+  newSprite->owner = NULL;
 
   //newSprite->animation->mesh
   //update sprite list:
@@ -365,6 +366,7 @@ Sprite* GCreateHudSprite(float _spriteX, float _spriteY, Animation* _animation, 
   newSprite->offset.y = 0;
   newSprite->blendMode = AE_GFX_BM_BLEND;
   newSprite->tint = GTint(1.0f, 1.0f, 1.0f, 1.0f);
+  newSprite->owner = NULL;
 
   if (!hudLayer->first) //if first, set first in list
   {
