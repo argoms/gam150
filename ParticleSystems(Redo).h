@@ -83,13 +83,13 @@ typedef struct PS_Instance
 
 //PS object instance list
 PS_Instance		goiaPS_ObjectInstanceList[PS_OBJ_INST_MAX];
-float           VectorX, VectorY;
+float           VectorX, VectorY, ImpactAngle;
 
 //PS spawn functions
 void SpawnDodgeSmokePS(float StartPosX, float StartPosY);
 void SpawnDodgeSmoke2PS(float StartPosX, float StartPosY);
 void SpawnFireHazardPS(float StartPosX, float StartPosY);
-void SpawnHitSplashPS(float StartPosX, float StartPosY);
+void SpawnHitSplashPS(float StartPosX, float StartPosY, float ObjDistX, float ObjDistY);
 void SpawnHealthGatherPS(float StartPosX, float StartPosY);
 
 //default PS behavior functions

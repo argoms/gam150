@@ -94,10 +94,12 @@ float for the PS's Starting X Position.  Recommended to be the position of the e
 \param StartPosY
 float for the PS's Starting Y Position.  Recommended to be the position of the enemy that was just hit.
 */
-void SpawnHitSplashPS(float StartPosX, float StartPosY)
+void SpawnHitSplashPS(float StartPosX, float StartPosY, float ObjDistX, float ObjDistY)
 {
 	int i;
 
+	VectorX = ObjDistX;
+	VectorY = ObjDistY;
 	for (i = 0; i < sizeof(pHitSplash) / sizeof(*pHitSplash); i++)
 	{
 		if (pHitSplash[i]->PS_Burst->ShutDown)
@@ -256,11 +258,6 @@ void Particle_Create_HitSplash(int i, PS_Instance *pPS_Inst)
 {
 	int j;
 	//you need to create and initialize these to make the particles work properly
-	float ImpactAngle = (float)acos(VectorX / sqrt(VectorX * VectorX + VectorY * VectorY));
-	if (asin(VectorX / sqrt(VectorX * VectorX + VectorY * VectorY)) < 0)
-	{
-		ImpactAngle = -ImpactAngle;
-	}
 	float RandomAngle = RANDOM_ANGLE;
 	float RandomScale = (float)((rand() / (float)RAND_MAX));
 	Vector2D ParticlePosition;
@@ -270,12 +267,18 @@ void Particle_Create_HitSplash(int i, PS_Instance *pPS_Inst)
 	Sprite *ParticleSprite;
 	GameObject *NewParticle;
 
+	ImpactAngle = (float)acos(VectorX / sqrt(VectorX * VectorX + VectorY * VectorY));
+	if (asin(VectorX / sqrt(VectorX * VectorX + VectorY * VectorY)) < 0)
+	{
+		ImpactAngle = -ImpactAngle;
+	}
+
 	//spawn particles at the position of the PS.
 	ParticlePosition.x = pPS_Inst->PS_Burst->StartPosX;
 	ParticlePosition.y = pPS_Inst->PS_Burst->StartPosY;
 	//launch particles in a random direction at a constant speed
-	InitialVelocity.x = (float)(RandomScale * 0.05 * cos(ImpactAngle + (RandomAngle - PI)/8));
-	InitialVelocity.y = (float)(RandomScale * 0.05 * sin(ImpactAngle + (RandomAngle - PI)/8));
+	InitialVelocity.x = (float)((0.1 + RandomScale * 0.2) * cos(ImpactAngle + (RandomAngle - PI)/8));
+	InitialVelocity.y = (float)((0.1 + RandomScale * 0.2) * sin(ImpactAngle + (RandomAngle - PI)/8));
 
 	//NECESSARY SET-UP STUFF
 	ParticlePhysics = PhysicsCreateObject(ParticlePosition, 1.0f);
@@ -298,6 +301,7 @@ void Particle_Create_HitSplash(int i, PS_Instance *pPS_Inst)
 		}
 	}
 
+	ParticleSprite->owner = NewParticle;
 	pPS_Inst->PS_Burst->Particle[i] = NewParticle;
 }
 
@@ -318,24 +322,24 @@ void Particle_Special_FX_HitSplash(Sprite *Owner)
 {
 	if (((ParticleData *)(Owner->owner->miscData))->ParticleID < 5)
 	{
-		if (pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer > 0.1f)
+		if (pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer > 0.25f)
 		{
-			AEGfxSetTintColor(0.2f, 1.0f, 0.3f, 1.0f);
+			AEGfxSetTintColor(0.0f, 0.7f, 0.1f, 1.0f);
 		}
 		else
 		{
-			AEGfxSetTintColor(0.2f, 1.0f, 0.3f, 5.0f * pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime);
+			AEGfxSetTintColor(0.0f, 0.7f, 0.1f, 0.2f + 0.8f * pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime);
 		}
 	}
 	else
 	{
-		if (pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer > 0.1f)
+		if (pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer > 0.25f)
 		{
-			AEGfxSetTintColor(1.0f, 0.5f, 0.0f, 1.0f);
+			AEGfxSetTintColor(0.8f, 0.2f, 0.0f, 1.0f);
 		}
 		else
 		{
-			AEGfxSetTintColor(1.0f, 0.5f, 0.0f, 5.0f * pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime);
+			AEGfxSetTintColor(0.8f, 0.2f, 0.0f, 0.2f + 0.8f * pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime);
 		}
 	}
 }
@@ -544,11 +548,11 @@ void Particle_Special_FX_DodgeSmoke(Sprite *Owner)
 {
 	if (pDodgeSmoke[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer > 1.0f)
 	{
-		AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 0.5f);
+		AEGfxSetTintColor(0.7f, 0.7f, 0.7f, 0.7f);
 	}
 	else
 	{
-		AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f * pDodgeSmoke[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pDodgeSmoke[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime);
+		AEGfxSetTintColor(0.7f, 0.7f, 0.7f, 0.2f + 0.5f * pDodgeSmoke[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pDodgeSmoke[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime);
 	}
 }
 

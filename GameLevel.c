@@ -64,6 +64,12 @@ void GameLevelInit(void)
 		pDodgeSmoke[i]->PS_Burst->vpParticle_Create = Particle_Create_DodgeSmoke;
 	}
 
+	for (i = 0; i < 4; i++)
+	{
+		pHitSplash[i] = Create_PS_Burst(0.5f, 10);
+		pHitSplash[i]->PS_Burst->vpParticle_Create = Particle_Create_HitSplash;
+	}
+
 	
 	for (i = 0; i < 2; i++)
 	{
