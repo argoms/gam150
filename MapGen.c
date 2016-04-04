@@ -79,6 +79,7 @@ static Animation* GateAnimationVertical;
 //implementation:
 void GenerateMap(IsoMap* inputMap)
 {
+  //AEGfxGetCamPosition
   printf("A");
   GateAnimationHorizontal = GCreateAnimation(1,
     GCreateTexture("animations/world/gateHorizontal.png"),

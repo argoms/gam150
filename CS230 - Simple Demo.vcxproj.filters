@@ -111,6 +111,9 @@
     <ClCompile Include="Isometric.c">
       <Filter>MapGen</Filter>
     </ClCompile>
+    <ClCompile Include="Cloud.c">
+      <Filter>Environmental Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -221,6 +224,9 @@
     </ClInclude>
     <ClInclude Include="Isometric.h">
       <Filter>MapGen</Filter>
+    </ClInclude>
+    <ClInclude Include="Cloud.h">
+      <Filter>Environmental Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

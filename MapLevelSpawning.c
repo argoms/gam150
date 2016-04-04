@@ -17,6 +17,8 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "MyRandom.h"
 #include "MapLevelSpawning.h"
 #include "AEEngine.h"
+#include "GameObject.h"
+#include "Cloud.h"
 void GenerateMapObjects()
 {
   AEGfxSetBackgroundColor(0.5f, 0.1f, 0.5f);
@@ -109,5 +111,24 @@ void GenerateMapObjects()
       j++;
     }
     i++;
+  }
+
+  Animation* cloud = GCreateAnimation(1,
+    GCreateTexture("animations/world/cloudTemplate.png"),
+    GCreateMesh(384.f, 255.f, 1, 1),
+    1);
+
+  //making some clouds:
+  i = 0;
+  while (i++ < 256)
+  {
+    Vector2D randomPos = Vec2((0.5 - RandFloat()) * mapWidth, (0.5 - RandFloat()) * mapHeight);
+    printf("pre-iso: %f, %f\n", randomPos.x, randomPos.y);
+    randomPos = IsoWorldToScreen(&randomPos);
+    printf("new cloud: %f, %f\n", randomPos.x, randomPos.y);
+
+    GameObject* cloudObject = GameObjectCreate(0, GCreateSprite(randomPos.x, randomPos.y, cloud, 0), 0, entity_cloud);
+    cloudObject->sprite->tint.alpha = 0.1;
+    CloudInit(cloudObject);
   }
 }
