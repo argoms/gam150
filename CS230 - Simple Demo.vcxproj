@@ -207,6 +207,7 @@
     <ClCompile Include="Physics.c" />
     <ClCompile Include="PlayerAnimations.c" />
     <ClCompile Include="PlayerEntity.c" />
+    <ClCompile Include="PlayerHUD.c" />
     <ClCompile Include="SplashScreen.c" />
     <ClCompile Include="Text.c" />
     <ClCompile Include="TownScreen.c" />
@@ -252,6 +253,7 @@
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PlayerAnimations.h" />
     <ClInclude Include="PlayerEntity.h" />
+    <ClInclude Include="PlayerHUD.h" />
     <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TownScreen.h" />
