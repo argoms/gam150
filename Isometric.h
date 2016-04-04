@@ -42,3 +42,4 @@ IsoMap* IsoCreateNewMap(int _mapHeight, int _mapWidth);
 int IsoTileGet(int _x, int _y);
 void IsoTileSet(int _x, int _y, int _newValue);
 void IsoSpawnMap();
+IsoMap* GetGameMap();

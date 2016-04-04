@@ -26,6 +26,7 @@ struct MapRoom
 
   Vector2D position;
   GameObject* gates[4];
+  GameObject* parent;
 
   int roomNum; //internal, order of creation
 };
@@ -35,4 +36,4 @@ void OpenRoom(GameObject* room);
 int GetRoomSize(GameObject* room);
 void CloseRoom(GameObject* room);
 void EnemyKilled(GameObject* room);
-Animation* GetGateAnimation();
+Animation* GetGateAnimation(int orientation);

@@ -37,6 +37,7 @@ void GameObjectInitialize()
   gameObjectList.last = NULL;
   objectDestroyedFlag = 0;
 }
+
 /*!
 \brief creates a gameobject given relevant components
 
@@ -89,6 +90,7 @@ GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _
   newGameObject->prev = NULL;
   newGameObject->next = NULL; 
 
+  newGameObject->parent = NULL;
   newGameObject->miscData = NULL; 
   newGameObject->simulate = NULL;
   newGameObject->projectileLifeTime = 0;

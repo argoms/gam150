@@ -13,6 +13,8 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Graphics.h"
 #include <stdlib.h>
 #include "MapGen.h"
+#include "MyRandom.h"
+#include "MapLevelSpawning.h"
 //#include "MapCreator.h"
 #include "Gate.h"
 static IsoMap* gameMap; /**< contains currently active game map*/
@@ -132,6 +134,8 @@ void IsoTileSet(int _x, int _y, int _newValue)
 */
 void IsoSpawnMap()
 {
+  GenerateMapObjects();
+  /*
   int i = 0; //index
   int j = 0; //index
   int mapWidth = gameMap->mapWidth;
@@ -142,13 +146,13 @@ void IsoSpawnMap()
     GCreateMesh(128.f, 64.f, 1, 1),
     1);
   Animation* tileAnim2 = GCreateAnimation(1,
-    GCreateTexture("isocircleRed.png"),
+    GCreateTexture("animations/world/pixelPath.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
     1);
 
   Animation* floor = GCreateAnimation(1,
-    GCreateTexture("animations/world/basicFloor4.png"),
-    GCreateMesh(512.f, 512.f, 1, 1),
+    GCreateTexture("animations/world/pixelFloor.png"),
+    GCreateMesh(128.f, 64.f, 1, 1),
     1);
 
   Animation* wall = GCreateAnimation(1,
@@ -163,7 +167,7 @@ void IsoSpawnMap()
     j = 0;
     while (j < mapHeight)
     {
-      if (IsoTileGet(i, j) == 1)
+      if (IsoTileGet(i, j) == tile_wall)
       {
         Vector2D tilePos = Vec2(i, j);
         float tileX = IsoWorldToScreen(&tilePos).x;
@@ -174,26 +178,28 @@ void IsoSpawnMap()
      //   newObj->offset.y = -9;
       }
 
-      if (IsoTileGet(i, j) == 0)
+      if (IsoTileGet(i, j) == tile_floor)
       {
         Vector2D tilePos = Vec2(i, j);
         float tileX = IsoWorldToScreen(&tilePos).x;
         float tileY = IsoWorldToScreen(&tilePos).y;
         //printf("(%i, %i)", i, j);
-        Sprite* newObj = GCreateSprite(tileX, tileY + 100, floor, 0);
-        newObj->offset.y = -4;
+        Sprite* newObj = GCreateSprite(tileX, tileY + 96, floor, 0);
+        newObj->offset.y = -96;
+        newObj->tint.alpha = (0.3 * RandFloat()) + 0.7;
 
       }
 
       //FOR DEBUG PURPOSES:
-      if (IsoTileGet(i, j) == 2)
+      if (IsoTileGet(i, j) == tile_path)
       {
         Vector2D tilePos = Vec2(i, j);
         float tileX = IsoWorldToScreen(&tilePos).x;
         float tileY = IsoWorldToScreen(&tilePos).y;
         //printf("(%i, %i)", i, j);
-        Sprite* newObj = GCreateSprite(tileX, tileY, tileAnim2, 0);
-        newObj->tint.alpha = 0.1;
+        Sprite* newObj = GCreateSprite(tileX, tileY + 96, tileAnim2, 0);
+        newObj->tint.alpha = (0.3 * RandFloat()) + 0.7;
+        newObj->offset.y = -96;
       }
 
       if (IsoTileGet(i, j) == 3)
@@ -204,5 +210,14 @@ void IsoSpawnMap()
       j++;
     }
     i++;
-  }
+  }*/
+}
+
+/*!
+\brief Getter for the currently active isomap object (level tile data information)
+\return Returns pointer to isomap.
+*/
+IsoMap* GetGameMap()
+{
+  return gameMap;
 }

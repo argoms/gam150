@@ -21,7 +21,7 @@ float RandFloatRange(float min, float max)
 }
 
 /*!
-\brief Written by James. Float between 0 and 1 in increments of 0.01.
+\brief Float between 0 and 1 in increments of 0.01. Written by James. 
 */
 float RandFloat()
 {

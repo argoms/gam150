@@ -24,6 +24,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Dodge.h"
 #include "EntityAnimation.h"
 #include "PlayerAnimations.h"
+#include "PlayerHUD.h"
 
 extern double frameTime;
 
@@ -74,7 +75,7 @@ Bit 6 is active if the player is moving
 Bit 7 is active if the player is attacking
 */
 
-static TextString* healthText;
+
 /*!
 \brief Call at the start of a level to initialize player values.
 */
@@ -92,12 +93,12 @@ void PlayerInit()
   player = GetPlayerObject();
 
   //set up player health:
-  player->entity->health = 100;
+  player->entity->health = 30;
   //
 
   attackCooldown = 0;
   attackCooldownLength = 0.5;
-  attackDamage = 50;
+  attackDamage = 12;
   tracerAnimation = GCreateAnimation(1,
     GCreateTexture("isotilePlaceholder1.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
@@ -132,17 +133,8 @@ void PlayerInit()
 
   //shitty alpha fast coding:
   TextInit();
-  char hpstring[20] = "Health:            ";
-  int tempHP = player->entity->health;
-  int count = 0;
-  while (tempHP > 0)
-  {
-    //printf("a");
-    count++;
-    hpstring[6 + count] = 3;
-    tempHP -= 10;
-  }
-  healthText =  TextCreateHUDString(hpstring, -300, -200);
+  
+
 }
 
 /*!
@@ -150,6 +142,8 @@ void PlayerInit()
 */
 void PlayerSimulate()
 {
+
+  UpdatePlayerHealthHUD();
   attackCooldown -= frameTime;
   //printf("%f \n", frameTime);
 
@@ -210,21 +204,47 @@ void PlayerSimulate()
   */
   //-------Tarrants code no touchie----------------------
 
-  //alpha dumb hardcoding
+
+  //cheat codes:
+  if (AEInputCheckTriggered('1'))
   {
-    char hpstring[20] = "Health:            ";
-    int tempHP = player->entity->health;
-    int count = 0;
-    while (tempHP > 0)
-    {
-      count++;
-      hpstring[6 + count] = 3;
-      tempHP -= 10;
-    }
-    TextRemoveString(healthText);
-    healthText = TextCreateHUDString(hpstring, -300, -200);
-    //TextHUDStringSet(&healthText, "aaa");
+    player->entity->health = 100;
   }
+
+  if (AEInputCheckTriggered('2'))
+  {
+    if (playerAccel < 0.3)
+    {
+      playerAccel = 0.5;
+    }
+    else
+    {
+      playerAccel = 0.2;
+    }
+  }
+  
+  if (AEInputCheckTriggered('2'))
+  {
+    if (attackDamage < 15)
+    {
+      attackDamage = 9999;
+    }
+    else
+    {
+      attackDamage = 10;
+    }
+  }
+
+
+
+  // cheat to restore hp, Tarrants code
+  if (AEInputCheckTriggered('M'))
+  {
+    RestoreHealth(player);
+    printf("restored hp\n");
+  }
+  
+ 
 }
 
 /*!
@@ -492,4 +512,25 @@ void SetPlayerDrag(float drag)
 float  GetPlayerDrag()
 {
   return playerDrag;
+}
+
+// tarrants cheat to restore hp
+// im gonna map m to this
+void RestoreHealth(GameObject* obj)
+{
+  if (obj == NULL)
+  {
+    return;
+  }
+
+  if (obj->entity == NULL)
+  {
+    return;
+  }
+
+  // who hardcoded ten, now i gotta do it
+  if (obj->entity->health < 10)
+  {
+    obj->entity->health = 10;
+  }
 }

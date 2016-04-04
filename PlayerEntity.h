@@ -24,3 +24,4 @@ void IncrementPlayerDrag();
 void DecrementPlayerDrag();
 void SetPlayerDrag(float drag);
 float  GetPlayerDrag();
+void RestoreHealth(GameObject* obj);

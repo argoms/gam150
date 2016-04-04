@@ -41,7 +41,7 @@ void Compass_Load()
   compass.mesh = AEGfxMeshEnd();
 
   /* Load the texture for the compass. */
-  compass.texture = AEGfxTextureLoad("animations/compass/compass.png");
+  compass.texture = AEGfxTextureLoad("animations/compass/compass2.png");
 
   compass.loaded = 1;
 }

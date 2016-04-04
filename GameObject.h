@@ -38,7 +38,8 @@ enum GameObjectNames {
   entity_particle, /**< particle that doesn't affect other game objects*/
   entity_damageText, /**< visual indicator for damage dealt*/
   entity_gate, /**< opens after clearing a room*/
-  entity_room /**< used for entire rooms*/
+  entity_room, /**< used for entire rooms*/
+  entity_cloud /**< background cloud effect*/
 };
 
 /**************************************************************************************************
@@ -129,6 +130,8 @@ struct GameObject
   GameObject* prev; /**< pointer to next object in list*/
   void* miscData;   /**< void pointer to whatever we want*/
   float projectileLifeTime;
+
+  GameObject* parent;
 };
 
 

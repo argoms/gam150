@@ -69,6 +69,12 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
 
 
   // set the function pointers to point to whatever function you wish to call
+  /*
+   *  onclick   - what happens when u click
+   *  onover    - what happens when u are over the button
+   *  onrelease - what happens when u release the button'
+   *  next      - the destination level u wana switch to
+   */
   switch (_button_type)
   {
   case MAIN_MENU_BUTTON:
@@ -92,7 +98,7 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onClick = &PlayPressedAnimation;
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
-    buttonComponent->next = NULL;
+    buttonComponent->next = level_level2;
   }
   break;
   case LEVEL_THREE_BUTTON:
@@ -175,6 +181,7 @@ void ChangeButtonNextLevel(GameObject *button, int level)
   {
     return;
   }
+
 
   //change the level
   button_data->next = level;
@@ -322,10 +329,16 @@ void PlayButtonReleasedAnimation(GameObject *button)
   Button *button_data = button->miscData; /* get the micelaneous data */
   //UnScaleButtonSpriteColor(button);       /* reset button color       */
   //printf("played released animation");    /* print                    */
-  int level = button_data->next;          /* get the level            */
-  LevelSetNext(level);                    /* set the next level       */
 
-
+  if (button_data->next == DONT_CHANGE_LEVEL)
+  {
+    return;
+  }
+  else
+  {
+    int level = button_data->next;          /* get the level            */
+    LevelSetNext(level);                    /* set the next level       */
+  }
 }
 
 /*************************************************************************/
@@ -397,7 +410,7 @@ void ButtonSimulate(GameObject *button)
   point.y = mouse_y;      /* set the y of the mouse       */
 
   //debug mose
-  printf("|Moux %f Mouy %f |Buttx %f  Butty %f W %f H %f\n", point.x, point.y, position.x, position.y, screenWidth, screenHeight);
+  //printf("|Moux %f Mouy %f |Buttx %f  Butty %f W %f H %f\n", point.x, point.y, position.x, position.y, screenWidth, screenHeight);
 
   //AEGfxConvertScreenCoordinatesToWorld(mouse_x, mouse_y, &point.x,&point.y);
 

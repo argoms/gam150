@@ -55,6 +55,8 @@ void UpdateEntityIFs(GameObject *obj)
     CheckDrag();
     if (ent->invincibilityRecoveryTime > 0)  //if recovering
     {
+
+
       CheckDrag();
       ent->invincibilityRecoveryTime--; /* decrement recovery time */
       Vector2DScale(&(obj->physics->velocity), &(obj->physics->velocity), DODGE_VELOCITY_SCALE); //slow it down
@@ -83,6 +85,17 @@ void UpdateEntityIFs(GameObject *obj)
     //remember to set the invincibility time to whatever i defined it to be
     if (ent->invincibilityTime > 0) //still INVINCIBLE
     {
+      // create particles in during the i frames but make sure to do it once every so often 
+      //FIX THIS LATER TARRANT OR I WILL KILL U WRITTEN BY TARRANT
+      /*
+      if (obj->type == entity_player && obj->entity->invincibilityTime % FRAME_DELAY_DODGE_PARTICLES == 0)
+      {
+        float player_x = obj->physics->position.x; // x position
+        float player_y = obj->physics->position.y; // y position
+        SpawnDodgeSmokePS(player_x, player_y);         // spawn particles where the player is
+      }
+      */
+
       CheckDrag();
       //SetPlayerDrag(0.9);
       ent->invincibilityTime--;                               /* decrement invincibility duration */
@@ -110,6 +123,18 @@ void UpdateEntityIFs(GameObject *obj)
 
                                                                //reset color
       ResetColor(obj);
+
+      // spawn dodge particles if player
+      if (obj->type == entity_player)
+      {
+        float player_x = obj->physics->position.x; // x position
+        float player_y = obj->physics->position.y; // y position
+        SpawnDodgeSmokePS(player_x, player_y);         // spawn particles where the player is
+      }
+      else
+      {
+        return;
+      }
       //obj->sprite->tint.alpha = player_alpha;//change alpha color
       //obj->sprite->tint.red = player_red;    //change red color
       //obj->sprite->tint.blue = player_blue;  //change blue color
@@ -163,7 +188,13 @@ void Dodge(int input_key, GameObject *obj)
   if (AEInputCheckReleased(input_key) && obj->entity->canBeDamaged == 1 && obj->entity->invincibilityRecoveryTime <= 0)
   {
 
-    Vector2DScale(&(obj->physics->velocity), &(obj->physics->velocity), DODGE_FORCE);
+    Vector2DScale(&(obj->physics->velocity), &(obj->physics->velocity), DODGE_FORCE); // apply force to the player
+
+    //SpawnDodgeSmokePS(float StartPosX, float StartPosY);
+
+    float player_x = obj->physics->position.x; // x position
+    float player_y = obj->physics->position.y; // y position
+    SpawnDodgeSmokePS(player_x, player_y);     // spawn particles where the player is
 
     //save original values
     float player_red = obj->sprite->tint.red;
@@ -216,6 +247,10 @@ void Dodge2(int keys[], GameObject *obj, int list_size)
 
     Vector2DScale(&(obj->physics->velocity), &(obj->physics->velocity), DODGE_FORCE);
 
+    float player_x = obj->physics->position.x; // x position
+    float player_y = obj->physics->position.y; // y position
+    SpawnDodgeSmokePS(player_x, player_y);     // spawn particles where the player is
+
     //save original values
     float player_red = obj->sprite->tint.red;
     float player_blue = obj->sprite->tint.blue;
@@ -251,11 +286,16 @@ void ResetColor(GameObject *GameObj)
 
   Sprite *obj_sprite = GameObj->sprite;
 
+  // undo the value modifications
   obj_sprite->tint.red = obj_sprite->tint.red / DODGE_RED_MODIFIER;
   obj_sprite->tint.green = obj_sprite->tint.green / DODGE_GREEN_MODIFIER;
   obj_sprite->tint.blue = obj_sprite->tint.blue / DODGE_BLUE_MODIFIER;
   obj_sprite->tint.alpha = obj_sprite->tint.alpha / DODGE_ALPHA_MODIFIER;
   color_changed = 0;
+  
+
+
+
 }
 
 void BriefInvulnerability(GameObject *GameObj, int PlayerOnly)

@@ -167,6 +167,7 @@
   <ItemGroup>
     <ClCompile Include="Audio.c" />
     <ClCompile Include="Button.c" />
+    <ClCompile Include="Cloud.c" />
     <ClCompile Include="Collision.c" />
     <ClCompile Include="Compass.c" />
     <ClCompile Include="ControlScreen.c" />
@@ -178,6 +179,7 @@
     <ClCompile Include="Door.c" />
     <ClCompile Include="Enemy.c" />
     <ClCompile Include="EnemyAIMeleeBehavior.c" />
+    <ClCompile Include="EnemyAIMeleeBigBehavior.c" />
     <ClCompile Include="EnemyAIRangedBehavior.c" />
     <ClCompile Include="EnemyAnimations.c" />
     <ClCompile Include="EnemyStateMachine.c" />
@@ -197,6 +199,7 @@
     </ClCompile>
     <ClCompile Include="MapCreator.c" />
     <ClCompile Include="MapGen.c" />
+    <ClCompile Include="MapLevelSpawning.c" />
     <ClCompile Include="MapRoomInfo.c" />
     <ClCompile Include="Matrix2D.c" />
     <ClCompile Include="MyRandom.c" />
@@ -204,6 +207,7 @@
     <ClCompile Include="Physics.c" />
     <ClCompile Include="PlayerAnimations.c" />
     <ClCompile Include="PlayerEntity.c" />
+    <ClCompile Include="PlayerHUD.c" />
     <ClCompile Include="SplashScreen.c" />
     <ClCompile Include="Text.c" />
     <ClCompile Include="TownScreen.c" />
@@ -213,6 +217,7 @@
   <ItemGroup>
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="Cloud.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Compass.h" />
     <ClInclude Include="ControlScreen.h" />
@@ -224,6 +229,7 @@
     <ClInclude Include="Door.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyAIMeleeBehavior.h" />
+    <ClInclude Include="EnemyAIMeleeBigBehavior.h" />
     <ClInclude Include="EnemyAIRangedBehavior.h" />
     <ClInclude Include="EnemyAnimations.h" />
     <ClInclude Include="EnemyStateMachine.h" />
@@ -239,6 +245,7 @@
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="MapCreator.h" />
     <ClInclude Include="MapGen.h" />
+    <ClInclude Include="MapLevelSpawning.h" />
     <ClInclude Include="MapRoomInfo.h" />
     <ClInclude Include="Matrix2D.h" />
     <ClInclude Include="MyRandom.h" />
@@ -246,6 +253,7 @@
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PlayerAnimations.h" />
     <ClInclude Include="PlayerEntity.h" />
+    <ClInclude Include="PlayerHUD.h" />
     <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TownScreen.h" />
@@ -253,6 +261,7 @@
     <ClInclude Include="WinScreen.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="EnemyMeleeBig.txt" />
     <Text Include="Level1EnemyMelee1.txt" />
     <Text Include="Level1EnemyRanged2.txt" />
   </ItemGroup>

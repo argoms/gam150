@@ -12,6 +12,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "GameObject.h"
 #include "DamageNumbers.h"
 #include "Dodge.h"
+#include "MapGen.h"
 
 #define BREIF_INVULNERABILITY_ENABLED  1    /* allow breif invulnerability after a hit    */
 #define BREIF_INVULNERABILITY_DISABLED 0    /* disallow brief invunerability after a hit  */
@@ -55,6 +56,10 @@ void EntityTakeDamage(Entity** _entity, int _damage)
       //printf("OW, %i left", (*_entity)->health);
       if ((*_entity)->health < 1)
       {
+        if ((*_entity)->owner->type == entity_enemy)
+        {
+          EnemyKilled((*_entity)->owner->parent);
+        }
         (*_entity)->onEntityKilled(((*_entity)->owner));
       }
     }

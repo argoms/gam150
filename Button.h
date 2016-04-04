@@ -8,6 +8,8 @@
 #define BUTTON_BLUE_MODIFIER               0.65f
 #define BUTTON_GREEN_MODIFIER              0.65f
 
+#define DONT_CHANGE_LEVEL                  - 1
+
 enum ButtonTypes 
 {
   MAIN_MENU_BUTTON = 0,    /* Button that will take you to the main menu    */
