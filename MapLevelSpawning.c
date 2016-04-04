@@ -19,6 +19,14 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "AEEngine.h"
 #include "GameObject.h"
 #include "Cloud.h"
+
+
+enum EnvironmentalFeatures //a list of environmental features that appear in empty space
+{
+  environment_pillar,
+  environment_block
+};
+
 void GenerateMapObjects()
 {
   AEGfxSetBackgroundColor(0.5f, 0.1f, 0.5f);
@@ -103,9 +111,33 @@ void GenerateMapObjects()
         newObj->offset.y = -96;
       }
 
-      if (IsoTileGet(i, j) == 3)
+      if (IsoTileGet(i, j) == tile_wall)
       {
-        Vector2D tilePos = Vec2(i, j);
+        if (RandFloat() > 0.5f)
+        {
+          Vector2D tilePos = Vec2(i, j);
+          int object = RandIntRange(0, 2);
+          switch (object)
+          {
+          case environment_block:
+
+           
+            tilePos = Vec2(i, j);
+            float tileX = IsoWorldToScreen(&tilePos).x;
+            float tileY = IsoWorldToScreen(&tilePos).y;
+
+            float heightOffset =  -2 + (RandFloat() * -16);
+
+            //printf("(%i, %i)", i, j);
+            Sprite* newObj = GCreateSprite(tileX, tileY + 80, floor, 0);
+            newObj->offset.y = -112 + heightOffset * 16;
+            newObj->tint.alpha = 0.9f;
+
+
+            break;
+          }
+        }
+        
         //CreateWorldGate(tilePos);
       }
       j++;
