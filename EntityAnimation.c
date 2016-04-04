@@ -10,6 +10,7 @@ Stores groups of animation objects and outputs the appropriate one given a direc
 All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "EntityAnimation.h"
+#include <stdlib.h>
 
 //private list struct for storage of all active animations (and memory freeing)
 typedef struct AnimationList AnimationList;
@@ -36,7 +37,7 @@ AnimationSet* CreateAnimationSet(Animation* inputAnims[])
 {
   EntityAnimationInit();
   //printf("FUCKING ANIMATIONS");
-  AnimationSet* newAnimSet = malloc(sizeof(AnimationSet));
+  AnimationSet* newAnimSet = (AnimationSet*)malloc(sizeof(AnimationSet));
   int i = -1;
   while (i++ < 16)
   {
@@ -68,7 +69,7 @@ int AnimationSetIndex(Vector2D* input)
 
   directionAngle *= -1; //flip around since apparently my render script actually goes clockwise instead of ccw
   int index = 0;
-  directionAngle *= 57.29578;//shitty radians conversion
+  directionAngle *= 57.29578f;//shitty radians conversion
   directionAngle += 180; //add 180 degrees since atan2 gives from -180 to 180 intead of 0 to 360
 
   //printf("ANGLE: %f\n", directionAngle);

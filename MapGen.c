@@ -21,9 +21,9 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "MapRoomInfo.h"
 #include "GameObject.h"
 #include "MapGen.h"
+#include "conversions.h"
 
-//private info (would be defines but you can't make those private?
-
+//private info 
 #define NUM_ROOMS 8
 
 //Think of this as MAX room size, not just room size.
@@ -45,13 +45,7 @@ enum MapGen_RoomTypes
   roomtype_start
 };
 
-
-
-
-
-
-//static enums/structs:
-static enum directions
+enum directions
 {
   dir_left,
   dir_right,
@@ -62,7 +56,7 @@ static enum directions
 //static function prototypes:
 static void FillLine(Vector2D position1, Vector2D position2, int newValue);
 static Vector2D directionOffsetGet(int dir);
-static void FillArea(int x, int y);
+//static void FillArea(int x, int y);
 static int isValid(Vector2D position, IsoMap* map);
 static void IsoSquareSet(Vector2D position, int newValue);
 static void Room_BasicEnemies(Vector2D cursor);
@@ -199,7 +193,7 @@ static void SpawnMapRooms(MapRoomInfo* rooms)
   }
 }
 /*!
-\brief Sets up a basic map grid with ROOM_SIZE-sized rooms.
+\brief Sets up a basic map grid with ROOM_SIZE-sized rooms separated by walls.
 */
 static void SetupBaseMap(int mapWidth, int mapHeight)
 {
@@ -246,7 +240,7 @@ static void FillLine(Vector2D position1, Vector2D position2, int newValue)
     
     IsoSquareSet(position1, newValue);
     //IsoSquareSet(position1, IsoTileGet(position1.x + unitVector.x * 2, position1.y + unitVector.y * 2) == 1 ? 3 : 2);
-    i++; //fuck your ++i
+    i++; 
   }
 }
 
@@ -314,12 +308,13 @@ static Vector2D directionOffsetGet(int dir)
   return offset;
 }
 
-//meant to fill area for floor tiles, unused for now
-//I wonder what the best fill algorithm would be.
-static void FillArea(int x, int y, int tileType)
-{
-  
-}
+///*!
+//\brief Unused at the moment.
+//*/
+//static void FillArea(int x, int y, int tileType)
+//{
+//  
+//}
 
 
 /*!
@@ -330,13 +325,18 @@ static void ReplaceTiles(Vector2D position, Vector2D size, int oldTile, int newT
   int overrideAll = (oldTile == tile_any); //if overrideall, just replaces everything.
   Vector2D index = size; // a 2D loop counter, yup.
 
+  //index through everything
   while (index.x != 0 || index.y != 0)
   {
+    //cursor: tile we're currently looking at
     Vector2D cursor = Vec2(position.x + index.x, position.y + index.y);
+
     if (overrideAll || IsoTileGet(cursor.x, cursor.y) == oldTile)
     {
       IsoTileSet(cursor.x, cursor.y, newTile);
     }
+
+    //indexing 2D-style
     index.x--;
     if (index.x < 0)
     {
@@ -346,6 +346,9 @@ static void ReplaceTiles(Vector2D position, Vector2D size, int oldTile, int newT
   }
 }
 
+/*!
+\brief Room-specific setup functions for a basic room with enemies in it.
+*/
 static void Room_BasicEnemies(Vector2D cursor)
 {
   
@@ -354,6 +357,10 @@ static void Room_BasicEnemies(Vector2D cursor)
   roomData->type = roomtype_simple;
 }
 
+
+/*!
+\brief Room-specific setup for the starting spawn room.
+*/
 static void Room_StartRoom(Vector2D cursor)
 {
   GameObject* room = RoomTemplate(cursor, 0);
@@ -368,12 +375,15 @@ static void Room_StartRoom(Vector2D cursor)
 */
 static GameObject* RoomTemplate(Vector2D cursor, int spawnGates)
 {
- 
+  //replace empty with floor
   ReplaceTiles(Vec2(cursor.x - ROOM_SIZE / 2, cursor.y - ROOM_SIZE / 2), Vec2(ROOM_SIZE, ROOM_SIZE), tile_empty, tile_floor);
-  GameObject* newRoom = GameObjectCreate(PhysicsCreateObject(cursor, 0), 0, 0, entity_room); //999 is placeholder, should be enum later
+
+  //set up the game object
+  GameObject* newRoom = GameObjectCreate(PhysicsCreateObject(cursor, 0), 0, 0, entity_room); 
   
   newRoom->syncSpritePhysics = 0;
 
+  //set up custom room "component"
   MapRoom* newMiscData = malloc(sizeof(MapRoom));
   newMiscData->state = roomstate_inactive;
   newMiscData->size = ROOM_SIZE;
@@ -389,12 +399,11 @@ static GameObject* RoomTemplate(Vector2D cursor, int spawnGates)
   if (spawnGates) //assign gates where space exists
   {
     newRoom->simulate = &GateRoomSimulate;
+
+    //if a tile at a given border is a path, make a gate
     if (IsoTileGet(cursor.x + ROOM_SIZE / 2, cursor.y) == 2)
     {
-      //GameObject* CreateWorldGate(Vector2D position);
-
       newMiscData->gates[0] = CreateWorldGate(Vec2(cursor.x + ROOM_SIZE / 2, cursor.y), gate_vertical);
-      //IsoTileSet(cursor.x + ROOM_SIZE / 2, cursor.y, 3);
     }
     else
     {
@@ -498,6 +507,7 @@ void CloseRoom(GameObject* room)
   }
 
   int i = 0;
+  //loop through the 4 potential door positions (since rooms are square)
   while (i < 4)
   {
     GameObject* inst = roomData->gates[i];
@@ -563,12 +573,15 @@ Animation* GetGateAnimation(int orientation)
   case gate_vertical:
     return GateAnimationVertical;
     break;
+  default:
+    return NULL;
+    break;
   }
   
 }
 
 /*!
-\brief checks if an area around room vector is valid to place a room in
+\brief checks if an area around room vector is valid to place a room in (is in bounds)
 */
 static int RoomValid(Vector2D cursor, int mapW, int mapH)
 {

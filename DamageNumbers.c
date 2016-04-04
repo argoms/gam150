@@ -13,6 +13,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "DamageNumbers.h"
 #include <stdio.h>
 #include "Isometric.h"
+#include <stdlib.h>
 
 extern double frameTime;
 typedef struct DamageText DamageText;
@@ -39,7 +40,7 @@ struct DamageText
 GameObject* DamageTextCreate(Vector2D position, int damage)
 {
   char buffer[10];
-  sprintf(buffer, "%d", damage);
+  sprintf_s(buffer, damage, "%d", damage);
 
   
 
@@ -58,6 +59,8 @@ GameObject* DamageTextCreate(Vector2D position, int damage)
   newObjectData->damage = damage;
 
   damageText->simulate = &DamageTextSimulate;
+
+  return damageText;
 }
 
 /*!

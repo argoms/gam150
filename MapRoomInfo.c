@@ -12,6 +12,8 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "MapRoomInfo.h"
 #include "ImportData.h"
 #include "MapGen.h"
+#include <stdlib.h>
+#include "GameLevel.h"
 /*
 struct MapRoomInfo
 {
@@ -28,7 +30,7 @@ MapRoomInfo* next;
 */
 void MapRoomInfoAdd(MapRoomInfo* first, Vector2D position, int type)
 {
-  MapRoomInfo* newNode = malloc(sizeof(MapRoomInfo));
+  MapRoomInfo* newNode = (MapRoomInfo*)malloc(sizeof(MapRoomInfo));
   newNode->next = NULL;
   newNode->type = type;
   newNode->position = position;

@@ -16,6 +16,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Physics.h"
 #include "MapGen.h"
 #include "Text.h"
+#include <stdlib.h>
 
 
 
