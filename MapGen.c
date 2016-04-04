@@ -73,14 +73,23 @@ static int RoomValid(Vector2D cursor, int mapW, int mapH);
 static void SpawnMapRooms(MapRoomInfo* rooms);
 static void ReplaceTiles(Vector2D position, Vector2D size, int oldTile, int newTile);
 
-static Animation* GateAnimation;
+static Animation* GateAnimationHorizontal;
+
+static Animation* GateAnimationVertical;
 //implementation:
 void GenerateMap(IsoMap* inputMap)
 {
-  GateAnimation = GCreateAnimation(1,
-    GCreateTexture("isoTileGreen.png"),
-    GCreateMesh(128.f, 64.f, 1, 1),
+  printf("A");
+  GateAnimationHorizontal = GCreateAnimation(1,
+    GCreateTexture("animations/world/gateHorizontal.png"),
+    GCreateMesh(256.f, 256.f, 1, 1),
     1);
+  printf("B");
+  GateAnimationVertical = GCreateAnimation(1,
+    GCreateTexture("animations/world/gateVertical.png"),
+    GCreateMesh(256.f, 256.f, 1, 1),
+    1);
+  printf("C");
   int mapHeight = inputMap->mapHeight;
   int mapWidth = inputMap->mapWidth;
   int i = 0;
@@ -543,9 +552,18 @@ void EnemyKilled(GameObject* room)
 /*!
 \brief Getter for a gate animation object so gates don't all have to create their own animations per create call.
 */
-Animation* GetGateAnimation()
+Animation* GetGateAnimation(int orientation)
 {
-  return GateAnimation;
+  switch (orientation)
+  {
+  case gate_horizontal:
+    return GateAnimationHorizontal;
+    break;
+  case gate_vertical:
+    return GateAnimationVertical;
+    break;
+  }
+  
 }
 
 /*!

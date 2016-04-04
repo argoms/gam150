@@ -36,4 +36,4 @@ void OpenRoom(GameObject* room);
 int GetRoomSize(GameObject* room);
 void CloseRoom(GameObject* room);
 void EnemyKilled(GameObject* room);
-Animation* GetGateAnimation();
+Animation* GetGateAnimation(int orientation);

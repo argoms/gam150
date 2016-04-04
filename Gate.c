@@ -35,7 +35,7 @@ GameObject* CreateWorldGate(Vector2D position, int orientation)
   case gate_horizontal:
     break;
   }
-  Animation* anim2 = GetGateAnimation();
+  Animation* anim2 = GetGateAnimation(orientation);
   GameObject* newGate = GameObjectCreate(PhysicsCreateObject(Vec2(position.x, position.y), 1), GCreateSprite(position.x, position.y, anim2, 1), gateEntity, entity_gate);
   
   newGate->simulate = NULL;
