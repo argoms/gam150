@@ -40,7 +40,7 @@ struct DamageText
 GameObject* DamageTextCreate(Vector2D position, int damage)
 {
   char buffer[10];
-  sprintf_s(buffer, damage, "%d", damage);
+  sprintf_s(buffer, 10, "%d", damage);
 
   
 

@@ -97,7 +97,7 @@ void PlayerInit()
 
   attackCooldown = 0;
   attackCooldownLength = 0.5;
-  attackDamage = 10;
+  attackDamage = 12;
   tracerAnimation = GCreateAnimation(1,
     GCreateTexture("isotilePlaceholder1.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
@@ -229,7 +229,7 @@ void PlayerSimulate()
       playerAccel = 0.2;
     }
   }
-
+  
   if (AEInputCheckTriggered('2'))
   {
     if (attackDamage < 15)
@@ -241,6 +241,7 @@ void PlayerSimulate()
       attackDamage = 10;
     }
   }
+
   //alpha dumb hardcoding
   {
     char hpstring[20] = "Health:            ";
