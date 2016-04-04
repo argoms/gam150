@@ -123,7 +123,7 @@ void GenerateMapObjects()
   while (i++ < 256)
   {
     Vector2D randomPos = Vec2((0.5 - RandFloat()) * mapWidth, (0.5 - RandFloat()) * mapHeight);
-    //printf("pre-iso: %f, %f\n", randomPos.x, randomPos.y);
+    printf("pre-iso: %f, %f\n", randomPos.x, randomPos.y);
     randomPos = IsoWorldToScreen(&randomPos);
     //printf("new cloud: %f, %f\n", randomPos.x, randomPos.y);
 

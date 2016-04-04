@@ -16,7 +16,6 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Vector2D.h"
 
 typedef struct Cloud Cloud;
-static float CLOUD_MAX_SPEED = 0.3;
 static float DEPTH = 0.5; //used for parallax calculations
 struct Cloud
 {
@@ -44,6 +43,8 @@ void CloudInit(GameObject* instance)
   //instance->sprite->
    instance->sprite->y += 5000;
   instance->sprite->offset.y = -5000;
+
+  AEGfxGetCamPosition(&cloud->lastCamX, &cloud->lastCamY);
 }
 void CloudSimulate(GameObject* instance)
 {
@@ -64,7 +65,7 @@ void CloudSimulate(GameObject* instance)
   //update last cam position
   AEGfxGetCamPosition(&cloud->lastCamX, &cloud->lastCamY);
 
-  //update sprite position
+  //update sprite position including slight adjustment for "parallax"
   instance->sprite->x += cloud->direction.x + (deltaCamX * DEPTH);
   instance->sprite->y += cloud->direction.y + (deltaCamY * DEPTH);
 
