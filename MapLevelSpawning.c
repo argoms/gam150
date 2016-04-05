@@ -139,7 +139,7 @@ void GenerateMapObjects()
             //printf("(%i, %i)", i, j);
             Sprite* newObj = GCreateSprite(tileX, tileY + 80, tileAnim_floor, 0);
             newObj->offset.y = -112 + heightOffset * 16;
-            newObj->tint.alpha = -10.f + 0.2f + (RandFloat() * 0.5f);
+            newObj->tint.alpha = + 0.2f + (RandFloat() * 0.5f);
 
 
             break;
