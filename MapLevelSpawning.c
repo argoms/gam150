@@ -163,7 +163,7 @@ void GenerateMapObjects()
     GCreateMesh(16.f, 16.f, 1, 1),
     1);
   SetParticleAnim(particle);
-  //EffectCreate(Vec2(-5, 6), Vec2(10, 3), Vec2(0, 100), 16, 0.1);
+  //EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), Vec2(100, 300), 16, 0.05f, transform_none, 0.5f, 1.f);
 }
 
 void MakeClouds()

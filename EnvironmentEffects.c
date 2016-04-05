@@ -4,6 +4,7 @@
 #include "Vector2D.h"
 #include "AEEngine.h"
 #include "MyRandom.h"
+#include "Isometric.h"
 
 #define MAX_PARTICLES_PER_EFFECT 32
 
@@ -29,6 +30,7 @@ struct EffectSource
 
   float emitDelayCounter;
   float emitDelay;
+  float damping;
   int density;
   int state;
 };
@@ -50,12 +52,45 @@ void EffectSimulate(GameObject* inst);
 void EffectRemove(GameObject* inst);
 void ParticleSimulate(GameObject* inst);
 void ParticleInitialize(GameObject* inst);
-static GameObject* ParticleCreate(Vector2D position);
+static GameObject* ParticleCreate(Vector2D position, GameObject* parent, float lifeTime);
 
 
 
-GameObject* EffectCreate(Vector2D minVelocity, Vector2D maxVelocity, Vector2D position, int density, float emitDelay)
+/*!
+\brief generate a new particle system
+\param minVelocity base velocity value
+\param maxVelocity added velocity value (0-100% of value added randomly)
+\param position position to spawn system at
+\param density number of instantiated particles
+\param emitDelay time between particle emits
+\param convertType What sort of transform (iso/world) to do (none is an option), see convertType enum in EnvironmentalEffects.h
+\param damping Velocity multiplier to apply every frame
+\param particleLifeTime how long each particle lasts
+*/
+GameObject* EffectCreate(Vector2D minVelocity, Vector2D maxVelocity, Vector2D position,
+  int density, float emitDelay, int convertType, float damping, float particleLifeTime)
 {
+  if (convertType == transform_screenToWorld)
+  {
+    Vector2D minVel = Vec2(minVelocity.x, minVelocity.y);
+    minVelocity = IsoScreenToWorld(&minVel);
+    
+    Vector2D maxVel = Vec2(maxVelocity.x, maxVelocity.y);
+    maxVelocity = IsoScreenToWorld(&maxVel);
+    //printf("pretrapos: %f, %f", position.x, position.y);
+
+
+    Vector2D pos = Vec2(position.x, position.y);
+    position = IsoScreenToWorld(&pos);
+    //printf("postrapos: %f, %f\n", position.x, position.y);
+  }
+  else if (convertType == transform_worldToScreen)
+  {
+    minVelocity = IsoWorldToScreen(&minVelocity);
+    maxVelocity = IsoWorldToScreen(&maxVelocity);
+    position = IsoWorldToScreen(&maxVelocity);
+  }
+
   GameObject* newEffect = GameObjectCreate(0, 0, 0, entity_particle);
   newEffect->simulate = &EffectSimulate;
 
@@ -64,6 +99,7 @@ GameObject* EffectCreate(Vector2D minVelocity, Vector2D maxVelocity, Vector2D po
   newEffectComponent->maxVelocity = maxVelocity;
   newEffectComponent->position = position;
   newEffectComponent->state = particle_active;
+  newEffectComponent->damping = damping;
 
   newEffectComponent->emitDelay = emitDelay;
   newEffectComponent->emitDelayCounter = 0;
@@ -78,13 +114,13 @@ GameObject* EffectCreate(Vector2D minVelocity, Vector2D maxVelocity, Vector2D po
       abort();
     }
 
-    newEffectComponent->particles[i] = ParticleCreate(position, newEffect);
+    newEffectComponent->particles[i] = ParticleCreate(position, newEffect, particleLifeTime);
   }
 }
 
 
 
-static GameObject* ParticleCreate(Vector2D position, GameObject* parent)
+static GameObject* ParticleCreate(Vector2D position, GameObject* parent, float lifeTime)
 {
   GameObject* newParticle = GameObjectCreate(0, GCreateSprite(position.x, position.y, ParticleAnimation, 0), 0, entity_particle);
   newParticle->parent = parent;
@@ -100,7 +136,7 @@ static GameObject* ParticleCreate(Vector2D position, GameObject* parent)
   newParticleComponent->lifeCounter = 0;
   newParticleComponent->alive = particle_inactive;
 
-  newParticleComponent->maxLife = 1.f; //TEMPORARY DEBUG VALUE
+  newParticleComponent->maxLife = lifeTime; 
   
 }
 
@@ -128,7 +164,7 @@ void ParticleSimulate(GameObject* inst)
 {
   
   ParticleComponent* instComponent = (ParticleComponent*)(inst->miscData);
-
+  EffectSource* ownerSystem = ((EffectSource*)(inst->parent->miscData));
   if (instComponent->alive == particle_active)
   {
 
@@ -139,6 +175,9 @@ void ParticleSimulate(GameObject* inst)
     inst->sprite->x += instComponent->velocity.x;
     inst->sprite->y += instComponent->velocity.y;
 
+    //Vector2DScale(&instComponent->velocity, &instComponent->velocity, 0.99f);
+    //printf("ERM %f\n, ownerSystem->damping");
+    GSortSprite(inst->sprite, 0);
     
 
     instComponent->lifeCounter += AEFrameRateControllerGetFrameTime();
@@ -152,7 +191,7 @@ void ParticleSimulate(GameObject* inst)
   }
   else
   {
-    EffectSource* ownerSystem = ((EffectSource*)(inst->parent->miscData));
+    
     //go full transparent if inactive (recycle if parent system is still active)
     if (ownerSystem->state == particle_active)
     {
