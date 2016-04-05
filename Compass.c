@@ -16,11 +16,19 @@ ChangeLog
 #include "MyRandom.h"
 #include "Matrix2D.h"
 #include "Isometric.h"
+#include <math.h>
 
-#define COMPASS_DISTANCE 370
+#define COMPASS_DISTANCE 300
 #define COMPASS_SIZE 70
+#define COMPASS_SPEED 3
+
+#define PI 3.14159265359
+
+#define true 1
+#define false 0
 
 static Compass compass = { 0 };
+static double time;
 
 /* Loads the compass into memory. */
 void Compass_Load()
@@ -50,6 +58,7 @@ void Compass_Load()
 void Compass_Init()
 {
   compass.active = 1;
+  time = 0;
 }
 
 /* Frees the compass from use. */
@@ -103,6 +112,18 @@ void Compass_Update(Vector2D *playerPos, Vector2D *goal)
   compass.distance = Vector2DLength(&direction);
   if (compass.distance > COMPASS_DISTANCE)
     compass.distance = COMPASS_DISTANCE;
+
+  /* Update time */
+  time += AEFrameRateControllerGetFrameTime() * COMPASS_SPEED;
+  if (time >= 2 * PI)
+    time = 0;
+
+  //Doesn't work. ignore
+  ///* If player is close to goal, then deactivate compass. */
+  //if (compass.distance < 5)
+  //  compass.active = false;
+  //else
+  //  compass.active = true;
 }
 
 /* Draws the compass object. */
@@ -139,7 +160,7 @@ void Compass_Draw()
   Vector2DFromAngleRad(&direction, compass.angle);
 
   Matrix2DIdentity(&trans_local);
-  Matrix2DTranslate(&trans_local, 0, COMPASS_DISTANCE);//compass.distance);
+  Matrix2DTranslate(&trans_local, 0, COMPASS_DISTANCE + ( COMPASS_DISTANCE * 0.1f * ((float)sin(time))));//compass.distance);
 
   Matrix2DIdentity(&trans);
   Matrix2DTranslate(&trans, CameraX, CameraY);
