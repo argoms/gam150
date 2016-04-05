@@ -150,10 +150,15 @@ void GenerateMap(IsoMap* inputMap)
         
         if (rooms_created == NUM_ROOMS)
         {
+          //behavior specific to end (final) room
           DoorCreateDoorAt(cursor);
+          MapRoomInfoAdd(rooms, cursor, roomtype_hall);
         }
 
-        MapRoomInfoAdd(rooms, cursor, RandIntRange(1, 3));
+        else
+        {
+          MapRoomInfoAdd(rooms, cursor, RandIntRange(1, 3));
+        }
         continue;
       }
     }
