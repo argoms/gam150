@@ -185,6 +185,7 @@
     <ClCompile Include="EnemyStateMachine.c" />
     <ClCompile Include="Entity.c" />
     <ClCompile Include="EntityAnimation.c" />
+    <ClCompile Include="EnvironmentEffects.c" />
     <ClCompile Include="GameLevel.c" />
     <ClCompile Include="GameObject.c" />
     <ClCompile Include="Gate.c" />
@@ -235,6 +236,7 @@
     <ClInclude Include="EnemyStateMachine.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityAnimation.h" />
+    <ClInclude Include="EnvironmentalEffects.h" />
     <ClInclude Include="GameLevel.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gate.h" />

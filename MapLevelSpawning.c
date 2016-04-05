@@ -20,6 +20,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "GameObject.h"
 #include "Cloud.h"
 #include <math.h>
+#include "EnvironmentalEffects.h"
 
 //static void SpawnPillar(Vector2D tilePos);
 
@@ -34,6 +35,8 @@ enum EnvironmentalFeatures //a list of environmental features that appear in emp
   environment_pillar,
   environment_block
 };
+
+void MakeClouds();
 
 void GenerateMapObjects()
 {
@@ -153,17 +156,34 @@ void GenerateMapObjects()
     i++;
   }
 
+  MakeClouds();
+
+  Animation* particle = GCreateAnimation(1,
+    GCreateTexture("animations/world/cloudTemplate.png"),
+    GCreateMesh(16.f, 16.f, 1, 1),
+    1);
+  SetParticleAnim(particle);
+  //EffectCreate(Vec2(-5, 6), Vec2(10, 3), Vec2(0, 100), 16, 0.1);
+}
+
+void MakeClouds()
+{
+
+  IsoMap* gameMap = GetGameMap();
+  int mapWidth = gameMap->mapWidth;
+  int mapHeight = gameMap->mapHeight;
+
   Animation* cloud = GCreateAnimation(1,
     GCreateTexture("animations/world/cloudTemplate.png"),
     GCreateMesh(384.f, 255.f, 1, 1),
     1);
 
   //making some clouds:
-  i = 0;
+  int i = 0;
   while (i++ < 256)
   {
     Vector2D randomPos = Vec2((0.5 - RandFloat()) * mapWidth, (0.5 - RandFloat()) * mapHeight);
-    printf("pre-iso: %f, %f\n", randomPos.x, randomPos.y);
+    //printf("pre-iso: %f, %f\n", randomPos.x, randomPos.y);
     randomPos = IsoWorldToScreen(&randomPos);
     //printf("new cloud: %f, %f\n", randomPos.x, randomPos.y);
 
