@@ -6,7 +6,7 @@ Project (working title): Epoch
 \brief
 Basic level/gamestate manager implementation.
 
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+All content ? 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "Graphics.h"
 #include "AEEngine.h"
@@ -34,7 +34,7 @@ static Animation* animtest2;/**< EXAMPLE VAR*/
 
 static float textY;/**< EXAMPLE VAR*/
 static TextString* textString;/**< EXAMPLE VAR*/
-//EXAMPLE CODE ENDS HERE
+                              //EXAMPLE CODE ENDS HERE
 
 
 static int currentLevel;/**< Current level (uses enum)*/
@@ -52,7 +52,7 @@ extern int level;
 */
 void LevelLoad(int _level)
 {
-	LoadAll_PS();
+  LoadAll_PS();
 
   GInitialize();
 
@@ -111,16 +111,16 @@ void LevelRun()
   frameTime = AEFrameRateControllerGetFrameTime();
   switch (currentLevel)
   {
-    
+
   case level_level1:
-	  if (AEInputCheckTriggered(VK_SPACE))
-	  {
-		 // SpawnDodgeSmokePS(4.0f, 4.0f);
-	  }
-	  if (AEInputCheckTriggered('T'))
-	  {
-		  SpawnHitSplashPS(4.0f, 4.0f, 1, 0);
-	  }
+    if (AEInputCheckTriggered(VK_SPACE))
+    {
+      // SpawnDodgeSmokePS(4.0f, 4.0f);
+    }
+    if (AEInputCheckTriggered('T'))
+    {
+      SpawnHitSplashPS(4.0f, 4.0f, 1, 0);
+    }
     GameLevelRun();
     break;
   case level_mainMenu:
@@ -159,7 +159,7 @@ void LevelRun()
 
   if (frameTime > 0.5)
   {
-	  frameTime = 0.016;
+    frameTime = 0.016;
   }
   UpdateAllPS_Inst((float)frameTime);
 }
@@ -192,7 +192,7 @@ void MainMenuInit()
   //pretty much all example stuff
   printf("loading menu\n");
   pMesh2 = GCreateMesh(128.f, 128.f, 16, 1);
-  
+
 
   // Texture 1: From file
   pTex1 = GCreateTexture("spiderwolfbrighter.png");
@@ -202,7 +202,7 @@ void MainMenuInit()
   AEGfxSetBlendMode(AE_GFX_BM_BLEND);
   //EXAMPLE ENDS HERE
 
-  
+
   //textString = TextCreateString("PLACEHOLDER MAIN MENU", -360, 100);
   //textString = TextCreateString("PRESS SPACE FOR LEVEL 1", -360, 0);
 
@@ -234,12 +234,12 @@ void MainMenuInit()
 
   textString = TextCreateString("EPOCH", string_xpos, string_ypos); // title
 
-  //BUTTONS------------------------------------------------------
-  // BUTTON LEVEL 1
+                                                                    //BUTTONS------------------------------------------------------
+                                                                    // BUTTON LEVEL 1
 
   int button_type = LEVEL_ONE_BUTTON;             /* type of button  */
   float buttonx = -200;                           /* x position      */
-  float buttony =  100;                           /* y position      */
+  float buttony = 100;                           /* y position      */
   float meshx = 256.0f;                           /* mesh x          */
   float meshy = 64.0f;                            /* mesh y          */
   float buttonsize = 1.0f;                        /* size            */
@@ -261,21 +261,21 @@ void MainMenuInit()
 
   GameObject* button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
   //end button level 1 ------------------------------
-  
+
   //BUTTON TWO for level 2
-   button_type = LEVEL_TWO_BUTTON;          /* type of button  */
-   buttonx = -200;                          /* x position      */
-   buttony = 25;                            /* y position      */
-   meshx = 256.0f;                          /* mesh x          */
-   meshy = 64.0f;                           /* mesh y          */
-   buttonsize = 1.0f;                       /* size            */  
-   button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
-   text_offset = 90.0f;
-   main_menu_text = TextCreateHUDString("Level 2", buttonx - text_offset, buttony);
-   button_texture = GCreateTexture("isocircleGreen.png");
-   anim_button = GCreateAnimation(1,
-   button_texture,  
-   button_mesh,
+  button_type = LEVEL_TWO_BUTTON;          /* type of button  */
+  buttonx = -200;                          /* x position      */
+  buttony = 25;                            /* y position      */
+  meshx = 256.0f;                          /* mesh x          */
+  meshy = 64.0f;                           /* mesh y          */
+  buttonsize = 1.0f;                       /* size            */
+  button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
+  text_offset = 90.0f;
+  main_menu_text = TextCreateHUDString("Level 2", buttonx - text_offset, buttony);
+  button_texture = GCreateTexture("isocircleGreen.png");
+  anim_button = GCreateAnimation(1,
+    button_texture,
+    button_mesh,
     1);
 
   button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
@@ -362,7 +362,7 @@ void MainMenuRun()
   GameObjectsPostStep();
   //debug
 
-  
+
   if (AEInputCheckReleased(VK_SPACE))
   {
     switch (currentLevel)

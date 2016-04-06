@@ -12,6 +12,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "AEEngine.h"
 #include "conversions.h"
 #include "Compass.h"
+#include "FancyBackground.h"
 
 static SpriteList* spriteList; //list of sprites for game layer
 static SpriteList* hudLayer; //list of sprites for hud layer
@@ -40,6 +41,9 @@ void GInitialize()
 */
 void GRender()
 {
+  Background_Update();
+  Background_Draw();
+
   AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
   float CameraX;
   float CameraY;
@@ -76,6 +80,8 @@ void GRender()
 
     }
   }
+
+
 
   if (Compass_IsActive)
   {
