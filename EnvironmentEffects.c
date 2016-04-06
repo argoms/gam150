@@ -212,7 +212,7 @@ void ParticleSimulate(GameObject* inst)
     Vector2DScale(&instComponent->velocity, &instComponent->velocity, ownerSystem->damping);
     instComponent->zVelocity *= ownerSystem->damping;
 
-    printf("ERM %f\n, ownerSystem->damping", ownerSystem->damping);
+    //printf("ERM %f\n, ownerSystem->damping", ownerSystem->damping);
     GSortSprite(inst->sprite, 0);
     
 
@@ -231,7 +231,6 @@ void ParticleSimulate(GameObject* inst)
     //go full transparent if inactive (recycle if parent system is still active)
     if (ownerSystem->state == particle_active)
     {
-
       //printf("ISFINE");
       inst->sprite->tint.alpha = 0.f;
       if (ownerSystem->emitDelayCounter > ownerSystem->emitDelay)
