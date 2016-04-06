@@ -86,7 +86,7 @@ void GateClosed(GameObject* inst)
 
   //create a vector for the dimensions of the gate depending on whether it's horizontal or vertical
   Vector2D gateDimensions;
-  if (gateComponent->orientation = gate_horizontal)
+  if (gateComponent->orientation == gate_horizontal)
   {
     gateDimensions = Vec2(3, 1);
   }
