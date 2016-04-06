@@ -16,10 +16,15 @@ enum ButtonTypes
   LEVEL_ONE_BUTTON,        /* Button that will take you to Level one        */
   LEVEL_TWO_BUTTON,        /* Button that will take you to Level two        */
   LEVEL_THREE_BUTTON,      /* Button that will take you to Level three      */
+  LEVEL_FOUR_BUTTON,       /* Button that will take u to level four         */
   DEATH_SCREEN_BUTTON,     /* Button that will take you to the death screen */
+  WIN_SCREEN,              /* Button for the win screen                     */
   TOWN_SCREEN_BUTTON,      /* Button that will take you to the town         */
   DP_SPLASH_SCREEN_BUTTON, /* digipen splashscreen level                    */
-  NUMBER_OF_BUTTON_TYPES   /* number of buttons in this enum. MUST B LAST   */  
+  CONTROL_SCREEN,          /* button for the control screen                 */
+  CREDIT_SCREEN,           /* button for the credit screen                  */
+  NUMBER_OF_BUTTON_TYPES,  /* number of buttons in this enum. MUST B LAST   */ 
+  QUIT                     /* buttton for quitting                          */
 };
 
 typedef struct 
