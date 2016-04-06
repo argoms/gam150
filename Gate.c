@@ -84,19 +84,7 @@ void GateClosed(GameObject* inst)
 {
   WorldGate* gateComponent = GetWorldGate(inst);
 
-  //create a vector for the dimensions of the gate depending on whether it's horizontal or vertical
-  Vector2D gateDimensions;
-  if (gateComponent->orientation == gate_horizontal)
-  {
-    gateDimensions = Vec2(3, 1);
-  }
-  else
-  {
-    gateDimensions = Vec2(1, 3);
-  }
-
-  gateDimensions = IsoWorldToScreen(&gateDimensions); //transform this into screen coordinates, since that's what particles work in
-  printf("Gatedim: %f, %f", gateDimensions.x, gateDimensions.y);
+ // printf("Gatedim: %f, %f", gateDimensions.x, gateDimensions.y);
 
   Animation* particle = GCreateAnimation(1,
     GCreateTexture("animations/world/cloudTemplate.png"),
@@ -104,7 +92,7 @@ void GateClosed(GameObject* inst)
     1);
   SetParticleAnim(particle);
   EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&inst->physics->position), 32, 0.0f, Vec2(4,3), 0.99f, 0.5f, 0,
-    gateDimensions, 0, GTint(1, 1, 1, 0.1f));
+    Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
 }
 
 ///*!

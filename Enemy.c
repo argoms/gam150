@@ -297,9 +297,9 @@ void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject)
 void EnemyOnKilled(GameObject* _self)
 {
   GameObjectDestroy(&_self);
-  pPS_B->PS_Burst->StartPosX = _self->physics->position.x;
-  pPS_B->PS_Burst->StartPosY = _self->physics->position.y;
-  Start_PS(pPS_B);
+  //pPS_B->PS_Burst->StartPosX = _self->physics->position.x;
+  //pPS_B->PS_Burst->StartPosY = _self->physics->position.y;
+  //Start_PS(pPS_B);
 }
 
 void EnemyChangeAnimationFlag(EnemyContainer* enemyContainer, Vector2D* worldFacingDirection)
