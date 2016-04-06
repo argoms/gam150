@@ -27,9 +27,6 @@
     <ClCompile Include="DeathScreen.c">
       <Filter>Menu/UI</Filter>
     </ClCompile>
-    <ClCompile Include="ImportData.c">
-      <Filter>Enemies</Filter>
-    </ClCompile>
     <ClCompile Include="LevelManager.c">
       <Filter>Back End</Filter>
     </ClCompile>
@@ -114,6 +111,12 @@
     <ClCompile Include="Cloud.c">
       <Filter>Environmental Objects</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerHUD.c">
+      <Filter>Menu/UI</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentEffects.c">
+      <Filter>Environmental Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -140,9 +143,6 @@
     </ClInclude>
     <ClInclude Include="DeathScreen.h">
       <Filter>Menu/UI</Filter>
-    </ClInclude>
-    <ClInclude Include="ImportData.h">
-      <Filter>Enemies</Filter>
     </ClInclude>
     <ClInclude Include="LevelManager.h">
       <Filter>Back End</Filter>
@@ -228,6 +228,12 @@
     <ClInclude Include="Cloud.h">
       <Filter>Environmental Objects</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerHUD.h">
+      <Filter>Menu/UI</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentalEffects.h">
+      <Filter>Environmental Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="EnemyFiles">
@@ -262,13 +268,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Level1EnemyMelee1.txt">
-      <Filter>EnemyFiles</Filter>
-    </Text>
-    <Text Include="Level1EnemyRanged2.txt">
-      <Filter>EnemyFiles</Filter>
-    </Text>
     <Text Include="EnemyMeleeBig.txt">
+      <Filter>EnemyFiles</Filter>
+    </Text>
+    <Text Include="EnemyMelee.txt">
+      <Filter>EnemyFiles</Filter>
+    </Text>
+    <Text Include="EnemyRanged.txt">
       <Filter>EnemyFiles</Filter>
     </Text>
   </ItemGroup>

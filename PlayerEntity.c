@@ -24,6 +24,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Dodge.h"
 #include "EntityAnimation.h"
 #include "PlayerAnimations.h"
+#include "PlayerHUD.h"
 
 extern double frameTime;
 
@@ -74,7 +75,7 @@ Bit 6 is active if the player is moving
 Bit 7 is active if the player is attacking
 */
 
-static TextString* healthText;
+
 /*!
 \brief Call at the start of a level to initialize player values.
 */
@@ -97,7 +98,7 @@ void PlayerInit()
 
   attackCooldown = 0;
   attackCooldownLength = 0.5;
-  attackDamage = 10;
+  attackDamage = 12;
   tracerAnimation = GCreateAnimation(1,
     GCreateTexture("isotilePlaceholder1.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
@@ -133,17 +134,7 @@ void PlayerInit()
   //shitty alpha fast coding:
   TextInit();
   
-  char hpstring[20] = "Health:            ";
-  int tempHP = player->entity->health;
-  int count = 0;
-  while (tempHP > 0 && count < 10)
-  {
-    //printf("a");
-    count++;
-    hpstring[6 + count] = 3;
-    tempHP -= 10;
-  }
-  healthText =  TextCreateHUDString(hpstring, -300, -200);
+
 }
 
 /*!
@@ -151,6 +142,8 @@ void PlayerInit()
 */
 void PlayerSimulate()
 {
+
+  UpdatePlayerHealthHUD();
   attackCooldown -= frameTime;
   //printf("%f \n", frameTime);
 
@@ -229,7 +222,7 @@ void PlayerSimulate()
       playerAccel = 0.2;
     }
   }
-
+  
   if (AEInputCheckTriggered('2'))
   {
     if (attackDamage < 15)
@@ -241,21 +234,8 @@ void PlayerSimulate()
       attackDamage = 10;
     }
   }
-  //alpha dumb hardcoding
-  {
-    char hpstring[20] = "Health:            ";
-    int tempHP = player->entity->health;
-    int count = 0;
-    while (tempHP > 0 && count < 10)  // whoever hard coded this needs to stop
-    {
-      count++;
-      hpstring[6 + count] = 3;
-      tempHP -= 10;
-    }
-    TextRemoveString(healthText);
-    healthText = TextCreateHUDString(hpstring, -300, -200);
-    //TextHUDStringSet(&healthText, "aaa");
-  }
+
+
 
   // cheat to restore hp, Tarrants code
   if (AEInputCheckTriggered('M'))

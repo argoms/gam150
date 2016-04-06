@@ -21,7 +21,6 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "PlayerEntity.h"
 #include "Hazard.h"
 #include "Button.h"
-#include "ImportData.h"
 #include "ParticleSystems(Redo).h"
 #include "MyRandom.h"
 #include "Compass.h"
@@ -46,6 +45,9 @@ static GameObject* player; /**< pointer to player object*/
 */
 void GameLevelInit(void)
 {
+  EnemyImportInfo(ENEMY_TYPE_MELEE, "EnemyMelee.txt");
+  EnemyImportInfo(ENEMY_TYPE_MELEE_BIG, "EnemyMeleeBig.txt");
+  //EnemyImportInfo(ENEMY_TYPE_RANGED, "EnemyRanged.txt");
   Entity* playerEntity;
 	int i;
 
@@ -63,6 +65,12 @@ void GameLevelInit(void)
 	{
 		pDodgeSmoke[i] = Create_PS_Burst(2.0f, 10);
 		pDodgeSmoke[i]->PS_Burst->vpParticle_Create = Particle_Create_DodgeSmoke;
+	}
+
+	for (i = 0; i < 4; i++)
+	{
+		pHitSplash[i] = Create_PS_Burst(0.5f, 10);
+		pHitSplash[i]->PS_Burst->vpParticle_Create = Particle_Create_HitSplash;
 	}
 
 	

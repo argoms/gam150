@@ -13,7 +13,6 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Vector2D.h"
 #include "Isometric.h"
 #include "AEEngine.h"
-#include "ImportData.h"
 #include "GameLevel.h"
 #include "Door.h"
 #include "Gate.h"
@@ -27,7 +26,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #define NUM_ROOMS 2
 
 //Think of this as MAX room size, not just room size.
-static int ROOM_SIZE = 13;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/
+static int ROOM_SIZE = 21;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/
 static int MAP_SEED = 32;
 
 
@@ -41,8 +40,9 @@ enum MapGen_RoomStates
 
 enum MapGen_RoomTypes
 {
+  roomtype_start,
   roomtype_simple,
-  roomtype_start
+  roomtype_hall
 };
 
 enum directions
@@ -66,6 +66,7 @@ static void SetupBaseMap(int mapWidth, int mapHeight);
 static int RoomValid(Vector2D cursor, int mapW, int mapH);
 static void SpawnMapRooms(MapRoomInfo* rooms);
 static void ReplaceTiles(Vector2D position, Vector2D size, int oldTile, int newTile);
+static void Room_HallsRoom(Vector2D cursor);
 
 static Animation* GateAnimationHorizontal;
 
@@ -148,10 +149,15 @@ void GenerateMap(IsoMap* inputMap)
         
         if (rooms_created == NUM_ROOMS)
         {
+          //behavior specific to end (final) room
           DoorCreateDoorAt(cursor);
+          MapRoomInfoAdd(rooms, cursor, roomtype_hall);
         }
 
-        MapRoomInfoAdd(rooms, cursor, roomtype_simple);
+        else
+        {
+          MapRoomInfoAdd(rooms, cursor, RandIntRange(1, 3));
+        }
         continue;
       }
     }
@@ -187,6 +193,10 @@ static void SpawnMapRooms(MapRoomInfo* rooms)
     case roomtype_simple:
       Room_BasicEnemies(index->position);
       printf("enemyroom\n");
+      break;
+    case roomtype_hall:
+      Room_HallsRoom(index->position);
+      printf("halls");
       break;
     }
     index = index->next;
@@ -366,6 +376,17 @@ static void Room_StartRoom(Vector2D cursor)
   GameObject* room = RoomTemplate(cursor, 0);
   MapRoom* roomData = (MapRoom*)(room->miscData);
   roomData->type = roomtype_start;
+}
+
+/*!
+\brief Room-specific setup for empty halls
+*/
+static void Room_HallsRoom(Vector2D cursor)
+{
+  GameObject* room = RoomTemplate(cursor, 0);
+  MapRoom* roomData = (MapRoom*)(room->miscData);
+  roomData->type = roomtype_hall;
+  ReplaceTiles(Vec2(cursor.x - ROOM_SIZE / 2, cursor.y - ROOM_SIZE / 2), Vec2(ROOM_SIZE, ROOM_SIZE), tile_floor, tile_wall);
 }
 
 /*!

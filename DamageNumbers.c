@@ -39,17 +39,18 @@ struct DamageText
 */
 GameObject* DamageTextCreate(Vector2D position, int damage)
 {
+  //create a buffer and write the damage values to it
   char buffer[10];
-  sprintf_s(buffer, damage, "%d", damage);
+  sprintf_s(buffer, 10, "%d", damage);
 
-  
-
+  //set up gameobject with lots of nulls
   GameObject* damageText = GameObjectCreate(NULL, NULL, NULL, entity_damageText);
   damageText->syncSpritePhysics = 0;
   damageText->physics = NULL;
   damageText->sprite = NULL;
   damageText->entity = NULL;
 
+  //set up DamageText component
   damageText->miscData = (DamageText*)malloc(sizeof(DamageText));
 
   DamageText* newObjectData = (DamageText*)(damageText->miscData);

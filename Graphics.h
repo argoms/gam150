@@ -11,6 +11,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #pragma once
 #include "Vector2D.h"
 
+typedef struct GameObject GameObject;
 typedef struct Animation Animation;
 typedef struct Sprite Sprite;
 typedef struct SpriteList SpriteList;
@@ -60,7 +61,8 @@ struct Sprite
   unsigned int blendMode; /**< blend mode for sprite rendering*/
   struct Tint tint; /**<tint for rendering*/
 
-  void(*specialFX)(void);
+  void(*specialFX)(Sprite *Owner);/**/
+  GameObject *owner; /*pointer to Sprite's owner.  doesn't have a default system to set it automatically, thus must be set manually*/
 };
 
 

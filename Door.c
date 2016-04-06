@@ -17,6 +17,11 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 
 extern int level;
 
+typedef struct DoorComponent DoorComponent;
+struct DoorComponent
+{
+  GameObject* particles[32];
+};
 static GameObject* levelDoor;
 /*!
 \brief Functionality for doors switching levels upon contact.
@@ -65,6 +70,8 @@ GameObject* DoorCreateDoorAt(Vector2D position)
   door->physics->onCollision = &DoorDefaultOnCollision;
   door->simulate = NULL;
 
+  GSortSprite(door->sprite, 0);
+
   levelDoor = door;
   return door;
 }
@@ -88,3 +95,25 @@ GameObject* DoorGetDoor()
 
 }
 
+
+/*!
+\brief Initializes door by adding a door component
+*/
+void DoorInit(GameObject* inst)
+{
+  DoorComponent* newDoorComponent = (DoorComponent*)(malloc(sizeof(DoorComponent)));
+
+  inst->miscData = newDoorComponent;
+
+  for (int i = 0; i < 32; i++)
+  {
+
+  }
+}
+
+/*!
+\brief Run by door every frame (for graphical effects)
+*/
+void DoorSimulate(GameObject* instance)
+{
+}
