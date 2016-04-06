@@ -115,7 +115,7 @@ void LevelRun()
   case level_level1:
 	  if (AEInputCheckTriggered(VK_SPACE))
 	  {
-		  SpawnDodgeSmokePS(4.0f, 4.0f);
+		 // SpawnDodgeSmokePS(4.0f, 4.0f);
 	  }
 	  if (AEInputCheckTriggered('T'))
 	  {
