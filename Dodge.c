@@ -129,7 +129,7 @@ void UpdateEntityIFs(GameObject *obj)
       {
         float player_x = obj->physics->position.x; // x position
         float player_y = obj->physics->position.y; // y position
-        SpawnDodgeSmokePS(player_x, player_y);         // spawn particles where the player is
+        //SpawnDodgeSmokePS(player_x, player_y);         // spawn particles where the player is
       }
       else
       {
@@ -194,7 +194,8 @@ void Dodge(int input_key, GameObject *obj)
 
     float player_x = obj->physics->position.x; // x position
     float player_y = obj->physics->position.y; // y position
-    SpawnDodgeSmokePS(player_x, player_y);     // spawn particles where the player is
+    //SpawnDodgeSmokePS(player_x, player_y);     // spawn particles where the player is
+    //SPAWN PARTICLES HERE
 
     //save original values
     float player_red = obj->sprite->tint.red;
@@ -249,7 +250,8 @@ void Dodge2(int keys[], GameObject *obj, int list_size)
 
     float player_x = obj->physics->position.x; // x position
     float player_y = obj->physics->position.y; // y position
-    SpawnDodgeSmokePS(player_x, player_y);     // spawn particles where the player is
+    //SpawnDodgeSmokePS(player_x, player_y);     // spawn particles where the player is
+    //SPAWN PRTICLES HERE
 
     //save original values
     float player_red = obj->sprite->tint.red;

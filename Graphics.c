@@ -255,10 +255,16 @@ void GFree()
 
       //printf("%p))", temp->item);
       temp2 = temp2->next;
-      AEGfxTextureUnload(tempPrevious2->item);
+      if (tempPrevious2->item)
+      {
+        AEGfxTextureUnload(tempPrevious2->item);
+      }
     }
     //printf("%i||", temp->item->vtxNum);
-    AEGfxTextureUnload(temp2->item);
+    if (temp2->item)
+    {
+      AEGfxTextureUnload(temp2->item);
+    }
     //printf("%p))", temp->item);
     //free(temp);
   }

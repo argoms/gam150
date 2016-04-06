@@ -13,7 +13,6 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Vector2D.h"
 #include "Isometric.h"
 #include "AEEngine.h"
-#include "ImportData.h"
 #include "GameLevel.h"
 #include "Door.h"
 #include "Gate.h"
@@ -22,12 +21,13 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "GameObject.h"
 #include "MapGen.h"
 #include "conversions.h"
+#include "EnvironmentalEffects.h"
 
 //private info 
-#define NUM_ROOMS 8
+#define NUM_ROOMS 12
 
 //Think of this as MAX room size, not just room size.
-static int ROOM_SIZE = 21;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/
+static int ROOM_SIZE = 9;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/
 static int MAP_SEED = 32;
 
 
@@ -536,10 +536,12 @@ void CloseRoom(GameObject* room)
     if (inst)
     {
       printf("CLOSED");
-      inst->sprite->tint.alpha = 1.f;
+      inst->sprite->tint.alpha = 0.5f;
       inst->sprite->tint.red = 1.f;
       IsoTileSet(inst->physics->position.x, inst->physics->position.y, tile_wall);
       
+      GateClosed(inst);
+
       switch(GetWorldGate(inst)->orientation)
       {
       case gate_horizontal:

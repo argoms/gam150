@@ -17,7 +17,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "MapGen.h"
 #include "Text.h"
 #include <stdlib.h>
-
+#include "EnvironmentalEffects.h"
 
 
 /*!
@@ -48,6 +48,11 @@ GameObject* CreateWorldGate(Vector2D position, int orientation)
   gateData->positionX = position.x;
   gateData->positionY = position.y;
   gateData->orientation = orientation;
+
+  for (int i = 0; i < GATE_LENGTH; i++)
+  {
+    gateData->particleSystems[i] = NULL;
+  }
   newGate->sprite->tint.alpha = 0.1f;
 
   //printf("created a gate. %f, %f\n", position.x, position.y);
@@ -58,10 +63,17 @@ GameObject* CreateWorldGate(Vector2D position, int orientation)
 
 
 /*!
-\brief Killed the gate! D:
+\brief Killed the gate! D: Called when a room is completed and the gates open again.
 */
 void GateOpened(GameObject* DeadGate)
 {
+  WorldGate* gateComponent = GetWorldGate(DeadGate);
+  for (int i = 0; i < GATE_LENGTH; i++)
+  {
+    EffectRemove(gateComponent->particleSystems[i]);
+    printf(":A %p", gateComponent->particleSystems[i]);
+    //GameObjectDestroy(&());
+  }
   IsoTileSet(GetWorldGate(DeadGate)->positionX, GetWorldGate(DeadGate)->positionY, tile_floor);
   switch (GetWorldGate(DeadGate)->orientation)
   {
@@ -75,6 +87,48 @@ void GateOpened(GameObject* DeadGate)
     break;
   }
   GameObjectDestroy(&DeadGate);
+}
+
+/*!
+\brief Called when the gate closes (player enters a room)
+*/
+void GateClosed(GameObject* inst)
+{
+  WorldGate* gateComponent = GetWorldGate(inst);
+
+ // printf("Gatedim: %f, %f", gateDimensions.x, gateDimensions.y);
+
+  Animation* particle = GCreateAnimation(1,
+    GCreateTexture("animations/world/cloudTemplate.png"),
+    GCreateMesh(24.f, 16.f, 1, 1),
+    1);
+  SetParticleAnim(particle);
+  
+  gateComponent->particleSystems[0] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&inst->physics->position), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
+    Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+  if (gateComponent->orientation = gate_horizontal)
+  {
+    Vector2D offsetPos = inst->physics->position;
+    ++offsetPos.x;
+    gateComponent->particleSystems[1] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&offsetPos), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
+      Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+    offsetPos.x -= 2;
+
+    gateComponent->particleSystems[2] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&offsetPos), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
+      Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+  }
+
+  else if (gateComponent->orientation = gate_vertical)
+  {
+    Vector2D offsetPos = inst->physics->position;
+    ++offsetPos.y;
+    gateComponent->particleSystems[1] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&offsetPos), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
+      Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+    offsetPos.y -= 2;
+
+    gateComponent->particleSystems[2] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&offsetPos), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
+      Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+  }
 }
 
 ///*!

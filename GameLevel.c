@@ -21,8 +21,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "PlayerEntity.h"
 #include "Hazard.h"
 #include "Button.h"
-#include "ImportData.h"
-#include "ParticleSystems(Redo).h"
+//#include "ParticleSystems(Redo).h"
 #include "MyRandom.h"
 #include "Compass.h"
 
@@ -30,12 +29,13 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #define MAP_HEIGHT 64
 
 //dumb hard coding for alpha:
+// for game play levels not win/lose screens 
 int level; 
 //
 
 //test particle effect istances
-PS_Instance *pPS_C;
-PS_Instance *pPS_B;
+//PS_Instance *pPS_C;
+//PS_Instance *pPS_B;
 
 //extern int nextLevel;/**< Level to switch to (if not equal to current level) (uses enum)*/
 static GameObject* player; /**< pointer to player object*/
@@ -45,8 +45,13 @@ static GameObject* player; /**< pointer to player object*/
 */
 void GameLevelInit(void)
 {
+  EnemyImportInfo(ENEMY_TYPE_MELEE, "EnemyMelee.txt");
+  EnemyImportInfo(ENEMY_TYPE_MELEE_BIG, "EnemyMeleeBig.txt");
+  //EnemyImportInfo(ENEMY_TYPE_RANGED, "EnemyRanged.txt");
   Entity* playerEntity;
 	int i;
+
+  /*
 
 	pPS_C = Create_PS_Continuous(2.0f, 5.0f, -1);
 
@@ -85,7 +90,7 @@ void GameLevelInit(void)
 	pFireHazard[1]->PS_Continuous->StartPosX = 3;
 	pFireHazard[1]->PS_Continuous->StartPosY = 5;
 	Start_PS(pFireHazard[1]);
-	
+	*/
 
   printf("game level init\n");
   PhysicsInit();
@@ -230,7 +235,7 @@ void GameLevelInit(void)
 
 void GameLevelRun(void)
 {
-
+  /*
 	if (AEInputCheckTriggered('Y'))
 	{
 		Start_PS(pPS_C);
@@ -239,6 +244,7 @@ void GameLevelRun(void)
 	{
 		Stop_PS(pPS_C);
 	}
+  */
 
   //Vector2D a = Vec2(2, 2);
   
