@@ -104,7 +104,7 @@ void GenerateMapObjects()
           Sprite* newObj = GCreateSprite(tileX + extraOffset.x, tileY + 96 + extraOffset.y, tileAnim_floor, 0);
           newObj->offset = extraOffset;
           newObj->offset.y -= 154;
-          newObj->tint.alpha = (0.3 * RandFloat()) + 0.1;
+          newObj->tint.alpha = (0.3 * RandFloat()) + 0.1f;
           i++;
         }
 
@@ -158,12 +158,7 @@ void GenerateMapObjects()
 
   MakeClouds();
 
-  Animation* particle = GCreateAnimation(1,
-    GCreateTexture("animations/world/cloudTemplate.png"),
-    GCreateMesh(16.f, 16.f, 1, 1),
-    1);
-  SetParticleAnim(particle);
-  //EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), Vec2(100, 300), 16, 0.05f, transform_none, 0.5f, 1.f);
+  
 }
 
 void MakeClouds()

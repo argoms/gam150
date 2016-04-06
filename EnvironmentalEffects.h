@@ -8,6 +8,10 @@ enum convertType
   transform_worldToScreen,
   transform_screenToWorld
 };
-GameObject* EffectCreate(Vector2D minVelocity, Vector2D maxVelocity, Vector2D position,
-  int density, float emitDelay, int convertType, float damping, float particleLifeTime);
+
+//the number of parameters in this function is becoming ludicrous, if only we had these things called function overloading and default parameters.
+GameObject* EffectCreate(Vector2D minVelocity, Vector2D maxVelocity, Vector2D position, int density,
+  float emitDelay, Vector2D zVelocityVariance, float damping, float particleLifeTime,
+  float zPosition, Vector2D positionVariance,
+  float zPositionVariance, Tint particleTint);
 void SetParticleAnim(Animation* input); //temporary debug for now;

@@ -26,9 +26,7 @@ struct WorldGate
   int positionY;
 };
 
-
-
-
+void GateClosed(GameObject* inst);
 GameObject* CreateWorldGate(Vector2D position, int orientation);
 void GateOpened(GameObject* DeadGate);
 void GateRemoveEnemy(GameObject* Target);
