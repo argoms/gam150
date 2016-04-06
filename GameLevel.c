@@ -29,6 +29,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #define MAP_HEIGHT 64
 
 //dumb hard coding for alpha:
+// for game play levels not win/lose screens 
 int level; 
 //
 
