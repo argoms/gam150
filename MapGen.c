@@ -13,7 +13,6 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Vector2D.h"
 #include "Isometric.h"
 #include "AEEngine.h"
-#include "ImportData.h"
 #include "GameLevel.h"
 #include "Door.h"
 #include "Gate.h"
@@ -25,7 +24,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "EnvironmentalEffects.h"
 
 //private info 
-#define NUM_ROOMS 8
+#define NUM_ROOMS 2
 
 //Think of this as MAX room size, not just room size.
 static int ROOM_SIZE = 9;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/

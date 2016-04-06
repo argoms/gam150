@@ -191,7 +191,6 @@
     <ClCompile Include="Gate.c" />
     <ClCompile Include="Graphics.c" />
     <ClCompile Include="Hazard.c" />
-    <ClCompile Include="ImportData.c" />
     <ClCompile Include="Isometric.c" />
     <ClCompile Include="LevelManager.c" />
     <ClCompile Include="Main_CS230.c">
@@ -242,7 +241,6 @@
     <ClInclude Include="Gate.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Hazard.h" />
-    <ClInclude Include="ImportData.h" />
     <ClInclude Include="Isometric.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="MapCreator.h" />
@@ -264,8 +262,8 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="EnemyMeleeBig.txt" />
-    <Text Include="Level1EnemyMelee1.txt" />
-    <Text Include="Level1EnemyRanged2.txt" />
+    <Text Include="EnemyMelee.txt" />
+    <Text Include="EnemyRanged.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
