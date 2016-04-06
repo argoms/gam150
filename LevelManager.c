@@ -21,7 +21,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Audio.h"
 #include "ParticleSystems(Redo).h"
 #include "Compass.h"
-
+#include "FancyBackground.h"
 
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
 static AEGfxVertexList*	pMesh2;				/**< EXAMPLE VAR*/
@@ -70,6 +70,7 @@ void LevelLoad(int _level)
     MainMenuInit();
     Audio_PlayMusicStream("EPOCH_main_theme.ogg", 1);
     Audio_PauseMusicStream("music_sample3.ogg");
+    Background_Init();
     break;
   case level_town:
     TownScreenInit();
@@ -173,6 +174,9 @@ void LevelUnload()
   GameObjectFree();
   UnloadAll_PS();
   GFree();
+
+  /* Background image stuff - Matt */
+  Background_Unload();
 }
 
 
@@ -198,7 +202,7 @@ void MainMenuInit()
   pTex1 = GCreateTexture("spiderwolfbrighter.png");
   pTex2 = GCreateTexture("dffont.png");
 
-  AEGfxSetBackgroundColor(1.0f, 1.0f, 1.0f);
+  AEGfxSetBackgroundColor(0.0f, 0.0f, 0.0f);
   AEGfxSetBlendMode(AE_GFX_BM_BLEND);
   //EXAMPLE ENDS HERE
 
@@ -265,7 +269,6 @@ void MainMenuInit()
 
   //END BUTTONS-------------------------------------------------------------
 
-
   //EXAMPLE CODE, REMOVE OUT WHEN USING
   {
     animtest2 = GCreateAnimation(16, pTex1, pMesh2, 1);
@@ -304,6 +307,10 @@ void MainMenuRun()
   PhysicsSimulate();
   GameObjectsPostStep();
   //debug
+
+  /* Update and draw background - Matt */
+  Background_Update();
+  Background_Draw();
 
   if (AEInputCheckReleased(VK_SPACE))
   {

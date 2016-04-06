@@ -120,6 +120,9 @@
     <ClCompile Include="EnvironmentEffects.c">
       <Filter>Environmental Objects</Filter>
     </ClCompile>
+    <ClCompile Include="FancyBackground.c">
+      <Filter>Menu/UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -239,6 +242,9 @@
     </ClInclude>
     <ClInclude Include="EnvironmentalEffects.h">
       <Filter>Environmental Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="FancyBackground.h">
+      <Filter>Menu/UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

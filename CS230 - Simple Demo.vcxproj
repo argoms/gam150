@@ -186,6 +186,7 @@
     <ClCompile Include="Entity.c" />
     <ClCompile Include="EntityAnimation.c" />
     <ClCompile Include="EnvironmentEffects.c" />
+    <ClCompile Include="FancyBackground.c" />
     <ClCompile Include="GameLevel.c" />
     <ClCompile Include="GameObject.c" />
     <ClCompile Include="Gate.c" />
@@ -237,6 +238,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityAnimation.h" />
     <ClInclude Include="EnvironmentalEffects.h" />
+    <ClInclude Include="FancyBackground.h" />
     <ClInclude Include="GameLevel.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gate.h" />
