@@ -49,3 +49,4 @@ GameObject* EffectCreate(Vector2D minVelocity, Vector2D maxVelocity, Vector2D po
   float zPosition, Vector2D positionVariance,
   float zPositionVariance, Tint particleTint);
 void SetParticleAnim(Animation* input); //temporary debug for now;
+void EffectRemove(GameObject* inst);

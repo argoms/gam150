@@ -10,6 +10,8 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #pragma once
 #include "GameObject.h"
+
+#define GATE_LENGTH 3
 typedef struct WorldGate WorldGate;
 enum WorldGateStates
 {
@@ -24,6 +26,8 @@ struct WorldGate
   int orientation;
   int positionX;
   int positionY;
+
+  GameObject* particleSystems[GATE_LENGTH]; 
 };
 
 void GateClosed(GameObject* inst);

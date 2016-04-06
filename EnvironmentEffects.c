@@ -28,7 +28,6 @@ struct ParticleComponent
 void ParticleSimulate(GameObject* inst);
 GameObject* EffectCreate(Vector2D minVelocity, Vector2D maxVelocity, Vector2D position, int density);
 void EffectSimulate(GameObject* inst);
-void EffectRemove(GameObject* inst);
 void ParticleSimulate(GameObject* inst);
 void ParticleInitialize(GameObject* inst);
 static GameObject* ParticleCreate(Vector2D position, GameObject* parent, float lifeTime);
@@ -120,6 +119,8 @@ GameObject* EffectCreate(Vector2D minVelocity, Vector2D maxVelocity, Vector2D po
 
     newEffectComponent->particles[i] = ParticleCreate(position, newEffect, particleLifeTime);
   }
+
+  return newEffect;
 }
 
 
@@ -159,7 +160,8 @@ void EffectRemove(GameObject* inst)
   EffectSource* instComponent = (EffectSource*)(inst->miscData);
   for (int i = 0; i < instComponent->density; i++)
   {
-    GameObjectDestroy(&(instComponent->particles[i]));
+    //instComponent->particles[i]->parent = NULL;
+    //GameObjectDestroy(&(instComponent->particles[i]));
   }
   GameObjectDestroy(&inst);
 }
@@ -167,54 +169,61 @@ void EffectRemove(GameObject* inst)
 void ParticleSimulate(GameObject* inst)
 {
   
-  ParticleComponent* instComponent = (ParticleComponent*)(inst->miscData);
-  EffectSource* ownerSystem = ((EffectSource*)(inst->parent->miscData));
-  if (instComponent->alive == particle_active)
+  if (inst->parent)
   {
+    ParticleComponent* instComponent = (ParticleComponent*)(inst->miscData);
+    EffectSource* ownerSystem = ((EffectSource*)(inst->parent->miscData));
 
-    if (instComponent->extraBehavior)
+    if (instComponent->alive == particle_active)
     {
-      instComponent->extraBehavior();
-    }
-    inst->sprite->x += instComponent->velocity.x;
-    inst->sprite->y += instComponent->velocity.y;
-    inst->sprite->offset.y += instComponent->zVelocity;
 
-    Vector2DScale(&instComponent->velocity, &instComponent->velocity, ownerSystem->damping);
-    instComponent->zVelocity *= ownerSystem->damping;
-
-    //printf("ERM %f\n, ownerSystem->damping", ownerSystem->damping);
-    GSortSprite(inst->sprite, 0);
-    
-
-    instComponent->lifeCounter += AEFrameRateControllerGetFrameTime();
-
-    //kill the thing:
-    if (instComponent->lifeCounter > instComponent->maxLife)
-    {
-      instComponent->alive = particle_inactive;
-      instComponent->lifeCounter = 0.f;
-    }
-  }
-  else
-  {
-    
-    //go full transparent if inactive (recycle if parent system is still active)
-    if (ownerSystem->state == particle_active)
-    {
-      //printf("ISFINE");
-      inst->sprite->tint.alpha = 0.f;
-      if (ownerSystem->emitDelayCounter > ownerSystem->emitDelay)
+      if (instComponent->extraBehavior)
       {
-        ParticleInitialize(inst);
-        ownerSystem->emitDelayCounter = 0.f;
-        
+        instComponent->extraBehavior();
+      }
+      inst->sprite->x += instComponent->velocity.x;
+      inst->sprite->y += instComponent->velocity.y;
+      inst->sprite->offset.y += instComponent->zVelocity;
+
+      Vector2DScale(&instComponent->velocity, &instComponent->velocity, ownerSystem->damping);
+      instComponent->zVelocity *= ownerSystem->damping;
+
+      //printf("ERM %f\n, ownerSystem->damping", ownerSystem->damping);
+      GSortSprite(inst->sprite, 0);
+
+
+      instComponent->lifeCounter += AEFrameRateControllerGetFrameTime();
+
+      //kill the thing:
+      if (instComponent->lifeCounter > instComponent->maxLife)
+      {
+        instComponent->alive = particle_inactive;
+        instComponent->lifeCounter = 0.f;
       }
     }
     else
     {
+      if (!ownerSystem)
+      {
+        return;
+      }
+      //go full transparent if inactive (recycle if parent system is still active)
+      if (ownerSystem->state == particle_active)
+      {
+        //printf("ISFINE");
+        inst->sprite->tint.alpha = 0.f;
+        if (ownerSystem->emitDelayCounter > ownerSystem->emitDelay)
+        {
+          ParticleInitialize(inst);
+          ownerSystem->emitDelayCounter = 0.f;
 
-      inst->sprite->tint.alpha = 0.f;
+        }
+      }
+      else
+      {
+
+        inst->sprite->tint.alpha = 0.f;
+      }
     }
   }
 }
