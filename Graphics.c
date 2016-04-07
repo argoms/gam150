@@ -13,6 +13,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "conversions.h"
 #include "Compass.h"
 #include "FancyBackground.h"
+#include "ColorFilter.h"
 
 static SpriteList* spriteList; //list of sprites for game layer
 static SpriteList* hudLayer; //list of sprites for hud layer
@@ -81,9 +82,10 @@ void GRender()
     }
   }
 
-
-
+  /* Draw filter over scene. */
+  ColorFilter_Draw();
   
+  AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 
   //render HUD in list starting from the first item
   if (hudLayer->first)

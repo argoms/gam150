@@ -22,6 +22,7 @@ All content ? 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "ParticleSystems(Redo).h"
 #include "Compass.h"
 #include "FancyBackground.h"
+#include "ColorFilter.h"
 
 
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
@@ -57,10 +58,14 @@ void LevelLoad(int _level)
 
   GInitialize();
 
+  ColorFilter_Init();
+
   switch (_level)
   {
   case level_level1:
     Level1Init();
+    ColorFilter_Set(1.96f, 0.9f, 1.99f);
+    //ColorFilter_Set(1.f, 1.f, 1.f);
     if (!(currentLevel == level_town))
     {
       Audio_PlayMusicStream("music_sample4.ogg", 1);
@@ -70,12 +75,14 @@ void LevelLoad(int _level)
   case level_mainMenu:
     MainMenuInit();
     Background_Init();
+    ColorFilter_Set(1.f, 1.f, 1.f);
     if (!currentLevel == level_splashScreen)
       Audio_PlayMusicStream("EPOCH_main_theme.ogg", 1);
     //Audio_PauseMusicStream("music_sample3.ogg");
     break;
   case level_town:
     TownScreenInit();
+    ColorFilter_Set(1.f, 1.f, 1.f);
     break;
   case level_deathScreen:
     DeathScreenInit();
@@ -83,17 +90,20 @@ void LevelLoad(int _level)
     //Audio_PauseMusicStream("music_sample2A.ogg");
     Audio_PauseMusicStream("music_sample4.ogg");
     //Audio_PauseMusicStream("EPOCH_theme_funky.ogg");
+    ColorFilter_Set(1.f, 1.f, 1.f);
     break;
   case level_splashScreen:
     //Audio_PlayMusicStream("music_sample3.ogg", 0);
     Audio_PlayMusicStream("EPOCH_main_theme.ogg", 1);
     SplashScreenInit();
+    ColorFilter_Set(1.f, 1.f, 1.f);
     break;
   case level_winScreen:
     WinScreenInit();
     level = 0;
     Audio_PauseMusicStream("music_sample4.ogg");
     //Audio_PauseMusicStream("EPOCH_theme_funky.ogg");
+    ColorFilter_Set(1.f, 1.f, 1.f);
     break;
   }
 
@@ -179,6 +189,7 @@ void LevelUnload()
   GFree();
 
   Background_Unload();
+  ColorFilter_Unload();
 }
 
 

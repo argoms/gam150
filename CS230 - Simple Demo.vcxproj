@@ -210,6 +210,7 @@
     <ClCompile Include="PlayerDeathTimer.c" />
     <ClCompile Include="PlayerEntity.c" />
     <ClCompile Include="PlayerHUD.c" />
+    <ClCompile Include="ColorFilter.c" />
     <ClCompile Include="SplashScreen.c" />
     <ClCompile Include="Text.c" />
     <ClCompile Include="TownScreen.c" />
@@ -258,6 +259,7 @@
     <ClInclude Include="PlayerDeathTimer.h" />
     <ClInclude Include="PlayerEntity.h" />
     <ClInclude Include="PlayerHUD.h" />
+    <ClInclude Include="ColorFilter.h" />
     <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TownScreen.h" />

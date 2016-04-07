@@ -166,6 +166,10 @@ void Background_Unload(void)
       free(backgroundSprites[i]);
     }
 
+    /* Free the items for the back area. */
+    AEGfxTextureUnload(backtexture);
+    free(backbase);
+
     /* Set the flag. */
     isLoaded = false;
   }
