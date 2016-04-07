@@ -67,13 +67,21 @@ GameObject* CreateWorldGate(Vector2D position, int orientation)
 */
 void GateOpened(GameObject* DeadGate)
 {
+  //printf("itdidopenright");
   WorldGate* gateComponent = GetWorldGate(DeadGate);
   for (int i = 0; i < GATE_LENGTH; i++)
   {
-    EffectRemove(gateComponent->particleSystems[i]);
-    printf(":A %p", gateComponent->particleSystems[i]);
+    if (gateComponent->particleSystems[i])
+    {
+      //printf("ONEWASFOUND\n");
+      EffectRemove(gateComponent->particleSystems[i]);
+    }
+    //printf("ASDASDASDZDX')");
+    //printf(":A %p", gateComponent->particleSystems[i]);
     //GameObjectDestroy(&());
   }
+
+
   IsoTileSet(GetWorldGate(DeadGate)->positionX, GetWorldGate(DeadGate)->positionY, tile_floor);
   switch (GetWorldGate(DeadGate)->orientation)
   {

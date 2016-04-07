@@ -207,6 +207,7 @@
     <ClCompile Include="ParticleSystems(Redo).c" />
     <ClCompile Include="Physics.c" />
     <ClCompile Include="PlayerAnimations.c" />
+    <ClCompile Include="PlayerDeathTimer.c" />
     <ClCompile Include="PlayerEntity.c" />
     <ClCompile Include="PlayerHUD.c" />
     <ClCompile Include="SplashScreen.c" />
@@ -254,6 +255,7 @@
     <ClInclude Include="ParticleSystems(Redo).h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PlayerAnimations.h" />
+    <ClInclude Include="PlayerDeathTimer.h" />
     <ClInclude Include="PlayerEntity.h" />
     <ClInclude Include="PlayerHUD.h" />
     <ClInclude Include="SplashScreen.h" />

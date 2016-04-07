@@ -24,6 +24,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 //#include "ParticleSystems(Redo).h"
 #include "MyRandom.h"
 #include "Compass.h"
+#include "PlayerDeathTimer.h"
 
 #define MAP_WIDTH 64
 #define MAP_HEIGHT 64
@@ -282,5 +283,6 @@ GameObject* GetPlayerObject(void)
 void OnPlayerKilled(void)
 {
   printf("\n***\n***\nYOU DIED SO NOW YOU'RE IN MAIN MENU WOOO\n***\n***\n");
-  LevelSetNext(level_deathScreen);
+  DeathTimerStart(Vec2(0, 0));
+  // LevelSetNext(level_deathScreen);
 }
