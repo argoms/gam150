@@ -3,6 +3,7 @@
 #include "AEEngine.h"
 #include "Text.h"
 #include "Graphics.h"
+#include "Isometric.h"
 
 typedef struct DeathTimer DeathTimer;
 
@@ -14,7 +15,8 @@ struct DeathTimer
 };
 
 static GameObject* deathTimerObject;
-static Sprite* fadesprite;
+
+static TextString* fadeText;
 
 /*!
 \param position World position of where player died.
@@ -31,12 +33,18 @@ void DeathTimerStart(Vector2D position)
 
   //TextCreateHUDString("YOU DIED", -100, 100);
   
-  fadesprite = GCreateHudSprite(0, 0, GCreateAnimation(1, GCreateTexture("splash.png"), GCreateMesh(800, 600, 1, 1), 1), 1);
-  fadesprite->tint = GTint(0, 0, 0, 1);
+  //fadesprite->tint = GTint(0, 0, 0, 1);
+  Vector2D screenPos = IsoWorldToScreen(&position);
+  fadeText = TextCreateString("YOU DIED", screenPos.x -100, screenPos.y);
+  TextStringAddOffset(fadeText, Vec2(0, 100));
 }
 
 void DeathTimerSimulate(GameObject* inst)
 {
+  //TextRemoveString(fadeText);
+  //fadeText = TextCreateHUDString("YOU DIED", -100, 100);
+
+  
 
   //printf("%p\n", fadesprite);
   DeathTimer* dtComponent = (DeathTimer*)(inst->miscData);
@@ -44,6 +52,9 @@ void DeathTimerSimulate(GameObject* inst)
   dtComponent->time -= AEFrameRateControllerGetFrameTime();
   if (dtComponent->time < 0)
   {
+    //TextRemoveString(fadeText);
+    
     LevelSetNext(level_deathScreen);
+    //GameObjectDestroy(deathTimerObject);
   }
 }

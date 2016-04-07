@@ -83,10 +83,7 @@ void GRender()
 
 
 
-  if (Compass_IsActive)
-  {
-    Compass_Draw();
-  }
+  
 
   //render HUD in list starting from the first item
   if (hudLayer->first)
@@ -117,6 +114,11 @@ void GRender()
 
     }
     //printf("a \n");
+  }
+
+  if (Compass_IsActive)
+  {
+    Compass_Draw();
   }
 
 }

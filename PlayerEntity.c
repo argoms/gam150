@@ -25,6 +25,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "EntityAnimation.h"
 #include "PlayerAnimations.h"
 #include "PlayerHUD.h"
+#include "LevelManager.h"
 
 extern double frameTime;
 
@@ -51,6 +52,8 @@ static Sprite* playerSprite;
 static float stepSoundTimer;
 
 static int dodge_key = VK_SPACE;
+
+static int isDead;
 
 //the following enums are used for the player action bit field:
 static enum directions 
@@ -88,12 +91,12 @@ static Vector2D playerDirection;
 void PlayerInit()
 {
   
-
+  isDead = 0;
 
   player = GetPlayerObject();
 
   //set up player health:
-  player->entity->health = 30;
+  player->entity->health = 3;
   //
 
   attackCooldown = 0;
@@ -143,10 +146,20 @@ void PlayerInit()
 void PlayerSimulate()
 {
 
+  if (!player)
+  {
+    return;
+  }
+  AEGfxSetCamPosition(player->sprite->x, player->sprite->y);
+
   UpdatePlayerHealthHUD();
   attackCooldown -= frameTime;
   //printf("%f \n", frameTime);
 
+  if (isDead)
+  {
+    return;
+  }
   PlayerInput();
   PlayerAnimations();
   //8
@@ -533,4 +546,17 @@ void RestoreHealth(GameObject* obj)
   {
     obj->entity->health = 10;
   }
+}
+
+/*!
+\brief called when player dies
+*/
+void OnPlayerKilled(void)
+{
+  printf("\n***\n***\nYOU DIED SO NOW YOU'RE IN MAIN MENU WOOO\n***\n***\n");
+  player->sprite->tint.alpha = 0;
+  //PhysicsRemoveObject(&player->physics);
+  DeathTimerStart(player->physics->position);
+  isDead = 1;
+   //LevelSetNext(level_deathScreen);
 }

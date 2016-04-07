@@ -255,9 +255,11 @@ void GameLevelRun(void)
   PhysicsSimulate();
   GameObjectsPostStep();
   //
-  AEGfxSetCamPosition(player->sprite->x, player->sprite->y);
   
-  Compass_Update(&player->physics->position, &DoorGetDoor()->physics->position);
+  if (player->sprite)
+  {
+    Compass_Update(&player->physics->position, &DoorGetDoor()->physics->position);
+  }
 
 }
 
@@ -277,12 +279,3 @@ GameObject* GetPlayerObject(void)
   return player;
 }
 
-/*!
-\brief called when player dies
-*/
-void OnPlayerKilled(void)
-{
-  printf("\n***\n***\nYOU DIED SO NOW YOU'RE IN MAIN MENU WOOO\n***\n***\n");
-  DeathTimerStart(Vec2(0, 0));
-  // LevelSetNext(level_deathScreen);
-}

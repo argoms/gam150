@@ -161,23 +161,25 @@ void GateClosed(GameObject* inst)
 */
 void GateRoomSimulate(GameObject* instance)
 {
-  if (instance->type != entity_room)
+  if (GetPlayerObject()->sprite)
   {
-    printf("You've assigned gateroomsimulate badly. Oops.");
-    abort();
+    if (instance->type != entity_room)
+    {
+      printf("You've assigned gateroomsimulate badly. Oops.");
+      abort();
+    }
+
+    int roomRadius = (GetRoomSize(instance) - 2) / 2;
+    if (PhysicsDistSQ(GetPlayerObject()->physics->position, instance->physics->position) < roomRadius * roomRadius)
+    {
+      //clear the sim function on gameobject after one execution:
+      instance->simulate = NULL;
+      CloseRoom(instance);
+      //OpenRoom(instance);
+      printf("\n \n *** \n room closed \n \n *** \n");
+    }
+
   }
-
-  int roomRadius = (GetRoomSize(instance) - 2) / 2;
-  if (PhysicsDistSQ(GetPlayerObject()->physics->position, instance->physics->position) < roomRadius * roomRadius)
-  {
-    //clear the sim function on gameobject after one execution:
-    instance->simulate = NULL;
-    CloseRoom(instance);
-    //OpenRoom(instance);
-    printf("\n \n *** \n room closed \n \n *** \n");
-  }
-
-
 }
 
 /*!
