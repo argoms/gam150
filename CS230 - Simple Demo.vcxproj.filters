@@ -120,6 +120,9 @@
     <ClCompile Include="FancyBackground.c">
       <Filter>Menu/UI</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerDeathTimer.c">
+      <Filter>Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -239,6 +242,9 @@
     </ClInclude>
     <ClInclude Include="FancyBackground.h">
       <Filter>Menu/UI</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerDeathTimer.h">
+      <Filter>Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

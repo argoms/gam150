@@ -17,7 +17,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Entity.h"
 #include "Graphics.h"
 #include "Physics.h"
-
+#include "PlayerDeathTimer.h"
 #define AISTACKSIZE 3
 
 typedef struct GameObject GameObject;

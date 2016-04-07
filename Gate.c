@@ -67,13 +67,21 @@ GameObject* CreateWorldGate(Vector2D position, int orientation)
 */
 void GateOpened(GameObject* DeadGate)
 {
+  //printf("itdidopenright");
   WorldGate* gateComponent = GetWorldGate(DeadGate);
   for (int i = 0; i < GATE_LENGTH; i++)
   {
-    EffectRemove(gateComponent->particleSystems[i]);
-    printf(":A %p", gateComponent->particleSystems[i]);
+    if (gateComponent->particleSystems[i])
+    {
+      //printf("ONEWASFOUND\n");
+      EffectRemove(gateComponent->particleSystems[i]);
+    }
+    //printf("ASDASDASDZDX')");
+    //printf(":A %p", gateComponent->particleSystems[i]);
     //GameObjectDestroy(&());
   }
+
+
   IsoTileSet(GetWorldGate(DeadGate)->positionX, GetWorldGate(DeadGate)->positionY, tile_floor);
   switch (GetWorldGate(DeadGate)->orientation)
   {
@@ -153,23 +161,25 @@ void GateClosed(GameObject* inst)
 */
 void GateRoomSimulate(GameObject* instance)
 {
-  if (instance->type != entity_room)
+  if (GetPlayerObject()->sprite)
   {
-    printf("You've assigned gateroomsimulate badly. Oops.");
-    abort();
+    if (instance->type != entity_room)
+    {
+      printf("You've assigned gateroomsimulate badly. Oops.");
+      abort();
+    }
+
+    int roomRadius = (GetRoomSize(instance) - 2) / 2;
+    if (PhysicsDistSQ(GetPlayerObject()->physics->position, instance->physics->position) < roomRadius * roomRadius)
+    {
+      //clear the sim function on gameobject after one execution:
+      instance->simulate = NULL;
+      CloseRoom(instance);
+      //OpenRoom(instance);
+      printf("\n \n *** \n room closed \n \n *** \n");
+    }
+
   }
-
-  int roomRadius = (GetRoomSize(instance) - 2) / 2;
-  if (PhysicsDistSQ(GetPlayerObject()->physics->position, instance->physics->position) < roomRadius * roomRadius)
-  {
-    //clear the sim function on gameobject after one execution:
-    instance->simulate = NULL;
-    CloseRoom(instance);
-    //OpenRoom(instance);
-    printf("\n \n *** \n room closed \n \n *** \n");
-  }
-
-
 }
 
 /*!

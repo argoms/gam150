@@ -578,7 +578,7 @@ void EnemyKilled(GameObject* room)
   //printf("\n thiswascalled \n \n");
   MapRoom* roomData = (MapRoom*)(room->miscData);
   roomData->numEnemies--;
-  if (roomData->numEnemies < 1)
+  if (roomData->numEnemies == 0)
   {
     OpenRoom(room);
   }

@@ -22,7 +22,10 @@ struct ParticleComponent
   int alive;
   float zVelocity;
   float zPosition;
+  float damping;
 
+
+  int ownerDead; //flag set to true once owner system is destroyed
   void(*extraBehavior)();
 };
 void ParticleSimulate(GameObject* inst);
@@ -107,8 +110,9 @@ GameObject* EffectCreate(Vector2D minVelocity, Vector2D maxVelocity, Vector2D po
   newEffectComponent->emitDelayCounter = 0;
   newEffectComponent->tint = particleTint;
 
-  newEffect->miscData = newEffectComponent;
+  
 
+  newEffectComponent->density = density;
   for (int i = 0; i < density; i++)
   {
     if (i > MAX_PARTICLES_PER_EFFECT)
@@ -118,8 +122,11 @@ GameObject* EffectCreate(Vector2D minVelocity, Vector2D maxVelocity, Vector2D po
     }
 
     newEffectComponent->particles[i] = ParticleCreate(position, newEffect, particleLifeTime);
+    //printf("asd asd %p", newEffectComponent->particles[i]);
   }
 
+  printf("asd asd %p", newEffectComponent->particles[0]);
+  newEffect->miscData = newEffectComponent;
   return newEffect;
 }
 
@@ -140,8 +147,11 @@ static GameObject* ParticleCreate(Vector2D position, GameObject* parent, float l
   newParticleComponent->extraBehavior = NULL;
   newParticleComponent->lifeCounter = 0;
   newParticleComponent->alive = particle_inactive;
+  newParticleComponent->ownerDead = 0;
 
   newParticleComponent->maxLife = lifeTime; 
+
+  return newParticle;
   
 }
 
@@ -157,10 +167,33 @@ void EffectSimulate(GameObject* inst)
 
 void EffectRemove(GameObject* inst)
 {
-  EffectSource* instComponent = (EffectSource*)(inst->miscData);
-  for (int i = 0; i < instComponent->density; i++)
+  if (!inst)
   {
-    //instComponent->particles[i]->parent = NULL;
+    printf("EffectRemove: tried to remove null object\n");
+    return;
+  }
+  //printf("AAAAA");
+  EffectSource* instComponent = (EffectSource*)(inst->miscData);
+
+
+  //printf("%i asdasdADs", instComponent->density);
+  for (int i = 0; i < instComponent->density ; i++)
+  {
+    
+    GameObject* current = ((GameObject*)instComponent->particles[i]);
+
+    
+   // ->parent = NULL;
+   // ((GameObject*)instComponent->particles[i])->simulate = NULL;
+
+    printf("%p \n", instComponent->particles[i]);
+    if ((ParticleComponent*)((current)->miscData))
+    {
+      //printf("%p \n", 0);//(ParticleComponent*)((current)->miscData));
+      //continue;
+      ((ParticleComponent*)((current)->miscData))->ownerDead = 1;
+    }
+    //printf("YUNONUL %p", ((GameObject*)instComponent->particles[i])->parent);
     //GameObjectDestroy(&(instComponent->particles[i]));
   }
   GameObjectDestroy(&inst);
@@ -168,10 +201,11 @@ void EffectRemove(GameObject* inst)
 
 void ParticleSimulate(GameObject* inst)
 {
-  
-  if (inst->parent)
+  ParticleComponent* instComponent = (ParticleComponent*)(inst->miscData);
+  //if (!instComponent->ownerDead)
   {
-    ParticleComponent* instComponent = (ParticleComponent*)(inst->miscData);
+    //printf("IMOK, %p", inst->parent);
+    //ParticleComponent* instComponent = (ParticleComponent*)(inst->miscData);
     EffectSource* ownerSystem = ((EffectSource*)(inst->parent->miscData));
 
     if (instComponent->alive == particle_active)
@@ -185,8 +219,8 @@ void ParticleSimulate(GameObject* inst)
       inst->sprite->y += instComponent->velocity.y;
       inst->sprite->offset.y += instComponent->zVelocity;
 
-      Vector2DScale(&instComponent->velocity, &instComponent->velocity, ownerSystem->damping);
-      instComponent->zVelocity *= ownerSystem->damping;
+      Vector2DScale(&instComponent->velocity, &instComponent->velocity, instComponent->damping);
+      instComponent->zVelocity *= instComponent->damping;
 
       //printf("ERM %f\n, ownerSystem->damping", ownerSystem->damping);
       GSortSprite(inst->sprite, 0);
@@ -199,13 +233,21 @@ void ParticleSimulate(GameObject* inst)
       {
         instComponent->alive = particle_inactive;
         instComponent->lifeCounter = 0.f;
+        if (instComponent->ownerDead)
+        {
+          GameObjectDestroy(&inst);
+        }
       }
     }
     else
     {
-      if (!ownerSystem)
+      //printf("AAAA");
+      if (instComponent->ownerDead)
       {
+        inst->sprite->tint.alpha = 0.f;
+        GameObjectDestroy(&inst);
         return;
+        
       }
       //go full transparent if inactive (recycle if parent system is still active)
       if (ownerSystem->state == particle_active)
@@ -234,7 +276,9 @@ void ParticleInitialize(GameObject* inst)
   ParticleComponent* particleComponent = (ParticleComponent*)(inst->miscData);
   EffectSource* effectComponent = (EffectSource*)(inst->parent->miscData);
 
+  particleComponent->ownerDead = 0;
   particleComponent->alive = particle_active;
+  particleComponent->damping = effectComponent->damping;
 
   //start pos       center of particle system      plus random number up to variance                     minus half variance to center at position
   inst->sprite->x = effectComponent->position.x + (RandFloat() * effectComponent->positionVariance.x) - (effectComponent->positionVariance.x / 2);
@@ -248,6 +292,8 @@ void ParticleInitialize(GameObject* inst)
 
   inst->sprite->offset.y = effectComponent->zPosition +(RandFloat() * effectComponent->zPositionVariance) - (effectComponent->zPositionVariance / 2);
   inst->sprite->tint = effectComponent->tint;
+
+  
 }
 
 void SetParticleAnim(Animation* input)
