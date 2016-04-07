@@ -21,6 +21,8 @@
 #include "Audio.h"
 
 #include "MapCreator.h"
+
+#include <Windows.h>
 // ---------------------------------------------------------------------------
 
 // Libraries
@@ -49,8 +51,14 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
   sysInitInfo.mCreateWindow = 1;
   sysInitInfo.mAppInstance = instanceH;
   sysInitInfo.mShow = show;
-  sysInitInfo.mWinWidth = 800;
-  sysInitInfo.mWinHeight = 600;
+
+  /*
+    Needs to start in fullscreen resolution.
+    Solution for getting screen height from http://stackoverflow.com/questions/17504954/windows-get-screen-resolution-in-c
+  */
+  sysInitInfo.mWinWidth = GetSystemMetrics(SM_CXSCREEN);// 800;
+  sysInitInfo.mWinHeight = GetSystemMetrics(SM_CYSCREEN);// 600;
+
   sysInitInfo.mCreateConsole = 0;
   sysInitInfo.mMaxFrameRate = 60;
   sysInitInfo.mpWinCallBack = NULL;//MyWinCallBack;

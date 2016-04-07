@@ -21,6 +21,7 @@ All content ? 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Audio.h"
 #include "ParticleSystems(Redo).h"
 #include "Compass.h"
+#include "FancyBackground.h"
 
 
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
@@ -68,6 +69,7 @@ void LevelLoad(int _level)
     break;
   case level_mainMenu:
     MainMenuInit();
+    Background_Init();
     Audio_PlayMusicStream("EPOCH_main_theme.ogg", 1);
     Audio_PauseMusicStream("music_sample3.ogg");
     break;
@@ -173,6 +175,8 @@ void LevelUnload()
   GameObjectFree();
   UnloadAll_PS();
   GFree();
+
+  Background_Unload();
 }
 
 
@@ -198,7 +202,7 @@ void MainMenuInit()
   pTex1 = GCreateTexture("spiderwolfbrighter.png");
   pTex2 = GCreateTexture("dffont.png");
 
-  AEGfxSetBackgroundColor(1.0f, 1.0f, 1.0f);
+  AEGfxSetBackgroundColor(0.0f, 0.0f, 0.0f);
   AEGfxSetBlendMode(AE_GFX_BM_BLEND);
   //EXAMPLE ENDS HERE
 
@@ -361,7 +365,6 @@ void MainMenuRun()
   PhysicsSimulate();
   GameObjectsPostStep();
   //debug
-
 
   if (AEInputCheckReleased(VK_SPACE))
   {
