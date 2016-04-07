@@ -196,7 +196,7 @@ void EffectRemove(GameObject* inst)
     //printf("YUNONUL %p", ((GameObject*)instComponent->particles[i])->parent);
     //GameObjectDestroy(&(instComponent->particles[i]));
   }
-  //GameObjectDestroy(&inst);
+  GameObjectDestroy(&inst);
 }
 
 void ParticleSimulate(GameObject* inst)
