@@ -70,8 +70,9 @@ void LevelLoad(int _level)
   case level_mainMenu:
     MainMenuInit();
     Background_Init();
-    Audio_PlayMusicStream("EPOCH_main_theme.ogg", 1);
-    Audio_PauseMusicStream("music_sample3.ogg");
+    if (!currentLevel == level_splashScreen)
+      Audio_PlayMusicStream("EPOCH_main_theme.ogg", 1);
+    //Audio_PauseMusicStream("music_sample3.ogg");
     break;
   case level_town:
     TownScreenInit();
@@ -84,7 +85,8 @@ void LevelLoad(int _level)
     //Audio_PauseMusicStream("EPOCH_theme_funky.ogg");
     break;
   case level_splashScreen:
-    Audio_PlayMusicStream("music_sample3.ogg", 0);
+    //Audio_PlayMusicStream("music_sample3.ogg", 0);
+    Audio_PlayMusicStream("EPOCH_main_theme.ogg", 1);
     SplashScreenInit();
     break;
   case level_winScreen:
