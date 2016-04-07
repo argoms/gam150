@@ -150,7 +150,11 @@ void PlayerSimulate()
   {
     return;
   }
-  AEGfxSetCamPosition(player->sprite->x, player->sprite->y);
+
+  if (!isDead)
+  {
+    AEGfxSetCamPosition(player->sprite->x, player->sprite->y);
+  }
 
   UpdatePlayerHealthHUD();
   attackCooldown -= frameTime;
