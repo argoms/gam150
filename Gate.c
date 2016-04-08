@@ -67,13 +67,21 @@ GameObject* CreateWorldGate(Vector2D position, int orientation)
 */
 void GateOpened(GameObject* DeadGate)
 {
+  //printf("itdidopenright");
   WorldGate* gateComponent = GetWorldGate(DeadGate);
   for (int i = 0; i < GATE_LENGTH; i++)
   {
-    EffectRemove(gateComponent->particleSystems[i]);
-    printf(":A %p", gateComponent->particleSystems[i]);
+    if (gateComponent->particleSystems[i])
+    {
+      //printf("ONEWASFOUND\n");
+      EffectRemove(gateComponent->particleSystems[i]);
+    }
+    //printf("ASDASDASDZDX')");
+    //printf(":A %p", gateComponent->particleSystems[i]);
     //GameObjectDestroy(&());
   }
+
+
   IsoTileSet(GetWorldGate(DeadGate)->positionX, GetWorldGate(DeadGate)->positionY, tile_floor);
   switch (GetWorldGate(DeadGate)->orientation)
   {
@@ -103,19 +111,21 @@ void GateClosed(GameObject* inst)
     GCreateMesh(24.f, 16.f, 1, 1),
     1);
   SetParticleAnim(particle);
+
+  Vector2D particleEffectRadius = Vec2(64, 64);
   
   gateComponent->particleSystems[0] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&inst->physics->position), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
-    Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+    particleEffectRadius, 0, GTint(1, 1, 1, 0.1f));
   if (gateComponent->orientation == gate_horizontal)
   {
     Vector2D offsetPos = inst->physics->position;
     ++offsetPos.x;
     gateComponent->particleSystems[1] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&offsetPos), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
-      Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+      particleEffectRadius, 0, GTint(1, 1, 1, 0.1f));
     offsetPos.x -= 2;
 
     gateComponent->particleSystems[2] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&offsetPos), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
-      Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+      particleEffectRadius, 0, GTint(1, 1, 1, 0.1f));
   }
 
   else if (gateComponent->orientation == gate_vertical)
@@ -123,11 +133,11 @@ void GateClosed(GameObject* inst)
     Vector2D offsetPos = inst->physics->position;
     ++offsetPos.y;
     gateComponent->particleSystems[1] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&offsetPos), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
-      Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+      particleEffectRadius, 0, GTint(1, 1, 1, 0.1f));
     offsetPos.y -= 2;
 
     gateComponent->particleSystems[2] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&offsetPos), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
-      Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+      particleEffectRadius, 0, GTint(1, 1, 1, 0.1f));
   }
 }
 
@@ -153,23 +163,25 @@ void GateClosed(GameObject* inst)
 */
 void GateRoomSimulate(GameObject* instance)
 {
-  if (instance->type != entity_room)
+  if (GetPlayerObject()->sprite)
   {
-    printf("You've assigned gateroomsimulate badly. Oops.");
-    abort();
+    if (instance->type != entity_room)
+    {
+      printf("You've assigned gateroomsimulate badly. Oops.");
+      abort();
+    }
+
+    int roomRadius = (GetRoomSize(instance) - 2) / 2;
+    if (PhysicsDistSQ(GetPlayerObject()->physics->position, instance->physics->position) < roomRadius * roomRadius)
+    {
+      //clear the sim function on gameobject after one execution:
+      instance->simulate = NULL;
+      CloseRoom(instance);
+      //OpenRoom(instance);
+      printf("\n \n *** \n room closed \n \n *** \n");
+    }
+
   }
-
-  int roomRadius = (GetRoomSize(instance) - 2) / 2;
-  if (PhysicsDistSQ(GetPlayerObject()->physics->position, instance->physics->position) < roomRadius * roomRadius)
-  {
-    //clear the sim function on gameobject after one execution:
-    instance->simulate = NULL;
-    CloseRoom(instance);
-    //OpenRoom(instance);
-    printf("\n \n *** \n room closed \n \n *** \n");
-  }
-
-
 }
 
 /*!

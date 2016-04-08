@@ -21,6 +21,14 @@ enum ParticleStates
   particle_inactive
 };
 
+/*
+
+*/
+enum ParticleBehaviors
+{
+  particleBehavior_linearAlpha, //decreases alpha of particle by constant
+};
+
 struct EffectSource
 {
   GameObject* particles[MAX_PARTICLES_PER_EFFECT];
@@ -40,6 +48,8 @@ struct EffectSource
   int density;
   int state;
 
+  float lifetime;
+
   Tint tint;
 };
 
@@ -50,3 +60,5 @@ GameObject* EffectCreate(Vector2D minVelocity, Vector2D maxVelocity, Vector2D po
   float zPositionVariance, Tint particleTint);
 void SetParticleAnim(Animation* input); //temporary debug for now;
 void EffectRemove(GameObject* inst);
+void ParticleSetLifetime(GameObject* inst, float life);
+void ParticleApplyBehavior(int behavior, GameObject* inst);
