@@ -1,3 +1,4 @@
+#pragma once
 #include "GameObject.h"
 
 enum directions
@@ -15,6 +16,6 @@ enum actions
   ENEMY_ATTACK = 64
 };
 
-void EnemyAnimationInitialize(GameObject* enemy);
+void EnemyAnimationInitialize();
 
 void EnemyAnimationStateManager(GameObject* enemy);
