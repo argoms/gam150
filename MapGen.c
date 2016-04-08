@@ -76,17 +76,17 @@ static Animation* GateAnimationVertical;
 void GenerateMap(IsoMap* inputMap)
 {
   //AEGfxGetCamPosition
-  printf("A");
+  //printf("A");
   GateAnimationHorizontal = GCreateAnimation(1,
     GCreateTexture("animations/world/gateHorizontal.png"),
     GCreateMesh(256.f, 256.f, 1, 1),
     1);
-  printf("B");
+  //printf("B");
   GateAnimationVertical = GCreateAnimation(1,
     GCreateTexture("animations/world/gateVertical.png"),
     GCreateMesh(256.f, 256.f, 1, 1),
     1);
-  printf("C");
+  //printf("C");
   int mapHeight = inputMap->mapHeight;
   int mapWidth = inputMap->mapWidth;
   int i = 0;

@@ -209,3 +209,18 @@ void TextStringAddOffset(TextString* _textString, Vector2D offset)
     textChar = textChar->next;
   }
 }
+
+void TextStringSetTint(TextString* _textString, Tint newTint)
+{
+  TextChar* textChar = _textString->first;
+  int i = 0;
+  // _textString->x = _x;
+  // _textString->y = _y;
+
+  while (textChar)
+  {
+    textChar->sprite->tint = newTint;
+    i++;
+    textChar = textChar->next;
+  }
+}

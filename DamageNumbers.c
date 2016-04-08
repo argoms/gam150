@@ -89,8 +89,10 @@ void DamageTextSimulate(GameObject* instance)
 {
   //printf("3TEXTY5YOU");
   DamageText* instanceData = (DamageText*)(instance->miscData);
-  TextStringAddOffset(instanceData->text, Vec2(0, 1));
+  TextStringAddOffset(instanceData->text, Vec2(0, instanceData->life * 2));
+  TextStringSetTint(instanceData->text, GTint(1, 1, 1, instanceData->life * 2));
   
+
   instanceData->life -= frameTime;
   if (instanceData->life < 0)
   {

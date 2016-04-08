@@ -252,7 +252,7 @@ void PlayerSimulate()
     }
     else
     {
-      attackDamage = 10;
+      attackDamage = 1;
     }
   }
 
