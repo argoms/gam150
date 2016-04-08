@@ -21,9 +21,11 @@ static float time = 2;
 static Sprite* splashScreen;
 void SplashScreenInit()
 {
+  float screenWidth = AEGfxGetWinMaxX() - AEGfxGetWinMinX();
+  float screenHeight = AEGfxGetWinMaxY() - AEGfxGetWinMinY();
   TextInit();
-  splashScreen = GCreateSprite(0, 0, GCreateAnimation(1, GCreateTexture("splash.png"), GCreateMesh(800, 600, 1, 1), 1), 1);
-  TextCreateString("", -300, -50);
+  splashScreen = GCreateSprite(0, 0, GCreateAnimation(1, GCreateTexture("splash.png"), GCreateMesh(screenWidth, screenHeight, 1, 1), 1), 1);
+  //TextCreateString("", -300, -50);
   //printf("AAA");
   printf("AAA");
   
