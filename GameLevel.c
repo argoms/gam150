@@ -21,6 +21,8 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "PlayerEntity.h"
 #include "Hazard.h"
 #include "Button.h"
+#include "EnemyAnimations.h"
+
 //#include "ParticleSystems(Redo).h"
 #include "MyRandom.h"
 #include "Compass.h"
