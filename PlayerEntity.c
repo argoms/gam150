@@ -561,8 +561,15 @@ void RestoreHealth(GameObject* obj)
 */
 void OnPlayerKilled(void)
 {
+  //do nothing if already dead
+  if (isDead)
+  {
+    return;
+  }
+
   printf("\n***\n***\nYOU DIED SO NOW YOU'RE IN MAIN MENU WOOO\n***\n***\n");
   player->sprite->tint.alpha = 0;
+  Audio_PlaySoundSample("death.ogg", 0);
   //PhysicsRemoveObject(&player->physics);
   DeathTimerStart(player->physics->position);
   isDead = 1;
