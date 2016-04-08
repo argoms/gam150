@@ -70,15 +70,12 @@ static AnimationDefinition animationChargetato[] =
   { ENEMY_ATTACK + ENEMY_UP + ENEMY_RIGHT, "animations/chargertato/Slam14.png",  NULL }
 };
 
-void EnemyAnimationInitialize(GameObject* enemy)
+void EnemyAnimationInitialize()
 {
-  EnemyContainer* enemyContainer = enemy->miscData;
-
   int walkFrames;
   int idleFrames;
   int attackFrames;
 
-  if (enemyContainer->enemyType == ENEMY_TYPE_MELEE || enemyContainer->enemyType == ENEMY_TYPE_RANGED)
   {
     walkFrames = 16;
     idleFrames = 1;
@@ -112,11 +109,8 @@ void EnemyAnimationInitialize(GameObject* enemy)
       }
       animationSpiderWolf[i].animation = GCreateAnimation(frames, GCreateTexture(animationSpiderWolf[i].filename), mesh, 1);
     }
-
-    enemy->sprite->animation = animationSpiderWolf[8].animation;
-    enemy->sprite->offset.y = 60.0f;
   }
-  if (enemyContainer->enemyType == ENEMY_TYPE_MELEE_BIG)
+
   {
     walkFrames = 17;
     idleFrames = 1;
@@ -152,9 +146,6 @@ void EnemyAnimationInitialize(GameObject* enemy)
         animationChargetato[i].animation = GCreateAnimation(frames, GCreateTexture(animationChargetato[i].filename), mesh, attackFrames);
       }
     }
-
-    enemy->sprite->animation = animationChargetato[8].animation;
-    enemy->sprite->offset.y = 150.0f;
   }
 }
 

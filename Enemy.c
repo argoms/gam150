@@ -242,8 +242,6 @@ GameObject* EnemySpawn(float x, float y, int enemyType, GameObject* player)
 
   newEnemy->entity->health = health;
 
-  EnemyAnimationInitialize(newEnemy);
-
   return newEnemy;
 }
 
