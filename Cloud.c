@@ -17,6 +17,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 
 typedef struct Cloud Cloud;
 static float CLOUD_MAX_SPEED = 0.25;
+static float CLOUD_DEPTH_VARIANCE = 200;
 static float DEPTH = 0.5; //used for parallax calculations
 struct Cloud
 {
@@ -44,7 +45,7 @@ void CloudInit(GameObject* instance)
   instance->simulate = &CloudSimulate;
 
   //set offsets so clouds will render below everything else:
-   instance->sprite->y += 5000;
+   instance->sprite->y += 5000 + RandFloat() * CLOUD_DEPTH_VARIANCE;
   instance->sprite->offset.y = -5000;
 
   

@@ -22,12 +22,13 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "MapGen.h"
 #include "conversions.h"
 #include "EnvironmentalEffects.h"
+#include "EnvironmentAssets.h"
 
 //private info 
 #define NUM_ROOMS 12
 
 //Think of this as MAX room size, not just room size.
-static int ROOM_SIZE = 9;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/
+static int ROOM_SIZE = 15;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/
 static int MAP_SEED = 32;
 
 
@@ -75,6 +76,7 @@ static Animation* GateAnimationVertical;
 //implementation:
 void GenerateMap(IsoMap* inputMap)
 {
+  EnvironmentAssetsInitialize();
   //AEGfxGetCamPosition
   //printf("A");
   GateAnimationHorizontal = GCreateAnimation(1,

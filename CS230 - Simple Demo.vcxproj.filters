@@ -123,6 +123,9 @@
     <ClCompile Include="PlayerDeathTimer.c">
       <Filter>Player</Filter>
     </ClCompile>
+    <ClCompile Include="EnvironmentAssets.c">
+      <Filter>MapGen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -245,6 +248,9 @@
     </ClInclude>
     <ClInclude Include="PlayerDeathTimer.h">
       <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentAssets.h">
+      <Filter>MapGen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

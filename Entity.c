@@ -14,6 +14,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Dodge.h"
 #include "MapGen.h"
 #include "EnvironmentalEffects.h"
+#include "EnvironmentAssets.h"
 
 #define BREIF_INVULNERABILITY_ENABLED  1    /* allow breif invulnerability after a hit    */
 #define BREIF_INVULNERABILITY_DISABLED 0    /* disallow brief invunerability after a hit  */
@@ -51,14 +52,11 @@ void EntityTakeDamage(Entity** _entity, int _damage)
       (*_entity)->health -= _damage;
       (*_entity)->wasDamaged = 1; // just got damaged
 
-      Animation* particle = GCreateAnimation(1,
-        GCreateTexture("animations/world/cloudTemplate.png"),
-        GCreateMesh(12.f, 8.f, 1, 1),
-        1);
-      SetParticleAnim(particle);
 
+      //make a particle effect burst thingy
       Vector2D particleEffectRadius = Vec2(64, 64);
       GameObject* inst = (*_entity)->owner;
+      SetParticleAnim(GetAsset_Animation(asset_particleHitEnemy));
       GameObject* particleEffect =  EffectCreate(Vec2(-10.f, -5.f), Vec2(20, 10), IsoWorldToScreen(&inst->physics->position), 
         16, -1.0f, Vec2(-4, 8), 0.9f, 0.5f, 32, particleEffectRadius, 0, GTint(1, 1, 1, 1.f));
       ParticleSetLifetime(particleEffect, 0.1f);

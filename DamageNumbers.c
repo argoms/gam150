@@ -40,8 +40,8 @@ struct DamageText
 GameObject* DamageTextCreate(Vector2D position, int damage)
 {
   //create a buffer and write the damage values to it
-  char buffer[10];
-  sprintf_s(buffer, 10, "%d", damage);
+  //char buffer[10];
+  //sprintf_s(buffer, 10, "%d", damage);
 
   //set up gameobject with lots of nulls
   GameObject* damageText = GameObjectCreate(NULL, NULL, NULL, entity_damageText);
@@ -70,8 +70,6 @@ GameObject* DamageTextCreate(Vector2D position, int damage)
   }
 
   newObjectData->text = TextCreateString(hpstring, position.x, position.y);
-
-
 
   newObjectData->life = 1;
   newObjectData->damage = damage;

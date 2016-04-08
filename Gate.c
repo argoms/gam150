@@ -18,6 +18,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Text.h"
 #include <stdlib.h>
 #include "EnvironmentalEffects.h"
+#include "EnvironmentAssets.h"
 
 static float GATE_FADE_DIST = 5.f;
 
@@ -50,6 +51,7 @@ GameObject* CreateWorldGate(Vector2D position, int orientation)
   gateData->positionX = position.x;
   gateData->positionY = position.y;
   gateData->orientation = orientation;
+  gateData->status = gate_open;
 
   for (int i = 0; i < GATE_LENGTH; i++)
   {
@@ -70,6 +72,7 @@ GameObject* CreateWorldGate(Vector2D position, int orientation)
 void GateOpened(GameObject* DeadGate)
 {
 
+  SetParticleAnim(GetAsset_Animation(asset_particleGate));
   Vector2D particleEffectRadius = Vec2(64, 64);
   GameObject* particleEffect = EffectCreate(Vec2(-10.f, -5.f), Vec2(20, 10), IsoWorldToScreen(&DeadGate->physics->position),
     16, -1.0f, Vec2(-4, 8), 0.9f, 0.5f, 32, particleEffectRadius, 0, GTint(1, 1, 1, 1.f));
@@ -117,10 +120,7 @@ void GateClosed(GameObject* inst)
   gateComponent->status = gate_closed;
  // printf("Gatedim: %f, %f", gateDimensions.x, gateDimensions.y);
 
-  Animation* particle = GCreateAnimation(1,
-    GCreateTexture("animations/world/cloudTemplate.png"),
-    GCreateMesh(24.f, 16.f, 1, 1),
-    1);
+  Animation* particle = GetAsset_Animation(asset_particleGate);
   SetParticleAnim(particle);
 
   Vector2D particleEffectRadius = Vec2(64, 64);
