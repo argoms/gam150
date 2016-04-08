@@ -95,7 +95,7 @@ void ColorFilter_Draw(void)
 
   AEGfxSetTransparency(1);
 
-  AEGfxSetBlendMode(AE_GFX_BM_ADD);
+  AEGfxSetBlendMode(AE_GFX_BM_MULTIPLY);
 
   AEGfxMeshDraw(Mesh, AE_GFX_MDM_TRIANGLES);
 }
