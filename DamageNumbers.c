@@ -55,7 +55,24 @@ GameObject* DamageTextCreate(Vector2D position, int damage)
 
   DamageText* newObjectData = (DamageText*)(damageText->miscData);
   position = IsoWorldToScreen(&position);
-  newObjectData->text = TextCreateString(buffer, position.x, position.y);
+
+  //code shamlessly ripped from playerHUD
+  char hpstring[20] = "            ";
+  int tempHP = damage;
+
+  int count = 0;
+
+  while (tempHP > 0 && count < 10) 
+  {
+    count++;
+    hpstring[count] = 3;
+    tempHP -= 1;
+  }
+
+  newObjectData->text = TextCreateString(hpstring, position.x, position.y);
+
+
+
   newObjectData->life = 1;
   newObjectData->damage = damage;
 

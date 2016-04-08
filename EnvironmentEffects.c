@@ -339,7 +339,7 @@ uses extrainfo1 for delta value
 */
 void ParticleBehavior_FadeLinear(GameObject* inst)
 {
-  printf("AAA");
+  //printf("AAA");
   //return;
   ParticleComponent* particleComponent = (ParticleComponent*)(inst->miscData);
   inst->sprite->tint.alpha -= 0.05f;// particleComponent->extrainfo1;
@@ -369,7 +369,7 @@ void ParticleApplyBehavior(int behavior, GameObject* inst)
   {
     GameObject* pInst = effectComponent->particles[i];
     ParticleComponent* particleComponent = (ParticleComponent*)(pInst->miscData);
-    printf("%p \n", pInst);
+    //printf("%p \n", pInst);
     
     particleComponent->extraBehavior = &ParticleBehavior_FadeLinear;
   }
