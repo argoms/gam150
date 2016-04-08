@@ -72,6 +72,7 @@ TextString* TextCreateString(char* _string, float _x, float _y)
     i++;
   }
 
+  TextStringSetTint(result, GTint(0, 0, 0, 1));
   return result;
 }
 
@@ -117,6 +118,7 @@ TextString* TextCreateHUDString(char* _string, float _x, float _y)
     i++;
   }
 
+  TextStringSetTint(result, GTint(0, 0, 0, 1));
   return result;
 }
 
@@ -219,7 +221,14 @@ void TextStringSetTint(TextString* _textString, Tint newTint)
 
   while (textChar)
   {
-    textChar->sprite->tint = newTint;
+    if (textChar->value != 3) //hearts are special characters only affected by alpha, others just take the tint
+    {
+      textChar->sprite->tint = newTint;
+    }
+    else
+    {
+      textChar->sprite->tint = GTint(1, 1, 1, newTint.alpha);
+    }
     i++;
     textChar = textChar->next;
   }
