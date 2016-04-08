@@ -111,19 +111,21 @@ void GateClosed(GameObject* inst)
     GCreateMesh(24.f, 16.f, 1, 1),
     1);
   SetParticleAnim(particle);
+
+  Vector2D particleEffectRadius = Vec2(64, 64);
   
   gateComponent->particleSystems[0] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&inst->physics->position), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
-    Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+    particleEffectRadius, 0, GTint(1, 1, 1, 0.1f));
   if (gateComponent->orientation == gate_horizontal)
   {
     Vector2D offsetPos = inst->physics->position;
     ++offsetPos.x;
     gateComponent->particleSystems[1] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&offsetPos), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
-      Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+      particleEffectRadius, 0, GTint(1, 1, 1, 0.1f));
     offsetPos.x -= 2;
 
     gateComponent->particleSystems[2] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&offsetPos), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
-      Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+      particleEffectRadius, 0, GTint(1, 1, 1, 0.1f));
   }
 
   else if (gateComponent->orientation == gate_vertical)
@@ -131,11 +133,11 @@ void GateClosed(GameObject* inst)
     Vector2D offsetPos = inst->physics->position;
     ++offsetPos.y;
     gateComponent->particleSystems[1] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&offsetPos), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
-      Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+      particleEffectRadius, 0, GTint(1, 1, 1, 0.1f));
     offsetPos.y -= 2;
 
     gateComponent->particleSystems[2] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&offsetPos), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
-      Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+      particleEffectRadius, 0, GTint(1, 1, 1, 0.1f));
   }
 }
 

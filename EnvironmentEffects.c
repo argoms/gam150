@@ -106,6 +106,8 @@ GameObject* EffectCreate(Vector2D minVelocity, Vector2D maxVelocity, Vector2D po
   newEffectComponent->zPositionVariance = zPositionVariance;
   newEffectComponent->positionVariance = positionVariance;
 
+  printf("%f %f \n", newEffectComponent->positionVariance.x, newEffectComponent->positionVariance.y);
+
   newEffectComponent->emitDelay = emitDelay;
   newEffectComponent->emitDelayCounter = 0;
   newEffectComponent->tint = particleTint;
