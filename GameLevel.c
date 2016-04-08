@@ -21,6 +21,8 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "PlayerEntity.h"
 #include "Hazard.h"
 #include "Button.h"
+#include "EnemyAnimations.h"
+
 //#include "ParticleSystems(Redo).h"
 #include "MyRandom.h"
 #include "Compass.h"
@@ -47,6 +49,7 @@ void GameLevelInit(void)
 {
   EnemyImportInfo(ENEMY_TYPE_MELEE, "EnemyMelee.txt");
   EnemyImportInfo(ENEMY_TYPE_MELEE_BIG, "EnemyMeleeBig.txt");
+  EnemyAnimationInitialize();
   //EnemyImportInfo(ENEMY_TYPE_RANGED, "EnemyRanged.txt");
   Entity* playerEntity;
 	int i;
