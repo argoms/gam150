@@ -11,7 +11,8 @@
 static Animation* ParticleAnimation;
 
 
-
+//internal value: particle system assigned lifetime lower than this number will count as immortal
+static float IMMORTAL_PARTICLE_LIFETIME = -5.f;
 
 struct ParticleComponent
 {
@@ -24,6 +25,10 @@ struct ParticleComponent
   float zPosition;
   float damping;
 
+  float extrainfo1;
+  float extrainfo2;
+  int extrainfo3;
+
 
   int ownerDead; //flag set to true once owner system is destroyed
   void(*extraBehavior)();
@@ -34,6 +39,7 @@ void EffectSimulate(GameObject* inst);
 void ParticleSimulate(GameObject* inst);
 void ParticleInitialize(GameObject* inst);
 static GameObject* ParticleCreate(Vector2D position, GameObject* parent, float lifeTime);
+void ParticleBehavior_FadeLinear(GameObject* inst);
 
 
 
@@ -106,11 +112,13 @@ GameObject* EffectCreate(Vector2D minVelocity, Vector2D maxVelocity, Vector2D po
   newEffectComponent->zPositionVariance = zPositionVariance;
   newEffectComponent->positionVariance = positionVariance;
 
-  printf("%f %f \n", newEffectComponent->positionVariance.x, newEffectComponent->positionVariance.y);
+  //printf("%f %f \n", newEffectComponent->positionVariance.x, newEffectComponent->positionVariance.y);
 
   newEffectComponent->emitDelay = emitDelay;
   newEffectComponent->emitDelayCounter = 0;
   newEffectComponent->tint = particleTint;
+
+  newEffectComponent->lifetime = IMMORTAL_PARTICLE_LIFETIME - 1;
 
   
 
@@ -152,6 +160,7 @@ static GameObject* ParticleCreate(Vector2D position, GameObject* parent, float l
   newParticleComponent->ownerDead = 0;
 
   newParticleComponent->maxLife = lifeTime; 
+  
 
   return newParticle;
   
@@ -161,6 +170,14 @@ void EffectSimulate(GameObject* inst)
 {
   EffectSource* instComponent = (EffectSource*)(inst->miscData);
   instComponent->emitDelayCounter += AEFrameRateControllerGetFrameTime();
+
+
+  instComponent->lifetime -= AEFrameRateControllerGetFrameTime();
+  if (instComponent->lifetime < 0 && instComponent->lifetime > IMMORTAL_PARTICLE_LIFETIME)
+  {
+    EffectRemove(inst);
+  }
+
   //for (int i = 0; i < instComponent->density; i++)
   //{
   //  ParticleSimulate(instComponent->particles[i]);
@@ -188,7 +205,7 @@ void EffectRemove(GameObject* inst)
    // ->parent = NULL;
    // ((GameObject*)instComponent->particles[i])->simulate = NULL;
 
-    printf("%p \n", instComponent->particles[i]);
+    //printf("%p \n", instComponent->particles[i]);
     if ((ParticleComponent*)((current)->miscData))
     {
       //printf("%p \n", 0);//(ParticleComponent*)((current)->miscData));
@@ -220,6 +237,12 @@ void ParticleSimulate(GameObject* inst)
       inst->sprite->x += instComponent->velocity.x;
       inst->sprite->y += instComponent->velocity.y;
       inst->sprite->offset.y += instComponent->zVelocity;
+      
+      //ParticleBehavior_FadeLinear(inst);
+      if (instComponent->extraBehavior)
+      {
+        instComponent->extraBehavior(inst);
+      }
 
       Vector2DScale(&instComponent->velocity, &instComponent->velocity, instComponent->damping);
       instComponent->zVelocity *= instComponent->damping;
@@ -301,4 +324,53 @@ void ParticleInitialize(GameObject* inst)
 void SetParticleAnim(Animation* input)
 {
   ParticleAnimation = input;
+}
+
+void ParticleSetLifetime(GameObject* inst, float life)
+{
+  EffectSource* instComponent = (EffectSource*)(inst->miscData);
+  instComponent->lifetime = life;
+}
+
+/*!
+\brief Particle behavior for a linear fade (alpha reduces at a fixed rate)
+
+uses extrainfo1 for delta value
+*/
+void ParticleBehavior_FadeLinear(GameObject* inst)
+{
+  printf("AAA");
+  //return;
+  ParticleComponent* particleComponent = (ParticleComponent*)(inst->miscData);
+  inst->sprite->tint.alpha -= 0.05f;// particleComponent->extrainfo1;
+}
+
+/*!
+applies a particle behavior
+*/
+void ParticleApplyBehavior(int behavior, GameObject* inst)
+{
+  void(*behaviorPointer)();
+  EffectSource* effectComponent = (EffectSource*)(inst->miscData);;
+
+
+  switch (behavior)
+  {
+  case particleBehavior_linearAlpha:
+    behaviorPointer = &ParticleBehavior_FadeLinear;
+    break;
+  default:
+    printf("ApplyParticleBehavior error: invalid particle input %i given \n", behavior);
+    break;
+  }
+
+
+  for (int i = 0; i < effectComponent->density - 1; i++)
+  {
+    GameObject* pInst = effectComponent->particles[i];
+    ParticleComponent* particleComponent = (ParticleComponent*)(pInst->miscData);
+    printf("%p \n", pInst);
+    
+    particleComponent->extraBehavior = &ParticleBehavior_FadeLinear;
+  }
 }
