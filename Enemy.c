@@ -24,7 +24,6 @@ static EnemyInfo enemyInfo[] =
 //call once
 void EnemyImportInfo(int enemyType, const char *file)
 {
-  //GameObject* newEnemy;
   FILE *infile = fopen(file, "r");
   if (infile)
   {
@@ -52,41 +51,6 @@ void EnemyImportInfo(int enemyType, const char *file)
       //Animation* enemyAnimation; /* Forward declaration for the enemy animation */
 
       fscanf(infile, "ENEMY - %i\n", &enemyTypeNumber);
-      /*
-      // Handles unchangable enemy information
-      // Each enemy will only have one animation set specific to it anyways
-      switch (enemyType)
-      {
-      case 1:
-        enemyType = ENEMY_TYPE_MELEE;
-        // REPLACE THE BELOW WITH PROPER ENEMY SPRITE/ANIMATION INFORMATION
-        enemyAnimation = GCreateAnimation(1,
-          GCreateTexture("isotilePlaceholder1.png"),
-          GCreateMesh(128.f, 64.f, 1, 1),
-          1);
-        break;
-      case 2:
-        enemyType = ENEMY_TYPE_MELEE_BIG;
-        enemyAnimation = GCreateAnimation(1,
-          GCreateTexture("isotilePlaceholder1.png"),
-          GCreateMesh(128.f, 64.f, 1, 1),
-          1);
-        break;
-      case 3:
-        enemyType = ENEMY_TYPE_MELEE_CHARGE;
-        break;
-      case 4:
-        enemyType = ENEMY_TYPE_RANGED;
-        enemyAnimation = GCreateAnimation(1,
-          GCreateTexture("isotilePlaceholder1.png"),
-          GCreateMesh(128.f, 64.f, 1, 1),
-          1);
-        break;
-      case 5:
-        enemyType = ENEMY_TYPE_HEALER;
-        break;
-      }
-      */
       fscanf(infile, "  SIZE     - %f\n", &size);
       fscanf(infile, "  HEALTH   - %i\n", &health);
 
@@ -242,7 +206,7 @@ GameObject* EnemySpawn(float x, float y, int enemyType, GameObject* player)
 
   newEnemy->entity->health = health;
 
-  EnemyAnimationInitialize(newEnemy);
+  //EnemyAnimationInitialize(newEnemy);
 
   return newEnemy;
 }
@@ -285,7 +249,7 @@ void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject)
   if (_thisObject->type == entity_enemy && _otherObject->type == entity_player)
   {
     EnemyKnockBack(_thisObject, _otherObject);
-    EntityTakeDamage(&(_otherObject->entity), 2);
+    //EntityTakeDamage(&(_otherObject->entity), 2);
   }
 }
 

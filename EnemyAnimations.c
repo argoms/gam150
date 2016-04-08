@@ -1,4 +1,3 @@
-#pragma once
 #include "EnemyAnimations.h"
 #include "Graphics.h"
 #include "AEEngine.h"
@@ -70,15 +69,15 @@ static AnimationDefinition animationChargetato[] =
   { ENEMY_ATTACK + ENEMY_UP + ENEMY_RIGHT, "animations/chargertato/Slam14.png",  NULL }
 };
 
-void EnemyAnimationInitialize(GameObject* enemy)
+void EnemyAnimationInitialize()//(GameObject* enemy)
 {
-  EnemyContainer* enemyContainer = enemy->miscData;
+  //EnemyContainer* enemyContainer = enemy->miscData;
 
   int walkFrames;
   int idleFrames;
   int attackFrames;
 
-  if (enemyContainer->enemyType == ENEMY_TYPE_MELEE || enemyContainer->enemyType == ENEMY_TYPE_RANGED)
+  //if (enemyContainer->enemyType == ENEMY_TYPE_MELEE || enemyContainer->enemyType == ENEMY_TYPE_RANGED)
   {
     walkFrames = 16;
     idleFrames = 1;
@@ -113,10 +112,10 @@ void EnemyAnimationInitialize(GameObject* enemy)
       animationSpiderWolf[i].animation = GCreateAnimation(frames, GCreateTexture(animationSpiderWolf[i].filename), mesh, 1);
     }
 
-    enemy->sprite->animation = animationSpiderWolf[8].animation;
-    enemy->sprite->offset.y = 60.0f;
+    //enemy->sprite->animation = animationSpiderWolf[8].animation;
+    //enemy->sprite->offset.y = 60.0f;
   }
-  if (enemyContainer->enemyType == ENEMY_TYPE_MELEE_BIG)
+  //if (enemyContainer->enemyType == ENEMY_TYPE_MELEE_BIG)
   {
     walkFrames = 17;
     idleFrames = 1;
@@ -153,8 +152,8 @@ void EnemyAnimationInitialize(GameObject* enemy)
       }
     }
 
-    enemy->sprite->animation = animationChargetato[8].animation;
-    enemy->sprite->offset.y = 150.0f;
+    //enemy->sprite->animation = animationChargetato[8].animation;
+    //enemy->sprite->offset.y = 150.0f;
   }
 }
 
