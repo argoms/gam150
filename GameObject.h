@@ -131,7 +131,7 @@ struct GameObject
   void* miscData;   /**< void pointer to whatever we want*/
   float projectileLifeTime;
 
-  GameObject* parent;
+  GameObject* parent; /* In case you want to make a gameobject a child of another gameobject */ 
 };
 
 

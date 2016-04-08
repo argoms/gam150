@@ -52,41 +52,6 @@ void EnemyImportInfo(int enemyType, const char *file)
                                   //Animation* enemyAnimation; /* Forward declaration for the enemy animation */
 
       fscanf(infile, "ENEMY - %i\n", &enemyTypeNumber);
-      /*
-      // Handles unchangable enemy information
-      // Each enemy will only have one animation set specific to it anyways
-      switch (enemyType)
-      {
-      case 1:
-      enemyType = ENEMY_TYPE_MELEE;
-      // REPLACE THE BELOW WITH PROPER ENEMY SPRITE/ANIMATION INFORMATION
-      enemyAnimation = GCreateAnimation(1,
-      GCreateTexture("isotilePlaceholder1.png"),
-      GCreateMesh(128.f, 64.f, 1, 1),
-      1);
-      break;
-      case 2:
-      enemyType = ENEMY_TYPE_MELEE_BIG;
-      enemyAnimation = GCreateAnimation(1,
-      GCreateTexture("isotilePlaceholder1.png"),
-      GCreateMesh(128.f, 64.f, 1, 1),
-      1);
-      break;
-      case 3:
-      enemyType = ENEMY_TYPE_MELEE_CHARGE;
-      break;
-      case 4:
-      enemyType = ENEMY_TYPE_RANGED;
-      enemyAnimation = GCreateAnimation(1,
-      GCreateTexture("isotilePlaceholder1.png"),
-      GCreateMesh(128.f, 64.f, 1, 1),
-      1);
-      break;
-      case 5:
-      enemyType = ENEMY_TYPE_HEALER;
-      break;
-      }
-      */
       fscanf(infile, "  SIZE     - %f\n", &size);
       fscanf(infile, "  HEALTH   - %i\n", &health);
 
@@ -100,7 +65,7 @@ void EnemyImportInfo(int enemyType, const char *file)
       fscanf(infile, "  ENEMY ATTACK WINDUP          - %f\n", &attackWindup);
       fscanf(infile, "  ENEMY ATTACK WINDUP LENGTH   - %f\n", &attackWindupLength);
       fscanf(infile, "  ENEMY ATTACK RANGE           - %f\n", &attackRange);
-      fscanf(infile, "  ENEMY ATTACK DAMAGE          - %f\n", &attackDamage);
+      fscanf(infile, "  ENEMY ATTACK DAMAGE          - %i\n", &attackDamage);
       fscanf(infile, "  ENEMY ATTACK KNOCKBACK FORCE - %f\n", &attackKnockback);
       fscanf(infile, "  ENEMY PROJECTILE SPEED       - %f\n", &enemyProjectileSpeed);
 
@@ -126,7 +91,7 @@ void EnemyImportInfo(int enemyType, const char *file)
           enemyInfo[i].enemyProjectileSpeed = enemyProjectileSpeed;
         }
       }
-      //printf("%f                      ------\n", enemyInfo[0].chaseSpeed);
+//      printf("%i                      ------\n", enemyInfo[0].attackDamage);
     }
     fclose(infile);
     printf("CLOSED FILE\n");
@@ -283,7 +248,7 @@ void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject)
   if (_thisObject->type == entity_enemy && _otherObject->type == entity_player)
   {
     EnemyKnockBack(_thisObject, _otherObject);
-    EntityTakeDamage(&(_otherObject->entity), 2);
+    //EntityTakeDamage(&(_otherObject->entity), 2);
   }
 }
 
@@ -343,6 +308,8 @@ void EnemyMeleeAttack(GameObject* _thisObject, Vector2D attackDirection)
   tracer->projectileLifeTime = 0;
   tracer->physics->onCollision = &EnemyTracerProjectileCollision;
   tracer->parent = _thisObject;
+  EnemyContainer* enemyContainer = tracer->parent->miscData;
+  printf("%i", enemyContainer->attackDamage);
 }
 
 void EnemyRangedAttack(GameObject* _thisObject, Vector2D attackDirection, float projectileSpeed)
@@ -358,14 +325,15 @@ void EnemyRangedAttack(GameObject* _thisObject, Vector2D attackDirection, float 
   tracer->simulate = &EnemyTracerSimulate;
   tracer->physics->onCollision = &EnemyTracerProjectileCollision;
   tracer->parent = _thisObject;
+  
 }
 
 void EnemyTracerProjectileCollision(GameObject* _thisObject, GameObject* _otherObject)
 {
   if (_otherObject && _otherObject->type == entity_player && (_otherObject->entity && _otherObject->entity->canBeDamaged))
   {
-    //EnemyContainer* enemyContainer = _thisObject->parent->miscData;
-    EntityTakeDamage(&_otherObject->entity, 10);
+    EnemyContainer* enemyContainer = _thisObject->parent->miscData;
+    EntityTakeDamage(&_otherObject->entity, enemyContainer->attackDamage);
     GameObjectDestroy(&_thisObject);
   }
 }
