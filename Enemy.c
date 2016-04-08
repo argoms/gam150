@@ -100,7 +100,7 @@ void EnemyImportInfo(int enemyType, const char *file)
       fscanf(infile, "  ENEMY ATTACK WINDUP          - %f\n", &attackWindup);
       fscanf(infile, "  ENEMY ATTACK WINDUP LENGTH   - %f\n", &attackWindupLength);
       fscanf(infile, "  ENEMY ATTACK RANGE           - %f\n", &attackRange);
-      fscanf(infile, "  ENEMY ATTACK DAMAGE          - %f\n", &attackDamage);
+      fscanf(infile, "  ENEMY ATTACK DAMAGE          - %i\n", &attackDamage);
       fscanf(infile, "  ENEMY ATTACK KNOCKBACK FORCE - %f\n", &attackKnockback);
       fscanf(infile, "  ENEMY PROJECTILE SPEED       - %f\n", &enemyProjectileSpeed);
 
@@ -283,7 +283,7 @@ void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject)
   if (_thisObject->type == entity_enemy && _otherObject->type == entity_player)
   {
     EnemyKnockBack(_thisObject, _otherObject);
-    EntityTakeDamage(&(_otherObject->entity), 2);
+    //EntityTakeDamage(&(_otherObject->entity), 2);
   }
 }
 
@@ -364,8 +364,8 @@ void EnemyTracerProjectileCollision(GameObject* _thisObject, GameObject* _otherO
 {
   if (_otherObject && _otherObject->type == entity_player && (_otherObject->entity && _otherObject->entity->canBeDamaged))
   {
-    //EnemyContainer* enemyContainer = _thisObject->parent->miscData;
-    EntityTakeDamage(&_otherObject->entity, 10);
+    EnemyContainer* enemyContainer = _thisObject->parent->miscData;
+    EntityTakeDamage(&_otherObject->entity, enemyContainer->attackDamage);
     GameObjectDestroy(&_thisObject);
   }
 }
