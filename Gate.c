@@ -67,6 +67,7 @@ GameObject* CreateWorldGate(Vector2D position, int orientation)
 */
 void GateOpened(GameObject* DeadGate)
 {
+  Audio_PlaySoundSample("RoomComplete.ogg", 0);
   //printf("itdidopenright");
   WorldGate* gateComponent = GetWorldGate(DeadGate);
   for (int i = 0; i < GATE_LENGTH; i++)
@@ -102,6 +103,7 @@ void GateOpened(GameObject* DeadGate)
 */
 void GateClosed(GameObject* inst)
 {
+  Audio_PlaySoundSample("RoomClosed.ogg", 0);
   WorldGate* gateComponent = GetWorldGate(inst);
 
  // printf("Gatedim: %f, %f", gateDimensions.x, gateDimensions.y);

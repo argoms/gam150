@@ -458,7 +458,7 @@ static void PlayerAttack()
 
   Vector2DScale(&mousePos, &mousePos, 0.25);
   EntityApplyKnockback(player->entity, &mousePos);
-  printf("M1\n");
+  //printf("M1\n");
 }
 /*!
 \brief simulates attack tracers, at the moment they just die immediately
