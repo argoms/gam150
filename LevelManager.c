@@ -21,6 +21,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Audio.h"
 #include "ParticleSystems(Redo).h"
 #include "Compass.h"
+#include "CreditsScreen.h"
 
 
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
@@ -91,6 +92,8 @@ void LevelLoad(int _level)
     Audio_PauseMusicStream("music_sample4.ogg");
     //Audio_PauseMusicStream("EPOCH_theme_funky.ogg");
     break;
+  case level_creditScreen:
+    CreditsScreenInit();    
   }
 
   if (_level != level_level1)
@@ -138,6 +141,8 @@ void LevelRun()
   case level_winScreen:
     WinScreenRun();
     break;
+  case level_creditScreen:
+    CreditsScreenRun();
   }
 
   if (currentLevel != nextLevel)
@@ -319,6 +324,67 @@ void MainMenuInit()
   button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
   button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
   //end button 4------------------------------------------------------------------
+  // scrub button (win screen)
+
+  button_type = WIN_SCREEN;               /* type of button  */
+  buttonx = -200;                          /* x position      */
+  buttony = -200;                          /* y position      */
+  meshx = 256.0f;                          /* mesh x          */
+  meshy = 64.0f;                           /* mesh y          */
+  buttonsize = 1.0f;                       /* size            */
+  button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
+  text_offset = 90.0f;
+  main_menu_text = TextCreateHUDString("Scrub", buttonx - text_offset, buttony);
+  button_texture = GCreateTexture("isocircleGreen.png");
+  anim_button = GCreateAnimation(1,
+    button_texture,
+    button_mesh,
+    1);
+
+  button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
+  button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+  //end scrubbutton------------------------------------------------------------------
+  // Lose screen
+
+  button_type = DEATH_SCREEN_BUTTON;       /* type of button  */
+  buttonx = 75;                          /* x position      */
+  buttony = -200;                          /* y position      */
+  meshx = 256.0f;                          /* mesh x          */
+  meshy = 64.0f;                           /* mesh y          */
+  buttonsize = 1.0f;                       /* size            */
+  button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
+  text_offset = 90.0f;
+  main_menu_text = TextCreateHUDString("Die", buttonx - text_offset, buttony);
+  button_texture = GCreateTexture("isocircleGreen.png");
+  anim_button = GCreateAnimation(1,
+    button_texture,
+    button_mesh,
+    1);
+
+  button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
+  button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+  //end lose screen ------------------------------------------------------------------
+
+
+  button_type = CREDIT_SCREEN;          /* type of button  */
+  buttonx = 200;                          /* x position      */
+  buttony = 100;                            /* y position      */
+  meshx = 256.0f;                          /* mesh x          */
+  meshy = 64.0f;                           /* mesh y          */
+  buttonsize = 1.0f;                       /* size            */
+  button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
+  text_offset = 90.0f;
+  main_menu_text = TextCreateHUDString("Credits", buttonx - text_offset, buttony);
+  button_texture = GCreateTexture("isocircleGreen.png");
+  anim_button = GCreateAnimation(1,
+    button_texture,
+    button_mesh,
+    1);
+
+  button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
+  button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+  //credits button----------------------------------------------------------------
+
 
   //END BUTTONS-------------------------------------------------------------
   //END TARRANT CODE
