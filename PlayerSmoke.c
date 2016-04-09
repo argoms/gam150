@@ -30,9 +30,9 @@ void SetSmoke(int input)
 
 GameObject* CreatePlayerSmoke()
 {
-  SetParticleAnim(GetAsset_Animation(asset_particleHitEnemy));
-  return EffectCreate(Vec2(-10.f, -5.f), Vec2(20, 10), Vec2(0, 0),
-    64, 0.02f, Vec2(-4, 8), 0.9f, 0.2f, 32, Vec2(30, 30), 0, GTint(1, 1, 1, 1.f));
+  SetParticleAnim(GetAsset_Animation(asset_smokeParticle));
+  return EffectCreate(Vec2(-5.f, -2.f), Vec2(10, 4), Vec2(0,0),
+    64, 0.0f, Vec2(0, 4), 0.9f, 0.2f, 32, Vec2(30, 30), 60, GTint(1, 1, 1, 0.4f));
 }
 
 /*!
