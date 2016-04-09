@@ -204,6 +204,7 @@ static void SpawnMapRooms(MapRoomInfo* rooms)
       break;
     case roomtype_small:
       Room_SmallRoom(index->position);
+      printf("TINY");
       break;
     case roomtype_hall:
       Room_HallsRoom(index->position);
@@ -405,7 +406,7 @@ static void Room_HallsRoom(Vector2D cursor)
 */
 static void Room_SmallRoom(Vector2D cursor)
 {
-  GameObject* room = RoomTemplate(cursor, 0);
+  GameObject* room = RoomTemplate(cursor, 1);
   MapRoom* roomData = (MapRoom*)(room->miscData);
   roomData->type = roomtype_small;
   ReplaceTiles(Vec2(cursor.x - ROOM_SIZE / 2, cursor.y - ROOM_SIZE / 2), Vec2(ROOM_SIZE, ROOM_SIZE), tile_floor, tile_wall);
