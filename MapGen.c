@@ -43,7 +43,10 @@ enum MapGen_RoomStates
 enum MapGen_RoomTypes
 {
   roomtype_start,
+  //PUT EXTRA ROOM TYPES IN HERE
   roomtype_simple,
+  roomtype_small,
+  //
   roomtype_hall
 };
 
@@ -69,6 +72,7 @@ static int RoomValid(Vector2D cursor, int mapW, int mapH);
 static void SpawnMapRooms(MapRoomInfo* rooms);
 static void ReplaceTiles(Vector2D position, Vector2D size, int oldTile, int newTile);
 static void Room_HallsRoom(Vector2D cursor);
+static void Room_SmallRoom(Vector2D cursor);
 
 static Animation* GateAnimationHorizontal;
 
@@ -77,6 +81,7 @@ static Animation* GateAnimationVertical;
 void GenerateMap(IsoMap* inputMap)
 {
   EnvironmentAssetsInitialize();
+
   //AEGfxGetCamPosition
   //printf("A");
   GateAnimationHorizontal = GCreateAnimation(1,
@@ -196,6 +201,9 @@ static void SpawnMapRooms(MapRoomInfo* rooms)
     case roomtype_simple:
       Room_BasicEnemies(index->position);
       printf("enemyroom\n");
+      break;
+    case roomtype_small:
+      Room_SmallRoom(index->position);
       break;
     case roomtype_hall:
       Room_HallsRoom(index->position);
@@ -393,6 +401,19 @@ static void Room_HallsRoom(Vector2D cursor)
 }
 
 /*!
+\brief Room-specific setup for small rooms
+*/
+static void Room_SmallRoom(Vector2D cursor)
+{
+  GameObject* room = RoomTemplate(cursor, 0);
+  MapRoom* roomData = (MapRoom*)(room->miscData);
+  roomData->type = roomtype_small;
+  ReplaceTiles(Vec2(cursor.x - ROOM_SIZE / 2, cursor.y - ROOM_SIZE / 2), Vec2(ROOM_SIZE, ROOM_SIZE), tile_floor, tile_wall);
+
+  ReplaceTiles(Vec2(cursor.x - ROOM_SIZE / 4, cursor.y - ROOM_SIZE / 4), Vec2(ROOM_SIZE / 2, ROOM_SIZE / 2), tile_wall, tile_floor);
+}
+
+/*!
 \brief Basic room setup/initialization
 \param cursor Location to set up room.
 \param spawnGates whether or not to spawn gate objects.
@@ -527,6 +548,9 @@ void CloseRoom(GameObject* room)
   {
   case roomtype_simple:
     MapRoomBehavior_BasicEnemies(roomData);
+    break;
+  case roomtype_small:
+    MapRoomBehavior_SmallRoom(roomData);
     break;
   }
 

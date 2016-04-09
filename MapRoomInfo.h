@@ -30,3 +30,4 @@ void MapRoomInfoClear(MapRoomInfo* first);
 
 //room-specific behaviors:
 void MapRoomBehavior_BasicEnemies(MapRoom* roomData);
+void MapRoomBehavior_SmallRoom(MapRoom* roomData);

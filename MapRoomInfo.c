@@ -85,3 +85,19 @@ void MapRoomBehavior_BasicEnemies(MapRoom* roomData)
   yetAnotherEnemy = EnemySpawn(cursor.x, cursor.y, ENEMY_TYPE_MELEE_BIG, GetPlayerObject());
   yetAnotherEnemy->parent = roomData->parent;
 }
+
+/*!
+\brief Called by a small enemies room once it is opened
+*/
+void MapRoomBehavior_SmallRoom(MapRoom* roomData)
+{
+  Vector2D cursor = Vec2(roomData->position.x, roomData->position.y);
+  //printf("======= %f, %f======= ROOM POSITION\n", cursor.x, cursor.y);
+  roomData->numEnemies = 2;
+  GameObject* newEnemy;
+  newEnemy = EnemySpawn(cursor.x, cursor.y, ENEMY_TYPE_MELEE, GetPlayerObject());
+  newEnemy->parent = roomData->parent;
+  GameObject* yetAnotherEnemy;
+  yetAnotherEnemy = EnemySpawn(cursor.x, cursor.y, ENEMY_TYPE_MELEE_BIG, GetPlayerObject());
+  yetAnotherEnemy->parent = roomData->parent;
+}

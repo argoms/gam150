@@ -26,6 +26,8 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "PlayerAnimations.h"
 #include "PlayerHUD.h"
 #include "LevelManager.h"
+#include "PlayerSmoke.h"
+#include "EnvironmentalEffects.h"
 
 extern double frameTime;
 
@@ -141,7 +143,7 @@ void PlayerInit()
   //shitty alpha fast coding:
   TextInit();
   
-
+  
 }
 
 /*!
@@ -157,10 +159,12 @@ void PlayerSimulate()
 
   if (!isDead)
   {
+    
     AEGfxSetCamPosition(player->sprite->x, player->sprite->y);
   }
 
   UpdatePlayerHealthHUD();
+  UpdateSmokePosition(player->physics->position);
   attackCooldown -= frameTime;
   //printf("%f \n", frameTime);
 
@@ -257,11 +261,16 @@ void PlayerSimulate()
   }
 
 
-
+  
   // cheat to restore hp, Tarrants code
   if (AEInputCheckTriggered('M'))
   {
-    RestoreHealth(player);
+    SetSmoke(particle_inactive);
+    printf("restored hp\n");
+  }
+  if (AEInputCheckTriggered('N'))
+  {
+    SetSmoke(particle_active);
     printf("restored hp\n");
   }
   

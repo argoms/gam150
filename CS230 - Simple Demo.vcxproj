@@ -211,6 +211,7 @@
     <ClCompile Include="PlayerDeathTimer.c" />
     <ClCompile Include="PlayerEntity.c" />
     <ClCompile Include="PlayerHUD.c" />
+    <ClCompile Include="PlayerSmoke.c" />
     <ClCompile Include="SplashScreen.c" />
     <ClCompile Include="Text.c" />
     <ClCompile Include="TownScreen.c" />
@@ -260,6 +261,7 @@
     <ClInclude Include="PlayerDeathTimer.h" />
     <ClInclude Include="PlayerEntity.h" />
     <ClInclude Include="PlayerHUD.h" />
+    <ClInclude Include="PlayerSmoke.h" />
     <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TownScreen.h" />

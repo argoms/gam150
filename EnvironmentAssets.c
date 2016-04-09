@@ -1,6 +1,6 @@
 //functions to load assets that may end up shared between multiple files/scopes
 #include "EnvironmentAssets.h"
-
+#include "PlayerSmoke.h"
 
 
 static Animation* Asset_particleGate;
@@ -15,8 +15,12 @@ void EnvironmentAssetsInitialize()
 
   Asset_particleHitEnemy = GCreateAnimation(1,
     GCreateTexture("animations/world/particle_simpleGreen.png"),
-    GCreateMesh(16.f, 16.f, 1, 1),
+    GCreateMesh(8.f, 8.f, 1, 1),
     1);   
+
+  InitializePlayerSmoke();
+
+
 }
 
 Animation* GetAsset_Animation(int assetName)

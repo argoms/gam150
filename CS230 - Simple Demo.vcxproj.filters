@@ -126,6 +126,9 @@
     <ClCompile Include="EnvironmentAssets.c">
       <Filter>MapGen</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerSmoke.c">
+      <Filter>Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -251,6 +254,9 @@
     </ClInclude>
     <ClInclude Include="EnvironmentAssets.h">
       <Filter>MapGen</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSmoke.h">
+      <Filter>Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
