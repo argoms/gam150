@@ -123,8 +123,9 @@
     <ClCompile Include="PlayerDeathTimer.c">
       <Filter>Player</Filter>
     </ClCompile>
-    <ClCompile Include="EnvironmentAssets.c">
-      <Filter>MapGen</Filter>
+    <ClCompile Include="EnvironmentAssets.c" />
+    <ClCompile Include="ColorFilter.c">
+      <Filter>Camera/ScreenFX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -249,9 +250,10 @@
     <ClInclude Include="PlayerDeathTimer.h">
       <Filter>Player</Filter>
     </ClInclude>
-    <ClInclude Include="EnvironmentAssets.h">
-      <Filter>MapGen</Filter>
+    <ClInclude Include="ColorFilter.h">
+      <Filter>Camera/ScreenFX</Filter>
     </ClInclude>
+    <ClInclude Include="EnvironmentAssets.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="EnemyFiles">
@@ -283,6 +285,9 @@
     </Filter>
     <Filter Include="Enemies\EnemyAI">
       <UniqueIdentifier>{1f5add3b-5ec5-4370-a712-b9f36955f6fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera/ScreenFX">
+      <UniqueIdentifier>{842b21f1-0a40-4660-86c4-fa90bd013bf1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

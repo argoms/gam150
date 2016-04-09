@@ -35,7 +35,6 @@ int gGameRunning = 1;
 
 LRESULT CALLBACK MyWinCallBack(HWND hWin, UINT msg, WPARAM wp, LPARAM lp) ;
 
-
 // ---------------------------------------------------------------------------
 // Static function protoypes
 
@@ -68,6 +67,28 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
   sysInitInfo.mHandleWindowMessages = 1;
   AESysInit(&sysInitInfo);
 
+
+  /* Matt - Set window to full screen. */
+
+  /*
+  To force into full screen mode, use Alt + Space, then X.
+  Solution obtained from http://cboard.cprogramming.com/windows-programming/72624-how-get-your-program-run-fullscreen-console.html
+  Scan codes obtained from https://msdn.microsoft.com/en-us/library/windows/desktop/ms646304(v=vs.85).aspx
+  */
+  /* Press Alt + Space */
+  keybd_event(VK_MENU, 0x38, 0, 0);
+  keybd_event(VK_SPACE, 0x39, 0, 0);
+
+  /* Release Alt + Space */
+  keybd_event(VK_MENU, 0x38, KEYEVENTF_KEYUP, 0);
+  keybd_event(VK_MENU, 0x39, KEYEVENTF_KEYUP, 0);
+
+  /* Press and release X */
+  keybd_event(0x58, 0x2D, 0, 0);
+  keybd_event(0x58, 0x2D, KEYEVENTF_KEYUP, 0);
+
+  /* End full screen code - Matt */
+
   AllocConsole();
   freopen("CONOUT$", "w", stdout);
   
@@ -75,11 +96,14 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
 	if(0 == AESysInit (&sysInitInfo))
 		printf("System Init Failed!\n");
 
+
+
   /*----------------------------------------------------------------------------
   AUDIO TEST  PART 1/3  INITIALIZING
   -----------------------------------------------------------------------------*/
     //TestAudioINIT();
     Audio_Initialize(64);
+
 
 
   //----------------------------------------------------------------------------
