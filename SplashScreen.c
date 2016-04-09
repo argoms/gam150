@@ -26,7 +26,7 @@ void SplashScreenInit()
 {
   TextInit();
   splashScreen = GCreateSprite(0, 0, GCreateAnimation(1, GCreateTexture("splash.png"), GCreateMesh(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), 1, 1), 1), 1);
-  TextCreateString("", -300, -50);
+  //TextCreateString("", -300, -50);
   //printf("AAA");
   printf("AAA");
   

@@ -123,6 +123,7 @@
     <ClCompile Include="PlayerDeathTimer.c">
       <Filter>Player</Filter>
     </ClCompile>
+    <ClCompile Include="EnvironmentAssets.c" />
     <ClCompile Include="ColorFilter.c">
       <Filter>Camera/ScreenFX</Filter>
     </ClCompile>
@@ -252,6 +253,7 @@
     <ClInclude Include="ColorFilter.h">
       <Filter>Camera/ScreenFX</Filter>
     </ClInclude>
+    <ClInclude Include="EnvironmentAssets.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="EnemyFiles">

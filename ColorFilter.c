@@ -3,6 +3,7 @@
 
 #include "AEEngine.h"
 #include <Windows.h>
+#include <math.h>
 
 #define PI 3.14159265359f
 
@@ -15,6 +16,9 @@ static float R = 1, G = 1, B = 1;
 static float time = 0;
 
 static int loaded = 0;
+
+static int fluctuate = 0;
+static float fluc_R = 0, fluc_G = 0, fluc_B = 0;
 
 /* Initializes the fader. */
 void ColorFilter_Init(void)
@@ -38,8 +42,14 @@ void ColorFilter_Init(void)
   Mesh = AEGfxMeshEnd();
 
   /* Set size of the filter to cover entire screen. */
-  Scale_X = GetSystemMetrics(SM_CXSCREEN);
-  Scale_Y = GetSystemMetrics(SM_CYSCREEN);
+  Scale_X = AEGfxGetWinMaxX() - AEGfxGetWinMinX();// GetSystemMetrics(SM_CXSCREEN);
+  Scale_Y = AEGfxGetWinMaxY() - AEGfxGetWinMinY();// GetSystemMetrics(SM_CYSCREEN);
+
+  /* Fluctuation is disabled by default. */
+  fluctuate = 0;
+  fluc_R = 0;
+  fluc_G = 0;
+  fluc_B = 0;
 
   loaded = 1;
 }
@@ -67,6 +77,18 @@ void ColorFilter_Set(float r, float g, float b)
   B = b;
 }
 
+/* 
+  Sets the fluctuation flag of the filter.
+  Keep values between 0 and 1. 
+*/
+void ColorFilter_Fluctuate(int useF, float r_amt, float g_amt, float b_amt)
+{
+  fluctuate = useF;
+  fluc_R = r_amt;
+  fluc_G = g_amt;
+  fluc_B = b_amt;
+}
+
 /* Applies the filter. */
 void ColorFilter_Draw(void)
 {
@@ -91,11 +113,43 @@ void ColorFilter_Draw(void)
 
   AEGfxTextureSet(Screen_Texture, 0, 0);
 
-  AEGfxSetTintColor(R, G, B, 1);
+  /* Copies of color values so they can be modified. */
+  float rCopy = R, gCopy = G, bCopy = B;
+
+  /* Fluctuation code. */
+  {
+    if (fluctuate)
+    {
+      rCopy += fluc_R * fabsf((sinf(time)));
+      gCopy += fluc_G * fabsf((sinf(time - 0.1f)));
+      bCopy += fluc_B * fabsf((sinf(time - 0.2f)));
+    }
+  }
+
+  /* Draw with multiply first to filter out undesired colors. */
+
+  float r1 = min(rCopy, 1), g1 = min(gCopy, 1), b1 = min(bCopy, 1);
+
+  AEGfxSetTintColor(r1, g1, b1, 1);
 
   AEGfxSetTransparency(1);
 
   AEGfxSetBlendMode(AE_GFX_BM_MULTIPLY);
+
+  AEGfxMeshDraw(Mesh, AE_GFX_MDM_TRIANGLES);
+
+  /* Draw with add to enrich desired colors. */
+
+  r1 = max(rCopy - 1, 0);
+  g1 = max(gCopy - 1, 0);
+  b1 = max(bCopy - 1, 0);
+
+
+  AEGfxSetTintColor(r1, g1, b1, 1);
+
+  AEGfxSetTransparency(1);
+
+  AEGfxSetBlendMode(AE_GFX_BM_ADD);
 
   AEGfxMeshDraw(Mesh, AE_GFX_MDM_TRIANGLES);
 }

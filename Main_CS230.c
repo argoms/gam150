@@ -67,7 +67,8 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
   sysInitInfo.mHandleWindowMessages = 1;
   AESysInit(&sysInitInfo);
 
-  /* Set window to full screen. */
+
+  /* Matt - Set window to full screen. */
 
   /*
   To force into full screen mode, use Alt + Space, then X.
@@ -85,6 +86,8 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
   /* Press and release X */
   keybd_event(0x58, 0x2D, 0, 0);
   keybd_event(0x58, 0x2D, KEYEVENTF_KEYUP, 0);
+
+  /* End full screen code - Matt */
 
   AllocConsole();
   freopen("CONOUT$", "w", stdout);

@@ -64,7 +64,8 @@ void LevelLoad(int _level)
   {
   case level_level1:
     Level1Init();
-    ColorFilter_Set(1.96f, 0.9f, 1.99f);
+    ColorFilter_Set(1.f, 0.7f, 0.5f);
+    ColorFilter_Fluctuate(1, 0.6f, 0.3f, 0.2f);
     //ColorFilter_Set(1.f, 1.f, 1.f);
     if (!(currentLevel == level_town))
     {
@@ -251,8 +252,8 @@ void MainMenuInit()
 
   textString = TextCreateString("EPOCH", string_xpos, string_ypos); // title
 
-                                                                    //BUTTONS------------------------------------------------------
-                                                                    // BUTTON LEVEL 1
+  //BUTTONS------------------------------------------------------
+  // BUTTON LEVEL 1
 
   int button_type = LEVEL_ONE_BUTTON;             /* type of button  */
   float buttonx = -200;                           /* x position      */
@@ -342,11 +343,11 @@ void MainMenuInit()
 
   //EXAMPLE CODE, REMOVE OUT WHEN USING
   {
-    animtest2 = GCreateAnimation(16, pTex1, pMesh2, 1);
+    //animtest2 = GCreateAnimation(16, pTex1, pMesh2, 1);
     //sprite = GCreateSprite(0, 30, animtest, 4);
     //sprite = GCreateSprite(0, 20, animtest, 4);
     //sprite = GCreateSprite(0, -30, animtest, 4);
-    sprite = GCreateSprite(100, -100, animtest2, 4);
+    //sprite = GCreateSprite(100, -100, animtest2, 4);
     //sprite = GCreateHudSprite(0, 0, animtest2, 1);
   }
   //EXAMPLE CODE ENDS HERE
