@@ -24,14 +24,14 @@ ChangeLog
 
 //#define PI 3.14159265359
 
-#define NUM_SPRITES 1000
+#define NUM_SPRITES 5000
 #define NUM_TEXTURES 5
 
 #define MAX_POS_X 100.f
 #define MAX_POS_Y 100.f
 
 #define MIN_DIST 50.f
-#define MAX_DIST 800.f
+#define MAX_DIST 500.f
 
 #define MIN_OSC_X 0.05f
 #define MAX_OSC_X 0.2f
@@ -39,10 +39,10 @@ ChangeLog
 #define MIN_OSC_Y 0.05f
 #define MAX_OSC_Y 0.5f
 
-#define MAX_SIZE_X 150.f
-#define MIN_SIZE_X 10.f
+#define MAX_SIZE_X 10.f
+#define MIN_SIZE_X 5.f
 
-#define MAX_SIZE_Y 300.f
+#define MAX_SIZE_Y 100.f
 #define MIN_SIZE_Y 10.f
 
 typedef struct BackgroundSprite
@@ -208,7 +208,7 @@ void Background_Update()
     /* Update the sprite information. */
 
     /* Scale the sprite. */
-    pInst->scaleX *= RandFloatRange(0.1f, 1.7f);// *(float)deltaTime;
+    pInst->scaleX *= RandFloatRange(0.1f, 1.2f);// *(float)deltaTime;
     pInst->scaleY *= RandFloatRange(0.1f, 1.7f);// *(float)deltaTime;
 
     /* Clamp the scale. */
@@ -268,66 +268,190 @@ void Background_Draw()
 
   AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
 
-  /* Set blend mode. */
-  AEGfxSetBlendMode(AE_GFX_BM_ADD);
+
+  // DEPRECATED CODE. REPLACED WITH OPTIMIZED VERSION
+  ///* Set blend mode. */
+  //AEGfxSetBlendMode(AE_GFX_BM_ADD);
+
+  ///* Draw each background sprite. */
+  //for (i = 0; i < NUM_SPRITES; ++i)
+  //{
+  //  /* The current sprite. */
+  //  BackgroundSprite * pInst = backgroundSprites[i];
+
+  //  /* Transform matrices */
+  //  Matrix2D transform, scale, rot, trans, trans_local, iso_scale;
+
+  //  Matrix2DIdentity(&scale);
+  //  Matrix2DScale(&scale, pInst->scaleX, pInst->scaleY);
+
+  //  Matrix2DIdentity(&rot);
+  //  Matrix2DRotRad(&rot, pInst->rotation);
+
+  //  Matrix2DIdentity(&trans_local);
+  //  Matrix2DTranslate(&trans_local, 0, pInst->distance + (pInst->distance * 0.9 * ((float)sin(pInst->time))));//compass.distance);
+
+  //  Matrix2DIdentity(&trans);
+  //  Matrix2DTranslate(&trans, (float)cos(pInst->time) * 50, (float)sin(pInst->time) * 50);// CameraX, CameraY);
+
+  //  Matrix2DIdentity(&iso_scale);
+  //  Matrix2DScale(&iso_scale, 1, 0.5f);
+
+  //  /* Combine matrices. */
+
+  //  Matrix2DConcat(&transform, &trans_local, &scale);
+
+  //  Matrix2DConcat(&transform, &rot, &transform);
+
+  //  //Matrix2DConcat(&transform, &trans_local, &transform);
+
+  //  Matrix2DConcat(&transform, &iso_scale, &transform);
+
+  //  Matrix2DConcat(&transform, &trans, &transform);
+
+  //  //Matrix2DConcat(&iso_rotate, &iso_rotate, &rot);
+  //  //Matrix2DConcat(&iso_scale, &iso_scale, &iso_rotate);
+
+  //  //Matrix2DConcat(&transform, &, &trans_local);
+
+  //  AEGfxSetTransform(transform.m);
+
+  //  /* Preparing for draw */
+
+  //  //AEGfxTextureSet(pInst->texture, 0, 0);
+
+  //  //float osc_valueR = 1 - 0.3f * fabsf(((float)sin(pInst->time)));
+  //  //float osc_valueG = 1 - 0.5f * fabsf(((float)sin(pInst->time - 1)));
+  //  //float osc_valueB = 1 - 0.2f * fabsf(((float)sin(pInst->time - 2)));
+  //  //float osc_valueA = fabsf(((float)sin(pInst->time - 3)));
+
+  //  //AEGfxSetTintColor(osc_valueR, osc_valueG, osc_valueB, osc_valueA);
+
+  //  //AEGfxSetTransparency(osc_valueA);
+
+  //  AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
+
+  //}
 
   /* Draw each background sprite. */
-  for (i = 0; i < NUM_SPRITES; ++i)
+
+  /* Batch draws by texture. */
+  for (i = 0; i < NUM_TEXTURES; ++i)
   {
-    /* The current sprite. */
-    BackgroundSprite * pInst = backgroundSprites[i];
+    int j;
 
-    /* Transform matrices */
-    Matrix2D transform, scale, rot, trans, trans_local, iso_scale;
-
-    Matrix2DIdentity(&scale);
-    Matrix2DScale(&scale, pInst->scaleX, pInst->scaleY);
-
-    Matrix2DIdentity(&rot);
-    Matrix2DRotRad(&rot, pInst->rotation);
-
-    Matrix2DIdentity(&trans_local);
-    Matrix2DTranslate(&trans_local, 0, pInst->distance + (pInst->distance * 0.9 * ((float)sin(pInst->time))));//compass.distance);
-
-    Matrix2DIdentity(&trans);
-    Matrix2DTranslate(&trans, (float)cos(pInst->time) * 50, (float)sin(pInst->time) * 50);// CameraX, CameraY);
-
-    Matrix2DIdentity(&iso_scale);
-    Matrix2DScale(&iso_scale, 1, 0.5f);
-
-    /* Combine matrices. */
-
-    Matrix2DConcat(&transform, &trans_local, &scale);
-
-    Matrix2DConcat(&transform, &rot, &transform);
-
-    //Matrix2DConcat(&transform, &trans_local, &transform);
-
-    Matrix2DConcat(&transform, &iso_scale, &transform);
-
-    Matrix2DConcat(&transform, &trans, &transform);
-
-    //Matrix2DConcat(&iso_rotate, &iso_rotate, &rot);
-    //Matrix2DConcat(&iso_scale, &iso_scale, &iso_rotate);
-
-    //Matrix2DConcat(&transform, &, &trans_local);
-
-    AEGfxSetTransform(transform.m);
-
-    /* Preparing for draw */
-
-    AEGfxTextureSet(pInst->texture, 0, 0);
-
-    float osc_valueR = 1 - 0.3f * fabsf(((float)sin(pInst->time)));
-    float osc_valueG = 1 - 0.5f * fabsf(((float)sin(pInst->time - 1)));
-    float osc_valueB = 1 - 0.2f * fabsf(((float)sin(pInst->time - 2)));
-    float osc_valueA = fabsf(((float)sin(pInst->time - 3)));
+    /* Tint values to make different colors. */
+    float osc_valueR = 1 - 0.3f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 1)]->time)));
+    float osc_valueG = 1 - 0.5f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 2)]->time - 1)));
+    float osc_valueB = 1 - 0.2f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 3)]->time - 2)));
+    float osc_valueA = fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 4)]->time - 3)));
 
     AEGfxSetTintColor(osc_valueR, osc_valueG, osc_valueB, osc_valueA);
 
-    AEGfxSetTransparency(osc_valueA);
+    /* Set the texture. */
+    AEGfxTextureSet(textures[i], 0, 0);
 
-    AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
+    /* Go through the first half of the sprites with one color. */
+    for (j = 0; j < NUM_SPRITES / 2; ++j)
+    {
+      /* The current sprite. */
+      BackgroundSprite * pInst = backgroundSprites[j];
+      
+      /* Transform matrices */
+      Matrix2D transform, scale, rot, trans, trans_local, iso_scale;
+
+      /* If the sprite's texture matches, then draw it. */
+      if (pInst->texture == textures[i])
+      {
+        /* Calculate transform matrices. */
+        
+        Matrix2DIdentity(&scale);
+        Matrix2DScale(&scale, pInst->scaleX, pInst->scaleY);
+
+        Matrix2DIdentity(&rot);
+        Matrix2DRotRad(&rot, pInst->rotation);
+
+        Matrix2DIdentity(&trans_local);
+        Matrix2DTranslate(&trans_local,(float)cos(pInst->time), pInst->distance + (pInst->distance * 0.9 * (float)(sin(2 * cos(pInst->time)))));
+
+        Matrix2DIdentity(&trans);
+        Matrix2DTranslate(&trans, (float)cos(pInst->time) * 50, (float)sin(pInst->time) * 50);// CameraX, CameraY);
+
+        Matrix2DIdentity(&iso_scale);
+        Matrix2DScale(&iso_scale, 1, 0.5f);
+
+        /* Combine matrices. */
+
+        Matrix2DConcat(&transform, &trans_local, &scale);
+
+        Matrix2DConcat(&transform, &rot, &transform);
+
+        Matrix2DConcat(&transform, &iso_scale, &transform);
+
+        Matrix2DConcat(&transform, &trans, &transform);
+
+        AEGfxSetTransform(transform.m);
+
+        /* Draw the sprite. */
+
+        AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
+      }
+    }
+
+    /* Tint values to make different colors */
+    osc_valueR = 1 - 0.3f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 5)]->time - 4)));
+    osc_valueG = 1 - 0.5f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 6)]->time - 5)));
+    osc_valueB = 1 - 0.2f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 7)]->time - 6)));
+    osc_valueA = fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 8)]->time - 7)));
+
+    AEGfxSetTintColor(osc_valueR, osc_valueG, osc_valueB, osc_valueA);
+
+    /* Go through the second half with a different color. */
+    for (j = 0; j < NUM_SPRITES / 2; ++j)
+    {
+      /* The current sprite. */
+      BackgroundSprite * pInst = backgroundSprites[j];
+
+      /* Transform matrices */
+      Matrix2D transform, scale, rot, trans, trans_local, iso_scale;
+
+      /* If the sprite's texture matches, then draw it. */
+      if (pInst->texture == textures[i])
+      {
+        /* Calculate transform matrices. */
+
+        Matrix2DIdentity(&scale);
+        Matrix2DScale(&scale, pInst->scaleX, pInst->scaleY);
+
+        Matrix2DIdentity(&rot);
+        Matrix2DRotRad(&rot, pInst->rotation);
+
+        Matrix2DIdentity(&trans_local);
+        Matrix2DTranslate(&trans_local, (float)cos(pInst->time), pInst->distance + (pInst->distance * 0.9 * ((float)sin(pInst->time))));
+
+        Matrix2DIdentity(&trans);
+        Matrix2DTranslate(&trans, (float)cos(pInst->time) * 50, (float)sin(pInst->time) * 50);// CameraX, CameraY);
+
+        Matrix2DIdentity(&iso_scale);
+        Matrix2DScale(&iso_scale, 1, 0.5f);
+
+        /* Combine matrices. */
+
+        Matrix2DConcat(&transform, &trans_local, &scale);
+
+        Matrix2DConcat(&transform, &rot, &transform);
+
+        Matrix2DConcat(&transform, &iso_scale, &transform);
+
+        Matrix2DConcat(&transform, &trans, &transform);
+
+        AEGfxSetTransform(transform.m);
+
+        /* Draw the sprite. */
+
+        AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
+      }
+    }
 
   }
 
