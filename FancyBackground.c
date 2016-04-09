@@ -34,10 +34,10 @@ ChangeLog
 #define MAX_DIST 800.f
 
 #define MIN_OSC_X 0.05f
-#define MAX_OSC_X 0.3f
+#define MAX_OSC_X 0.2f
 
-#define MIN_OSC_Y 0.2f
-#define MAX_OSC_Y 1.f
+#define MIN_OSC_Y 0.05f
+#define MAX_OSC_Y 0.5f
 
 #define MAX_SIZE_X 150.f
 #define MIN_SIZE_X 10.f
@@ -106,7 +106,7 @@ void Background_Init(void)
 
   /* Initialize the base sprite. */
   
-  backtexture = AEGfxTextureLoad("animations/cameraFX/vignette_texture2.png");
+  backtexture = AEGfxTextureLoad("animations/cameraFX/vignette_texture3.png");
   
   backbase = (BackgroundSprite *)calloc(1, sizeof(BackgroundSprite));
 

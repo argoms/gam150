@@ -67,13 +67,28 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
   sysInitInfo.mHandleWindowMessages = 1;
   AESysInit(&sysInitInfo);
 
+  AllocConsole();
+  freopen("CONOUT$", "w", stdout);
+
+	if(0 == AESysInit (&sysInitInfo))
+		printf("System Init Failed!\n");
+
+  /*
+    Matt's window fixing stuff
+    Opening stdout/the console put the game screen into the background.
+    This brings the game screen back into the foreground. 
+    Solution obtained from https://msdn.microsoft.com/en-us/library/windows/desktop/ms633539(v=vs.85).aspx
+  */
+
+  HWND hwnd = AESysGetWindowHandle();
+  SetForegroundWindow(hwnd);
 
   /* Matt - Set window to full screen. */
 
   /*
-  To force into full screen mode, use Alt + Space, then X.
-  Solution obtained from http://cboard.cprogramming.com/windows-programming/72624-how-get-your-program-run-fullscreen-console.html
-  Scan codes obtained from https://msdn.microsoft.com/en-us/library/windows/desktop/ms646304(v=vs.85).aspx
+    To force into full screen mode, use Alt + Space, then X.
+    Solution obtained from http://cboard.cprogramming.com/windows-programming/72624-how-get-your-program-run-fullscreen-console.html
+    Scan codes obtained from https://msdn.microsoft.com/en-us/library/windows/desktop/ms646304(v=vs.85).aspx
   */
   /* Press Alt + Space */
   keybd_event(VK_MENU, 0x38, 0, 0);
@@ -89,13 +104,7 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
 
   /* End full screen code - Matt */
 
-  AllocConsole();
-  freopen("CONOUT$", "w", stdout);
-  
-
-	if(0 == AESysInit (&sysInitInfo))
-		printf("System Init Failed!\n");
-
+  /* End Matt's window stuff */
 
 
   /*----------------------------------------------------------------------------
