@@ -1,4 +1,9 @@
-
+#include "GameLevel.h"
+#include "PlayerSmoke.h"
+#include "EnvironmentalEffects.h"
+#include "EnvironmentAssets.h"
+#include "GameObject.h"
+#include "PlayerEntity.h"
 
 static GameObject* smokeEffect;
 /*!

@@ -129,6 +129,7 @@
     <ClCompile Include="PlayerSmoke.c">
       <Filter>Player</Filter>
     </ClCompile>
+    <ClCompile Include="ColorFilter.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -258,6 +259,7 @@
     <ClInclude Include="PlayerSmoke.h">
       <Filter>Player</Filter>
     </ClInclude>
+    <ClInclude Include="ColorFilter.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="EnemyFiles">

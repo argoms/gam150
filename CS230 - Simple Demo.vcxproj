@@ -169,6 +169,7 @@
     <ClCompile Include="Button.c" />
     <ClCompile Include="Cloud.c" />
     <ClCompile Include="Collision.c" />
+    <ClCompile Include="ColorFilter.c" />
     <ClCompile Include="Compass.c" />
     <ClCompile Include="ControlScreen.c" />
     <ClCompile Include="conversions.c" />
@@ -223,6 +224,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Cloud.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="ColorFilter.h" />
     <ClInclude Include="Compass.h" />
     <ClInclude Include="ControlScreen.h" />
     <ClInclude Include="conversions.h" />
