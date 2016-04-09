@@ -37,3 +37,4 @@ void GateRemoveEnemy(GameObject* Target);
 void GateAddEnemy(GameObject* Target);
 void GateRoomSimulate(GameObject* instance);
 WorldGate* GetWorldGate(GameObject* input);;
+void GateSimulate(GameObject* inst);

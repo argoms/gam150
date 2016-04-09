@@ -18,6 +18,9 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Text.h"
 #include <stdlib.h>
 #include "EnvironmentalEffects.h"
+#include "EnvironmentAssets.h"
+
+static float GATE_FADE_DIST = 5.f;
 
 
 /*!
@@ -39,7 +42,7 @@ GameObject* CreateWorldGate(Vector2D position, int orientation)
   Animation* anim2 = GetGateAnimation(orientation);
   GameObject* newGate = GameObjectCreate(PhysicsCreateObject(Vec2(position.x, position.y), 1), GCreateSprite(position.x, position.y, anim2, 1), gateEntity, entity_gate);
   
-  newGate->simulate = NULL;
+  newGate->simulate = &GateSimulate;
   newGate->entity->onEntityKilled = &GateOpened;
 
   newGate->miscData = (WorldGate*)malloc(sizeof(WorldGate));
@@ -48,12 +51,13 @@ GameObject* CreateWorldGate(Vector2D position, int orientation)
   gateData->positionX = position.x;
   gateData->positionY = position.y;
   gateData->orientation = orientation;
+  gateData->status = gate_open;
 
   for (int i = 0; i < GATE_LENGTH; i++)
   {
     gateData->particleSystems[i] = NULL;
   }
-  newGate->sprite->tint.alpha = 0.1f;
+  newGate->sprite->tint.alpha = 0.0f;
 
   //printf("created a gate. %f, %f\n", position.x, position.y);
   return newGate;
@@ -67,6 +71,15 @@ GameObject* CreateWorldGate(Vector2D position, int orientation)
 */
 void GateOpened(GameObject* DeadGate)
 {
+
+  SetParticleAnim(GetAsset_Animation(asset_particleGate));
+  Vector2D particleEffectRadius = Vec2(64, 64);
+  GameObject* particleEffect = EffectCreate(Vec2(-10.f, -5.f), Vec2(20, 10), IsoWorldToScreen(&DeadGate->physics->position),
+    16, -1.0f, Vec2(-4, 8), 0.9f, 0.5f, 32, particleEffectRadius, 0, GTint(1, 1, 1, 1.f));
+  ParticleSetLifetime(particleEffect, 0.1f);
+  ParticleApplyBehavior(particleBehavior_linearAlpha, particleEffect);
+
+  Audio_PlaySoundSample("RoomComplete.ogg", 0);
   //printf("itdidopenright");
   WorldGate* gateComponent = GetWorldGate(DeadGate);
   for (int i = 0; i < GATE_LENGTH; i++)
@@ -102,28 +115,28 @@ void GateOpened(GameObject* DeadGate)
 */
 void GateClosed(GameObject* inst)
 {
+  Audio_PlaySoundSample("RoomClosed.ogg", 0);
   WorldGate* gateComponent = GetWorldGate(inst);
-
+  gateComponent->status = gate_closed;
  // printf("Gatedim: %f, %f", gateDimensions.x, gateDimensions.y);
 
-  Animation* particle = GCreateAnimation(1,
-    GCreateTexture("animations/world/cloudTemplate.png"),
-    GCreateMesh(24.f, 16.f, 1, 1),
-    1);
+  Animation* particle = GetAsset_Animation(asset_particleGate);
   SetParticleAnim(particle);
+
+  Vector2D particleEffectRadius = Vec2(64, 64);
   
   gateComponent->particleSystems[0] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&inst->physics->position), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
-    Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+    particleEffectRadius, 0, GTint(1, 1, 1, 0.1f));
   if (gateComponent->orientation == gate_horizontal)
   {
     Vector2D offsetPos = inst->physics->position;
     ++offsetPos.x;
     gateComponent->particleSystems[1] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&offsetPos), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
-      Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+      particleEffectRadius, 0, GTint(1, 1, 1, 0.1f));
     offsetPos.x -= 2;
 
     gateComponent->particleSystems[2] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&offsetPos), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
-      Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+      particleEffectRadius, 0, GTint(1, 1, 1, 0.1f));
   }
 
   else if (gateComponent->orientation == gate_vertical)
@@ -131,11 +144,11 @@ void GateClosed(GameObject* inst)
     Vector2D offsetPos = inst->physics->position;
     ++offsetPos.y;
     gateComponent->particleSystems[1] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&offsetPos), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
-      Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+      particleEffectRadius, 0, GTint(1, 1, 1, 0.1f));
     offsetPos.y -= 2;
 
     gateComponent->particleSystems[2] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&offsetPos), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
-      Vec2(1, 1), 0, GTint(1, 1, 1, 0.1f));
+      particleEffectRadius, 0, GTint(1, 1, 1, 0.1f));
   }
 }
 
@@ -188,4 +201,21 @@ void GateRoomSimulate(GameObject* instance)
  WorldGate* GetWorldGate(GameObject* input)
 {
   return ((WorldGate*)(input->miscData));
+}
+
+/*!
+\brief Makes gates fade in more when player gets closer
+*/
+void GateSimulate(GameObject* inst)
+{
+  if (GetWorldGate(inst)->status == gate_closed)
+  {
+    float dist = PhysicsDistSQ(GetPlayerObject()->physics->position, inst->physics->position);
+    if (dist > GATE_FADE_DIST)
+    {
+      dist = GATE_FADE_DIST;
+    }
+
+    inst->sprite->tint.alpha = 0.2f + ((GATE_FADE_DIST - dist) / GATE_FADE_DIST) * 0.5f;
+  }
 }

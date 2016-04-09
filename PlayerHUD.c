@@ -16,7 +16,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 
 static TextString* healthText = NULL;
 
-#define HEART_SCALE 10 //number of health points per heart
+#define HEART_SCALE 1 //number of health points per heart
 void UpdatePlayerHealthHUD()
 {
   GameObject* player = GetPlayerObject();

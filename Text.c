@@ -72,6 +72,7 @@ TextString* TextCreateString(char* _string, float _x, float _y)
     i++;
   }
 
+  TextStringSetTint(result, GTint(0, 0, 0, 1));
   return result;
 }
 
@@ -117,6 +118,7 @@ TextString* TextCreateHUDString(char* _string, float _x, float _y)
     i++;
   }
 
+  TextStringSetTint(result, GTint(0, 0, 0, 1));
   return result;
 }
 
@@ -205,6 +207,28 @@ void TextStringAddOffset(TextString* _textString, Vector2D offset)
   {
     textChar->sprite->offset.x += offset.x;
     textChar->sprite->offset.y += offset.y;
+    i++;
+    textChar = textChar->next;
+  }
+}
+
+void TextStringSetTint(TextString* _textString, Tint newTint)
+{
+  TextChar* textChar = _textString->first;
+  int i = 0;
+  // _textString->x = _x;
+  // _textString->y = _y;
+
+  while (textChar)
+  {
+    if (textChar->value != 3) //hearts are special characters only affected by alpha, others just take the tint
+    {
+      textChar->sprite->tint = newTint;
+    }
+    else
+    {
+      textChar->sprite->tint = GTint(1, 1, 1, newTint.alpha);
+    }
     i++;
     textChar = textChar->next;
   }

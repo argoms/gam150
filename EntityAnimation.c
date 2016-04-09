@@ -36,22 +36,18 @@ void EntityAnimationInit()
 AnimationSet* CreateAnimationSet(Animation* inputAnims[])
 {
   EntityAnimationInit();
-  //printf("FUCKING ANIMATIONS");
   AnimationSet* newAnimSet = (AnimationSet*)malloc(sizeof(AnimationSet));
   int i = -1;
   while (i++ < 16)
   {
-    //printf("FUCKING ANIMATIONS2");
     newAnimSet->animations[i] = inputAnims[i];
   }
 
-  //printf("FUCKING ANIMATIONS4");
   animationList.last = newAnimSet;
   if (animationList.first == NULL)
   {
     animationList.first = newAnimSet;
   }
-  //printf("FUCKING ANIMATIONS3");
   return newAnimSet;
 }
 

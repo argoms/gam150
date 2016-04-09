@@ -29,11 +29,14 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 
 extern double frameTime;
 
+
+static int attackDamage = 1;
+
 static GameObject* player; /**< pointer to player object*/
 static double attackCooldown; /**< timer before player can attack again*/
 
 static double attackCooldownLength; /**< defined minimum time between attacks (attackCooldown is the timer)*/
-static int attackDamage;
+
 static Animation* tracerAnimation;
 
 signed long mouseX;
@@ -88,6 +91,7 @@ static AnimationSet* playerIdleAnims;
 static AnimationSet* playerSwordAnims;
 
 static Vector2D playerDirection;
+
 void PlayerInit()
 {
   
@@ -101,7 +105,7 @@ void PlayerInit()
 
   attackCooldown = 0;
   attackCooldownLength = 0.5;
-  attackDamage = 12;
+  attackDamage = 1;
   tracerAnimation = GCreateAnimation(1,
     GCreateTexture("isotilePlaceholder1.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
@@ -248,7 +252,7 @@ void PlayerSimulate()
     }
     else
     {
-      attackDamage = 10;
+      attackDamage = 1;
     }
   }
 
@@ -454,7 +458,7 @@ static void PlayerAttack()
 
   Vector2DScale(&mousePos, &mousePos, 0.25);
   EntityApplyKnockback(player->entity, &mousePos);
-  printf("M1\n");
+  //printf("M1\n");
 }
 /*!
 \brief simulates attack tracers, at the moment they just die immediately
@@ -557,8 +561,15 @@ void RestoreHealth(GameObject* obj)
 */
 void OnPlayerKilled(void)
 {
+  //do nothing if already dead
+  if (isDead)
+  {
+    return;
+  }
+
   printf("\n***\n***\nYOU DIED SO NOW YOU'RE IN MAIN MENU WOOO\n***\n***\n");
   player->sprite->tint.alpha = 0;
+  Audio_PlaySoundSample("death.ogg", 0);
   //PhysicsRemoveObject(&player->physics);
   DeathTimerStart(player->physics->position);
   isDead = 1;
