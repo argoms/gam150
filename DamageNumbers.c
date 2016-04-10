@@ -14,6 +14,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include <stdio.h>
 #include "Isometric.h"
 #include <stdlib.h>
+#include "conversions.h"
 
 extern double frameTime;
 typedef struct DamageText DamageText;
@@ -62,7 +63,7 @@ GameObject* DamageTextCreate(Vector2D position, int damage)
 
   int count = 0;
 
-  while (tempHP > 0 && count < 10) 
+  while (tempHP > 0 && count < 10)
   {
     count++;
     hpstring[count] = 3;
@@ -87,11 +88,11 @@ void DamageTextSimulate(GameObject* instance)
 {
   //printf("3TEXTY5YOU");
   DamageText* instanceData = (DamageText*)(instance->miscData);
-  TextStringAddOffset(instanceData->text, Vec2(0, instanceData->life * 2));
-  TextStringSetTint(instanceData->text, GTint(1, 1, 1, instanceData->life * 2));
-  
+  TextStringAddOffset(instanceData->text, Vec2(0, (float)instanceData->life * 2));
+  TextStringSetTint(instanceData->text, GTint(1, 1, 1, (float)instanceData->life * 2));
 
-  instanceData->life -= frameTime;
+
+  instanceData->life -= (float)frameTime;
   if (instanceData->life < 0)
   {
     TextRemoveString(instanceData->text);

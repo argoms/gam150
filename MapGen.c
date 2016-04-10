@@ -107,7 +107,7 @@ void GenerateMap(IsoMap* inputMap)
   SetupBaseMap(mapWidth, mapHeight);
   //create path of rooms:
 
-  Vector2D cursor = Vec2(ROOM_SIZE / 2, ROOM_SIZE / 2); //create a "cursor" for the rooms, starting at the spawn room
+  Vector2D cursor = Vec2((float)(ROOM_SIZE / 2), (float)(ROOM_SIZE / 2)); //create a "cursor" for the rooms, starting at the spawn room
   int rooms_created = 1;
   int tries = 0; //infinite loop killer
 
@@ -124,7 +124,7 @@ void GenerateMap(IsoMap* inputMap)
   {
     int direction = (int)(RandFloat() * 4); //random direction
     Vector2D offset = directionOffsetGet(direction); //turn that random stupid number into an actual random direction
-    Vector2DScale(&offset, &offset, ROOM_SIZE);
+    Vector2DScale(&offset, &offset, (float)ROOM_SIZE);
 
     Vector2D newCursorPosition;
     Vector2DAdd(&newCursorPosition, &cursor, &offset); //travel one room size in that random direction
@@ -353,9 +353,9 @@ static void ReplaceTiles(Vector2D position, Vector2D size, int oldTile, int newT
     //cursor: tile we're currently looking at
     Vector2D cursor = Vec2(position.x + index.x, position.y + index.y);
 
-    if (overrideAll || IsoTileGet(cursor.x, cursor.y) == oldTile)
+    if (overrideAll || IsoTileGet((int)cursor.x, (int)cursor.y) == oldTile)
     {
-      IsoTileSet(cursor.x, cursor.y, newTile);
+      IsoTileSet((int)cursor.x, (int)cursor.y, newTile);
     }
 
     //indexing 2D-style
@@ -398,7 +398,7 @@ static void Room_HallsRoom(Vector2D cursor)
   GameObject* room = RoomTemplate(cursor, 0);
   MapRoom* roomData = (MapRoom*)(room->miscData);
   roomData->type = roomtype_hall;
-  ReplaceTiles(Vec2(cursor.x - ROOM_SIZE / 2, cursor.y - ROOM_SIZE / 2), Vec2(ROOM_SIZE, ROOM_SIZE), tile_floor, tile_wall);
+  ReplaceTiles(Vec2(cursor.x - (float)(ROOM_SIZE / 2), cursor.y - (float)(ROOM_SIZE / 2)), Vec2((float)ROOM_SIZE, (float)ROOM_SIZE), tile_floor, tile_wall);
 }
 
 /*!
@@ -409,9 +409,9 @@ static void Room_SmallRoom(Vector2D cursor)
   GameObject* room = RoomTemplate(cursor, 1);
   MapRoom* roomData = (MapRoom*)(room->miscData);
   roomData->type = roomtype_small;
-  ReplaceTiles(Vec2(cursor.x - ROOM_SIZE / 2, cursor.y - ROOM_SIZE / 2), Vec2(ROOM_SIZE, ROOM_SIZE), tile_floor, tile_wall);
+  ReplaceTiles(Vec2(cursor.x - (float)(ROOM_SIZE / 2), cursor.y - (float)(ROOM_SIZE / 2)), Vec2((float)ROOM_SIZE, (float)ROOM_SIZE), tile_floor, tile_wall);
 
-  ReplaceTiles(Vec2(cursor.x - ROOM_SIZE / 4, cursor.y - ROOM_SIZE / 4), Vec2(ROOM_SIZE / 2, ROOM_SIZE / 2), tile_wall, tile_floor);
+  ReplaceTiles(Vec2(cursor.x - (float)(ROOM_SIZE / 4), cursor.y - (float)(ROOM_SIZE / 4)), Vec2((float)(ROOM_SIZE / 2), (float)(ROOM_SIZE / 2)), tile_wall, tile_floor);
 }
 
 /*!
@@ -422,7 +422,7 @@ static void Room_SmallRoom(Vector2D cursor)
 static GameObject* RoomTemplate(Vector2D cursor, int spawnGates)
 {
   //replace empty with floor
-  ReplaceTiles(Vec2(cursor.x - ROOM_SIZE / 2, cursor.y - ROOM_SIZE / 2), Vec2(ROOM_SIZE, ROOM_SIZE), tile_empty, tile_floor);
+  ReplaceTiles(Vec2(cursor.x - (float)(ROOM_SIZE / 2), cursor.y - (float)(ROOM_SIZE / 2)), Vec2((float)ROOM_SIZE, (float)ROOM_SIZE), tile_empty, tile_floor);
 
   //set up the game object
   GameObject* newRoom = GameObjectCreate(PhysicsCreateObject(cursor, 0), 0, 0, entity_room); 
@@ -447,7 +447,7 @@ static GameObject* RoomTemplate(Vector2D cursor, int spawnGates)
     newRoom->simulate = &GateRoomSimulate;
 
     //if a tile at a given border is a path, make a gate
-    if (IsoTileGet(cursor.x + ROOM_SIZE / 2, cursor.y) == 2)
+    if (IsoTileGet((int)(cursor.x + (float)(ROOM_SIZE / 2)), (int)cursor.y) == 2)
     {
       newMiscData->gates[0] = CreateWorldGate(Vec2(cursor.x + ROOM_SIZE / 2, cursor.y), gate_vertical);
     }
@@ -456,7 +456,7 @@ static GameObject* RoomTemplate(Vector2D cursor, int spawnGates)
       newMiscData->gates[0] = NULL;
     }
 
-    if (IsoTileGet(cursor.x - ROOM_SIZE / 2, cursor.y) == 2)
+    if (IsoTileGet((int)(cursor.x - (float)(ROOM_SIZE / 2)), (int)cursor.y) == 2)
     {
       newMiscData->gates[1] = CreateWorldGate(Vec2(cursor.x - ROOM_SIZE / 2, cursor.y), gate_vertical);
     }
@@ -465,7 +465,7 @@ static GameObject* RoomTemplate(Vector2D cursor, int spawnGates)
       newMiscData->gates[1] = NULL;
     }
 
-    if (IsoTileGet(cursor.x, cursor.y - ROOM_SIZE / 2) == 2)
+    if (IsoTileGet((int)cursor.x, (int)(cursor.y - (float)(ROOM_SIZE / 2))) == 2)
     {
       newMiscData->gates[2] = CreateWorldGate(Vec2(cursor.x, cursor.y - ROOM_SIZE / 2), gate_horizontal);
     }
@@ -474,7 +474,7 @@ static GameObject* RoomTemplate(Vector2D cursor, int spawnGates)
       newMiscData->gates[2] = NULL;
     }
 
-    if (IsoTileGet(cursor.x, cursor.y + ROOM_SIZE / 2) == 2)
+    if (IsoTileGet((int)cursor.x, (int)(cursor.y + (float)(ROOM_SIZE / 2))) == 2)
     {
       newMiscData->gates[3] = CreateWorldGate(Vec2(cursor.x, cursor.y + ROOM_SIZE / 2), gate_horizontal);
     }
@@ -565,19 +565,19 @@ void CloseRoom(GameObject* room)
       printf("CLOSED");
       inst->sprite->tint.alpha = 0.5f;
       inst->sprite->tint.red = 1.f;
-      IsoTileSet(inst->physics->position.x, inst->physics->position.y, tile_wall);
+      IsoTileSet((int)inst->physics->position.x, (int)inst->physics->position.y, tile_wall);
       
       GateClosed(inst);
 
       switch(GetWorldGate(inst)->orientation)
       {
       case gate_horizontal:
-        IsoTileSet(inst->physics->position.x + 1, inst->physics->position.y, tile_wall);
-        IsoTileSet(inst->physics->position.x - 1, inst->physics->position.y, tile_wall);
+        IsoTileSet((int)inst->physics->position.x + 1, (int)inst->physics->position.y, tile_wall);
+        IsoTileSet((int)inst->physics->position.x - 1, (int)inst->physics->position.y, tile_wall);
         break;
       case gate_vertical:
-        IsoTileSet(inst->physics->position.x, inst->physics->position.y + 1, tile_wall);
-        IsoTileSet(inst->physics->position.x, inst->physics->position.y - 1, tile_wall);
+        IsoTileSet((int)inst->physics->position.x, (int)inst->physics->position.y + 1, tile_wall);
+        IsoTileSet((int)inst->physics->position.x, (int)inst->physics->position.y - 1, tile_wall);
         break;
       }
     }

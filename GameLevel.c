@@ -54,7 +54,6 @@ void GameLevelInit(void)
   EnemyAnimationInitialize();
   //EnemyImportInfo(ENEMY_TYPE_RANGED, "EnemyRanged.txt");
   Entity* playerEntity;
-	int i;
 
   /*
 

@@ -28,6 +28,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "LevelManager.h"
 #include "PlayerSmoke.h"
 #include "EnvironmentalEffects.h"
+#include "Audio.h"
 
 extern double frameTime;
 
@@ -61,7 +62,7 @@ static int dodge_key = VK_SPACE;
 static int isDead;
 
 //the following enums are used for the player action bit field:
-static enum directions 
+ enum directions 
 {
   PLAYER_LEFT = 1,
   PLAYER_RIGHT = 2,
@@ -69,7 +70,7 @@ static enum directions
   PLAYER_DOWN = 8
 };
 
-static enum actions
+ enum actions
 {
   PLAYER_IDLE = 16,
   PLAYER_WALK = 32,
@@ -106,7 +107,7 @@ void PlayerInit()
   //
 
   attackCooldown = 0;
-  attackCooldownLength = 0.5;
+  attackCooldownLength = 0.5f;
   attackDamage = 1;
   tracerAnimation = GCreateAnimation(1,
     GCreateTexture("isotilePlaceholder1.png"),
@@ -115,8 +116,8 @@ void PlayerInit()
 
   //set up player movement vars:
   playerMaxSpeed = 1;
-  playerAccel = 0.2;
-  playerDrag = 0.7;
+  playerAccel = 0.2f;
+  playerDrag = 0.7f;
 
   
   //load animations:
@@ -240,11 +241,11 @@ void PlayerSimulate()
   {
     if (playerAccel < 0.3)
     {
-      playerAccel = 0.5;
+      playerAccel = 0.5f;
     }
     else
     {
-      playerAccel = 0.2;
+      playerAccel = 0.2f;
     }
   }
   
@@ -294,7 +295,7 @@ void PlayerInput()
   {
     playerSprite->frameDelay = 3;
     //get movement vector:
-    Vector2D input = Vec2(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41),
+    Vector2D input = Vec2((float)(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41)),
       ((float)(AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53)) / 2));
     
 
@@ -303,11 +304,11 @@ void PlayerInput()
     
     if (input.x != 0 || input.y != 0)
     {
-      stepSoundTimer -= frameTime;
+      stepSoundTimer -= (float)frameTime;
       if(stepSoundTimer < 0)
       {
        Audio_PlaySoundSample("FootstepPlayer1.ogg", 0);
-       stepSoundTimer = 0.3;
+       stepSoundTimer = 0.3f;
       }
       Vector2DNormalize(&input, &input);
       Vector2DScale(&input, &input, 10);
@@ -318,7 +319,7 @@ void PlayerInput()
     else
     {
 
-      stepSoundTimer = 0.1;
+      stepSoundTimer = 0.1f;
       //if idle, set idle flag and remove walk flag
       if (!(playerAction & PLAYER_IDLE)) //called on the frame where player goes from walk to idle
       {
@@ -334,7 +335,7 @@ void PlayerInput()
   }
   else if(playerAction & PLAYER_SWORD)
   {
-    Vector2D input = Vec2(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41),
+    Vector2D input = Vec2((float)(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41)),
       ((float)(AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53)) / 2));
     Vector2DScale(&input, &input, 5);
     player->physics->velocity.x += IsoScreenToWorld(&input).x * playerAccel; 
@@ -369,7 +370,7 @@ static void SnapVector(Vector2D* _input)
 {
   //get input dir
   float directionAngle = atan2f(_input->y, _input->x);
-  float fortyFiveDegrees = 0.785398;
+  float fortyFiveDegrees = 0.785398f;
   directionAngle = lroundf(directionAngle / fortyFiveDegrees) * fortyFiveDegrees;
   
   //note: probably more efficient to switch
@@ -437,14 +438,14 @@ static void PlayerAttack()
   mouseX += -400;
   mouseY += -300;
   */
-  mouseX += (AEGfxGetWinMaxX() - AEGfxGetWinMinX()) / -2;
-  mouseY += (AEGfxGetWinMaxY() - AEGfxGetWinMinY()) / -2;
+  mouseX += (long)((AEGfxGetWinMaxX() - AEGfxGetWinMinX()) / -2);
+  mouseY += (long)((AEGfxGetWinMaxY() - AEGfxGetWinMinY()) / -2);
   //printf("%f", (AEGfxGetWinMaxX() - AEGfxGetWinMinX()) / -2);
   /***/
 
   //printf("%i, %i|||", mouseX, mouseY);
   //AEGfxConvertScreenCoordinatesToWorld(mouseX, mouseY, &(mousePos.x), &(mousePos.y));
-  Vector2D mousePos = Vec2(mouseX, mouseY * -1);
+  Vector2D mousePos = Vec2((float)mouseX, (float)mouseY * -1);
   //SnapVector(&mousePos);
 
   mousePos = IsoScreenToWorld(&mousePos);

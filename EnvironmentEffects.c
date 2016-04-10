@@ -34,7 +34,6 @@ struct ParticleComponent
   void(*extraBehavior)();
 };
 void ParticleSimulate(GameObject* inst);
-GameObject* EffectCreate(Vector2D minVelocity, Vector2D maxVelocity, Vector2D position, int density);
 void EffectSimulate(GameObject* inst);
 void ParticleSimulate(GameObject* inst);
 void ParticleInitialize(GameObject* inst);
@@ -169,10 +168,10 @@ static GameObject* ParticleCreate(Vector2D position, GameObject* parent, float l
 void EffectSimulate(GameObject* inst)
 {
   EffectSource* instComponent = (EffectSource*)(inst->miscData);
-  instComponent->emitDelayCounter += AEFrameRateControllerGetFrameTime();
+  instComponent->emitDelayCounter += (float)AEFrameRateControllerGetFrameTime();
 
 
-  instComponent->lifetime -= AEFrameRateControllerGetFrameTime();
+  instComponent->lifetime -= (float)AEFrameRateControllerGetFrameTime();
   if (instComponent->lifetime < 0 && instComponent->lifetime > IMMORTAL_PARTICLE_LIFETIME)
   {
     EffectRemove(inst);
@@ -251,7 +250,7 @@ void ParticleSimulate(GameObject* inst)
       GSortSprite(inst->sprite, 0);
 
 
-      instComponent->lifeCounter += AEFrameRateControllerGetFrameTime();
+      instComponent->lifeCounter += (float)AEFrameRateControllerGetFrameTime();
 
       //kill the thing:
       if (instComponent->lifeCounter > instComponent->maxLife)
