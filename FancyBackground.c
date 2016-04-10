@@ -39,7 +39,7 @@ ChangeLog
 #define MIN_OSC_Y 0.05f
 #define MAX_OSC_Y 0.5f
 
-#define MAX_SIZE_X 10.f
+#define MAX_SIZE_X 15.f
 #define MIN_SIZE_X 5.f
 
 #define MAX_SIZE_Y 100.f
@@ -208,7 +208,7 @@ void Background_Update()
     /* Update the sprite information. */
 
     /* Scale the sprite. */
-    pInst->scaleX *= RandFloatRange(0.1f, 1.2f);// *(float)deltaTime;
+    pInst->scaleX *= RandFloatRange(0.1f, 1.5f);// *(float)deltaTime;
     pInst->scaleY *= RandFloatRange(0.1f, 1.7f);// *(float)deltaTime;
 
     /* Clamp the scale. */
