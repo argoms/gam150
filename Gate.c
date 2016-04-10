@@ -19,6 +19,8 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include <stdlib.h>
 #include "EnvironmentalEffects.h"
 #include "EnvironmentAssets.h"
+#include "Audio.h"
+#include <stdio.h>
 
 static float GATE_FADE_DIST = 5.f;
 
@@ -48,8 +50,8 @@ GameObject* CreateWorldGate(Vector2D position, int orientation)
   newGate->miscData = (WorldGate*)malloc(sizeof(WorldGate));
   
   WorldGate* gateData = GetWorldGate(newGate);
-  gateData->positionX = position.x;
-  gateData->positionY = position.y;
+  gateData->positionX = (int)position.x;
+  gateData->positionY = (int)position.y;
   gateData->orientation = orientation;
   gateData->status = gate_open;
 

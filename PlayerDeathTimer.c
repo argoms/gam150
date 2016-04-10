@@ -49,7 +49,7 @@ void DeathTimerSimulate(GameObject* inst)
   //printf("%p\n", fadesprite);
   DeathTimer* dtComponent = (DeathTimer*)(inst->miscData);
 
-  dtComponent->time -= AEFrameRateControllerGetFrameTime();
+  dtComponent->time -= (float)AEFrameRateControllerGetFrameTime();
   if (dtComponent->time < 0)
   {
     //TextRemoveString(fadeText);

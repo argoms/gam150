@@ -25,7 +25,7 @@ static Sprite* splashScreen;
 void SplashScreenInit()
 {
   TextInit();
-  splashScreen = GCreateSprite(0, 0, GCreateAnimation(1, GCreateTexture("splash.png"), GCreateMesh(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), 1, 1), 1), 1);
+  splashScreen = GCreateSprite(0, 0, GCreateAnimation(1, GCreateTexture("splash.png"), GCreateMesh((float)GetSystemMetrics(SM_CXSCREEN), (float)GetSystemMetrics(SM_CYSCREEN), 1, 1), 1), 1);
   //TextCreateString("", -300, -50);
   //printf("AAA");
   printf("AAA");
@@ -42,7 +42,7 @@ void SplashScreenInit()
 void SplashScreenRun()
 {
  
-  time -= AEFrameRateControllerGetFrameTime();
+  time -= (float)AEFrameRateControllerGetFrameTime();
 
   /* Matt's fade-in code */
   {

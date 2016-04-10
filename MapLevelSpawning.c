@@ -75,7 +75,7 @@ void GenerateMapObjects()
     {
       if (IsoTileGet(i, j) == tile_wall)
       {
-        Vector2D tilePos = Vec2(i, j);
+        Vector2D tilePos = Vec2((float)i, (float)j);
         float tileX = IsoWorldToScreen(&tilePos).x;
         float tileY = IsoWorldToScreen(&tilePos).y;
         //printf("(%i, %i)", i, j);
@@ -86,7 +86,7 @@ void GenerateMapObjects()
 
       if (IsoTileGet(i, j) == tile_floor)
       {
-        Vector2D tilePos = Vec2(i, j);
+        Vector2D tilePos = Vec2((float)i, (float)j);
         float tileX = IsoWorldToScreen(&tilePos).x;
         float tileY = IsoWorldToScreen(&tilePos).y;
         //printf("(%i, %i)", i, j);
@@ -97,14 +97,14 @@ void GenerateMapObjects()
         int i = 0;
         while (i < 4 && (i < 2 || RandFloat() < 0.6))
         {
-          Vector2D extraOffset = Vec2(0, -16 * i);
+          Vector2D extraOffset = Vec2(0, -16.f * i);
           //extraOffset = IsoScreenToWorld(&extraOffset);
 
           //printf("(%i, %i)", i, j);
           Sprite* newObj = GCreateSprite(tileX + extraOffset.x, tileY + 96 + extraOffset.y, tileAnim_floor, 0);
           newObj->offset = extraOffset;
           newObj->offset.y -= 154;
-          newObj->tint.alpha = (0.3 * RandFloat()) + 0.1f;
+          newObj->tint.alpha = (0.3f * RandFloat()) + 0.1f;
           i++;
         }
 
@@ -113,12 +113,12 @@ void GenerateMapObjects()
       //FOR DEBUG PURPOSES:
       if (IsoTileGet(i, j) == tile_path)
       {
-        Vector2D tilePos = Vec2(i, j);
+        Vector2D tilePos = Vec2((float)i, (float)j);
         float tileX = IsoWorldToScreen(&tilePos).x;
         float tileY = IsoWorldToScreen(&tilePos).y;
         //printf("(%i, %i)", i, j);
         Sprite* newObj = GCreateSprite(tileX, tileY + 96, tileAnim_path, 0);
-        newObj->tint.alpha = (0.3 * RandFloat()) + 0.7;
+        newObj->tint.alpha = (0.3f * RandFloat()) + 0.7f;
         newObj->offset.y = -96;
       }
 
@@ -126,14 +126,14 @@ void GenerateMapObjects()
       {
         if (RandFloat() > 0.5f)
         {
-          Vector2D tilePos = Vec2(i, j);
+          Vector2D tilePos = Vec2((float)i, (float)j);
           int object = RandIntRange(0, 2);
           switch (object)
           {
           case environment_block:
 
            
-            tilePos = Vec2(i, j);
+            tilePos = Vec2((float)i, (float)j);
             float tileX = IsoWorldToScreen(&tilePos).x;
             float tileY = IsoWorldToScreen(&tilePos).y;
 
@@ -177,13 +177,13 @@ void MakeClouds()
   int i = 0;
   while (i++ < 256)
   {
-    Vector2D randomPos = Vec2((0.5 - RandFloat()) * mapWidth, (0.5 - RandFloat()) * mapHeight);
+    Vector2D randomPos = Vec2((0.5f - RandFloat()) * mapWidth, (0.5f - RandFloat()) * mapHeight);
     //printf("pre-iso: %f, %f\n", randomPos.x, randomPos.y);
     randomPos = IsoWorldToScreen(&randomPos);
     //printf("new cloud: %f, %f\n", randomPos.x, randomPos.y);
 
     GameObject* cloudObject = GameObjectCreate(0, GCreateSprite(randomPos.x, randomPos.y, cloud, 0), 0, entity_cloud);
-    cloudObject->sprite->tint.alpha = 0.1;
+    cloudObject->sprite->tint.alpha = 0.1f;
     CloudInit(cloudObject);
   }
 }
