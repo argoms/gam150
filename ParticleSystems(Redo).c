@@ -1,3 +1,4 @@
+//NOTE: THIS FILE IS DEPRECATED, NO FUNCTIONALITY IS USED
 /*****************************************************************************/
 /*!
 \file   ParticleSystems(Redo).c

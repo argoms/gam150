@@ -54,7 +54,7 @@ extern int level;
 */
 void LevelLoad(int _level)
 {
-  LoadAll_PS();
+  //LoadAll_PS(); DEPRECATED (jack's non-functional code)
 
   GInitialize();
 

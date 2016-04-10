@@ -1,3 +1,13 @@
+/*!
+Project (working title): Epoch
+\file   EnvironmentalEffects.h
+\author James Do
+\par    email: j.do\@digipen.edu
+\brief
+Particle system declarations
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+*/
 #include "EnvironmentalEffects.h"
 #include "GameObject.h"
 #include <math.h>
@@ -14,25 +24,32 @@ static Animation* ParticleAnimation;
 //internal value: particle system assigned lifetime lower than this number will count as immortal
 static float IMMORTAL_PARTICLE_LIFETIME = -5.f;
 
+/*!
+\struct ParticleComponent
+\brief Information used by individual particles within a particle system.
+*/
 struct ParticleComponent
 {
   Vector2D velocity;
-  float offsetY;
-  float lifeCounter;
-  float maxLife;
-  int alive;
+  float lifeCounter; /**<internal counter of current lifetime*/
+  float maxLife; /**< base lifetime of particle*/
+  int alive; /**< whether particle is currently being rendered, see ParticleStates enum*/
   float zVelocity;
   float zPosition;
   float damping;
 
+  //random extra pointers because of how gameobject's memory management works 
+  //(it doesn't like pointers to otherwise unreachable memory within "misc" components)
   float extrainfo1;
   float extrainfo2;
   int extrainfo3;
 
 
-  int ownerDead; //flag set to true once owner system is destroyed
-  void(*extraBehavior)();
+  int ownerDead; /**< flag set to true once owner system is destroyed*/
+  void(*extraBehavior)(); /**< Pointer to any additional functionality (e.g. fading out)*/
 };
+
+//PROTOTYPES FOR INTERNALLY USED FUNCTIONS:
 void ParticleSimulate(GameObject* inst);
 void EffectSimulate(GameObject* inst);
 void ParticleSimulate(GameObject* inst);
@@ -43,7 +60,7 @@ void ParticleBehavior_FadeLinear(GameObject* inst);
 
 
 /*!
-\brief Oh god, I've gone full Noah.
+\brief Oh god, I've gone full Noah. Function used to create a new particle system.
 
 \param minVelocity base velocity value
 \param maxVelocity added velocity value (0-100% of value added randomly)
@@ -60,67 +77,51 @@ void ParticleBehavior_FadeLinear(GameObject* inst);
 
 \param positionVariance a random scalar between -50% and 50% (axis independent) of x and y are added to position on spawning, centered on position
 \param zPositionVariance random scalar between -50% and 50% of this number is added to z position on spawning, centered on position
+
+\return Returns a pointer to the particle system GameObject
 */
 GameObject* EffectCreate(Vector2D minVelocity, Vector2D maxVelocity, Vector2D position, int density, 
   float emitDelay, Vector2D zVelocityVariance, float damping, float particleLifeTime, 
   float zPosition, Vector2D positionVariance, 
   float zPositionVariance, Tint particleTint)
 {
-  /*
-  if (convertType == transform_screenToWorld)
-  {
-    Vector2D minVel = Vec2(minVelocity.x, minVelocity.y);
-    minVelocity = IsoScreenToWorld(&minVel);
-    
-    Vector2D maxVel = Vec2(maxVelocity.x, maxVelocity.y);
-    maxVelocity = IsoScreenToWorld(&maxVel);
-    //printf("pretrapos: %f, %f", position.x, position.y);
-
-
-    Vector2D pos = Vec2(position.x, position.y);
-    position = IsoScreenToWorld(&pos);
-    //printf("postrapos: %f, %f\n", position.x, position.y);
-  }
-  else if (convertType == transform_worldToScreen)
-  {
-    Vector2D minVel = Vec2(minVelocity.x, minVelocity.y);
-    minVelocity = IsoWorldToScreen(&minVel);
-
-    Vector2D maxVel = Vec2(maxVelocity.x, maxVelocity.y);
-    maxVelocity = IsoWorldToScreen(&maxVel);
-    //printf("pretrapos: %f, %f", position.x, position.y);
-
-
-    Vector2D pos = Vec2(position.x, position.y);
-    position = IsoWorldToScreen(&pos);
-  }*/
-
+  //create new particle effect GameObject
   GameObject* newEffect = GameObjectCreate(0, 0, 0, entity_particle);
   newEffect->simulate = &EffectSimulate;
 
+  //create the component specific to particle effect (and set values according to passed in parameters)
   EffectSource* newEffectComponent = (EffectSource*)(malloc(sizeof(EffectSource)));
+
+  //x/y velocity:
   newEffectComponent->minVelocity = minVelocity;
   newEffectComponent->maxVelocity = maxVelocity;
-  newEffectComponent->position = position;
-  newEffectComponent->zPosition = zPosition;
-  newEffectComponent->state = particle_active;
-  newEffectComponent->damping = damping;
-  newEffectComponent->zVelocityVariance = zVelocityVariance;
 
-  newEffectComponent->zVelocityVariance = zVelocityVariance;
-  newEffectComponent->zPositionVariance = zPositionVariance;
+  //x/y position:
+  newEffectComponent->position = position;
   newEffectComponent->positionVariance = positionVariance;
 
-  //printf("%f %f \n", newEffectComponent->positionVariance.x, newEffectComponent->positionVariance.y);
+  //state:
+  newEffectComponent->state = particle_active;
 
+  
+  //Z-variance/position
+  newEffectComponent->zPosition = zPosition;
+  newEffectComponent->zVelocityVariance = zVelocityVariance;
+  newEffectComponent->zPositionVariance = zPositionVariance;
+  
+  //particle emit rates:
   newEffectComponent->emitDelay = emitDelay;
   newEffectComponent->emitDelayCounter = 0;
-  newEffectComponent->tint = particleTint;
 
+  //misc:
+  newEffectComponent->tint = particleTint;
+  newEffectComponent->damping = damping;
+
+  //lifetime defaults to infinite unless set after creation
   newEffectComponent->lifetime = IMMORTAL_PARTICLE_LIFETIME - 1;
 
   
-
+  //instantiate particles:
   newEffectComponent->density = density;
   for (int i = 0; i < density; i++)
   {
@@ -134,15 +135,21 @@ GameObject* EffectCreate(Vector2D minVelocity, Vector2D maxVelocity, Vector2D po
     //printf("asd asd %p", newEffectComponent->particles[i]);
   }
 
-  printf("asd asd %p", newEffectComponent->particles[0]);
+  //assign created component to GameObject
   newEffect->miscData = newEffectComponent;
+
   return newEffect;
 }
 
 
+/*!
+\brief Used internally during particle system initialization to instantiate particles.
 
+\param parent The particle system's GameObject.
+*/
 static GameObject* ParticleCreate(Vector2D position, GameObject* parent, float lifeTime)
 {
+  //create new gameobject and parent it to the particle system
   GameObject* newParticle = GameObjectCreate(0, GCreateSprite(position.x, position.y, ParticleAnimation, 0), 0, entity_particle);
   newParticle->parent = parent;
   newParticle->simulate = &ParticleSimulate;
@@ -151,6 +158,7 @@ static GameObject* ParticleCreate(Vector2D position, GameObject* parent, float l
   ParticleComponent* newParticleComponent = (ParticleComponent*)(malloc(sizeof(ParticleComponent)));
   newParticle->miscData = newParticleComponent;
 
+  //initialize values:
   newParticleComponent->velocity.x = 0;
   newParticleComponent->velocity.y = 0;
   newParticleComponent->extraBehavior = NULL;
@@ -165,13 +173,20 @@ static GameObject* ParticleCreate(Vector2D position, GameObject* parent, float l
   
 }
 
+/*!
+\brief Function run every frame on every particle system
+\param inst Pointer to GameObject being affected
+*/
 void EffectSimulate(GameObject* inst)
 {
-  EffectSource* instComponent = (EffectSource*)(inst->miscData);
-  instComponent->emitDelayCounter += (float)AEFrameRateControllerGetFrameTime();
+  EffectSource* instComponent = (EffectSource*)(inst->miscData); //grab pointer to particle system's component
+
+  instComponent->emitDelayCounter += (float)AEFrameRateControllerGetFrameTime(); //update internal timer
 
 
-  instComponent->lifetime -= (float)AEFrameRateControllerGetFrameTime();
+  instComponent->lifetime -= (float)AEFrameRateControllerGetFrameTime(); //decrease internal lifetime counter
+
+  //kill particle system if applicable (countdown timer < 0  and particle system not marked as immortal
   if (instComponent->lifetime < 0 && instComponent->lifetime > IMMORTAL_PARTICLE_LIFETIME)
   {
     EffectRemove(inst);
@@ -183,6 +198,9 @@ void EffectSimulate(GameObject* inst)
   //}
 }
 
+/*!
+\brief Called to properly destroy a particle system (GameObjectDestroy doesn't cover everything for particles)
+*/
 void EffectRemove(GameObject* inst)
 {
   if (!inst)
@@ -190,74 +208,68 @@ void EffectRemove(GameObject* inst)
     printf("EffectRemove: tried to remove null object\n");
     return;
   }
-  //printf("AAAAA");
   EffectSource* instComponent = (EffectSource*)(inst->miscData);
 
 
-  //printf("%i asdasdADs", instComponent->density);
+  //Index through child particles and tell them that their parent is dead (lets them die naturally instead of instantly vanishing with their parent)
+  //Huh, that phrasing.
   for (int i = 0; i < instComponent->density ; i++)
   {
     
     GameObject* current = ((GameObject*)instComponent->particles[i]);
-
-    
-   // ->parent = NULL;
-   // ((GameObject*)instComponent->particles[i])->simulate = NULL;
-
-    //printf("%p \n", instComponent->particles[i]);
     if ((ParticleComponent*)((current)->miscData))
     {
-      //printf("%p \n", 0);//(ParticleComponent*)((current)->miscData));
-      //continue;
       ((ParticleComponent*)((current)->miscData))->ownerDead = 1;
     }
-    //printf("YUNONUL %p", ((GameObject*)instComponent->particles[i])->parent);
-    //GameObjectDestroy(&(instComponent->particles[i]));
   }
+
+  //After that, destroy the actual particle system object normally:
   GameObjectDestroy(&inst);
 }
 
+/*!
+\brief Function called by every particle GameObject.
+\param inst GameObject calling the function.
+*/
 void ParticleSimulate(GameObject* inst)
 {
   ParticleComponent* instComponent = (ParticleComponent*)(inst->miscData);
+
   //if (!instComponent->ownerDead)
   {
-    //printf("IMOK, %p", inst->parent);
-    //ParticleComponent* instComponent = (ParticleComponent*)(inst->miscData);
+    //grab a pointer to the parent particle system's component:
     EffectSource* ownerSystem = ((EffectSource*)(inst->parent->miscData));
 
-    if (instComponent->alive == particle_active)
+    if (instComponent->alive == particle_active) //if the particle (not the system) is currently active, run this:
     {
 
-      if (instComponent->extraBehavior)
-      {
-        instComponent->extraBehavior();
-      }
+      //update position based on velocity:
       inst->sprite->x += instComponent->velocity.x;
       inst->sprite->y += instComponent->velocity.y;
       inst->sprite->offset.y += instComponent->zVelocity;
       
-      //ParticleBehavior_FadeLinear(inst);
-      if (instComponent->extraBehavior)
+      if (instComponent->extraBehavior) //any extra behavior if applicable
       {
         instComponent->extraBehavior(inst);
       }
 
+      //apply damping effect (scale velocity by damping value):
       Vector2DScale(&instComponent->velocity, &instComponent->velocity, instComponent->damping);
       instComponent->zVelocity *= instComponent->damping;
 
       //printf("ERM %f\n, ownerSystem->damping", ownerSystem->damping);
       GSortSprite(inst->sprite, 0);
 
-
+      //update lifetime counter:
       instComponent->lifeCounter += (float)AEFrameRateControllerGetFrameTime();
 
-      //kill the thing:
+      //kill the thing if time has run out:
       if (instComponent->lifeCounter > instComponent->maxLife)
       {
         instComponent->alive = particle_inactive;
         instComponent->lifeCounter = 0.f;
-        if (instComponent->ownerDead)
+
+        if (instComponent->ownerDead) //if the parent is dead, destroy the particle instead of only recycling
         {
           GameObjectDestroy(&inst);
         }
@@ -265,14 +277,16 @@ void ParticleSimulate(GameObject* inst)
     }
     else
     {
-      //printf("AAAA");
-      if (instComponent->ownerDead)
+      //if the particle is inactive (not currently being rendered), do the following:
+
+      if (instComponent->ownerDead) //if the parent is dead, destroy the object
       {
         inst->sprite->tint.alpha = 0.f;
         GameObjectDestroy(&inst);
         return;
         
       }
+
       //go full transparent if inactive (recycle if parent system is still active)
       if (ownerSystem->state == particle_active)
       {
@@ -288,12 +302,15 @@ void ParticleSimulate(GameObject* inst)
       else
       {
 
-        inst->sprite->tint.alpha = 0.f;
+        inst->sprite->tint.alpha = 0.f; //if parent is marked as inactive, go transparent
       }
     }
   }
 }
 
+/*!
+\brief Called to initialize a particle system based on its parent's values. Seriously, the phrasing in this c file!
+*/
 void ParticleInitialize(GameObject* inst)
 {
   inst->sprite->tint.alpha = 1.f;
@@ -320,11 +337,19 @@ void ParticleInitialize(GameObject* inst)
   
 }
 
+/*!
+\brief Makes all following particle animations use the given input as their particle.
+
+Why? Because there were so many parameters in the particle system creation function that it was easier to split this stuff up.
+*/
 void SetParticleAnim(Animation* input)
 {
   ParticleAnimation = input;
 }
 
+/*!
+\brief Used to set lifetime of a particle system (make them non-immortal)
+*/
 void ParticleSetLifetime(GameObject* inst, float life)
 {
   EffectSource* instComponent = (EffectSource*)(inst->miscData);
@@ -334,25 +359,25 @@ void ParticleSetLifetime(GameObject* inst, float life)
 /*!
 \brief Particle behavior for a linear fade (alpha reduces at a fixed rate)
 
-uses extrainfo1 for delta value
 */
 void ParticleBehavior_FadeLinear(GameObject* inst)
 {
-  //printf("AAA");
-  //return;
   ParticleComponent* particleComponent = (ParticleComponent*)(inst->miscData);
-  inst->sprite->tint.alpha -= 0.05f;// particleComponent->extrainfo1;
+  inst->sprite->tint.alpha -= 0.05f;
 }
 
 /*!
-applies a particle behavior
+Applies a nonstandard particle behavior to the given particle system.
+
+\param behavior See ParticleBehaviors enum
+\param inst Pointer to particle system to modify
 */
 void ParticleApplyBehavior(int behavior, GameObject* inst)
 {
-  void(*behaviorPointer)();
+  void(*behaviorPointer)(); //pointer to behavior to apply
   EffectSource* effectComponent = (EffectSource*)(inst->miscData);;
 
-
+  //set pointer according to input
   switch (behavior)
   {
   case particleBehavior_linearAlpha:
@@ -360,16 +385,14 @@ void ParticleApplyBehavior(int behavior, GameObject* inst)
     break;
   default:
     printf("ApplyParticleBehavior error: invalid particle input %i given \n", behavior);
-    break;
+    return;
   }
 
-
+  //index through the given particle system and give them the new behavior
   for (int i = 0; i < effectComponent->density - 1; i++)
   {
     GameObject* pInst = effectComponent->particles[i];
     ParticleComponent* particleComponent = (ParticleComponent*)(pInst->miscData);
-    //printf("%p \n", pInst);
-    
     particleComponent->extraBehavior = &ParticleBehavior_FadeLinear;
   }
 }
