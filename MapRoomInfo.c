@@ -15,6 +15,9 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "GameLevel.h"
 #include "Enemy.h"
 #include <stdio.h>
+#include "MyRandom.h"
+
+int ChooseEnemyType();
 /*
 struct MapRoomInfo
 {
@@ -77,6 +80,27 @@ void MapRoomInfoClear(MapRoomInfo* first)
 void MapRoomBehavior_BasicEnemies(MapRoom* roomData)
 {
   Vector2D cursor = Vec2(roomData->position.x, roomData->position.y);
+  roomData->numEnemies = 0;
+  for (int i = 0; i < 5; i++)
+  {
+    cursor.x += (((roomData->size - 4) / -2) + (RandFloat() * (roomData->size - 4)));
+    cursor.y += (((roomData->size - 4) / -2) + (RandFloat() * (roomData->size - 4)));
+
+    if (PhysicsDistSQ(cursor, GetPlayerObject()->physics->position) > 4)
+    {
+      GameObject* newEnemy;
+      roomData->numEnemies++;
+      newEnemy = EnemySpawn(cursor.x, cursor.y, ChooseEnemyType(), GetPlayerObject());
+      newEnemy->parent = roomData->parent;
+    } 
+    else
+    {
+      i--;
+    }
+    cursor = Vec2(roomData->position.x, roomData->position.y);
+
+  }
+  /*
   //printf("======= %f, %f======= ROOM POSITION\n", cursor.x, cursor.y);
   roomData->numEnemies = 2;
   GameObject* newEnemy;
@@ -85,6 +109,7 @@ void MapRoomBehavior_BasicEnemies(MapRoom* roomData)
   GameObject* yetAnotherEnemy;
   yetAnotherEnemy = EnemySpawn(cursor.x, cursor.y, ENEMY_TYPE_MELEE_BIG, GetPlayerObject());
   yetAnotherEnemy->parent = roomData->parent;
+  */
 }
 
 /*!
@@ -101,4 +126,19 @@ void MapRoomBehavior_SmallRoom(MapRoom* roomData)
   GameObject* yetAnotherEnemy;
   yetAnotherEnemy = EnemySpawn(cursor.x, cursor.y, ENEMY_TYPE_MELEE_BIG, GetPlayerObject());
   yetAnotherEnemy->parent = roomData->parent;
+}
+
+/*!
+\brief Chooses what type of enemy to spawn, with distributions of probabilities based on the level.
+*/
+int ChooseEnemyType()
+{
+  if (RandFloat() > 0.35f)
+  {
+    return ENEMY_TYPE_MELEE;
+  }
+  else
+  {
+    return ENEMY_TYPE_MELEE_BIG;
+  }
 }
