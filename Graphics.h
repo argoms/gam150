@@ -80,8 +80,10 @@ struct SpriteList
 
 /*!
 \struct Animation
-\brief contains information about animations
-Note: animation spritesheet should be 1 frame high- all frames on horizontal strip.
+\brief Contains information about animation objects.
+An animation object can be thought of as an "action" that can be applied to a sprite: for example, I could attach the "enemny walk left" animation
+to any number of sprites, and they would all function independently (current frame info is sotred on sprite struct). Animations act as the
+container for calculating what frame to render based on a given mesh and texture.
 */
 struct Animation
 {

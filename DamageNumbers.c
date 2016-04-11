@@ -14,6 +14,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include <stdio.h>
 #include "Isometric.h"
 #include <stdlib.h>
+#include "conversions.h"
 
 extern double frameTime;
 typedef struct DamageText DamageText;
@@ -40,8 +41,8 @@ struct DamageText
 GameObject* DamageTextCreate(Vector2D position, int damage)
 {
   //create a buffer and write the damage values to it
-  char buffer[10];
-  sprintf_s(buffer, 10, "%d", damage);
+  //char buffer[10];
+  //sprintf_s(buffer, 10, "%d", damage);
 
   //set up gameobject with lots of nulls
   GameObject* damageText = GameObjectCreate(NULL, NULL, NULL, entity_damageText);
@@ -55,7 +56,22 @@ GameObject* DamageTextCreate(Vector2D position, int damage)
 
   DamageText* newObjectData = (DamageText*)(damageText->miscData);
   position = IsoWorldToScreen(&position);
-  newObjectData->text = TextCreateString(buffer, position.x, position.y);
+
+  //code shamlessly ripped from playerHUD
+  char hpstring[20] = "            ";
+  int tempHP = damage;
+
+  int count = 0;
+
+  while (tempHP > 0 && count < 10)
+  {
+    count++;
+    hpstring[count] = 3;
+    tempHP -= 1;
+  }
+
+  newObjectData->text = TextCreateString(hpstring, position.x, position.y);
+
   newObjectData->life = 1;
   newObjectData->damage = damage;
 
@@ -72,9 +88,11 @@ void DamageTextSimulate(GameObject* instance)
 {
   //printf("3TEXTY5YOU");
   DamageText* instanceData = (DamageText*)(instance->miscData);
-  TextStringAddOffset(instanceData->text, Vec2(0, 1));
-  
-  instanceData->life -= frameTime;
+  TextStringAddOffset(instanceData->text, Vec2(0, (float)instanceData->life * 2));
+  TextStringSetTint(instanceData->text, GTint(1, 1, 1, (float)instanceData->life * 2));
+
+
+  instanceData->life -= (float)frameTime;
   if (instanceData->life < 0)
   {
     TextRemoveString(instanceData->text);

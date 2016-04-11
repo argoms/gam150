@@ -22,12 +22,13 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "MapGen.h"
 #include "conversions.h"
 #include "EnvironmentalEffects.h"
+#include "EnvironmentAssets.h"
 
 //private info 
 #define NUM_ROOMS 12
 
 //Think of this as MAX room size, not just room size.
-static int ROOM_SIZE = 9;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/
+static int ROOM_SIZE = 15;//22; /**< Room size, subtract 2 from this due to increased wall thickness*/
 static int MAP_SEED = 32;
 
 
@@ -42,7 +43,10 @@ enum MapGen_RoomStates
 enum MapGen_RoomTypes
 {
   roomtype_start,
+  //PUT EXTRA ROOM TYPES IN HERE
   roomtype_simple,
+  roomtype_small,
+  //
   roomtype_hall
 };
 
@@ -68,6 +72,7 @@ static int RoomValid(Vector2D cursor, int mapW, int mapH);
 static void SpawnMapRooms(MapRoomInfo* rooms);
 static void ReplaceTiles(Vector2D position, Vector2D size, int oldTile, int newTile);
 static void Room_HallsRoom(Vector2D cursor);
+static void Room_SmallRoom(Vector2D cursor);
 
 static Animation* GateAnimationHorizontal;
 
@@ -75,24 +80,31 @@ static Animation* GateAnimationVertical;
 //implementation:
 void GenerateMap(IsoMap* inputMap)
 {
+  EnvironmentAssetsInitialize();
+
   //AEGfxGetCamPosition
-  printf("A");
+
+  //textures used during map generation (for gates):
   GateAnimationHorizontal = GCreateAnimation(1,
     GCreateTexture("animations/world/gateHorizontal.png"),
     GCreateMesh(256.f, 256.f, 1, 1),
     1);
-  printf("B");
   GateAnimationVertical = GCreateAnimation(1,
     GCreateTexture("animations/world/gateVertical.png"),
     GCreateMesh(256.f, 256.f, 1, 1),
     1);
-  printf("C");
+
+  //shorter references:
   int mapHeight = inputMap->mapHeight;
   int mapWidth = inputMap->mapWidth;
+
+  //index vars:
   int i = 0;
   int j = 0;
 
+  //get a random seed, then seed with that
   MAP_SEED =  rand();
+
   RandSeed(MAP_SEED);
   printf("\n \n \n GENERATING MAP WITH SEED %i AND %i ROOMS\n \n \n", MAP_SEED, NUM_ROOMS);
 
@@ -100,7 +112,7 @@ void GenerateMap(IsoMap* inputMap)
   SetupBaseMap(mapWidth, mapHeight);
   //create path of rooms:
 
-  Vector2D cursor = Vec2(ROOM_SIZE / 2, ROOM_SIZE / 2); //create a "cursor" for the rooms, starting at the spawn room
+  Vector2D cursor = Vec2((float)(ROOM_SIZE / 2), (float)(ROOM_SIZE / 2)); //create a "cursor" for the rooms, starting at the spawn room
   int rooms_created = 1;
   int tries = 0; //infinite loop killer
 
@@ -117,7 +129,7 @@ void GenerateMap(IsoMap* inputMap)
   {
     int direction = (int)(RandFloat() * 4); //random direction
     Vector2D offset = directionOffsetGet(direction); //turn that random stupid number into an actual random direction
-    Vector2DScale(&offset, &offset, ROOM_SIZE);
+    Vector2DScale(&offset, &offset, (float)ROOM_SIZE);
 
     Vector2D newCursorPosition;
     Vector2DAdd(&newCursorPosition, &cursor, &offset); //travel one room size in that random direction
@@ -167,12 +179,12 @@ void GenerateMap(IsoMap* inputMap)
   //discount exceptions/infinite loop handling
   if (tries > NUM_ROOMS * 100)
   {
-    printf("MapGen.c: seriously your algorithm is fucked, look at it.");
+    printf("MapGen.c: seriously your algorithm is not working, look at it.");
     //abort();
     //GenerateMap(inputMap); //comment this back in for release, but while debugging keep it out to avoid recursion.
   }
 
-  SpawnMapRooms(rooms);
+  SpawnMapRooms(rooms); //goes through the list of rooms to spawn relevant features (gates)
   MapRoomInfoClear(rooms); //clean up after done
   
 }
@@ -189,15 +201,19 @@ static void SpawnMapRooms(MapRoomInfo* rooms)
     {
     case roomtype_start:
       Room_StartRoom(index->position);
-      printf("made a start room");
+    //  printf("made a start room");
       break;
     case roomtype_simple:
       Room_BasicEnemies(index->position);
-      printf("enemyroom\n");
+     // printf("enemyroom\n");
+      break;
+    case roomtype_small:
+      Room_SmallRoom(index->position);
+     // printf("TINY");
       break;
     case roomtype_hall:
       Room_HallsRoom(index->position);
-      printf("halls");
+    //  printf("halls");
       break;
     }
     index = index->next;
@@ -233,8 +249,10 @@ static void SetupBaseMap(int mapWidth, int mapHeight)
     i++;
   }
 }
+
 /*!
 \brief Fills a line between two given vector2Ds
+
 */
 static void FillLine(Vector2D position1, Vector2D position2, int newValue)
 {
@@ -244,6 +262,8 @@ static void FillLine(Vector2D position1, Vector2D position2, int newValue)
   Vector2DNormalize(&unitVector, &unitVector);
 
   int i = 0; //because we're technically using c, right?
+
+  //fill a 3x3 square and then step forwards one unit towards the end point until the end point magnitude is reached
   while (i * i < dist)
   {
     Vector2DAdd(&position1, &position1, &unitVector);
@@ -260,6 +280,9 @@ static void FillLine(Vector2D position1, Vector2D position2, int newValue)
 */
 static void IsoSquareSet(Vector2D position, int newValue)
 {
+
+  //cs230 told me to do it this way
+  //no regrets
   IsoTileSet((int)position.x, (int)position.y, newValue);
   IsoTileSet((int)position.x + 1, (int)position.y, newValue);
   IsoTileSet((int)position.x - 1, (int)position.y, newValue);
@@ -342,9 +365,9 @@ static void ReplaceTiles(Vector2D position, Vector2D size, int oldTile, int newT
     //cursor: tile we're currently looking at
     Vector2D cursor = Vec2(position.x + index.x, position.y + index.y);
 
-    if (overrideAll || IsoTileGet(cursor.x, cursor.y) == oldTile)
+    if (overrideAll || IsoTileGet((int)cursor.x, (int)cursor.y) == oldTile)
     {
-      IsoTileSet(cursor.x, cursor.y, newTile);
+      IsoTileSet((int)cursor.x, (int)cursor.y, newTile);
     }
 
     //indexing 2D-style
@@ -387,7 +410,20 @@ static void Room_HallsRoom(Vector2D cursor)
   GameObject* room = RoomTemplate(cursor, 0);
   MapRoom* roomData = (MapRoom*)(room->miscData);
   roomData->type = roomtype_hall;
-  ReplaceTiles(Vec2(cursor.x - ROOM_SIZE / 2, cursor.y - ROOM_SIZE / 2), Vec2(ROOM_SIZE, ROOM_SIZE), tile_floor, tile_wall);
+  ReplaceTiles(Vec2(cursor.x - (float)(ROOM_SIZE / 2), cursor.y - (float)(ROOM_SIZE / 2)), Vec2((float)ROOM_SIZE, (float)ROOM_SIZE), tile_floor, tile_wall);
+}
+
+/*!
+\brief Room-specific setup for small rooms
+*/
+static void Room_SmallRoom(Vector2D cursor)
+{
+  GameObject* room = RoomTemplate(cursor, 1);
+  MapRoom* roomData = (MapRoom*)(room->miscData);
+  roomData->type = roomtype_small;
+  ReplaceTiles(Vec2(cursor.x - (float)(ROOM_SIZE / 2), cursor.y - (float)(ROOM_SIZE / 2)), Vec2((float)ROOM_SIZE, (float)ROOM_SIZE), tile_floor, tile_wall);
+
+  ReplaceTiles(Vec2(cursor.x - (float)(ROOM_SIZE / 4), cursor.y - (float)(ROOM_SIZE / 4)), Vec2((float)(ROOM_SIZE / 2), (float)(ROOM_SIZE / 2)), tile_wall, tile_floor);
 }
 
 /*!
@@ -398,7 +434,7 @@ static void Room_HallsRoom(Vector2D cursor)
 static GameObject* RoomTemplate(Vector2D cursor, int spawnGates)
 {
   //replace empty with floor
-  ReplaceTiles(Vec2(cursor.x - ROOM_SIZE / 2, cursor.y - ROOM_SIZE / 2), Vec2(ROOM_SIZE, ROOM_SIZE), tile_empty, tile_floor);
+  ReplaceTiles(Vec2(cursor.x - (float)(ROOM_SIZE / 2), cursor.y - (float)(ROOM_SIZE / 2)), Vec2((float)ROOM_SIZE, (float)ROOM_SIZE), tile_empty, tile_floor);
 
   //set up the game object
   GameObject* newRoom = GameObjectCreate(PhysicsCreateObject(cursor, 0), 0, 0, entity_room); 
@@ -423,7 +459,7 @@ static GameObject* RoomTemplate(Vector2D cursor, int spawnGates)
     newRoom->simulate = &GateRoomSimulate;
 
     //if a tile at a given border is a path, make a gate
-    if (IsoTileGet(cursor.x + ROOM_SIZE / 2, cursor.y) == 2)
+    if (IsoTileGet((int)(cursor.x + (float)(ROOM_SIZE / 2)), (int)cursor.y) == 2)
     {
       newMiscData->gates[0] = CreateWorldGate(Vec2(cursor.x + ROOM_SIZE / 2, cursor.y), gate_vertical);
     }
@@ -432,7 +468,7 @@ static GameObject* RoomTemplate(Vector2D cursor, int spawnGates)
       newMiscData->gates[0] = NULL;
     }
 
-    if (IsoTileGet(cursor.x - ROOM_SIZE / 2, cursor.y) == 2)
+    if (IsoTileGet((int)(cursor.x - (float)(ROOM_SIZE / 2)), (int)cursor.y) == 2)
     {
       newMiscData->gates[1] = CreateWorldGate(Vec2(cursor.x - ROOM_SIZE / 2, cursor.y), gate_vertical);
     }
@@ -441,7 +477,7 @@ static GameObject* RoomTemplate(Vector2D cursor, int spawnGates)
       newMiscData->gates[1] = NULL;
     }
 
-    if (IsoTileGet(cursor.x, cursor.y - ROOM_SIZE / 2) == 2)
+    if (IsoTileGet((int)cursor.x, (int)(cursor.y - (float)(ROOM_SIZE / 2))) == 2)
     {
       newMiscData->gates[2] = CreateWorldGate(Vec2(cursor.x, cursor.y - ROOM_SIZE / 2), gate_horizontal);
     }
@@ -450,7 +486,7 @@ static GameObject* RoomTemplate(Vector2D cursor, int spawnGates)
       newMiscData->gates[2] = NULL;
     }
 
-    if (IsoTileGet(cursor.x, cursor.y + ROOM_SIZE / 2) == 2)
+    if (IsoTileGet((int)cursor.x, (int)(cursor.y + (float)(ROOM_SIZE / 2))) == 2)
     {
       newMiscData->gates[3] = CreateWorldGate(Vec2(cursor.x, cursor.y + ROOM_SIZE / 2), gate_horizontal);
     }
@@ -526,6 +562,9 @@ void CloseRoom(GameObject* room)
   case roomtype_simple:
     MapRoomBehavior_BasicEnemies(roomData);
     break;
+  case roomtype_small:
+    MapRoomBehavior_SmallRoom(roomData);
+    break;
   }
 
   int i = 0;
@@ -538,19 +577,19 @@ void CloseRoom(GameObject* room)
       printf("CLOSED");
       inst->sprite->tint.alpha = 0.5f;
       inst->sprite->tint.red = 1.f;
-      IsoTileSet(inst->physics->position.x, inst->physics->position.y, tile_wall);
+      IsoTileSet((int)inst->physics->position.x, (int)inst->physics->position.y, tile_wall);
       
       GateClosed(inst);
 
       switch(GetWorldGate(inst)->orientation)
       {
       case gate_horizontal:
-        IsoTileSet(inst->physics->position.x + 1, inst->physics->position.y, tile_wall);
-        IsoTileSet(inst->physics->position.x - 1, inst->physics->position.y, tile_wall);
+        IsoTileSet((int)inst->physics->position.x + 1, (int)inst->physics->position.y, tile_wall);
+        IsoTileSet((int)inst->physics->position.x - 1, (int)inst->physics->position.y, tile_wall);
         break;
       case gate_vertical:
-        IsoTileSet(inst->physics->position.x, inst->physics->position.y + 1, tile_wall);
-        IsoTileSet(inst->physics->position.x, inst->physics->position.y - 1, tile_wall);
+        IsoTileSet((int)inst->physics->position.x, (int)inst->physics->position.y + 1, tile_wall);
+        IsoTileSet((int)inst->physics->position.x, (int)inst->physics->position.y - 1, tile_wall);
         break;
       }
     }
@@ -578,7 +617,7 @@ void EnemyKilled(GameObject* room)
   //printf("\n thiswascalled \n \n");
   MapRoom* roomData = (MapRoom*)(room->miscData);
   roomData->numEnemies--;
-  if (roomData->numEnemies < 1)
+  if (roomData->numEnemies == 0)
   {
     OpenRoom(room);
   }

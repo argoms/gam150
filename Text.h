@@ -43,3 +43,4 @@ void TextRemoveString(TextString* _textString);
 void TextStringSet(TextString** _textString, char* _string);
 void TextHUDStringSet(TextString** _textString, char* _string);
 void TextStringAddOffset(TextString* _textString, Vector2D offset);
+void TextStringSetTint(TextString* _textString, Tint newTint);

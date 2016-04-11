@@ -21,6 +21,8 @@
 #include "Audio.h"
 
 #include "MapCreator.h"
+
+#include <Windows.h>
 // ---------------------------------------------------------------------------
 
 // Libraries
@@ -32,7 +34,6 @@
 int gGameRunning = 1;
 
 LRESULT CALLBACK MyWinCallBack(HWND hWin, UINT msg, WPARAM wp, LPARAM lp) ;
-
 
 // ---------------------------------------------------------------------------
 // Static function protoypes
@@ -49,8 +50,14 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
   sysInitInfo.mCreateWindow = 1;
   sysInitInfo.mAppInstance = instanceH;
   sysInitInfo.mShow = show;
-  sysInitInfo.mWinWidth = 800;
-  sysInitInfo.mWinHeight = 600;
+
+  /*
+    Needs to start in fullscreen resolution.
+    Solution for getting screen height from http://stackoverflow.com/questions/17504954/windows-get-screen-resolution-in-c
+  */
+  sysInitInfo.mWinWidth = GetSystemMetrics(SM_CXSCREEN);// 800;
+  sysInitInfo.mWinHeight = GetSystemMetrics(SM_CYSCREEN);// 600;
+
   sysInitInfo.mCreateConsole = 0;
   sysInitInfo.mMaxFrameRate = 60;
   sysInitInfo.mpWinCallBack = NULL;//MyWinCallBack;
@@ -62,16 +69,50 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
 
   AllocConsole();
   freopen("CONOUT$", "w", stdout);
-  
 
 	if(0 == AESysInit (&sysInitInfo))
 		printf("System Init Failed!\n");
+
+  /*
+    Matt's window fixing stuff
+    Opening stdout/the console put the game screen into the background.
+    This brings the game screen back into the foreground. 
+    Solution obtained from https://msdn.microsoft.com/en-us/library/windows/desktop/ms633539(v=vs.85).aspx
+  */
+
+  HWND hwnd = AESysGetWindowHandle();
+  SetForegroundWindow(hwnd);
+
+  /* Matt - Set window to full screen. */
+
+  /*
+    To force into full screen mode, use Alt + Space, then X.
+    Solution obtained from http://cboard.cprogramming.com/windows-programming/72624-how-get-your-program-run-fullscreen-console.html
+    Scan codes obtained from https://msdn.microsoft.com/en-us/library/windows/desktop/ms646304(v=vs.85).aspx
+  */
+  /* Press Alt + Space */
+  keybd_event(VK_MENU, 0x38, 0, 0);
+  keybd_event(VK_SPACE, 0x39, 0, 0);
+
+  /* Release Alt + Space */
+  keybd_event(VK_MENU, 0x38, KEYEVENTF_KEYUP, 0);
+  keybd_event(VK_MENU, 0x39, KEYEVENTF_KEYUP, 0);
+
+  /* Press and release X */
+  keybd_event(0x58, 0x2D, 0, 0);
+  keybd_event(0x58, 0x2D, KEYEVENTF_KEYUP, 0);
+
+  /* End full screen code - Matt */
+
+  /* End Matt's window stuff */
+
 
   /*----------------------------------------------------------------------------
   AUDIO TEST  PART 1/3  INITIALIZING
   -----------------------------------------------------------------------------*/
     //TestAudioINIT();
     Audio_Initialize(64);
+
 
 
   //----------------------------------------------------------------------------

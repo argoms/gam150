@@ -13,6 +13,10 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "DamageNumbers.h"
 #include "Dodge.h"
 #include "MapGen.h"
+#include "EnvironmentalEffects.h"
+#include "EnvironmentAssets.h"
+#include "GameLevel.h"
+#include "Audio.h"
 
 #define BREIF_INVULNERABILITY_ENABLED  1    /* allow breif invulnerability after a hit    */
 #define BREIF_INVULNERABILITY_DISABLED 0    /* disallow brief invunerability after a hit  */
@@ -43,9 +47,29 @@ void EntityTakeDamage(Entity** _entity, int _damage)
     //allow it to take damage if its flag saying that itcanbedamaged is false
     if ( (*_entity)->canBeDamaged != 0)
     {
+
+      //play sound if player hit:
+      if ((*_entity)->owner == GetPlayerObject())
+      {
+        Audio_PlaySoundSample("hitSound.ogg", 0);
+      }
+
+      //damage number popup
       DamageTextCreate((*_entity)->owner->physics->position, _damage);
+
+      //actualy modify health value
       (*_entity)->health -= _damage;
       (*_entity)->wasDamaged = 1; // just got damaged
+
+
+      //make a particle effect burst thingy
+      Vector2D particleEffectRadius = Vec2(64, 64);
+      GameObject* inst = (*_entity)->owner;
+      SetParticleAnim(GetAsset_Animation(asset_particleHitEnemy));
+      GameObject* particleEffect =  EffectCreate(Vec2(-10.f, -5.f), Vec2(20, 10), IsoWorldToScreen(&inst->physics->position), 
+        16, -1.0f, Vec2(-4, 8), 0.9f, 0.5f, 32, particleEffectRadius, 0, GTint(1, 1, 1, 1.f));
+      ParticleSetLifetime(particleEffect, 0.1f);
+      ParticleApplyBehavior(particleBehavior_linearAlpha, particleEffect);
 
       if (BREIF_INVULNERABILITY_ENABLED)//if we allow brief invulnerability
       {
@@ -53,7 +77,7 @@ void EntityTakeDamage(Entity** _entity, int _damage)
         (*_entity)->invincibilityRecoveryTime = 0; /* if it was recovering make it invincible */
       }
         
-      //printf("OW, %i left", (*_entity)->health);
+      //handle death (health 0 or less)
       if ((*_entity)->health < 1)
       {
         if ((*_entity)->owner->type == entity_enemy)

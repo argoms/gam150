@@ -169,6 +169,7 @@
     <ClCompile Include="Button.c" />
     <ClCompile Include="Cloud.c" />
     <ClCompile Include="Collision.c" />
+    <ClCompile Include="ColorFilter.c" />
     <ClCompile Include="Compass.c" />
     <ClCompile Include="ControlScreen.c" />
     <ClCompile Include="conversions.c" />
@@ -185,7 +186,9 @@
     <ClCompile Include="EnemyStateMachine.c" />
     <ClCompile Include="Entity.c" />
     <ClCompile Include="EntityAnimation.c" />
+    <ClCompile Include="EnvironmentAssets.c" />
     <ClCompile Include="EnvironmentEffects.c" />
+    <ClCompile Include="FancyBackground.c" />
     <ClCompile Include="GameLevel.c" />
     <ClCompile Include="GameObject.c" />
     <ClCompile Include="Gate.c" />
@@ -206,8 +209,10 @@
     <ClCompile Include="ParticleSystems(Redo).c" />
     <ClCompile Include="Physics.c" />
     <ClCompile Include="PlayerAnimations.c" />
+    <ClCompile Include="PlayerDeathTimer.c" />
     <ClCompile Include="PlayerEntity.c" />
     <ClCompile Include="PlayerHUD.c" />
+    <ClCompile Include="PlayerSmoke.c" />
     <ClCompile Include="SplashScreen.c" />
     <ClCompile Include="stats.c" />
     <ClCompile Include="Text.c" />
@@ -220,6 +225,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Cloud.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="ColorFilter.h" />
     <ClInclude Include="Compass.h" />
     <ClInclude Include="ControlScreen.h" />
     <ClInclude Include="conversions.h" />
@@ -237,6 +243,8 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityAnimation.h" />
     <ClInclude Include="EnvironmentalEffects.h" />
+    <ClInclude Include="EnvironmentAssets.h" />
+    <ClInclude Include="FancyBackground.h" />
     <ClInclude Include="GameLevel.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gate.h" />
@@ -253,8 +261,10 @@
     <ClInclude Include="ParticleSystems(Redo).h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PlayerAnimations.h" />
+    <ClInclude Include="PlayerDeathTimer.h" />
     <ClInclude Include="PlayerEntity.h" />
     <ClInclude Include="PlayerHUD.h" />
+    <ClInclude Include="PlayerSmoke.h" />
     <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="stats.h" />
     <ClInclude Include="Text.h" />

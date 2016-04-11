@@ -22,7 +22,7 @@ ChangeLog
 #define COMPASS_SIZE 70
 #define COMPASS_SPEED 3
 
-#define PI 3.14159265359
+//#define PI 3.14159265359
 
 #define true 1
 #define false 0
@@ -145,13 +145,13 @@ void Compass_Draw()
 
 
   Matrix2DIdentity(&scale);
-  Matrix2DScale(&scale, COMPASS_SIZE, COMPASS_SIZE);
+  Matrix2DScale(&scale, COMPASS_SIZE + (COMPASS_SIZE * 0.1f * ((float)sin(time))), COMPASS_SIZE + (COMPASS_SIZE * 0.1f * ((float)sin(time))));
 
   Matrix2DIdentity(&rot);
   Matrix2DRotRad(&rot, compass.angle);
 
-  f32 targetPosX = 0.9f;
-  f32 targetPosY = 0.9f;
+  //f32 targetPosX = 0.9f;
+  //f32 targetPosY = 0.9f;
 
   //Vector2D drawPos;
   //AEGfxConvertScreenCoordinatesToWorld(targetPosX, targetPosY, &drawPos.x, &drawPos.y);
@@ -191,7 +191,7 @@ void Compass_Draw()
 
   AEGfxTextureSet(compass.texture, 0, 0);
 
-  AEGfxSetTintColor(1, 1, RandFloatRange(.5f, 2), 1);
+  AEGfxSetTintColor(1, 1, 1, 1);
 
   AEGfxSetTransparency(1.0f);
 

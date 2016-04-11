@@ -12,13 +12,13 @@
 
 static Animation* tracerAnimation;
 
-static EnemyInfo enemyInfo[] = 
+static EnemyInfo enemyInfo[] =
 {
-  {ENEMY_TYPE_MELEE        , 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL }, //0
-  {ENEMY_TYPE_MELEE_BIG    , 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL }, //1
-  {ENEMY_TYPE_MELEE_CHARGE , 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL }, //2
-  {ENEMY_TYPE_RANGED       , 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL }, //3
-  {ENEMY_TYPE_HEALER       , 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL }  //4
+  { ENEMY_TYPE_MELEE        , 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL }, //0
+  { ENEMY_TYPE_MELEE_BIG    , 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL }, //1
+  { ENEMY_TYPE_MELEE_CHARGE , 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL }, //2
+  { ENEMY_TYPE_RANGED       , 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL }, //3
+  { ENEMY_TYPE_HEALER       , 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL }  //4
 };
 
 //call once
@@ -49,7 +49,7 @@ void EnemyImportInfo(int enemyType, const char *file)
       float attackKnockback;      /* Knockback the PLAYER feels when hit by an ENEMY'S attack */
       float enemyProjectileSpeed; /* Projectile speed for ranged enemies, set it to 0 for melee enemies obviously. Setting it to anything but 0 for melee enemies will do nothing anyways */
 
-      //Animation* enemyAnimation; /* Forward declaration for the enemy animation */
+                                  //Animation* enemyAnimation; /* Forward declaration for the enemy animation */
 
       fscanf(infile, "ENEMY - %i\n", &enemyTypeNumber);
       /*
@@ -58,33 +58,33 @@ void EnemyImportInfo(int enemyType, const char *file)
       switch (enemyType)
       {
       case 1:
-        enemyType = ENEMY_TYPE_MELEE;
-        // REPLACE THE BELOW WITH PROPER ENEMY SPRITE/ANIMATION INFORMATION
-        enemyAnimation = GCreateAnimation(1,
-          GCreateTexture("isotilePlaceholder1.png"),
-          GCreateMesh(128.f, 64.f, 1, 1),
-          1);
-        break;
+      enemyType = ENEMY_TYPE_MELEE;
+      // REPLACE THE BELOW WITH PROPER ENEMY SPRITE/ANIMATION INFORMATION
+      enemyAnimation = GCreateAnimation(1,
+      GCreateTexture("isotilePlaceholder1.png"),
+      GCreateMesh(128.f, 64.f, 1, 1),
+      1);
+      break;
       case 2:
-        enemyType = ENEMY_TYPE_MELEE_BIG;
-        enemyAnimation = GCreateAnimation(1,
-          GCreateTexture("isotilePlaceholder1.png"),
-          GCreateMesh(128.f, 64.f, 1, 1),
-          1);
-        break;
+      enemyType = ENEMY_TYPE_MELEE_BIG;
+      enemyAnimation = GCreateAnimation(1,
+      GCreateTexture("isotilePlaceholder1.png"),
+      GCreateMesh(128.f, 64.f, 1, 1),
+      1);
+      break;
       case 3:
-        enemyType = ENEMY_TYPE_MELEE_CHARGE;
-        break;
+      enemyType = ENEMY_TYPE_MELEE_CHARGE;
+      break;
       case 4:
-        enemyType = ENEMY_TYPE_RANGED;
-        enemyAnimation = GCreateAnimation(1,
-          GCreateTexture("isotilePlaceholder1.png"),
-          GCreateMesh(128.f, 64.f, 1, 1),
-          1);
-        break;
+      enemyType = ENEMY_TYPE_RANGED;
+      enemyAnimation = GCreateAnimation(1,
+      GCreateTexture("isotilePlaceholder1.png"),
+      GCreateMesh(128.f, 64.f, 1, 1),
+      1);
+      break;
       case 5:
-        enemyType = ENEMY_TYPE_HEALER;
-        break;
+      enemyType = ENEMY_TYPE_HEALER;
+      break;
       }
       */
       fscanf(infile, "  SIZE     - %f\n", &size);
@@ -100,7 +100,7 @@ void EnemyImportInfo(int enemyType, const char *file)
       fscanf(infile, "  ENEMY ATTACK WINDUP          - %f\n", &attackWindup);
       fscanf(infile, "  ENEMY ATTACK WINDUP LENGTH   - %f\n", &attackWindupLength);
       fscanf(infile, "  ENEMY ATTACK RANGE           - %f\n", &attackRange);
-      fscanf(infile, "  ENEMY ATTACK DAMAGE          - %f\n", &attackDamage);
+      fscanf(infile, "  ENEMY ATTACK DAMAGE          - %i\n", &attackDamage);
       fscanf(infile, "  ENEMY ATTACK KNOCKBACK FORCE - %f\n", &attackKnockback);
       fscanf(infile, "  ENEMY PROJECTILE SPEED       - %f\n", &enemyProjectileSpeed);
 
@@ -141,7 +141,7 @@ Don't actually call this method. Use EnemySpawn function instead, which calls th
 
 //KILL ME
 \param
-	a metrik fuk ton
+a metrik fuk ton
 */
 GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _type,
   int enemyType, float chaseSpeed, float detectRange, float knockback, float attackCooldown, float attackCooldownLength, float attackWindup, float attackWindupLength,
@@ -242,8 +242,6 @@ GameObject* EnemySpawn(float x, float y, int enemyType, GameObject* player)
 
   newEnemy->entity->health = health;
 
-  EnemyAnimationInitialize(newEnemy);
-
   return newEnemy;
 }
 
@@ -285,7 +283,7 @@ void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject)
   if (_thisObject->type == entity_enemy && _otherObject->type == entity_player)
   {
     EnemyKnockBack(_thisObject, _otherObject);
-    EntityTakeDamage(&(_otherObject->entity), 2);
+    //EntityTakeDamage(&(_otherObject->entity), 2);
   }
 }
 
@@ -307,14 +305,14 @@ void EnemyChangeAnimationFlag(EnemyContainer* enemyContainer, Vector2D* worldFac
   double worldFacingAngle = atan2(worldFacingDirection->y, worldFacingDirection->x) * (180.0f / PI);
   //printf("%f\n", worldFacingAngle);
   enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & (~(ENEMY_LEFT + ENEMY_RIGHT + ENEMY_UP + ENEMY_DOWN));
-  
+
   if (worldFacingAngle < 67.5 && worldFacingAngle > -67.5)
   {
     //printf("right");
     //printf("%f\n", worldFacingAngle);
     enemyContainer->enemyAnimationState += ENEMY_RIGHT;
   }
-  
+
   if (worldFacingAngle > 112.5 || worldFacingAngle < -112.5)
   {
     //printf("left\n");
@@ -331,7 +329,7 @@ void EnemyChangeAnimationFlag(EnemyContainer* enemyContainer, Vector2D* worldFac
     //printf("down\n");
     enemyContainer->enemyAnimationState += ENEMY_DOWN;
   }
-  
+
 }
 
 
@@ -366,8 +364,8 @@ void EnemyTracerProjectileCollision(GameObject* _thisObject, GameObject* _otherO
 {
   if (_otherObject && _otherObject->type == entity_player && (_otherObject->entity && _otherObject->entity->canBeDamaged))
   {
-    //EnemyContainer* enemyContainer = _thisObject->parent->miscData;
-    EntityTakeDamage(&_otherObject->entity, 10);
+    EnemyContainer* enemyContainer = _thisObject->parent->miscData;
+    EntityTakeDamage(&_otherObject->entity, enemyContainer->attackDamage);
     GameObjectDestroy(&_thisObject);
   }
 }

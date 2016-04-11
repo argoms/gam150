@@ -25,14 +25,21 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "EntityAnimation.h"
 #include "PlayerAnimations.h"
 #include "PlayerHUD.h"
+#include "LevelManager.h"
+#include "PlayerSmoke.h"
+#include "EnvironmentalEffects.h"
+#include "Audio.h"
 
 extern double frameTime;
+
+
+static int attackDamage = 1;
 
 static GameObject* player; /**< pointer to player object*/
 static double attackCooldown; /**< timer before player can attack again*/
 
 static double attackCooldownLength; /**< defined minimum time between attacks (attackCooldown is the timer)*/
-static int attackDamage;
+
 static Animation* tracerAnimation;
 
 signed long mouseX;
@@ -52,8 +59,10 @@ static float stepSoundTimer;
 
 static int dodge_key = VK_SPACE;
 
+static int isDead;
+
 //the following enums are used for the player action bit field:
-static enum directions 
+ enum directions 
 {
   PLAYER_LEFT = 1,
   PLAYER_RIGHT = 2,
@@ -61,7 +70,7 @@ static enum directions
   PLAYER_DOWN = 8
 };
 
-static enum actions
+ enum actions
 {
   PLAYER_IDLE = 16,
   PLAYER_WALK = 32,
@@ -85,20 +94,21 @@ static AnimationSet* playerIdleAnims;
 static AnimationSet* playerSwordAnims;
 
 static Vector2D playerDirection;
+
 void PlayerInit()
 {
   
-
+  isDead = 0;
 
   player = GetPlayerObject();
 
   //set up player health:
-  player->entity->health = 30;
+  player->entity->health = 3;
   //
 
   attackCooldown = 0;
-  attackCooldownLength = 0.5;
-  attackDamage = 12;
+  attackCooldownLength = 0.5f;
+  attackDamage = 1;
   tracerAnimation = GCreateAnimation(1,
     GCreateTexture("isotilePlaceholder1.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
@@ -106,8 +116,8 @@ void PlayerInit()
 
   //set up player movement vars:
   playerMaxSpeed = 1;
-  playerAccel = 0.2;
-  playerDrag = 0.7;
+  playerAccel = 0.2f;
+  playerDrag = 0.7f;
 
   
   //load animations:
@@ -134,7 +144,7 @@ void PlayerInit()
   //shitty alpha fast coding:
   TextInit();
   
-
+  
 }
 
 /*!
@@ -143,10 +153,26 @@ void PlayerInit()
 void PlayerSimulate()
 {
 
+  if (!player)
+  {
+    return;
+  }
+
+  if (!isDead)
+  {
+    
+    AEGfxSetCamPosition(player->sprite->x, player->sprite->y);
+  }
+
   UpdatePlayerHealthHUD();
+  UpdateSmokePosition(player->physics->position);
   attackCooldown -= frameTime;
   //printf("%f \n", frameTime);
 
+  if (isDead)
+  {
+    return;
+  }
   PlayerInput();
   PlayerAnimations();
   //8
@@ -215,11 +241,11 @@ void PlayerSimulate()
   {
     if (playerAccel < 0.3)
     {
-      playerAccel = 0.5;
+      playerAccel = 0.5f;
     }
     else
     {
-      playerAccel = 0.2;
+      playerAccel = 0.2f;
     }
   }
   
@@ -231,16 +257,21 @@ void PlayerSimulate()
     }
     else
     {
-      attackDamage = 10;
+      attackDamage = 1;
     }
   }
 
 
-
+  
   // cheat to restore hp, Tarrants code
   if (AEInputCheckTriggered('M'))
   {
-    RestoreHealth(player);
+    SetSmoke(particle_inactive);
+    printf("restored hp\n");
+  }
+  if (AEInputCheckTriggered('N'))
+  {
+    SetSmoke(particle_active);
     printf("restored hp\n");
   }
   
@@ -264,7 +295,7 @@ void PlayerInput()
   {
     playerSprite->frameDelay = 3;
     //get movement vector:
-    Vector2D input = Vec2(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41),
+    Vector2D input = Vec2((float)(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41)),
       ((float)(AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53)) / 2));
     
 
@@ -273,11 +304,13 @@ void PlayerInput()
     
     if (input.x != 0 || input.y != 0)
     {
-      stepSoundTimer -= frameTime;
+      stepSoundTimer -= (float)frameTime;
       if(stepSoundTimer < 0)
       {
-       Audio_PlaySoundSample("FootstepPlayer1.ogg", 0);
-       stepSoundTimer = 0.3;
+        Audio_PlaySoundSample("FootstepPlayer1.ogg", 0);
+        stepSoundTimer = 0.3f;
+        
+       
       }
       Vector2DNormalize(&input, &input);
       Vector2DScale(&input, &input, 10);
@@ -288,7 +321,7 @@ void PlayerInput()
     else
     {
 
-      stepSoundTimer = 0.1;
+      stepSoundTimer = 0.1f;
       //if idle, set idle flag and remove walk flag
       if (!(playerAction & PLAYER_IDLE)) //called on the frame where player goes from walk to idle
       {
@@ -304,7 +337,7 @@ void PlayerInput()
   }
   else if(playerAction & PLAYER_SWORD)
   {
-    Vector2D input = Vec2(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41),
+    Vector2D input = Vec2((float)(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41)),
       ((float)(AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53)) / 2));
     Vector2DScale(&input, &input, 5);
     player->physics->velocity.x += IsoScreenToWorld(&input).x * playerAccel; 
@@ -339,7 +372,7 @@ static void SnapVector(Vector2D* _input)
 {
   //get input dir
   float directionAngle = atan2f(_input->y, _input->x);
-  float fortyFiveDegrees = 0.785398;
+  float fortyFiveDegrees = 0.785398f;
   directionAngle = lroundf(directionAngle / fortyFiveDegrees) * fortyFiveDegrees;
   
   //note: probably more efficient to switch
@@ -407,14 +440,14 @@ static void PlayerAttack()
   mouseX += -400;
   mouseY += -300;
   */
-  mouseX += (AEGfxGetWinMaxX() - AEGfxGetWinMinX()) / -2;
-  mouseY += (AEGfxGetWinMaxY() - AEGfxGetWinMinY()) / -2;
+  mouseX += (long)((AEGfxGetWinMaxX() - AEGfxGetWinMinX()) / -2);
+  mouseY += (long)((AEGfxGetWinMaxY() - AEGfxGetWinMinY()) / -2);
   //printf("%f", (AEGfxGetWinMaxX() - AEGfxGetWinMinX()) / -2);
   /***/
 
   //printf("%i, %i|||", mouseX, mouseY);
   //AEGfxConvertScreenCoordinatesToWorld(mouseX, mouseY, &(mousePos.x), &(mousePos.y));
-  Vector2D mousePos = Vec2(mouseX, mouseY * -1);
+  Vector2D mousePos = Vec2((float)mouseX, (float)mouseY * -1);
   //SnapVector(&mousePos);
 
   mousePos = IsoScreenToWorld(&mousePos);
@@ -437,7 +470,7 @@ static void PlayerAttack()
 
   Vector2DScale(&mousePos, &mousePos, 0.25);
   EntityApplyKnockback(player->entity, &mousePos);
-  printf("M1\n");
+  //printf("M1\n");
 }
 /*!
 \brief simulates attack tracers, at the moment they just die immediately
@@ -454,7 +487,14 @@ void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _oth
 
   if (_otherObject && _otherObject->type == entity_enemy)
   {
-    Audio_PlaySoundSample("SwordClash1.ogg", 0);
+    if (AERandFloat() > 0.5f)
+    {
+      Audio_PlaySoundSample("SwordClash1.ogg", 0);
+    }
+    else
+    {
+      Audio_PlaySoundSample("SwordClash2.ogg", 0);
+    }
     printf("YOU HIT ENEMY FOR %i DAMAGE\n", attackDamage);
     EntityTakeDamage(&_otherObject->entity, attackDamage);
   }
@@ -533,4 +573,24 @@ void RestoreHealth(GameObject* obj)
   {
     obj->entity->health = 10;
   }
+}
+
+/*!
+\brief called when player dies
+*/
+void OnPlayerKilled(void)
+{
+  //do nothing if already dead
+  if (isDead)
+  {
+    return;
+  }
+
+  printf("\n***\n***\nYOU DIED SO NOW YOU'RE IN MAIN MENU WOOO\n***\n***\n");
+  player->sprite->tint.alpha = 0;
+  Audio_PlaySoundSample("death.ogg", 0);
+  //PhysicsRemoveObject(&player->physics);
+  DeathTimerStart(player->physics->position);
+  isDead = 1;
+   //LevelSetNext(level_deathScreen);
 }

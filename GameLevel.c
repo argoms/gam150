@@ -21,9 +21,13 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "PlayerEntity.h"
 #include "Hazard.h"
 #include "Button.h"
+#include "EnemyAnimations.h"
+
 //#include "ParticleSystems(Redo).h"
 #include "MyRandom.h"
 #include "Compass.h"
+#include "PlayerDeathTimer.h"
+#include "EnemyAnimations.h"
 
 #define MAP_WIDTH 64
 #define MAP_HEIGHT 64
@@ -47,9 +51,9 @@ void GameLevelInit(void)
 {
   EnemyImportInfo(ENEMY_TYPE_MELEE, "EnemyMelee.txt");
   EnemyImportInfo(ENEMY_TYPE_MELEE_BIG, "EnemyMeleeBig.txt");
+  EnemyAnimationInitialize();
   //EnemyImportInfo(ENEMY_TYPE_RANGED, "EnemyRanged.txt");
   Entity* playerEntity;
-	int i;
 
   /*
 
@@ -254,9 +258,11 @@ void GameLevelRun(void)
   PhysicsSimulate();
   GameObjectsPostStep();
   //
-  AEGfxSetCamPosition(player->sprite->x, player->sprite->y);
   
-  Compass_Update(&player->physics->position, &DoorGetDoor()->physics->position);
+  if (player->sprite)
+  {
+    Compass_Update(&player->physics->position, &DoorGetDoor()->physics->position);
+  }
 
 }
 
@@ -276,11 +282,3 @@ GameObject* GetPlayerObject(void)
   return player;
 }
 
-/*!
-\brief called when player dies
-*/
-void OnPlayerKilled(void)
-{
-  printf("\n***\n***\nYOU DIED SO NOW YOU'RE IN MAIN MENU WOOO\n***\n***\n");
-  LevelSetNext(level_deathScreen);
-}
