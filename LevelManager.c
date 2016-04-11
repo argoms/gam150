@@ -37,7 +37,7 @@ static Animation* animtest2;/**< EXAMPLE VAR*/
 
 static float textY;/**< EXAMPLE VAR*/
 static TextString* textString;/**< EXAMPLE VAR*/
-//EXAMPLE CODE ENDS HERE
+                              //EXAMPLE CODE ENDS HERE
 
 
 static int currentLevel;/**< Current level (uses enum)*/
@@ -49,13 +49,23 @@ double frameTime;
 
 extern int level;
 
+// 1 show, 0 hide or not create, level 1 button will always be there
+// flags to turn off or turn on tarrants buttons to be creATED
+//int button_flag_level1 = 1;
+int button_flag_level2 = 0;
+int button_flag_level3 = 0;
+int button_flag_level4 = 0;
+int button_flag_win = 0;
+int button_flag_lose = 0;
+int buttin_flag_credits = 1;
+
 /*
 \brief loads given level
 \param _level level to be loaded
 */
 void LevelLoad(int _level)
 {
-	LoadAll_PS();
+  LoadAll_PS();
 
   GInitialize();
 
@@ -74,7 +84,7 @@ void LevelLoad(int _level)
     break;
   case level_mainMenu:
     MainMenuInit();
-    //Background_Init(BACKGROUND_BH_SWIRLY, BACKGROUND_MD_BLOCKS);
+    Background_Init(BACKGROUND_BH_SWIRLY, BACKGROUND_MD_BLOCKS);
     ColorFilter_Set(1.f, 1.f, 1.f);
     if (!currentLevel == level_splashScreen)
       Audio_PlayMusicStream("EPOCH_main_theme.ogg", 1);
@@ -82,14 +92,14 @@ void LevelLoad(int _level)
     break;
   case level_town:
     TownScreenInit();
-    //Background_Init(BACKGROUND_BH_HORIZONTAL, BACKGROUND_MD_BLOCKS);
+    Background_Init(BACKGROUND_BH_HORIZONTAL, BACKGROUND_MD_BLOCKS);
     ColorFilter_Init();
     ColorFilter_Fluctuate(1, 0.5f, 0.2f, 0.2f);
     ColorFilter_Set(0.5f, 0.8f, 0.8f);
     break;
   case level_deathScreen:
     DeathScreenInit();
-    //Background_Init(BACKGROUND_BH_HORIZONTAL, BACKGROUND_MD_ENERGY);
+    Background_Init(BACKGROUND_BH_HORIZONTAL, BACKGROUND_MD_ENERGY);
     ColorFilter_Init();
     ColorFilter_Fluctuate(1, 0.3f, 0.0f, 0.0f);
     ColorFilter_Set(1.7f, 0.1f, 0.1f);
@@ -107,7 +117,7 @@ void LevelLoad(int _level)
     break;
   case level_winScreen:
     WinScreenInit();
-    //Background_Init(BACKGROUND_BH_SWIRLY, BACKGROUND_MD_ENERGY);
+    Background_Init(BACKGROUND_BH_SWIRLY, BACKGROUND_MD_ENERGY);
     level = 0;
     Audio_PauseMusicStream("music_sample4.ogg");
     //Audio_PauseMusicStream("EPOCH_theme_funky.ogg");
@@ -128,16 +138,16 @@ void LevelRun()
   frameTime = AEFrameRateControllerGetFrameTime();
   switch (currentLevel)
   {
-    
+
   case level_level1:
-	  if (AEInputCheckTriggered(VK_SPACE))
-	  {
-		 // SpawnDodgeSmokePS(4.0f, 4.0f);
-	  }
-	  if (AEInputCheckTriggered('T'))
-	  {
-		  SpawnHitSplashPS(4.0f, 4.0f, 1, 0);
-	  }
+    if (AEInputCheckTriggered(VK_SPACE))
+    {
+      // SpawnDodgeSmokePS(4.0f, 4.0f);
+    }
+    if (AEInputCheckTriggered('T'))
+    {
+      SpawnHitSplashPS(4.0f, 4.0f, 1, 0);
+    }
     GameLevelRun();
     break;
   case level_mainMenu:
@@ -178,7 +188,7 @@ void LevelRun()
 
   if (frameTime > 0.5)
   {
-	  frameTime = 0.016;
+    frameTime = 0.016;
   }
   UpdateAllPS_Inst((float)frameTime);
 }
@@ -203,8 +213,6 @@ void LevelUnload()
 */
 void MainMenuInit()
 {
-
-
   AEGfxSetCamPosition(0, 0);
   static AEGfxVertexList*	newmesh;				// Pointer to Mesh (Model)
   newmesh = GCreateMesh(16, 24, 16, 16);
@@ -214,7 +222,7 @@ void MainMenuInit()
   //pretty much all example stuff
   printf("loading menu\n");
   pMesh2 = GCreateMesh(128.f, 128.f, 16, 1);
-  
+
 
   // Texture 1: From file
   pTex1 = GCreateTexture("spiderwolfbrighter.png");
@@ -224,7 +232,7 @@ void MainMenuInit()
   AEGfxSetBlendMode(AE_GFX_BM_BLEND);
   //EXAMPLE ENDS HERE
 
-  
+
   //textString = TextCreateString("PLACEHOLDER MAIN MENU", -360, 100);
   //textString = TextCreateString("PRESS SPACE FOR LEVEL 1", -360, 0);
 
@@ -262,7 +270,7 @@ void MainMenuInit()
 
   int button_type = LEVEL_ONE_BUTTON;             /* type of button  */
   float buttonx = -200;                           /* x position      */
-  float buttony =  100;                           /* y position      */
+  float buttony = 100;                           /* y position      */
   float meshx = 256.0f;                           /* mesh x          */
   float meshy = 64.0f;                            /* mesh y          */
   float buttonsize = 1.0f;                        /* size            */
@@ -284,123 +292,138 @@ void MainMenuInit()
 
   GameObject* button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
   //end button level 1 ------------------------------
-  
+
   //BUTTON TWO for level 2
-   button_type = LEVEL_TWO_BUTTON;          /* type of button  */
-   buttonx = -200;                          /* x position      */
-   buttony = 25;                            /* y position      */
-   meshx = 256.0f;                          /* mesh x          */
-   meshy = 64.0f;                           /* mesh y          */
-   buttonsize = 1.0f;                       /* size            */  
-   button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
-   text_offset = 90.0f;
-   main_menu_text = TextCreateHUDString("Level 2", buttonx - text_offset, buttony);
-   button_texture = GCreateTexture("isocircleGreen.png");
-   anim_button = GCreateAnimation(1,
-   button_texture,  
-   button_mesh,
-    1);
+  if (button_flag_level2)
+  {
+    button_type = LEVEL_TWO_BUTTON;          /* type of button  */
+    buttonx = -200;                          /* x position      */
+    buttony = 25;                            /* y position      */
+    meshx = 256.0f;                          /* mesh x          */
+    meshy = 64.0f;                           /* mesh y          */
+    buttonsize = 1.0f;                       /* size            */
+    button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
+    text_offset = 90.0f;
+    main_menu_text = TextCreateHUDString("Level 2", buttonx - text_offset, buttony);
+    button_texture = GCreateTexture("isocircleGreen.png");
+    anim_button = GCreateAnimation(1,
+      button_texture,
+      button_mesh,
+      1);
 
-  button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
-  button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+    button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
+    button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+  }
   // --------------------end button level 2-----------------------
-  //BUTTON TWO for level 3
-  button_type = LEVEL_THREE_BUTTON;          /* type of button  */
-  buttonx = -200;                          /* x position      */
-  buttony = -50;                          /* y position      */
-  meshx = 256.0f;                          /* mesh x          */
-  meshy = 64.0f;                           /* mesh y          */
-  buttonsize = 1.0f;                       /* size            */
-  button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
-  text_offset = 90.0f;
-  main_menu_text = TextCreateHUDString("Level 3", buttonx - text_offset, buttony);
-  button_texture = GCreateTexture("isocircleGreen.png");
-  anim_button = GCreateAnimation(1,
-    button_texture,
-    button_mesh,
-    1);
+  //BUTTON three for level 3
+  if (button_flag_level3)
+  {
+    button_type = LEVEL_THREE_BUTTON;          /* type of button  */
+    buttonx = -200;                          /* x position      */
+    buttony = -50;                          /* y position      */
+    meshx = 256.0f;                          /* mesh x          */
+    meshy = 64.0f;                           /* mesh y          */
+    buttonsize = 1.0f;                       /* size            */
+    button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
+    text_offset = 90.0f;
+    main_menu_text = TextCreateHUDString("Level 3", buttonx - text_offset, buttony);
+    button_texture = GCreateTexture("isocircleGreen.png");
+    anim_button = GCreateAnimation(1,
+      button_texture,
+      button_mesh,
+      1);
 
-  button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
-  button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+    button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
+    button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+  }
   //---------------------------end button level 3-------------------------
-  //BUTTON TWO for level 4
-  button_type = LEVEL_FOUR_BUTTON;         /* type of button  */
-  buttonx = -200;                          /* x position      */
-  buttony = -125;                          /* y position      */
-  meshx = 256.0f;                          /* mesh x          */
-  meshy = 64.0f;                           /* mesh y          */
-  buttonsize = 1.0f;                       /* size            */
-  button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
-  text_offset = 90.0f;
-  main_menu_text = TextCreateHUDString("Level 4", buttonx - text_offset, buttony);
-  button_texture = GCreateTexture("isocircleGreen.png");
-  anim_button = GCreateAnimation(1,
-    button_texture,
-    button_mesh,
-    1);
+  //BUTTON four for level 4
+  if (button_flag_level4)
+  {
+    button_type = LEVEL_FOUR_BUTTON;         /* type of button  */
+    buttonx = -200;                          /* x position      */
+    buttony = -125;                          /* y position      */
+    meshx = 256.0f;                          /* mesh x          */
+    meshy = 64.0f;                           /* mesh y          */
+    buttonsize = 1.0f;                       /* size            */
+    button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
+    text_offset = 90.0f;
+    main_menu_text = TextCreateHUDString("Level 4", buttonx - text_offset, buttony);
+    button_texture = GCreateTexture("isocircleGreen.png");
+    anim_button = GCreateAnimation(1,
+      button_texture,
+      button_mesh,
+      1);
 
-  button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
-  button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+    button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
+    button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+  }
   //end button 4------------------------------------------------------------------
   // scrub button (win screen)
+  if (button_flag_win)
+  {
+    button_type = WIN_SCREEN;               /* type of button  */
+    buttonx = -200;                          /* x position      */
+    buttony = -200;                          /* y position      */
+    meshx = 256.0f;                          /* mesh x          */
+    meshy = 64.0f;                           /* mesh y          */
+    buttonsize = 1.0f;                       /* size            */
+    button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
+    text_offset = 90.0f;
+    main_menu_text = TextCreateHUDString("Scrub", buttonx - text_offset, buttony);
+    button_texture = GCreateTexture("isocircleGreen.png");
+    anim_button = GCreateAnimation(1,
+      button_texture,
+      button_mesh,
+      1);
 
-  button_type = WIN_SCREEN;               /* type of button  */
-  buttonx = -200;                          /* x position      */
-  buttony = -200;                          /* y position      */
-  meshx = 256.0f;                          /* mesh x          */
-  meshy = 64.0f;                           /* mesh y          */
-  buttonsize = 1.0f;                       /* size            */
-  button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
-  text_offset = 90.0f;
-  main_menu_text = TextCreateHUDString("Scrub", buttonx - text_offset, buttony);
-  button_texture = GCreateTexture("isocircleGreen.png");
-  anim_button = GCreateAnimation(1,
-    button_texture,
-    button_mesh,
-    1);
-
-  button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
-  button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+    button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
+    button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+  }
   //end scrubbutton------------------------------------------------------------------
   // Lose screen
+  if (button_flag_lose)
+  {
+    button_type = DEATH_SCREEN_BUTTON;       /* type of button  */
+    buttonx = 75;                          /* x position      */
+    buttony = -200;                          /* y position      */
+    meshx = 256.0f;                          /* mesh x          */
+    meshy = 64.0f;                           /* mesh y          */
+    buttonsize = 1.0f;                       /* size            */
+    button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
+    text_offset = 90.0f;
+    main_menu_text = TextCreateHUDString("Die", buttonx - text_offset, buttony);
+    button_texture = GCreateTexture("isocircleGreen.png");
+    anim_button = GCreateAnimation(1,
+      button_texture,
+      button_mesh,
+      1);
 
-  button_type = DEATH_SCREEN_BUTTON;       /* type of button  */
-  buttonx = 75;                          /* x position      */
-  buttony = -200;                          /* y position      */
-  meshx = 256.0f;                          /* mesh x          */
-  meshy = 64.0f;                           /* mesh y          */
-  buttonsize = 1.0f;                       /* size            */
-  button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
-  text_offset = 90.0f;
-  main_menu_text = TextCreateHUDString("Die", buttonx - text_offset, buttony);
-  button_texture = GCreateTexture("isocircleGreen.png");
-  anim_button = GCreateAnimation(1,
-    button_texture,
-    button_mesh,
-    1);
-
-  button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
-  button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+    button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
+    button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+  }
   //end lose screen ------------------------------------------------------------------
 
+  if (buttin_flag_credits)
+  {
+    button_type = CREDIT_SCREEN;          /* type of button  */
+    buttonx = 200;                          /* x position      */
+    buttony = 100;                            /* y position      */
+    meshx = 256.0f;                          /* mesh x          */
+    meshy = 64.0f;                           /* mesh y          */
+    buttonsize = 1.0f;                       /* size            */
+    button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
+    text_offset = 90.0f;
+    main_menu_text = TextCreateHUDString("Credits", buttonx - text_offset, buttony);
+    button_texture = GCreateTexture("isocircleGreen.png");
+    anim_button = GCreateAnimation(1,
+      button_texture,
+      button_mesh,
+      1);
 
-  button_type = CREDIT_SCREEN;          /* type of button  */
-  buttonx = 200;                          /* x position      */
-  buttony = 100;                            /* y position      */
-  meshx = 256.0f;                          /* mesh x          */
-  meshy = 64.0f;                           /* mesh y          */
-  buttonsize = 1.0f;                       /* size            */
-  button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
-  text_offset = 90.0f;
-  main_menu_text = TextCreateHUDString("Credits", buttonx - text_offset, buttony);
-  button_texture = GCreateTexture("isocircleGreen.png");
-  anim_button = GCreateAnimation(1,
-    button_texture,
-    button_mesh,
-    1);
-
-  button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
-  button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+    button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
+    button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+  }
   //credits button----------------------------------------------------------------
 
 
@@ -447,7 +470,7 @@ void MainMenuRun()
   //debug
 
   Background_Update();
-  
+
   if (AEInputCheckReleased(VK_SPACE))
   {
     switch (currentLevel)
