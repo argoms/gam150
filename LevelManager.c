@@ -86,7 +86,7 @@ void LevelLoad(int _level)
     MainMenuInit();
     Background_Init(BACKGROUND_BH_SWIRLY, BACKGROUND_MD_BLOCKS);
     ColorFilter_Set(1.f, 1.f, 1.f);
-    if (!currentLevel == level_splashScreen)
+    if (!(currentLevel == level_splashScreen || currentLevel == level_creditScreen))
       Audio_PlayMusicStream("EPOCH_main_theme.ogg", 1);
     //Audio_PauseMusicStream("music_sample3.ogg");
     break;
