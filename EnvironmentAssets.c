@@ -39,8 +39,10 @@ void EnvironmentAssetsInitialize()
 
   Asset_smokeParticle = GCreateAnimation(1,
     GCreateTexture("animations/world/particle_simpleGray.png"),
-    GCreateMesh(16.f, 16.f, 1, 1),
+    GCreateMesh(24.f, 24.f, 1, 1),
     1);
+
+
 
   InitializePlayerSmoke();
 

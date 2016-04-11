@@ -51,6 +51,8 @@ GameObject* GameObjectCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _
 {
   
   GameObject* newGameObject = (GameObject*) malloc(sizeof(GameObject));
+
+  //assign component pointers:
   if (_sprite)
   {
     newGameObject->sprite = _sprite;
@@ -134,6 +136,8 @@ void GameObjectDestroy(GameObject** _input)
 */
 static void GameObjectRemove(GameObject** _input)
 {
+
+  //free components:
   if ((*_input)->sprite)
   {
     GRemoveSprite(&((*_input)->sprite));
@@ -155,7 +159,7 @@ static void GameObjectRemove(GameObject** _input)
     free((*_input)->miscData);
   }
 
-
+  //update list of gameobjects
   if ((*_input)->prev)
   {
 
@@ -190,10 +194,13 @@ static void GameObjectRemove(GameObject** _input)
 }
 
 /*!
-\brief run at the end of a game loop to remove objects (prevents stuff from breaking by removing mid-simulation of a step)
+\brief Internal, run at the end of a game loop to remove objects (prevents stuff from breaking by removing mid-simulation of a step).
+
+This is totally normal behavior for an engine stop judging me, see Box2D
 */
 void GameObjectsPostStep()
 {
+  //index through object list and remove when needed
   if (gameObjectList.first)
   {
     GameObject* instance = gameObjectList.first;
@@ -222,14 +229,6 @@ void GameObjectSimulate()
     GameObject* instanceNext;
     while (instance)
     {
-
-      //debuging delete later
-      //if (instance->type == entity_button)
-      //{
-        //int derp = 2+2;
-      //}
-
-      //
       instanceNext = instance->next;
       if (instance->simulate)
       {
@@ -242,6 +241,7 @@ void GameObjectSimulate()
         }
       }
 
+      //update position based on physics engine position if intended
       if (instance->physics && instance->syncSpritePhysics)
       {
         
@@ -257,30 +257,22 @@ void GameObjectSimulate()
 
 /*!
 \brief frees allocated memory for ALL gameobjects
-mem leak atm can't free sprite member?
 */
 void GameObjectFree()
 {
   GameObject* temp = gameObjectList.first; //index
   GameObject* tempPrevious; //index for previous value
 
+
+  //index through everything
   if (temp)
   {
     while (temp->next)
     {
       tempPrevious = temp;
-      //printf("||| %p, %p ||", tempPrevious, gameObjectList.first);
-        
       temp = temp->next;
-      //GRemoveSprite(tempPrevious->sprite);
-      //free(tempPrevious);
       GameObjectRemove(&tempPrevious);
-      //GameObjectDestroy(tempPrevious);
-
     }
-    //GameObjectDestroy(temp);
-    //printf("||| %p ||", temp);
-    //free(temp);
     GameObjectRemove(&temp);
   }
 
@@ -288,32 +280,32 @@ void GameObjectFree()
   gameObjectList.last = NULL;
 }
 
-
-/*************************************************************************/
-/*!
-\par   Function: DisplayHealth
-
-\par Description: displays a health bar of the object
-
-\param obj pointer to the game object
-
-*/
-/*************************************************************************/
-void DisplayHealth(GameObject *obj)
-{
-  //these objects will always have a healthbar
-  if (obj->type == entity_enemy || 
-      obj->type == entity_player)
-  {
-    int max_health = obj->entity->maxHealth;   
-    int current_health = obj->entity->health;    
-    float health_percentage = ( (float)current_health ) / ( (float)max_health );
-    
-    
-  }
-  else  //cant display its healthbar
-  {
-    printf("object cannot display its health bar");
-    return;
-  }
-}
+//DEPRECATED
+///*************************************************************************/
+///*!
+//\par   Function: DisplayHealth
+//
+//\par Description: displays a health bar of the object
+//
+//\param obj pointer to the game object
+//
+//*/
+///*************************************************************************/
+//void DisplayHealth(GameObject *obj)
+//{
+//  //these objects will always have a healthbar
+//  if (obj->type == entity_enemy || 
+//      obj->type == entity_player)
+//  {
+//    int max_health = obj->entity->maxHealth;   
+//    int current_health = obj->entity->health;    
+//    float health_percentage = ( (float)current_health ) / ( (float)max_health );
+//    
+//    
+//  }
+//  else  //cant display its healthbar
+//  {
+//    printf("object cannot display its health bar");
+//    return;
+//  }
+//}

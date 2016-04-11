@@ -45,8 +45,8 @@ GameObject* CreatePlayerSmoke()
 {
   SetParticleAnim(GetAsset_Animation(asset_smokeParticle));
   
-  GameObject* particleEffect =  EffectCreate(Vec2(-5.f, -2.f), Vec2(10, 4), Vec2(0,0),
-    64, 0.0f, Vec2(0, 4), 0.9f, 0.2f, 32, Vec2(30, 30), 60, GTint(1, 1, 1, 1));
+  GameObject* particleEffect =  EffectCreate(Vec2(-2.f, -1.f), Vec2(4, 2), Vec2(0,0),
+    256, 0.0f, Vec2(0, 4), 0.99f, 0.4f, 26, Vec2(30, 45), 60, GTint(1, 1, 1, 1));
   ParticleApplyBehavior(particleBehavior_linearAlpha, particleEffect);
   return particleEffect;
 }
