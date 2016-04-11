@@ -5,8 +5,9 @@ Created       :  3/28/16
 Description   :  Contains the functionality of the compass on the screen.
 ChangeLog
 
+4/1/16        :  Added oscillating behavior to compass
 
-
+© Copyright 1996 - 2016, DigiPen Institute of Technology(USA).All rights reserved.
 **************************************************************************************************/
 
 #include "AEEngine.h"

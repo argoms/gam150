@@ -1,13 +1,14 @@
 /*---------------------------------------------------------------------------
-Project Title         :        Platformer
-File Name             :        Matrix2D.h
-Author                :        Matt Chasengnou
-Creation Date         :        1/19/16
-Purpose               :        Provides prototypes for functions implemented in
-                               Matrix2D.c
-History
--No major changes since creation
--2/1/16               :        Added Matrix2DSet
+Author        :  Matt Chasengnou
+File          :  Matrix2D.h
+Created       :  1/19/16
+Description   :  Provides functions for matrix operations
+ChangeLog
+
+-1/20/16      :  Changes made to Matrix2DTranspose
+
+-NOTE: Don't count code from this. Reused from CS230.
+
 © Copyright 1996 - 2016, DigiPen Institute of Technology(USA).All rights reserved.
 ----------------------------------------------------------------------------*/
 #ifndef MATRIX2D_H
