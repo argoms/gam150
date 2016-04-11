@@ -191,7 +191,7 @@ void Compass_Draw()
 
   AEGfxTextureSet(compass.texture, 0, 0);
 
-  AEGfxSetTintColor(1, 1, RandFloatRange(.5f, 2), 1);
+  AEGfxSetTintColor(1, 1, 1, 1);
 
   AEGfxSetTransparency(1.0f);
 
