@@ -13,7 +13,7 @@ NOTES       REMEMBER TO CONVERT YOUR X/Y to the iso X/Y
             currently using matrix[y,x]
             convert   to    matrix[x,y]
 
-
+© Copyright 1996 - 2016, DigiPen Institute of Technology(USA).All rights reserved.
 **************************************************************************************************/
 /*-------------------------------------------------------------------------------------------------
 INCLUDES

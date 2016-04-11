@@ -1,3 +1,17 @@
+/**************************************************************************************************
+Author        :  Matt Chasengnou
+File          :  FancyBackground.h
+Created       :  4/5/16
+Description   :  Contains the functionality for doing fancy menu backgrounds.
+ChangeLog
+
+4/6/16           Added in a base background
+
+4/10/16          Added in different behaviour. Now has horizontal scrolling and swirly behaviour.
+
+© Copyright 1996 - 2016, DigiPen Institute of Technology(USA).All rights reserved.
+**************************************************************************************************/
+
 #ifndef FANCY_BACKGROUND_H
 #define FANCY_BACKGROUND_H
 

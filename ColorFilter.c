@@ -1,4 +1,12 @@
+/**************************************************************************************************
+Author        :  Matt Chasengnou
+File          :  ColorFilter.h
+Created       :  4/6/16
+Description   :  Contains the functionality for doing fancy menu backgrounds.
+ChangeLog
 
+© Copyright 1996 - 2016, DigiPen Institute of Technology(USA).All rights reserved.
+**************************************************************************************************/
 
 
 #include "AEEngine.h"
