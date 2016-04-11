@@ -13,18 +13,13 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Vector2D.h"
 
 
-#define MAX_PARTICLES_PER_EFFECT 64
+#define MAX_PARTICLES_PER_EFFECT 64 //maximum number of particles that can be instantiated (increasing this increases memory footprint of each particle effect slightly)
 
 typedef struct EffectSource EffectSource;
 typedef struct ParticleComponent ParticleComponent;
-enum convertType
-{
-  transform_none,
-  transform_worldToScreen,
-  transform_screenToWorld
-};
 
 
+//pretty self-explanatory, used to see whether a given particle-related system is alive
 enum ParticleStates
 {
   particle_active,
@@ -37,6 +32,7 @@ enum ParticleStates
 enum ParticleBehaviors
 {
   particleBehavior_linearAlpha, //decreases alpha of particle by constant
+  particleBehavior_fadeIn //the weird pseudo-fireish behavior of door particles
 };
 
 struct EffectSource

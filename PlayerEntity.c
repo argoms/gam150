@@ -307,8 +307,10 @@ void PlayerInput()
       stepSoundTimer -= (float)frameTime;
       if(stepSoundTimer < 0)
       {
-       Audio_PlaySoundSample("FootstepPlayer1.ogg", 0);
-       stepSoundTimer = 0.3f;
+        Audio_PlaySoundSample("FootstepPlayer1.ogg", 0);
+        stepSoundTimer = 0.3f;
+        
+       
       }
       Vector2DNormalize(&input, &input);
       Vector2DScale(&input, &input, 10);
@@ -485,7 +487,14 @@ void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _oth
 
   if (_otherObject && _otherObject->type == entity_enemy)
   {
-    Audio_PlaySoundSample("SwordClash1.ogg", 0);
+    if (AERandFloat() > 0.5f)
+    {
+      Audio_PlaySoundSample("SwordClash1.ogg", 0);
+    }
+    else
+    {
+      Audio_PlaySoundSample("SwordClash2.ogg", 0);
+    }
     printf("YOU HIT ENEMY FOR %i DAMAGE\n", attackDamage);
     EntityTakeDamage(&_otherObject->entity, attackDamage);
   }

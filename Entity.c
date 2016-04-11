@@ -15,6 +15,8 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "MapGen.h"
 #include "EnvironmentalEffects.h"
 #include "EnvironmentAssets.h"
+#include "GameLevel.h"
+#include "Audio.h"
 
 #define BREIF_INVULNERABILITY_ENABLED  1    /* allow breif invulnerability after a hit    */
 #define BREIF_INVULNERABILITY_DISABLED 0    /* disallow brief invunerability after a hit  */
@@ -45,6 +47,13 @@ void EntityTakeDamage(Entity** _entity, int _damage)
     //allow it to take damage if its flag saying that itcanbedamaged is false
     if ( (*_entity)->canBeDamaged != 0)
     {
+
+      //play sound if player hit:
+      if ((*_entity)->owner == GetPlayerObject())
+      {
+        Audio_PlaySoundSample("hitSound.ogg", 0);
+      }
+
       //damage number popup
       DamageTextCreate((*_entity)->owner->physics->position, _damage);
 

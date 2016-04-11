@@ -33,28 +33,34 @@ GameObject* CreateWorldGate(Vector2D position, int orientation)
 
   Entity* gateEntity = malloc(sizeof(Entity));
   gateEntity->health = 5;
-
+  
+  /*
   switch (orientation)
   {
   case gate_vertical:
     break;
   case gate_horizontal:
     break;
-  }
+  }*/
+
+  //grab an animation based on the orientation of the gate
   Animation* anim2 = GetGateAnimation(orientation);
+
+  //create the game object
   GameObject* newGate = GameObjectCreate(PhysicsCreateObject(Vec2(position.x, position.y), 1), GCreateSprite(position.x, position.y, anim2, 1), gateEntity, entity_gate);
   
   newGate->simulate = &GateSimulate;
   newGate->entity->onEntityKilled = &GateOpened;
 
+  //set up gate component
   newGate->miscData = (WorldGate*)malloc(sizeof(WorldGate));
-  
   WorldGate* gateData = GetWorldGate(newGate);
   gateData->positionX = (int)position.x;
   gateData->positionY = (int)position.y;
   gateData->orientation = orientation;
   gateData->status = gate_open;
 
+  //create an array of pointers to particle effects, with one particle effect per tile length of the gate
   for (int i = 0; i < GATE_LENGTH; i++)
   {
     gateData->particleSystems[i] = NULL;
@@ -63,7 +69,6 @@ GameObject* CreateWorldGate(Vector2D position, int orientation)
 
   //printf("created a gate. %f, %f\n", position.x, position.y);
   return newGate;
-  //IsoTileSet(position.x, position.y, 1);
 }
 
 
@@ -73,7 +78,7 @@ GameObject* CreateWorldGate(Vector2D position, int orientation)
 */
 void GateOpened(GameObject* DeadGate)
 {
-
+  //create a gate explosion particle
   SetParticleAnim(GetAsset_Animation(asset_particleGate));
   Vector2D particleEffectRadius = Vec2(64, 64);
   GameObject* particleEffect = EffectCreate(Vec2(-10.f, -5.f), Vec2(20, 10), IsoWorldToScreen(&DeadGate->physics->position),
@@ -81,8 +86,10 @@ void GateOpened(GameObject* DeadGate)
   ParticleSetLifetime(particleEffect, 0.1f);
   ParticleApplyBehavior(particleBehavior_linearAlpha, particleEffect);
 
+  //play gate open sound
   Audio_PlaySoundSample("RoomComplete.ogg", 0);
-  //printf("itdidopenright");
+
+  //remove particle effects attached to the gate
   WorldGate* gateComponent = GetWorldGate(DeadGate);
   for (int i = 0; i < GATE_LENGTH; i++)
   {
@@ -91,12 +98,9 @@ void GateOpened(GameObject* DeadGate)
       //printf("ONEWASFOUND\n");
       EffectRemove(gateComponent->particleSystems[i]);
     }
-    //printf("ASDASDASDZDX')");
-    //printf(":A %p", gateComponent->particleSystems[i]);
-    //GameObjectDestroy(&());
   }
 
-
+  //set the collision flags of the gate-occupied areas back to 0 (no collision)
   IsoTileSet(GetWorldGate(DeadGate)->positionX, GetWorldGate(DeadGate)->positionY, tile_floor);
   switch (GetWorldGate(DeadGate)->orientation)
   {
@@ -113,22 +117,29 @@ void GateOpened(GameObject* DeadGate)
 }
 
 /*!
-\brief Called when the gate closes (player enters a room)
+\brief Called when the gate closes (player enters a room). This makes the room impossible to exit until the enemies are clearead.
 */
 void GateClosed(GameObject* inst)
 {
   Audio_PlaySoundSample("RoomClosed.ogg", 0);
+
+
   WorldGate* gateComponent = GetWorldGate(inst);
   gateComponent->status = gate_closed;
- // printf("Gatedim: %f, %f", gateDimensions.x, gateDimensions.y);
 
+  
+  
+  //set up particle systems corresponding to the gate's occupied tiles: (this is hard coded for 3-tile wide paths at the moment)
   Animation* particle = GetAsset_Animation(asset_particleGate);
   SetParticleAnim(particle);
 
   Vector2D particleEffectRadius = Vec2(64, 64);
-  
+
+  //the origin point particle system occurs on both horizontal and vertical gates
   gateComponent->particleSystems[0] = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&inst->physics->position), 32, 0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
     particleEffectRadius, 0, GTint(1, 1, 1, 0.1f));
+
+  //other than that, create particle systems according to gate orientation
   if (gateComponent->orientation == gate_horizontal)
   {
     Vector2D offsetPos = inst->physics->position;

@@ -9,9 +9,8 @@ Contains functionality for doors to move between levels on contact.
 All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "Door.h"
-
-
-
+#include "EnvironmentalEffects.h"
+#include "EnvironmentAssets.h"
 #include <stdio.h>
 
 
@@ -43,7 +42,7 @@ void DoorDefaultOnCollision(GameObject* _thisObject, GameObject* _otherObject)
       LevelSetNext(level_winScreen);
     }
     
-    printf("DOOR ME");
+    //printf("DOOR ME");
 
     //alpha hardcoding:
     level++;
@@ -59,13 +58,27 @@ void DoorDefaultOnCollision(GameObject* _thisObject, GameObject* _otherObject)
 */
 GameObject* DoorCreateDoorAt(Vector2D position)
 {
+  //load door animation:
   Animation* anim2 = GCreateAnimation(1,
     GCreateTexture("isoTileGreen.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
     1);
+
+  //create door object:
   GameObject* door = GameObjectCreate(PhysicsCreateObject(Vec2(position.x, position.y), 1), GCreateSprite(0, 40, anim2, 1), 0, entity_door);
   door->physics->onCollision = &DoorDefaultOnCollision;
   door->simulate = NULL;
+
+  //make door invisible:
+  door->sprite->tint.alpha = 0.0f;
+
+  //create door particle effect:
+  SetParticleAnim(GetAsset_Animation(asset_particleDoor));
+  Vector2D particleEffectRadius = Vec2(64, 64);
+  GameObject* doorParticles = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&door->physics->position), 64, -0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
+    particleEffectRadius, 0, GTint(1, 1, 1, 0.f));
+
+  ParticleApplyBehavior(particleBehavior_fadeIn, doorParticles);
 
   GSortSprite(door->sprite, 0);
 
@@ -98,6 +111,7 @@ GameObject* DoorGetDoor()
 */
 void DoorInit(GameObject* inst)
 {
+  
 }
 
 /*!
