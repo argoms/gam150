@@ -85,7 +85,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_mainMenu;
-    level = level_mainMenu;
   }
   break;
   case LEVEL_ONE_BUTTON:
@@ -94,7 +93,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_level1;
-    level = 1;
   }
   break;
   case LEVEL_TWO_BUTTON:
@@ -103,7 +101,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_level1;
-    level = 2;
   }
   break;
   case LEVEL_THREE_BUTTON:
@@ -112,8 +109,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_level1;
-    level = level_level3;
-    level = 3;
   }
   break;
   case LEVEL_FOUR_BUTTON:
@@ -122,7 +117,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_level1;
-    level = 4;
   }
   break;
   case DEATH_SCREEN_BUTTON:
@@ -131,7 +125,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_deathScreen;
-    level = level_deathScreen;
   }
   break;
   case WIN_SCREEN:
@@ -140,7 +133,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_winScreen;
-    level = level_winScreen;
   }
   break;
   case CONTROL_SCREEN:
@@ -149,7 +141,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_controlScreen;
-    level = level_controlScreen;
   }
   break;
   case TOWN_SCREEN_BUTTON:
@@ -158,7 +149,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_town;
-    level = level_town;
   }
   break;
   case CREDIT_SCREEN:
@@ -167,7 +157,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_creditScreen;
-    level = level_creditScreen;
   }
   break;
   case DP_SPLASH_SCREEN_BUTTON:
@@ -176,7 +165,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_splashScreen;
-    level = level_splashScreen;
   }
   break;
   default:
@@ -186,7 +174,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = NULL;
     buttonComponent->onRelease = NULL;
     buttonComponent->next = level = level_level1;
-    level = level_level1;
   }
   break;
   }

@@ -107,7 +107,7 @@ void LevelLoad(int _level)
     break;
   case level_winScreen:
     WinScreenInit();
-    Background_Init(BACKGROUND_BH_SWIRLY, BACKGROUND_MD_ENERGY);
+    //Background_Init(BACKGROUND_BH_SWIRLY, BACKGROUND_MD_ENERGY);
     level = 0;
     Audio_PauseMusicStream("music_sample4.ogg");
     //Audio_PauseMusicStream("EPOCH_theme_funky.ogg");
