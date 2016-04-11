@@ -376,6 +376,7 @@ void ParticleBehavior_DoorBehavior(GameObject* inst)
 {
   ParticleComponent* particleComponent = (ParticleComponent*)(inst->miscData);
   inst->sprite->tint.alpha += 0.05f;
+  inst->sprite->tint.green = RandFloat();
   inst->sprite->blendMode = AE_GFX_BM_ADD;
 }
 
@@ -396,15 +397,22 @@ void ParticleApplyBehavior(int behavior, GameObject* inst)
   case particleBehavior_linearAlpha:
     behaviorPointer = &ParticleBehavior_FadeLinear;
     break;
-  case particleBehavior_doorBehavior:
-    behavior = &ParticleBehavior_DoorBehavior;
+  case particleBehavior_fadeIn:
+    behaviorPointer = &ParticleBehavior_DoorBehavior;
+    break;
   default:
     printf("ApplyParticleBehavior error: invalid particle input %i given \n", behavior);
     return;
   }
-
   //index through the given particle system and give them the new behavior
-  for (int i = 0; i < effectComponent->density - 1; i++)
+
+  ////////////////////////////////
+  //NOTE:MAY NEED TO BE EffectComponent->density - 1
+  //ONLY IN DEBUG MODE, THAT WON'T WORK PROPERLY IN RELEASE MODE. THIS MAKES NO SENSE I KNOW.
+  //OR MAYBE IT'S RELEASE MODE NOW.
+  //SERIOUSLY, IT JUST MAGICALLY STARTED WORKING IN BOTH MODES EARLIER, LET'S JUST ROLL WITH IT.
+  ////////////////////////////////
+  for (int i = 0; i < effectComponent->density; i++)
   {
     GameObject* pInst = effectComponent->particles[i];
     ParticleComponent* particleComponent = (ParticleComponent*)(pInst->miscData);

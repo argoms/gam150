@@ -1,13 +1,25 @@
-//functions to load assets that may end up shared between multiple files/scopes
+/*!
+Project (working title): Epoch
+\file   EnvironmentalAssets.c
+\author James Do
+\par    email: j.do\@digipen.edu
+\brief
+functions to load assets that may end up shared between multiple files/scopes
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+*/
 #include "EnvironmentAssets.h"
 #include "PlayerSmoke.h"
 
-
+//ASSET POINTER LIST:
 static Animation* Asset_particleGate;
 static Animation* Asset_particleHitEnemy;
 static Animation* Asset_smokeParticle;
 static Animation* Asset_particleDoor;
 
+/*!
+\brief Loads in relevent assets and stores the addresses of the loaded assets in static pointers.
+*/
 void EnvironmentAssetsInitialize()
 {
   Asset_particleGate = GCreateAnimation(1,

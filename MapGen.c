@@ -83,23 +83,28 @@ void GenerateMap(IsoMap* inputMap)
   EnvironmentAssetsInitialize();
 
   //AEGfxGetCamPosition
-  //printf("A");
+
+  //textures used during map generation (for gates):
   GateAnimationHorizontal = GCreateAnimation(1,
     GCreateTexture("animations/world/gateHorizontal.png"),
     GCreateMesh(256.f, 256.f, 1, 1),
     1);
-  //printf("B");
   GateAnimationVertical = GCreateAnimation(1,
     GCreateTexture("animations/world/gateVertical.png"),
     GCreateMesh(256.f, 256.f, 1, 1),
     1);
-  //printf("C");
+
+  //shorter references:
   int mapHeight = inputMap->mapHeight;
   int mapWidth = inputMap->mapWidth;
+
+  //index vars:
   int i = 0;
   int j = 0;
 
+  //get a random seed, then seed with that
   MAP_SEED =  rand();
+
   RandSeed(MAP_SEED);
   printf("\n \n \n GENERATING MAP WITH SEED %i AND %i ROOMS\n \n \n", MAP_SEED, NUM_ROOMS);
 
@@ -174,12 +179,12 @@ void GenerateMap(IsoMap* inputMap)
   //discount exceptions/infinite loop handling
   if (tries > NUM_ROOMS * 100)
   {
-    printf("MapGen.c: seriously your algorithm is fucked, look at it.");
+    printf("MapGen.c: seriously your algorithm is not working, look at it.");
     //abort();
     //GenerateMap(inputMap); //comment this back in for release, but while debugging keep it out to avoid recursion.
   }
 
-  SpawnMapRooms(rooms);
+  SpawnMapRooms(rooms); //goes through the list of rooms to spawn relevant features (gates)
   MapRoomInfoClear(rooms); //clean up after done
   
 }
@@ -196,19 +201,19 @@ static void SpawnMapRooms(MapRoomInfo* rooms)
     {
     case roomtype_start:
       Room_StartRoom(index->position);
-      printf("made a start room");
+    //  printf("made a start room");
       break;
     case roomtype_simple:
       Room_BasicEnemies(index->position);
-      printf("enemyroom\n");
+     // printf("enemyroom\n");
       break;
     case roomtype_small:
       Room_SmallRoom(index->position);
-      printf("TINY");
+     // printf("TINY");
       break;
     case roomtype_hall:
       Room_HallsRoom(index->position);
-      printf("halls");
+    //  printf("halls");
       break;
     }
     index = index->next;
@@ -244,8 +249,10 @@ static void SetupBaseMap(int mapWidth, int mapHeight)
     i++;
   }
 }
+
 /*!
 \brief Fills a line between two given vector2Ds
+
 */
 static void FillLine(Vector2D position1, Vector2D position2, int newValue)
 {
@@ -255,6 +262,8 @@ static void FillLine(Vector2D position1, Vector2D position2, int newValue)
   Vector2DNormalize(&unitVector, &unitVector);
 
   int i = 0; //because we're technically using c, right?
+
+  //fill a 3x3 square and then step forwards one unit towards the end point until the end point magnitude is reached
   while (i * i < dist)
   {
     Vector2DAdd(&position1, &position1, &unitVector);
@@ -271,6 +280,9 @@ static void FillLine(Vector2D position1, Vector2D position2, int newValue)
 */
 static void IsoSquareSet(Vector2D position, int newValue)
 {
+
+  //cs230 told me to do it this way
+  //no regrets
   IsoTileSet((int)position.x, (int)position.y, newValue);
   IsoTileSet((int)position.x + 1, (int)position.y, newValue);
   IsoTileSet((int)position.x - 1, (int)position.y, newValue);

@@ -42,7 +42,7 @@ void DoorDefaultOnCollision(GameObject* _thisObject, GameObject* _otherObject)
       LevelSetNext(level_winScreen);
     }
     
-    printf("DOOR ME");
+    //printf("DOOR ME");
 
     //alpha hardcoding:
     level++;
@@ -76,9 +76,9 @@ GameObject* DoorCreateDoorAt(Vector2D position)
   SetParticleAnim(GetAsset_Animation(asset_particleDoor));
   Vector2D particleEffectRadius = Vec2(64, 64);
   GameObject* doorParticles = EffectCreate(Vec2(-2.f, -2.f), Vec2(4, 4), IsoWorldToScreen(&door->physics->position), 64, -0.0f, Vec2(4, 3), 0.99f, 0.5f, 0,
-    particleEffectRadius, 0, GTint(1, 1, 1, 1.f));
+    particleEffectRadius, 0, GTint(1, 1, 1, 0.f));
 
-  ParticleApplyBehavior(particleBehavior_doorBehavior, doorParticles);
+  ParticleApplyBehavior(particleBehavior_fadeIn, doorParticles);
 
   GSortSprite(door->sprite, 0);
 

@@ -1,3 +1,13 @@
+/*!
+Project (working title): Epoch
+\file   EnvironmentalAssets.h
+\author James Do
+\par    email: j.do\@digipen.edu
+\brief
+functions to load assets that may end up shared between multiple files/scopes
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+*/
 #pragma once
 #include "GameObject.h"
 #include "Graphics.h"
