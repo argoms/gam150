@@ -5,9 +5,9 @@ Created       :  4/5/16
 Description   :  Contains the functionality for doing fancy menu backgrounds.
 ChangeLog
 
-4/6/16           Adding in a base background
+4/6/16           Added in a base background
 
-4/10/16          Adding in different behaviours
+4/10/16          Added in different behaviour. Now has horizontal scrolling and swirly behaviour.
 
 **************************************************************************************************/
 
