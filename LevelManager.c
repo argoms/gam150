@@ -254,6 +254,7 @@ void MainMenuInit()
   string_ypos += 0.25f * screenHeight;
 
   textString = TextCreateString("EPOCH", string_xpos, string_ypos); // title
+  TextStringSetTint(textString, GTint(1, 1, 1, 1));
 
   //BUTTONS------------------------------------------------------
   // BUTTON LEVEL 1
