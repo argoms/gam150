@@ -117,19 +117,9 @@
     <ClCompile Include="EnvironmentEffects.c">
       <Filter>Environmental Objects</Filter>
     </ClCompile>
-    <ClCompile Include="FancyBackground.c">
-      <Filter>Menu/UI</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerDeathTimer.c">
+    <ClCompile Include="stats.c">
       <Filter>Player</Filter>
     </ClCompile>
-    <ClCompile Include="EnvironmentAssets.c">
-      <Filter>MapGen</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerSmoke.c">
-      <Filter>Player</Filter>
-    </ClCompile>
-    <ClCompile Include="ColorFilter.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -247,19 +237,9 @@
     <ClInclude Include="EnvironmentalEffects.h">
       <Filter>Environmental Objects</Filter>
     </ClInclude>
-    <ClInclude Include="FancyBackground.h">
-      <Filter>Menu/UI</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerDeathTimer.h">
+    <ClInclude Include="stats.h">
       <Filter>Player</Filter>
     </ClInclude>
-    <ClInclude Include="EnvironmentAssets.h">
-      <Filter>MapGen</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerSmoke.h">
-      <Filter>Player</Filter>
-    </ClInclude>
-    <ClInclude Include="ColorFilter.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="EnemyFiles">
