@@ -1,6 +1,6 @@
 /**************************************************************************************************
 Author        :  Matt Chasengnou
-File          :  Compass.c
+File          :  FancyBackground.c
 Created       :  4/5/16
 Description   :  Contains the functionality for doing fancy menu backgrounds.
 ChangeLog
@@ -9,6 +9,7 @@ ChangeLog
 
 4/10/16          Added in different behaviour. Now has horizontal scrolling and swirly behaviour.
 
+© Copyright 1996 - 2016, DigiPen Institute of Technology(USA).All rights reserved.
 **************************************************************************************************/
 
 #include <stdlib.h>
@@ -422,7 +423,7 @@ void Background_Draw()
 
   int i;
 
-  float deltaTime = AEFrameRateControllerGetFrameTime();
+  float deltaTime = (float)AEFrameRateControllerGetFrameTime();
 
   float CameraX;
   float CameraY;
@@ -435,7 +436,7 @@ void Background_Draw()
   AEGfxSetFullTransform(CameraX, CameraY, 0, backbase->scaleX, backbase->scaleY);
   
   if (mode == BACKGROUND_BH_HORIZONTAL)
-    AEGfxTextureSet(backbase->texture, 0, sinf(backbase->time * 0.5f * sin(2 * backbase->time)));
+    AEGfxTextureSet(backbase->texture, 0, sinf(backbase->time * 0.5f * sinf(2 * backbase->time)));
   else
     AEGfxTextureSet(backbase->texture, 0, 0);
 
@@ -530,16 +531,16 @@ void Background_Draw()
   /* Batch draws by texture to reduce render time. */
   for (i = 0; i < NUM_TEXTURES; ++i)
   {
-    int j;
+    //int j;
 
     /* Set the texture. */
     AEGfxTextureSet(textures[i], 0, 0);
 
     /* Tint values to make different colors. */
-    float osc_valueR = 1 - 0.3f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 1)]->time)));
-    float osc_valueG = 1 - 0.5f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 2)]->time - 1)));
-    float osc_valueB = 1 - 0.2f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 3)]->time - 2)));
-    float osc_valueA = fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 4)]->time - 3)));
+    float osc_valueR = 1 - 0.3f * fabsf((sinf(backgroundSprites[NUM_SPRITES / (i + 2)]->time)));
+    float osc_valueG = 1 - 0.5f * fabsf((sinf(backgroundSprites[NUM_SPRITES / (i + 3)]->time - 1)));
+    float osc_valueB = 1 - 0.2f * fabsf((sinf(backgroundSprites[NUM_SPRITES / (i + 4)]->time - 2)));
+    float osc_valueA = fabsf((sinf(backgroundSprites[NUM_SPRITES / (i + 5)]->time - 3)));
 
     AEGfxSetTintColor(osc_valueR, osc_valueG, osc_valueB, osc_valueA);
 
@@ -547,10 +548,10 @@ void Background_Draw()
     BG_DrawBatch(0, NUM_SPRITES / 2, textures[i]);
 
     /* Tint values to make different colors */
-    osc_valueR = 1 - 0.3f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 5)]->time - 4)));
-    osc_valueG = 1 - 0.5f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 6)]->time - 5)));
-    osc_valueB = 1 - 0.2f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 7)]->time - 6)));
-    osc_valueA = fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 8)]->time - 7)));
+    osc_valueR = 1 - 0.3f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 6)]->time - 4)));
+    osc_valueG = 1 - 0.5f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 7)]->time - 5)));
+    osc_valueB = 1 - 0.2f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 8)]->time - 6)));
+    osc_valueA = fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 9)]->time - 7)));
 
     AEGfxSetTintColor(osc_valueR, osc_valueG, osc_valueB, osc_valueA);
 
@@ -562,7 +563,7 @@ void Background_Draw()
   AEGfxSetFullTransform(CameraX, CameraY, 0, backbase->scaleX, backbase->scaleY);
 
   if (mode == BACKGROUND_BH_HORIZONTAL)
-    AEGfxTextureSet(backbase->texture, 0, sinf(backbase->time * 0.2f * sin(backbase->time)));
+    AEGfxTextureSet(backbase->texture, 0, sinf(backbase->time * 0.2f * sinf(backbase->time)));
   else
     AEGfxTextureSet(backbase->texture, 0, 0);
 
