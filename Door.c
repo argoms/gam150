@@ -42,7 +42,7 @@ void DoorDefaultOnCollision(GameObject* _thisObject, GameObject* _otherObject)
       LevelSetNext(level_winScreen);
     }
     
-    //printf("DOOR ME");
+    printf("DOOR ME \n LEVEL %i \n", level);
 
     //alpha hardcoding:
     level++;
