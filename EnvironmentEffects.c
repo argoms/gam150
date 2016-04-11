@@ -312,7 +312,7 @@ void ParticleSimulate(GameObject* inst)
 }
 
 /*!
-\brief Called to initialize a particle system based on its parent's values. Seriously, the phrasing in this c file!
+\brief Called to initialize a particle based on its parent's values. Seriously, the phrasing in this c file!
 */
 void ParticleInitialize(GameObject* inst)
 {
