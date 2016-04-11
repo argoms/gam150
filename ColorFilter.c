@@ -92,7 +92,6 @@ void ColorFilter_Fluctuate(int useF, float r_amt, float g_amt, float b_amt)
 /* Applies the filter. */
 void ColorFilter_Draw(void)
 {
-  return;
   if (!loaded)
     return;
 
