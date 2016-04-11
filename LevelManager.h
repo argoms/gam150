@@ -12,7 +12,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 
 
 
-enum LevelStates 
+enum LevelStates
 {
   level_splashScreen, /**< DigiPen splash screen        */
   level_mainMenu,     /**< main menu level              */
