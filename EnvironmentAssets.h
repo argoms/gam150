@@ -8,7 +8,8 @@ enum AssetsList
   asset_particleGate,
   asset_particleHitEnemy,
   asset_particleHitPlayer,
-  asset_smokeParticle
+  asset_smokeParticle,
+  asset_particleDoor
 };
 
 void EnvironmentAssetsInitialize();

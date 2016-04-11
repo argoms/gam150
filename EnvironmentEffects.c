@@ -15,6 +15,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "AEEngine.h"
 #include "MyRandom.h"
 #include "Isometric.h"
+#include "AEGraphics.h"
 
 
 
@@ -55,8 +56,10 @@ void EffectSimulate(GameObject* inst);
 void ParticleSimulate(GameObject* inst);
 void ParticleInitialize(GameObject* inst);
 static GameObject* ParticleCreate(Vector2D position, GameObject* parent, float lifeTime);
-void ParticleBehavior_FadeLinear(GameObject* inst);
 
+//PARTICLE BEHAVIORS:
+void ParticleBehavior_FadeLinear(GameObject* inst);
+void ParticleBehavior_DoorBehavior(GameObject* inst);
 
 
 /*!
@@ -367,6 +370,16 @@ void ParticleBehavior_FadeLinear(GameObject* inst)
 }
 
 /*!
+\brief Particle behavior for the door particles
+*/
+void ParticleBehavior_DoorBehavior(GameObject* inst)
+{
+  ParticleComponent* particleComponent = (ParticleComponent*)(inst->miscData);
+  inst->sprite->tint.alpha += 0.05f;
+  inst->sprite->blendMode = AE_GFX_BM_ADD;
+}
+
+/*!
 Applies a nonstandard particle behavior to the given particle system.
 
 \param behavior See ParticleBehaviors enum
@@ -383,6 +396,8 @@ void ParticleApplyBehavior(int behavior, GameObject* inst)
   case particleBehavior_linearAlpha:
     behaviorPointer = &ParticleBehavior_FadeLinear;
     break;
+  case particleBehavior_doorBehavior:
+    behavior = &ParticleBehavior_DoorBehavior;
   default:
     printf("ApplyParticleBehavior error: invalid particle input %i given \n", behavior);
     return;
@@ -393,6 +408,6 @@ void ParticleApplyBehavior(int behavior, GameObject* inst)
   {
     GameObject* pInst = effectComponent->particles[i];
     ParticleComponent* particleComponent = (ParticleComponent*)(pInst->miscData);
-    particleComponent->extraBehavior = &ParticleBehavior_FadeLinear;
+    particleComponent->extraBehavior = behaviorPointer;
   }
 }

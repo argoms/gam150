@@ -6,6 +6,7 @@
 static Animation* Asset_particleGate;
 static Animation* Asset_particleHitEnemy;
 static Animation* Asset_smokeParticle;
+static Animation* Asset_particleDoor;
 
 void EnvironmentAssetsInitialize()
 {
@@ -18,6 +19,11 @@ void EnvironmentAssetsInitialize()
     GCreateTexture("animations/world/particle_simpleGreen.png"),
     GCreateMesh(8.f, 8.f, 1, 1),
     1);   
+
+  Asset_particleDoor = GCreateAnimation(1,
+    GCreateTexture("animations/world/particle_largeBlue.png"),
+    GCreateMesh(16.f, 16.f, 1, 1),
+    1);
 
   Asset_smokeParticle = GCreateAnimation(1,
     GCreateTexture("animations/world/particle_simpleGray.png"),
@@ -41,6 +47,9 @@ Animation* GetAsset_Animation(int assetName)
     return Asset_particleHitEnemy;
   case asset_smokeParticle:
     return Asset_smokeParticle;
+    break;
+  case asset_particleDoor:
+    return Asset_particleDoor;
     break;
   }
 }

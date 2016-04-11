@@ -13,7 +13,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Vector2D.h"
 
 
-#define MAX_PARTICLES_PER_EFFECT 64
+#define MAX_PARTICLES_PER_EFFECT 256
 
 typedef struct EffectSource EffectSource;
 typedef struct ParticleComponent ParticleComponent;
@@ -37,6 +37,7 @@ enum ParticleStates
 enum ParticleBehaviors
 {
   particleBehavior_linearAlpha, //decreases alpha of particle by constant
+  particleBehavior_doorBehavior, //the weird pseudo-fireish behavior of door particles
 };
 
 struct EffectSource
