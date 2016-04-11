@@ -112,6 +112,7 @@ void LevelLoad(int _level)
     Audio_PauseMusicStream("music_sample4.ogg");
     //Audio_PauseMusicStream("EPOCH_theme_funky.ogg");
     ColorFilter_Set(1.f, 1.f, 1.f);
+    break;
   case level_creditScreen:
     CreditsScreenInit();
 
