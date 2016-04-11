@@ -74,7 +74,7 @@ void LevelLoad(int _level)
     break;
   case level_mainMenu:
     MainMenuInit();
-    Background_Init(BACKGROUND_BH_SWIRLY, BACKGROUND_MD_BLOCKS);
+    //Background_Init(BACKGROUND_BH_SWIRLY, BACKGROUND_MD_BLOCKS);
     ColorFilter_Set(1.f, 1.f, 1.f);
     if (!currentLevel == level_splashScreen)
       Audio_PlayMusicStream("EPOCH_main_theme.ogg", 1);
@@ -82,14 +82,14 @@ void LevelLoad(int _level)
     break;
   case level_town:
     TownScreenInit();
-    Background_Init(BACKGROUND_BH_HORIZONTAL, BACKGROUND_MD_BLOCKS);
+    //Background_Init(BACKGROUND_BH_HORIZONTAL, BACKGROUND_MD_BLOCKS);
     ColorFilter_Init();
     ColorFilter_Fluctuate(1, 0.5f, 0.2f, 0.2f);
     ColorFilter_Set(0.5f, 0.8f, 0.8f);
     break;
   case level_deathScreen:
     DeathScreenInit();
-    Background_Init(BACKGROUND_BH_HORIZONTAL, BACKGROUND_MD_ENERGY);
+    //Background_Init(BACKGROUND_BH_HORIZONTAL, BACKGROUND_MD_ENERGY);
     ColorFilter_Init();
     ColorFilter_Fluctuate(1, 0.3f, 0.0f, 0.0f);
     ColorFilter_Set(1.7f, 0.1f, 0.1f);

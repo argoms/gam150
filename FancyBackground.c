@@ -363,6 +363,8 @@ void Background_Update()
 /* Draws a batch of sprites. Draws sprites that has the matching texture. */
 void BG_DrawBatch(int start, int stop, AEGfxTexture *texture)
 {
+
+
   int i;
   for (i = start; i < stop; ++i)
   {
