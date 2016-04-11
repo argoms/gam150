@@ -125,7 +125,7 @@ void LevelLoad(int _level)
     break;
   case level_creditScreen:
     CreditsScreenInit();
-
+    Background_Init(BACKGROUND_BH_HORIZONTAL, BACKGROUND_MD_BLOCKS);
     break;
   }
 }
