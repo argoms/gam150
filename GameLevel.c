@@ -261,7 +261,7 @@ void GameLevelRun(void)
   
   if (player->sprite)
   {
-    Compass_Update(&player->physics->position, &DoorGetDoor()->physics->position);
+    Compass_Update(&player->physics->position, &(DoorGetDoor()->physics->position));
   }
 
 }
