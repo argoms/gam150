@@ -37,23 +37,37 @@ void CreditsScreenInit()
   float screenWidth = winMaxX - winMinX;
   float screenHeight = winMaxY - winMinY;
 
+  /* Matt - handler to created text. */
+  TextString *text;
+
   // text for the creidts
-  TextCreateString("Credits", winMinX + screenWidth / 2, winMinY + 9 * screenHeight / 10);
+  text = TextCreateString("Credits", winMinX + screenWidth / 2, winMinY + 9 * screenHeight / 10);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
 
-  TextCreateString("Producer:", winMinX + screenWidth / 5, winMinY + screenHeight / 2 + 170);
-  TextCreateString("Noah Park", winMinX + screenWidth / 5, winMinY + screenHeight / 2 + 130);
+  text = TextCreateString("Producer:", winMinX + screenWidth / 5, winMinY + screenHeight / 2 + 170);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
+  text = TextCreateString("Noah Park", winMinX + screenWidth / 5, winMinY + screenHeight / 2 + 130);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
 
-  TextCreateString("Tech Director:", winMinX + screenWidth / 5, winMinY + screenHeight / 2 + 80);
-  TextCreateString("James Do", winMinX + screenWidth / 5, winMinY + screenHeight / 2 + 30);
+  text = TextCreateString("Tech Director:", winMinX + screenWidth / 5, winMinY + screenHeight / 2 + 80);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
+  text = TextCreateString("James Do", winMinX + screenWidth / 5, winMinY + screenHeight / 2 + 30);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
 
-  TextCreateString("Product Manager:", winMinX + screenWidth / 5, winMinY + screenHeight / 2 - 20);
-  TextCreateString("Matt Chasengnou", winMinX + screenWidth / 5, winMinY + screenHeight / 2 - 60);
+  text = TextCreateString("Product Manager:", winMinX + screenWidth / 5, winMinY + screenHeight / 2 - 20);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
+  text = TextCreateString("Matt Chasengnou", winMinX + screenWidth / 5, winMinY + screenHeight / 2 - 60);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
 
-  TextCreateString("Design Director:", winMinX + screenWidth / 5, winMinY + screenHeight / 2 - 110);
-  TextCreateString("Jack Ile", winMinX + screenWidth / 5, winMinY + screenHeight / 2 - 150);
+  text = TextCreateString("Design Director:", winMinX + screenWidth / 5, winMinY + screenHeight / 2 - 110);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
+  text = TextCreateString("Jack Ile", winMinX + screenWidth / 5, winMinY + screenHeight / 2 - 150);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
 
-  TextCreateString("Test Manager:", winMinX + screenWidth / 5, winMinY + screenHeight / 2 - 200);
-  TextCreateString("Tarrant Mangasarian", winMinX + screenWidth / 5, winMinY + screenHeight / 2 - 240);
+  text = TextCreateString("Test Manager:", winMinX + screenWidth / 5, winMinY + screenHeight / 2 - 200);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
+  text = TextCreateString("Tarrant Mangasarian", winMinX + screenWidth / 5, winMinY + screenHeight / 2 - 240);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
 
   // string positions
   float string_xpos = 0.0f; // default x
