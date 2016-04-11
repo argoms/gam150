@@ -22,6 +22,8 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "ParticleSystems(Redo).h"
 #include "Compass.h"
 #include "CreditsScreen.h"
+#include "FancyBackground.h"
+#include "ColorFilter.h"
 
 
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
@@ -61,6 +63,9 @@ void LevelLoad(int _level)
   {
   case level_level1:
     Level1Init();
+    //ColorFilter_Set(1.f, 0.7f, 0.5f);
+    //ColorFilter_Fluctuate(1, 0.6f, 0.3f, 0.2f);
+    //ColorFilter_Set(1.f, 1.f, 1.f);
     if (!(currentLevel == level_town))
     {
       Audio_PlayMusicStream("music_sample4.ogg", 1);
@@ -69,41 +74,49 @@ void LevelLoad(int _level)
     break;
   case level_mainMenu:
     MainMenuInit();
-    Audio_PlayMusicStream("EPOCH_main_theme.ogg", 1);
-    Audio_PauseMusicStream("music_sample3.ogg");
+    Background_Init(BACKGROUND_BH_SWIRLY, BACKGROUND_MD_BLOCKS);
+    ColorFilter_Set(1.f, 1.f, 1.f);
+    if (!currentLevel == level_splashScreen)
+      Audio_PlayMusicStream("EPOCH_main_theme.ogg", 1);
+    //Audio_PauseMusicStream("music_sample3.ogg");
     break;
   case level_town:
     TownScreenInit();
+    Background_Init(BACKGROUND_BH_HORIZONTAL, BACKGROUND_MD_BLOCKS);
+    ColorFilter_Init();
+    ColorFilter_Fluctuate(1, 0.5f, 0.2f, 0.2f);
+    ColorFilter_Set(0.5f, 0.8f, 0.8f);
     break;
   case level_deathScreen:
     DeathScreenInit();
+    Background_Init(BACKGROUND_BH_HORIZONTAL, BACKGROUND_MD_ENERGY);
+    ColorFilter_Init();
+    ColorFilter_Fluctuate(1, 0.3f, 0.0f, 0.0f);
+    ColorFilter_Set(1.7f, 0.1f, 0.1f);
     level = 0;
     //Audio_PauseMusicStream("music_sample2A.ogg");
     Audio_PauseMusicStream("music_sample4.ogg");
     //Audio_PauseMusicStream("EPOCH_theme_funky.ogg");
+    ColorFilter_Set(1.f, 1.f, 1.f);
     break;
   case level_splashScreen:
-    Audio_PlayMusicStream("music_sample3.ogg", 0);
+    //Audio_PlayMusicStream("music_sample3.ogg", 0);
+    Audio_PlayMusicStream("EPOCH_main_theme.ogg", 1);
     SplashScreenInit();
+    ColorFilter_Set(1.f, 1.f, 1.f);
     break;
   case level_winScreen:
     WinScreenInit();
+    Background_Init(BACKGROUND_BH_SWIRLY, BACKGROUND_MD_ENERGY);
     level = 0;
     Audio_PauseMusicStream("music_sample4.ogg");
     //Audio_PauseMusicStream("EPOCH_theme_funky.ogg");
-    break;
+    ColorFilter_Set(1.f, 1.f, 1.f);
   case level_creditScreen:
-    CreditsScreenInit();    
+    CreditsScreenInit();
+
+    break;
   }
-
-  if (_level != level_level1)
-  {
-    //Matt's compass code
-    Compass_Free();
-    Compass_Unload();
-
-  }
-
 }
 
 /*
@@ -178,6 +191,9 @@ void LevelUnload()
   GameObjectFree();
   UnloadAll_PS();
   GFree();
+
+  Background_Unload();
+  ColorFilter_Unload();
 }
 
 
@@ -391,11 +407,11 @@ void MainMenuInit()
 
   //EXAMPLE CODE, REMOVE OUT WHEN USING
   {
-    animtest2 = GCreateAnimation(16, pTex1, pMesh2, 1);
+    //animtest2 = GCreateAnimation(16, pTex1, pMesh2, 1);
     //sprite = GCreateSprite(0, 30, animtest, 4);
     //sprite = GCreateSprite(0, 20, animtest, 4);
     //sprite = GCreateSprite(0, -30, animtest, 4);
-    sprite = GCreateSprite(100, -100, animtest2, 4);
+    //sprite = GCreateSprite(100, -100, animtest2, 4);
     //sprite = GCreateHudSprite(0, 0, animtest2, 1);
   }
   //EXAMPLE CODE ENDS HERE
@@ -428,6 +444,7 @@ void MainMenuRun()
   GameObjectsPostStep();
   //debug
 
+  Background_Update();
   
   if (AEInputCheckReleased(VK_SPACE))
   {
