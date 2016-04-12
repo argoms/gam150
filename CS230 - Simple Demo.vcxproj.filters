@@ -97,8 +97,6 @@
     <ClCompile Include="Matrix2D.c">
       <Filter>Back End</Filter>
     </ClCompile>
-    <ClCompile Include="ControlScreen.c" />
-    <ClCompile Include="CreditsScreen.c" />
     <ClCompile Include="EnemyAIMeleeBigBehavior.c">
       <Filter>Enemies\EnemyAI</Filter>
     </ClCompile>
@@ -119,6 +117,17 @@
     </ClCompile>
     <ClCompile Include="stats.c">
       <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorFilter.c" />
+    <ClCompile Include="EnvironmentAssets.c" />
+    <ClCompile Include="FancyBackground.c" />
+    <ClCompile Include="PlayerDeathTimer.c" />
+    <ClCompile Include="PlayerSmoke.c" />
+    <ClCompile Include="ControlScreen.c">
+      <Filter>Menu/UI</Filter>
+    </ClCompile>
+    <ClCompile Include="CreditsScreen.c">
+      <Filter>Menu/UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -217,8 +226,6 @@
     <ClInclude Include="Matrix2D.h">
       <Filter>Back End</Filter>
     </ClInclude>
-    <ClInclude Include="ControlScreen.h" />
-    <ClInclude Include="CreditsScreen.h" />
     <ClInclude Include="EnemyAIMeleeBigBehavior.h">
       <Filter>Enemies\EnemyAI</Filter>
     </ClInclude>
@@ -239,6 +246,17 @@
     </ClInclude>
     <ClInclude Include="stats.h">
       <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorFilter.h" />
+    <ClInclude Include="EnvironmentAssets.h" />
+    <ClInclude Include="FancyBackground.h" />
+    <ClInclude Include="PlayerDeathTimer.h" />
+    <ClInclude Include="PlayerSmoke.h" />
+    <ClInclude Include="ControlScreen.h">
+      <Filter>Menu/UI</Filter>
+    </ClInclude>
+    <ClInclude Include="CreditsScreen.h">
+      <Filter>Menu/UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
