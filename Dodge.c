@@ -1,4 +1,6 @@
 #include "Dodge.h"
+#include "EnvironmentalEffects.h"
+#include "PlayerSmoke.h"
 
 //#include <windows>
 // CALL THIS EVERY FRAME
@@ -120,7 +122,7 @@ void UpdateEntityIFs(GameObject *obj)
       //SetPlayerDrag(0.3f);
       ent->canBeDamaged = 1;                                   /* make the entity damagable          */
       ent->invincibilityRecoveryTime = PLAYER_IFRAME_RECOVORY; /* set the entity to start recovering */
-      //SetSmoke(particle_inactive);// turn off particles
+      SetSmoke(particle_inactive);// turn off particles
                                                                //reset color
       ResetColor(obj);
 
@@ -209,7 +211,7 @@ void Dodge(int input_key, GameObject *obj)
     obj->entity->canBeDamaged = 0; /* activate invincibility */
     obj->entity->invincibilityTime = PLAYER_IFRAMES;
     SetSmoke(particle_active); // turn on particles
-    printf("dodged, is invincibleLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL\n");
+    printf("dodged, is zzz\n");
   }
 }
 
@@ -265,6 +267,7 @@ void Dodge2(int keys[], GameObject *obj, int list_size)
     // do particle effects
     obj->entity->canBeDamaged = 0; /* activate invincibility */
     obj->entity->invincibilityTime = PLAYER_IFRAMES;
+    SetSmoke(particle_active);
     printf("dodged, is invincibleLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL\n");
   }
 }
@@ -339,6 +342,7 @@ void BriefInvulnerability(GameObject *GameObj, int PlayerOnly)
   Entity *ent = GameObj->entity;
   ent->canBeDamaged = 0;  //make it invulnerable
   ent->invincibilityTime = BRIEF_IFRAMES;
+  printf("AAAAA");
   SetSmoke(particle_active); // turn on particles
   //ent->wasDamaged = 0;
 }

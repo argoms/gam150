@@ -51,6 +51,7 @@ void EntityTakeDamage(Entity** _entity, int _damage)
       //play sound if player hit:
       if ((*_entity)->owner == GetPlayerObject())
       {
+        //CreatePlayerSmokePuff(4);
         Audio_PlaySoundSample("hitSound.ogg", 0);
       }
 
