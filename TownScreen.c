@@ -37,13 +37,8 @@ void TownScreenInit()
   //printf("\nWELCOME TO TOWN");
   //char levelIndicator[3];
   //itoa(level, levelIndicator, 10);
-<<<<<<< HEAD
   //TextCreateString(levelIndicator, -350, 50);
   TextString* cleared = TextCreateString("Level Cleared!", 50, 0);
-=======
-  //TextCreateString(levelIndicator, -350, 150);
-  TextString* cleared = TextCreateString("Level Cleared!", -350, 150);
->>>>>>> refs/remotes/origin/master
   TextStringSetTint(cleared, GTint(1, 1, 1, 1));
   //TextCreateString("PRESS SPACE TO LEAVE", -300, -50);
 

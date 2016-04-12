@@ -33,7 +33,7 @@ void DoorDefaultOnCollision(GameObject* _thisObject, GameObject* _otherObject)
   if (_thisObject->type == entity_door && _otherObject->type == entity_player)
   {
     //GameObjectDestroy(&_thisObject);
-    if (level < 3)
+    if (level < 4)
     {
       LevelSetNext(level_town);
     }

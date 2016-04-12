@@ -85,7 +85,7 @@ void LevelLoad(int _level)
       Audio_PlayMusicStream("music_sample4.ogg", 1);
       Audio_PauseMusicStream("EPOCH_main_theme.ogg");
     }
-    if (level == 3)
+    if (level == 4)
     {
       Audio_PlayMusicStream("EPOCH_theme_final_level.ogg", 1);
       Audio_PauseMusicStream("music_sample4.ogg");
@@ -98,7 +98,7 @@ void LevelLoad(int _level)
     Audio_PauseMusicStream("music_sample4.ogg");
     Audio_PauseMusicStream("EPOCH_theme_final_level.ogg");
     Audio_PauseMusicStream("death_tunes.ogg");
-    if (!(currentLevel == level_splashScreen || currentLevel == level_creditScreen))
+    if (!(currentLevel == level_splashScreen || currentLevel == level_creditScreen || currentLevel == level_controlScreen))
       Audio_PlayMusicStream("EPOCH_main_theme.ogg", 1);
     //Audio_PauseMusicStream("music_sample3.ogg");
     break;
