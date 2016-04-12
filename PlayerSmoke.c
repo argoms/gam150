@@ -38,7 +38,7 @@ void SetSmoke(int input)
   EffectSource* smokeComponent = (EffectSource*)(smokeEffect->miscData);
 
   smokeComponent->state = input;
-  if (input == particle_active)
+  if (input == particle_active) //if switching to active, create a puff of smoke
   {
     CreatePlayerSmokePuff(16);
   }
@@ -46,7 +46,7 @@ void SetSmoke(int input)
 
 
 /*!
-\brief Creates a puff of smoke at the player's position
+\brief Creates a short-lived puff of smoke at the player's position
 \param size Number of particles in the puff
 */
 void CreatePlayerSmokePuff(int size)
@@ -55,10 +55,11 @@ void CreatePlayerSmokePuff(int size)
   Vector2D puffPos = IsoWorldToScreen(&(GetPlayerObject()->physics->position));
   SetParticleAnim(GetAsset_Animation(asset_smokeParticle));
   GameObject* particleEffect = EffectCreate(Vec2(-2.f, -1.f), Vec2(4, 2), puffPos,
-    size, -1.0f, Vec2(0, 4), 0.99f, 0.4f, 26, Vec2(30, 45), 60, GTint(1, 1, 1, 1));
+    size, -1.0f, Vec2(0, 4), 0.99f, 0.4f, 26, Vec2(20, 35), 60, GTint(1, 1, 1, 1));
   ParticleApplyBehavior(particleBehavior_linearAlpha, particleEffect);
   ParticleSetLifetime(particleEffect, 0.05f);
 }
+
 /*!
 \brief Creates the player smoke effect and returns a pointer to the particle system created.
 */
@@ -77,10 +78,12 @@ GameObject* CreatePlayerSmoke()
 */
 void UpdateSmokePosition(Vector2D worldPos)
 {
-  if (!smokeEffect)
+  if (!smokeEffect) //safety check
   {
-    
+    return;
   }
+
+  //update position based on player's
   EffectSource* smokeComponent = (EffectSource*)(smokeEffect->miscData);
   smokeComponent->position = IsoWorldToScreen(&worldPos);
 }
