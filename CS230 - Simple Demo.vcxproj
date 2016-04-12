@@ -181,6 +181,7 @@
     <ClCompile Include="Enemy.c" />
     <ClCompile Include="EnemyAIMeleeBehavior.c" />
     <ClCompile Include="EnemyAIMeleeBigBehavior.c" />
+    <ClCompile Include="EnemyAIMeleeChargerBehavior.c" />
     <ClCompile Include="EnemyAIRangedBehavior.c" />
     <ClCompile Include="EnemyAnimations.c" />
     <ClCompile Include="EnemyStateMachine.c" />
@@ -236,6 +237,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyAIMeleeBehavior.h" />
     <ClInclude Include="EnemyAIMeleeBigBehavior.h" />
+    <ClInclude Include="EnemyAIMeleeChargerBehavior.h" />
     <ClInclude Include="EnemyAIRangedBehavior.h" />
     <ClInclude Include="EnemyAnimations.h" />
     <ClInclude Include="EnemyStateMachine.h" />
@@ -273,6 +275,7 @@
   <ItemGroup>
     <Text Include="EnemyMeleeBig.txt" />
     <Text Include="EnemyMelee.txt" />
+    <Text Include="EnemyMeleeCharger.txt" />
     <Text Include="EnemyRanged.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

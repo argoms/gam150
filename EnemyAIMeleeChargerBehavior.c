@@ -1,36 +1,36 @@
-#include "EnemyAIRangedBehavior.h"
+#include "EnemyAIMeleeChargerBehavior.h"
 #include "EnemyAnimations.h"
 #include "Isometric.h"
 #include "AEEngine.h"
 
 /****************IDLE******************/
 
-EnemyAI_Ranged_IdleStart(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_MeleeCharger_IdleStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemy->physics->velocity.x = 0;
   enemy->physics->velocity.y = 0;
 }
 
-EnemyAI_Ranged_IdleUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_MeleeCharger_IdleUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
 
 }
 
-EnemyAI_Ranged_IdleExit(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_MeleeCharger_IdleExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
 
 }
 
 /****************PATROL******************/
 
-EnemyAI_Ranged_PatrolStart(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_MeleeCharger_PatrolStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemy->physics->velocity.x = 0;
   enemy->physics->velocity.y = 0;
   enemyContainer->enemyAnimationState = ENEMY_IDLE;
 }
 
-EnemyAI_Ranged_PatrolUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_MeleeCharger_PatrolUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   float distanceToPlayer = Vector2DSquareDistance(&(enemy->physics->position), &(enemy->target->physics->position));
 
@@ -40,19 +40,19 @@ EnemyAI_Ranged_PatrolUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
   }
 }
 
-EnemyAI_Ranged_PatrolExit(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_MeleeCharger_PatrolExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~ENEMY_IDLE;
 }
 
 /****************CHASE******************/
 
-EnemyAI_Ranged_ChaseStart(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_MeleeCharger_ChaseStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = ENEMY_WALK;
 }
 
-EnemyAI_Ranged_ChaseUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_MeleeCharger_ChaseUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   Vector2D facingDirection;
   facingDirection.x = enemy->target->physics->position.x - enemy->physics->position.x;
@@ -60,10 +60,6 @@ EnemyAI_Ranged_ChaseUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 
   Vector2DNormalize(&facingDirection, &facingDirection);
   Vector2DScale(&(enemy->physics->velocity), &facingDirection, enemyContainer->chaseSpeed);
-
-  Vector2D worldFacing;
-  worldFacing = IsoWorldToScreen(&facingDirection);
-  //EnemyChangeAnimationFlag(enemyContainer, &worldFacing);
 
   float distanceToPlayer = Vector2DSquareDistance(&(enemy->physics->position), &(enemy->target->physics->position));
   if (distanceToPlayer <= enemyContainer->attackRange)
@@ -77,67 +73,73 @@ EnemyAI_Ranged_ChaseUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
   }
 }
 
-EnemyAI_Ranged_ChaseExit(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_MeleeCharger_ChaseExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~ENEMY_WALK;
 }
 
 /****************ATTACK******************/
 
-EnemyAI_Ranged_AttackStart(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_MeleeCharger_AttackStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = ENEMY_ATTACK;
   enemy->physics->velocity.x = 0;
   enemy->physics->velocity.y = 0;
+  enemy->sprite->frame = 0;
 }
 
-EnemyAI_Ranged_AttackUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_MeleeCharger_AttackUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   float distanceToPlayer = Vector2DSquareDistance(&(enemy->physics->position), &(enemy->target->physics->position));
-
-  if (distanceToPlayer > enemyContainer->attackRange)
-  {
-    enemy->enemyAI->newEnemyState = ENEMY_STATE_CHASE;
-    return;
-  }
 
   if (enemyContainer->attackWindup > 0)
   {
     enemyContainer->attackWindup -= AEFrameRateControllerGetFrameTime();
   }
 
-  Vector2D attackDirection;
-  attackDirection.x = enemy->target->physics->position.x - enemy->physics->position.x;
-  attackDirection.y = enemy->target->physics->position.y - enemy->physics->position.y;
-  Vector2DNormalize(&attackDirection, &attackDirection);
+  if (enemyContainer->attackWindup <= .42f && enemyContainer->attackWindup > 0.4f && enemy->physics->velocity.x == 0 && enemy->physics->velocity.y == 0)
+  {
+    Vector2D attackDirection;
+    attackDirection.x = enemy->target->physics->position.x - enemy->physics->position.x;
+    attackDirection.y = enemy->target->physics->position.y - enemy->physics->position.y;
+    Vector2DNormalize(&attackDirection, &attackDirection);
 
-  Vector2D worldFacing;
-  worldFacing = IsoWorldToScreen(&attackDirection);
-
-  //EnemyChangeAnimationFlag(enemyContainer, &worldFacing);
+    enemy->physics->velocity.x = attackDirection.x;
+    enemy->physics->velocity.y = attackDirection.y;
+    Vector2DScale(&(enemy->physics->velocity), &(enemy->physics->velocity), .1f);
+  }
 
   if (enemyContainer->attackWindup <= 0)
   {
+    Vector2D attackDirection;
+    attackDirection.x = enemy->target->physics->position.x - enemy->physics->position.x;
+    attackDirection.y = enemy->target->physics->position.y - enemy->physics->position.y;
+    Vector2DNormalize(&attackDirection, &attackDirection);
+
+    enemy->physics->velocity.x = 0;
+    enemy->physics->velocity.y = 0;
     enemyContainer->attackCooldown = enemyContainer->attackCooldownLength;
+
     EnemyMeleeAttack(enemy, attackDirection);
     enemy->enemyAI->newEnemyState = ENEMY_STATE_COOLDOWN;
   }
 }
 
-EnemyAI_Ranged_AttackExit(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_MeleeCharger_AttackExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~ENEMY_ATTACK;
   enemyContainer->attackWindup = enemyContainer->attackWindupLength;
 }
 
-/*****************COOLDOWN***************/
+//******************* COOL DOWN *********************//s
 
-void EnemyAI_Ranged_CooldownStart(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_MeleeCharger_CooldownStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
-  enemyContainer->enemyAnimationState = ENEMY_IDLE;
+  enemyContainer->enemyAnimationState = ENEMY_COOLDOWN;
+  enemy->sprite->frame = 0;
 }
 
-void EnemyAI_Ranged_CooldownUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_MeleeCharger_CooldownUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   Vector2D attackDirection;
   attackDirection.x = enemy->target->physics->position.x - enemy->physics->position.x;
@@ -147,20 +149,27 @@ void EnemyAI_Ranged_CooldownUpdate(GameObject* enemy, EnemyContainer* enemyConta
   Vector2D worldFacing;
   worldFacing = IsoWorldToScreen(&attackDirection);
 
-  //EnemyChangeAnimationFlag(enemyContainer, &worldFacing);
   if (enemyContainer->attackCooldown > 0)
   {
     enemyContainer->attackCooldown -= AEFrameRateControllerGetFrameTime();
   }
 
+  float distanceToPlayer = Vector2DSquareDistance(&(enemy->physics->position), &(enemy->target->physics->position));
+
   if (enemyContainer->attackCooldown <= 0)
   {
+    if (distanceToPlayer > enemyContainer->attackRange)
+    {
+      enemy->enemyAI->newEnemyState = ENEMY_STATE_CHASE;
+      return;
+    }
+
     enemy->enemyAI->newEnemyState = ENEMY_STATE_ATTACK;
   }
 }
 
-void EnemyAI_Ranged_CooldownExit(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_MeleeCharger_CooldownExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->attackCooldown = enemyContainer->attackCooldownLength;
-  enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~(ENEMY_IDLE);
+  enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~(ENEMY_COOLDOWN);
 }

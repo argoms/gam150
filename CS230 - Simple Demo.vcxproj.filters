@@ -130,6 +130,9 @@
       <Filter>Player</Filter>
     </ClCompile>
     <ClCompile Include="ColorFilter.c" />
+    <ClCompile Include="EnemyAIMeleeChargerBehavior.c">
+      <Filter>Enemies\EnemyAI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -260,6 +263,9 @@
       <Filter>Player</Filter>
     </ClInclude>
     <ClInclude Include="ColorFilter.h" />
+    <ClInclude Include="EnemyAIMeleeChargerBehavior.h">
+      <Filter>Enemies\EnemyAI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="EnemyFiles">
@@ -301,6 +307,9 @@
       <Filter>EnemyFiles</Filter>
     </Text>
     <Text Include="EnemyRanged.txt">
+      <Filter>EnemyFiles</Filter>
+    </Text>
+    <Text Include="EnemyMeleeCharger.txt">
       <Filter>EnemyFiles</Filter>
     </Text>
   </ItemGroup>

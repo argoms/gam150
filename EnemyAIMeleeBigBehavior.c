@@ -27,7 +27,7 @@ void EnemyAI_MeleeBig_PatrolStart(GameObject* enemy, EnemyContainer* enemyContai
 {
   enemy->physics->velocity.x = 0;
   enemy->physics->velocity.y = 0;
-  enemyContainer->enemyAnimationState = ENEMY_IDLE + ENEMY_DOWN;
+  enemyContainer->enemyAnimationState = ENEMY_IDLE;
 }
 
 void EnemyAI_MeleeBig_PatrolUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
@@ -60,10 +60,6 @@ void EnemyAI_MeleeBig_ChaseUpdate(GameObject* enemy, EnemyContainer* enemyContai
 
   Vector2DNormalize(&facingDirection, &facingDirection);
   Vector2DScale(&(enemy->physics->velocity), &facingDirection, enemyContainer->chaseSpeed);
-
-  Vector2D worldFacing;
-  worldFacing = IsoWorldToScreen(&facingDirection);
-  EnemyChangeAnimationFlag(enemyContainer, &worldFacing);
 
   float distanceToPlayer = Vector2DSquareDistance(&(enemy->physics->position), &(enemy->target->physics->position));
   if (distanceToPlayer <= enemyContainer->attackRange)
@@ -101,25 +97,13 @@ void EnemyAI_MeleeBig_AttackUpdate(GameObject* enemy, EnemyContainer* enemyConta
     enemyContainer->attackWindup -= AEFrameRateControllerGetFrameTime();
   }
 
-  Vector2D attackDirection;
-  attackDirection.x = enemy->target->physics->position.x - enemy->physics->position.x;
-  attackDirection.y = enemy->target->physics->position.y - enemy->physics->position.y;
-  Vector2DNormalize(&attackDirection, &attackDirection);
-
-  Vector2D worldFacing;
-  worldFacing = IsoWorldToScreen(&attackDirection);
-
-  EnemyChangeAnimationFlag(enemyContainer, &worldFacing);
-
-  if (enemyContainer->attackWindup <= .42f && enemyContainer->attackWindup > 0.4f && enemy->physics->velocity.x == 0 && enemy->physics->velocity.y == 0)
-  {
-    enemy->physics->velocity.x = attackDirection.x;
-    enemy->physics->velocity.y = attackDirection.y;
-    Vector2DScale(&(enemy->physics->velocity), &(enemy->physics->velocity), .1f);
-  }
-
   if (enemyContainer->attackWindup <= 0)
   {
+    Vector2D attackDirection;
+    attackDirection.x = enemy->target->physics->position.x - enemy->physics->position.x;
+    attackDirection.y = enemy->target->physics->position.y - enemy->physics->position.y;
+    Vector2DNormalize(&attackDirection, &attackDirection);
+
     enemy->physics->velocity.x = 0;
     enemy->physics->velocity.y = 0;
     enemyContainer->attackCooldown = enemyContainer->attackCooldownLength;
@@ -139,21 +123,12 @@ void EnemyAI_MeleeBig_AttackExit(GameObject* enemy, EnemyContainer* enemyContain
 
 void EnemyAI_MeleeBig_CooldownStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
-  enemyContainer->enemyAnimationState = ENEMY_IDLE;
+  enemyContainer->enemyAnimationState = ENEMY_COOLDOWN;
   enemy->sprite->frame = 0;
 }
 
 void EnemyAI_MeleeBig_CooldownUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
-  Vector2D attackDirection;
-  attackDirection.x = enemy->target->physics->position.x - enemy->physics->position.x;
-  attackDirection.y = enemy->target->physics->position.y - enemy->physics->position.y;
-  Vector2DNormalize(&attackDirection, &attackDirection);
-
-  Vector2D worldFacing;
-  worldFacing = IsoWorldToScreen(&attackDirection);
-
-  EnemyChangeAnimationFlag(enemyContainer, &worldFacing);
   if (enemyContainer->attackCooldown > 0)
   {
     enemyContainer->attackCooldown -= AEFrameRateControllerGetFrameTime();
@@ -176,5 +151,5 @@ void EnemyAI_MeleeBig_CooldownUpdate(GameObject* enemy, EnemyContainer* enemyCon
 void EnemyAI_MeleeBig_CooldownExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->attackCooldown = enemyContainer->attackCooldownLength;
-  enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~(ENEMY_IDLE);
+  enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~(ENEMY_COOLDOWN);
 }
