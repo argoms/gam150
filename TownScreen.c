@@ -18,11 +18,18 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 extern int level;
 
 // button pointers
-static Button* level1_button;
-static Button* level2_button;
-static Button* level3_button;
-static Button* level4_button;
-static Button* level5_button;
+static GameObject* level1_button;
+static GameObject* level2_button;
+static GameObject* level3_button;
+static GameObject* level4_button;
+static GameObject* level5_button;// or main menu button
+
+ // button visibility flags
+static int button_flag_level1 = 0;
+static int button_flag_level2 = 0;
+static int button_flag_level3 = 0;
+static int button_flag_level4 = 0;
+
 
 void TownScreenInit()
 {
@@ -30,8 +37,8 @@ void TownScreenInit()
   //printf("\nWELCOME TO TOWN");
   //char levelIndicator[3];
   //itoa(level, levelIndicator, 10);
-  //TextCreateString(levelIndicator, -350, 50);
-  TextString* cleared = TextCreateString("Level Cleared!", -350, 0);
+  //TextCreateString(levelIndicator, -350, 150);
+  TextString* cleared = TextCreateString("Level Cleared!", -350, 150);
   TextStringSetTint(cleared, GTint(1, 1, 1, 1));
   //TextCreateString("PRESS SPACE TO LEAVE", -300, -50);
 
@@ -79,6 +86,7 @@ void TownScreenInit()
     //PhysicsObject *button1_physics = PhysicsCreateObject(Vec2(button1x,button1y),1);
 
     GameObject* button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+    level1_button = button;
   //}
   //end button level 1 ------------------------------
 
@@ -103,6 +111,7 @@ void TownScreenInit()
 
     button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
     button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+    level2_button = button;
   //}
   // --------------------end button level 2-----------------------
   //BUTTON three for level 3
@@ -126,6 +135,7 @@ void TownScreenInit()
 
     button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
     button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+    level3_button = button;
   //}
   //---------------------------end button level 3-------------------------
   //BUTTON four for level 4
@@ -149,6 +159,7 @@ void TownScreenInit()
 
     button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
     button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+    level4_button = button;
   //}
   //end button 4------------------------------------------------------------------
 
@@ -173,7 +184,7 @@ void TownScreenInit()
 
   button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
   button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
-
+  level5_button = button;
   //end button 4------------------------------------------------------------------
 
 
@@ -190,11 +201,7 @@ void TownScreenRun()
   }
   */
   //TARRANT CODE START
-  // button visibility flags
-  int button_flag_level1 = 0;
-  int button_flag_level2 = 0;
-  int button_flag_level3 = 0;
-  int button_flag_level4 = 0;
+
 
   //we are going to level 2
   if (level == 2)
@@ -203,6 +210,11 @@ void TownScreenRun()
     button_flag_level2 = 1;
     button_flag_level3 = 0;
     button_flag_level4 = 0;
+
+    ReactivateAndDisplayButton(level1_button);
+    ReactivateAndDisplayButton(level2_button);
+    FadeAndDisableButton(level3_button);
+    FadeAndDisableButton(level4_button);
   }
   // we are going to level 3
   else if (level == 3)
@@ -211,6 +223,11 @@ void TownScreenRun()
     button_flag_level2 = 0;
     button_flag_level3 = 1;
     button_flag_level4 = 0;
+
+    ReactivateAndDisplayButton(level1_button);
+    ReactivateAndDisplayButton(level2_button);
+    ReactivateAndDisplayButton(level3_button);
+    FadeAndDisableButton(level4_button);
   }
   // we are going to level 4
   else if (level == 4)
@@ -219,6 +236,11 @@ void TownScreenRun()
     button_flag_level2 = 0;
     button_flag_level3 = 0;
     button_flag_level4 = 0;
+
+    ReactivateAndDisplayButton(level1_button);
+    ReactivateAndDisplayButton(level2_button);
+    ReactivateAndDisplayButton(level3_button);
+    ReactivateAndDisplayButton(level4_button);
   }
   // we are going to level 5 or the winscreen
   else if (level == 5)
@@ -227,6 +249,12 @@ void TownScreenRun()
     button_flag_level2 = 0;
     button_flag_level3 = 0;
     button_flag_level4 = 1;
+
+    FadeAndDisableButton(level1_button);
+    //ReactivateAndDisplayButton();
+    FadeAndDisableButton(level2_button);
+    FadeAndDisableButton(level3_button);
+    FadeAndDisableButton(level4_button);
   }
 
 

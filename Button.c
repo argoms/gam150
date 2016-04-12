@@ -63,6 +63,7 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
   buttonComponent->Yscale = _scaley;                    /* set the y scale             */
   buttonComponent->size = _size;                        /* set the size                */
   buttonComponent->isSelected = 0;                      /* set button to not selected  */
+  buttonComponent->isActive = 1;                        /* set the button to active    */
 
   /* the type will determine where the next level will be upon function call */
 
@@ -418,6 +419,12 @@ void ButtonSimulate(GameObject *button)
 
 
   Button *button_data = button->miscData;
+
+  //skip inactive buttons
+  if (button_data->isActive == 0)
+  {
+    return;
+  }
  
   float x = button->sprite->x;                  /* button x position            */
   float y = button->sprite->y;                  /* button y position            */
@@ -536,4 +543,68 @@ void UnscaleButtonSpriteColor(GameObject *button)
   button_sprite->tint.red = button_sprite->tint.red / BUTTON_RED_MODIFIER;      //change red color
   button_sprite->tint.blue = button_sprite->tint.blue / BUTTON_BLUE_MODIFIER;   //change blue color
   button_sprite->tint.green = button_sprite->tint.green / BUTTON_GREEN_MODIFIER;//change green color
+}
+
+void FadeAndDisableButton(GameObject *button)
+{
+
+  if (button == NULL)
+  {
+    return;
+  }
+
+  if (button->type != entity_button)
+  {
+    return;
+  }
+
+  if (!button->miscData)
+  {
+    return;
+  }
+
+  Button* button_data = button->miscData;
+
+  if (button->sprite)
+  {
+    button->sprite->tint.alpha = 0.1f;  //make it invisible
+    button_data->isActive = 0;          //make it inactive
+    
+  }
+  else
+  {
+    return;
+  }
+}
+
+void ReactivateAndDisplayButton(GameObject *button)
+{
+
+  if (button == NULL)
+  {
+    return;
+  }
+
+  if (button->type != entity_button)
+  {
+    return;
+  }
+
+
+  if (!button->miscData)
+  {
+    return;
+  }
+
+  Button* button_data = button->miscData;
+
+  if (button->sprite)
+  {
+    button->sprite->tint.alpha = 1.0f;  // restore the alpha
+    button_data->isActive = 1;          // reactivate the button
+  }
+  else
+  {
+    return;
+  }
 }
