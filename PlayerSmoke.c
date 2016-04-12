@@ -22,6 +22,8 @@ static GameObject* smokeEffect;
 void InitializePlayerSmoke()
 {
   smokeEffect = CreatePlayerSmoke();
+
+  SetSmoke(particle_inactive);
  
 }
 
@@ -36,6 +38,7 @@ void SetSmoke(int input)
   EffectSource* smokeComponent = (EffectSource*)(smokeEffect->miscData);
 
   smokeComponent->state = input;
+  printf("poooop\n");
 }
 
 /*!
