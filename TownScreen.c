@@ -187,22 +187,6 @@ void TownScreenInit()
   level5_button = button;
   //end button 4------------------------------------------------------------------
 
-
-
-}
-
-
-void TownScreenRun()
-{
-  /*
-  if (AEInputCheckReleased(VK_SPACE))
-  {
-    LevelSetNext(level_level1);
-  }
-  */
-  //TARRANT CODE START
-
-
   //we are going to level 2
   if (level == 2)
   {
@@ -258,8 +242,29 @@ void TownScreenRun()
   }
 
 
+
+}
+
+
+void TownScreenRun()
+{
+  /*
+  if (AEInputCheckReleased(VK_SPACE))
+  {
+    LevelSetNext(level_level1);
+  }
+  */
+  //TARRANT CODE START
+
+
+
+
+  GameObjectSimulate();
+  PhysicsSimulate();
+  GameObjectsPostStep();
   
   //-----------------Tarant text------------------------------
+  /*
   TextInit();
   // window size vars
   float winMaxX;
@@ -308,12 +313,10 @@ void TownScreenRun()
 
   GameObject* button;
 
+  */
 
 
 
 
-  GameObjectSimulate();
-  PhysicsSimulate();
-  GameObjectsPostStep();
 
 }
