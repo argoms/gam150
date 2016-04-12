@@ -65,6 +65,7 @@ void MapRoomInfoClear(MapRoomInfo* first)
   MapRoomInfo* index = first;
   MapRoomInfo* indexTemp = index;
 
+  //index through linked list and free links
   while (index)
   {
     indexTemp = index;
@@ -81,11 +82,15 @@ void MapRoomBehavior_BasicEnemies(MapRoom* roomData)
 {
   Vector2D cursor = Vec2(roomData->position.x, roomData->position.y);
   roomData->numEnemies = 0;
+
+  
   for (int i = 0; i < 5; i++)
   {
+    //grab random positions within the room
     cursor.x += (((roomData->size - 4) / -2) + (RandFloat() * (roomData->size - 4)));
     cursor.y += (((roomData->size - 4) / -2) + (RandFloat() * (roomData->size - 4)));
 
+    //if far enough from the player, position is valid and spawn an enemy
     if (PhysicsDistSQ(cursor, GetPlayerObject()->physics->position) > 4)
     {
       GameObject* newEnemy;

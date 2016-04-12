@@ -2,186 +2,376 @@
 #include "EnemyAnimations.h"
 #include "Graphics.h"
 #include "AEEngine.h"
+#include "EntityAnimation.h"
+#include "Isometric.h"
+
+static AnimationSet* AS_SpiderWolfIdle;
+static AnimationSet* AS_SpiderWolfWalk;
+static AnimationSet* AS_SpiderWolfAttack;
+
+static AnimationSet* AS_ChargerTatoIdle;
+static AnimationSet* AS_ChargerTatoWalk;
+static AnimationSet* AS_ChargerTatoAttack;
+static AnimationSet* AS_ChargerTatoCooldown;
+
+static AnimationSet* AS_StabbyIdle;
+static AnimationSet* AS_StabbyWalk;
+static AnimationSet* AS_StabbyAttack;
 
 typedef struct
 {
-  unsigned int action;
   const char *filename;
   Animation *animation;
 } AnimationDefinition;
 
-static AnimationDefinition animationSpiderWolf[] =
+static AnimationDefinition AD_SpiderWolfIdle[] =
 {
-  { ENEMY_WALK + ENEMY_DOWN, "animations/spiderwolf/walkDown.png",  NULL },
-  { ENEMY_WALK + ENEMY_DOWN + ENEMY_LEFT, "animations/spiderwolf/walkDownLeft.png",  NULL },
-  { ENEMY_WALK + ENEMY_DOWN + ENEMY_RIGHT, "animations/spiderwolf/walkDownRight.png",  NULL },
-  { ENEMY_WALK + ENEMY_LEFT, "animations/spiderwolf/walkLeft.png",  NULL },
-  { ENEMY_WALK + ENEMY_RIGHT, "animations/spiderwolf/walkRight.png",  NULL },
-  { ENEMY_WALK + ENEMY_UP, "animations/spiderwolf/walkUp.png",  NULL },
-  { ENEMY_WALK + ENEMY_UP + ENEMY_LEFT, "animations/spiderwolf/walkUpLeft.png",  NULL },
-  { ENEMY_WALK + ENEMY_UP + ENEMY_RIGHT, "animations/spiderwolf/walkUpRight.png",  NULL },
-
-  { ENEMY_IDLE + ENEMY_DOWN, "animations/spiderwolf/idleDown.png",  NULL },
-  { ENEMY_IDLE + ENEMY_DOWN + ENEMY_LEFT, "animations/spiderwolf/idleDownLeft.png",  NULL },
-  { ENEMY_IDLE + ENEMY_DOWN + ENEMY_RIGHT, "animations/spiderwolf/idleDownRight.png",  NULL },
-  { ENEMY_IDLE + ENEMY_LEFT, "animations/spiderwolf/idleLeft.png",  NULL },
-  { ENEMY_IDLE + ENEMY_RIGHT, "animations/spiderwolf/idleRight.png",  NULL },
-  { ENEMY_IDLE + ENEMY_UP, "animations/spiderwolf/idleUp.png",  NULL },
-  { ENEMY_IDLE + ENEMY_UP + ENEMY_LEFT, "animations/spiderwolf/idleUpLeft.png",  NULL },
-  { ENEMY_IDLE + ENEMY_UP + ENEMY_RIGHT, "animations/spiderwolf/idleUpRight.png",  NULL },
-
-  { ENEMY_ATTACK + ENEMY_DOWN, "animations/spiderwolf/SwipeDown.png",  NULL },
-  { ENEMY_ATTACK + ENEMY_DOWN + ENEMY_LEFT, "animations/spiderwolf/SwipeDownLeft.png",  NULL },
-  { ENEMY_ATTACK + ENEMY_DOWN + ENEMY_RIGHT, "animations/spiderwolf/SwipeDownRight.png",  NULL },
-  { ENEMY_ATTACK + ENEMY_LEFT, "animations/spiderwolf/SwipeLeft.png",  NULL },
-  { ENEMY_ATTACK + ENEMY_RIGHT, "animations/spiderwolf/SwipeRight.png",  NULL },
-  { ENEMY_ATTACK + ENEMY_UP, "animations/spiderwolf/SwipeUp.png",  NULL },
-  { ENEMY_ATTACK + ENEMY_UP + ENEMY_LEFT, "animations/spiderwolf/SwipeUpLeft.png",  NULL },
-  { ENEMY_ATTACK + ENEMY_UP + ENEMY_RIGHT, "animations/spiderwolf/SwipeUpRight.png",  NULL }
+  { "animations/spiderwolf/Idle0.png",  NULL },
+  { "animations/spiderwolf/Idle1.png",  NULL },
+  { "animations/spiderwolf/Idle2.png",  NULL },
+  { "animations/spiderwolf/Idle3.png",  NULL },
+  { "animations/spiderwolf/Idle4.png",  NULL },
+  { "animations/spiderwolf/Idle5.png",  NULL },
+  { "animations/spiderwolf/Idle6.png",  NULL },
+  { "animations/spiderwolf/Idle7.png",  NULL },
+  { "animations/spiderwolf/Idle8.png",  NULL },
+  { "animations/spiderwolf/Idle9.png",  NULL },
+  { "animations/spiderwolf/Idle10.png",  NULL },
+  { "animations/spiderwolf/Idle11.png",  NULL },
+  { "animations/spiderwolf/Idle12.png",  NULL },
+  { "animations/spiderwolf/Idle13.png",  NULL },
+  { "animations/spiderwolf/Idle14.png",  NULL },
+  { "animations/spiderwolf/Idle15.png",  NULL }
 };
 
-static AnimationDefinition animationChargetato[] =
+static AnimationDefinition AD_SpiderWolfWalk[] =
 {
-  { ENEMY_WALK + ENEMY_DOWN, "animations/chargertato/Walk4.png",  NULL },
-  { ENEMY_WALK + ENEMY_DOWN + ENEMY_LEFT, "animations/chargertato/Walk6.png",  NULL },
-  { ENEMY_WALK + ENEMY_DOWN + ENEMY_RIGHT, "animations/chargertato/Walk2.png",  NULL },
-  { ENEMY_WALK + ENEMY_LEFT, "animations/chargertato/Walk8.png",  NULL },
-  { ENEMY_WALK + ENEMY_RIGHT, "animations/chargertato/Walk0.png",  NULL },
-  { ENEMY_WALK + ENEMY_UP, "animations/chargertato/Walk2.png",  NULL },
-  { ENEMY_WALK + ENEMY_UP + ENEMY_LEFT, "animations/chargertato/Walk10.png",  NULL },
-  { ENEMY_WALK + ENEMY_UP + ENEMY_RIGHT, "animations/chargertato/Walk14.png",  NULL },
+  { "animations/spiderwolf/Walk0.png",  NULL },
+  { "animations/spiderwolf/Walk1.png",  NULL },
+  { "animations/spiderwolf/Walk2.png",  NULL },
+  { "animations/spiderwolf/Walk3.png",  NULL },
+  { "animations/spiderwolf/Walk4.png",  NULL },
+  { "animations/spiderwolf/Walk5.png",  NULL },
+  { "animations/spiderwolf/Walk6.png",  NULL },
+  { "animations/spiderwolf/Walk7.png",  NULL },
+  { "animations/spiderwolf/Walk8.png",  NULL },
+  { "animations/spiderwolf/Walk9.png",  NULL },
+  { "animations/spiderwolf/Walk10.png",  NULL },
+  { "animations/spiderwolf/Walk11.png",  NULL },
+  { "animations/spiderwolf/Walk12.png",  NULL },
+  { "animations/spiderwolf/Walk13.png",  NULL },
+  { "animations/spiderwolf/Walk14.png",  NULL },
+  { "animations/spiderwolf/Walk15.png",  NULL }
+};
 
-  { ENEMY_IDLE + ENEMY_DOWN, "animations/chargertato/Idle4.png",  NULL },
-  { ENEMY_IDLE + ENEMY_DOWN + ENEMY_LEFT, "animations/chargertato/Idle6.png",  NULL },
-  { ENEMY_IDLE + ENEMY_DOWN + ENEMY_RIGHT, "animations/chargertato/Idle2.png",  NULL },
-  { ENEMY_IDLE + ENEMY_LEFT, "animations/chargertato/Idle8.png",  NULL },
-  { ENEMY_IDLE + ENEMY_RIGHT, "animations/chargertato/Idle0.png",  NULL },
-  { ENEMY_IDLE + ENEMY_UP, "animations/chargertato/Idle12.png",  NULL },
-  { ENEMY_IDLE + ENEMY_UP + ENEMY_LEFT, "animations/chargertato/Idle10.png",  NULL },
-  { ENEMY_IDLE + ENEMY_UP + ENEMY_RIGHT, "animations/chargertato/Idle14.png",  NULL },
+static AnimationDefinition AD_SpiderWolfAttack[] =
+{
+  { "animations/spiderwolf/Swipe0.png",  NULL },
+  { "animations/spiderwolf/Swipe1.png",  NULL },
+  { "animations/spiderwolf/Swipe2.png",  NULL },
+  { "animations/spiderwolf/Swipe3.png",  NULL },
+  { "animations/spiderwolf/Swipe4.png",  NULL },
+  { "animations/spiderwolf/Swipe5.png",  NULL },
+  { "animations/spiderwolf/Swipe6.png",  NULL },
+  { "animations/spiderwolf/Swipe7.png",  NULL },
+  { "animations/spiderwolf/Swipe8.png",  NULL },
+  { "animations/spiderwolf/Swipe9.png",  NULL },
+  { "animations/spiderwolf/Swipe10.png",  NULL },
+  { "animations/spiderwolf/Swipe11.png",  NULL },
+  { "animations/spiderwolf/Swipe12.png",  NULL },
+  { "animations/spiderwolf/Swipe13.png",  NULL },
+  { "animations/spiderwolf/Swipe14.png",  NULL },
+  { "animations/spiderwolf/Swipe15.png",  NULL }
+};
 
-  { ENEMY_ATTACK + ENEMY_DOWN, "animations/chargertato/Slam4.png",  NULL },
-  { ENEMY_ATTACK + ENEMY_DOWN + ENEMY_LEFT, "animations/chargertato/Slam6.png",  NULL },
-  { ENEMY_ATTACK + ENEMY_DOWN + ENEMY_RIGHT, "animations/chargertato/Slam2.png",  NULL },
-  { ENEMY_ATTACK + ENEMY_LEFT, "animations/chargertato/Slam8.png",  NULL },
-  { ENEMY_ATTACK + ENEMY_RIGHT, "animations/chargertato/Slam0.png",  NULL },
-  { ENEMY_ATTACK + ENEMY_UP, "animations/chargertato/Slam12.png",  NULL },
-  { ENEMY_ATTACK + ENEMY_UP + ENEMY_LEFT, "animations/chargertato/Slam10.png",  NULL },
-  { ENEMY_ATTACK + ENEMY_UP + ENEMY_RIGHT, "animations/chargertato/Slam14.png",  NULL }
+static AnimationDefinition AD_ChargeTatoIdle[] =
+{
+  { "animations/chargertato/Idle4.png",  NULL },
+  { "animations/chargertato/Idle5.png",  NULL },
+  { "animations/chargertato/Idle6.png",  NULL },
+  { "animations/chargertato/Idle7.png",  NULL },
+  { "animations/chargertato/Idle8.png",  NULL },
+  { "animations/chargertato/Idle9.png",  NULL },
+  { "animations/chargertato/Idle10.png",  NULL },
+  { "animations/chargertato/Idle11.png",  NULL },
+  { "animations/chargertato/Idle12.png",  NULL },
+  { "animations/chargertato/Idle13.png",  NULL },
+  { "animations/chargertato/Idle14.png",  NULL },
+  { "animations/chargertato/Idle15.png",  NULL },
+  { "animations/chargertato/Idle0.png",  NULL },
+  { "animations/chargertato/Idle1.png",  NULL },
+  { "animations/chargertato/Idle2.png",  NULL },
+  { "animations/chargertato/Idle3.png",  NULL }
+};
+
+static AnimationDefinition AD_ChargeTatoWalk[] =
+{
+  { "animations/chargertato/Walk4.png",  NULL },
+  { "animations/chargertato/Walk5.png",  NULL },
+  { "animations/chargertato/Walk6.png",  NULL },
+  { "animations/chargertato/Walk7.png",  NULL },
+  { "animations/chargertato/Walk8.png",  NULL },
+  { "animations/chargertato/Walk9.png",  NULL },
+  { "animations/chargertato/Walk10.png",  NULL },
+  { "animations/chargertato/Walk11.png",  NULL },
+  { "animations/chargertato/Walk12.png",  NULL },
+  { "animations/chargertato/Walk13.png",  NULL },
+  { "animations/chargertato/Walk14.png",  NULL },
+  { "animations/chargertato/Walk15.png",  NULL },
+  { "animations/chargertato/Walk0.png",  NULL },
+  { "animations/chargertato/Walk1.png",  NULL },
+  { "animations/chargertato/Walk2.png",  NULL },
+  { "animations/chargertato/Walk3.png",  NULL }
+};
+
+static AnimationDefinition AD_ChargeTatoAttack[] =
+{
+  { "animations/chargertato/Slam4.png",  NULL },
+  { "animations/chargertato/Slam5.png",  NULL },
+  { "animations/chargertato/Slam6.png",  NULL },
+  { "animations/chargertato/Slam7.png",  NULL },
+  { "animations/chargertato/Slam8.png",  NULL },
+  { "animations/chargertato/Slam9.png",  NULL },
+  { "animations/chargertato/Slam10.png",  NULL },
+  { "animations/chargertato/Slam11.png",  NULL },
+  { "animations/chargertato/Slam12.png",  NULL },
+  { "animations/chargertato/Slam13.png",  NULL },
+  { "animations/chargertato/Slam14.png",  NULL },
+  { "animations/chargertato/Slam15.png",  NULL },
+  { "animations/chargertato/Slam0.png",  NULL },
+  { "animations/chargertato/Slam1.png",  NULL },
+  { "animations/chargertato/Slam2.png",  NULL },
+  { "animations/chargertato/Slam3.png",  NULL }
+};
+
+static AnimationDefinition AD_ChargeTatoCooldown[] =
+{
+  { "animations/chargertato/Cooldown4.png",  NULL },
+  { "animations/chargertato/Cooldown5.png",  NULL },
+  { "animations/chargertato/Cooldown6.png",  NULL },
+  { "animations/chargertato/Cooldown7.png",  NULL },
+  { "animations/chargertato/Cooldown8.png",  NULL },
+  { "animations/chargertato/Cooldown9.png",  NULL },
+  { "animations/chargertato/Cooldown10.png",  NULL },
+  { "animations/chargertato/Cooldown11.png",  NULL },
+  { "animations/chargertato/Cooldown12.png",  NULL },
+  { "animations/chargertato/Cooldown13.png",  NULL },
+  { "animations/chargertato/Cooldown14.png",  NULL },
+  { "animations/chargertato/Cooldown15.png",  NULL },
+  { "animations/chargertato/Cooldown0.png",  NULL },
+  { "animations/chargertato/Cooldown1.png",  NULL },
+  { "animations/chargertato/Cooldown2.png",  NULL },
+  { "animations/chargertato/Cooldown3.png",  NULL }
+};
+
+static AnimationDefinition AD_StabbyIdle[] =
+{
+  { "animations/stabby/Idle4.png",  NULL },
+  { "animations/stabby/Idle5.png",  NULL },
+  { "animations/stabby/Idle6.png",  NULL },
+  { "animations/stabby/Idle7.png",  NULL },
+  { "animations/stabby/Idle8.png",  NULL },
+  { "animations/stabby/Idle9.png",  NULL },
+  { "animations/stabby/Idle10.png",  NULL },
+  { "animations/stabby/Idle11.png",  NULL },
+  { "animations/stabby/Idle12.png",  NULL },
+  { "animations/stabby/Idle13.png",  NULL },
+  { "animations/stabby/Idle14.png",  NULL },
+  { "animations/stabby/Idle15.png",  NULL },
+  { "animations/stabby/Idle0.png",  NULL },
+  { "animations/stabby/Idle1.png",  NULL },
+  { "animations/stabby/Idle2.png",  NULL },
+  { "animations/stabby/Idle3.png",  NULL }
+};
+
+static AnimationDefinition AD_StabbyWalk[] =
+{
+  { "animations/stabby/Walk4.png",  NULL },
+  { "animations/stabby/Walk5.png",  NULL },
+  { "animations/stabby/Walk6.png",  NULL },
+  { "animations/stabby/Walk7.png",  NULL },
+  { "animations/stabby/Walk8.png",  NULL },
+  { "animations/stabby/Walk9.png",  NULL },
+  { "animations/stabby/Walk10.png",  NULL },
+  { "animations/stabby/Walk11.png",  NULL },
+  { "animations/stabby/Walk12.png",  NULL },
+  { "animations/stabby/Walk13.png",  NULL },
+  { "animations/stabby/Walk14.png",  NULL },
+  { "animations/stabby/Walk15.png",  NULL },
+  { "animations/stabby/Walk0.png",  NULL },
+  { "animations/stabby/Walk1.png",  NULL },
+  { "animations/stabby/Walk2.png",  NULL },
+  { "animations/stabby/Walk3.png",  NULL }
+};
+
+static AnimationDefinition AD_StabbyAttack[] =
+{
+  { "animations/stabby/Attack4.png",  NULL },
+  { "animations/stabby/Attack5.png",  NULL },
+  { "animations/stabby/Attack6.png",  NULL },
+  { "animations/stabby/Attack7.png",  NULL },
+  { "animations/stabby/Attack8.png",  NULL },
+  { "animations/stabby/Attack9.png",  NULL },
+  { "animations/stabby/Attack10.png",  NULL },
+  { "animations/stabby/Attack11.png",  NULL },
+  { "animations/stabby/Attack12.png",  NULL },
+  { "animations/stabby/Attack13.png",  NULL },
+  { "animations/stabby/Attack14.png",  NULL },
+  { "animations/stabby/Attack15.png",  NULL },
+  { "animations/stabby/Attack0.png",  NULL },
+  { "animations/stabby/Attack1.png",  NULL },
+  { "animations/stabby/Attack2.png",  NULL },
+  { "animations/stabby/Attack3.png",  NULL }
 };
 
 void EnemyAnimationInitialize()
 {
-  int walkFrames;
-  int idleFrames;
-  int attackFrames;
+  /*************** Spider *****************/
 
+  int spiderWolfIdleFrames   = 1;
+  int spiderWolfWalkFrames   = 17;
+  int spiderWolfAttackFrames = 18;
+
+  AEGfxVertexList* spiderWolfIdleMesh   = GCreateMesh(256.f, 256.f, spiderWolfIdleFrames, 1);
+  AEGfxVertexList* spiderWolfWalkMesh   = GCreateMesh(256.f, 256.f, spiderWolfWalkFrames, 1);
+  AEGfxVertexList* spiderWolfAttackMesh = GCreateMesh(256.f, 256.f, spiderWolfAttackFrames, 1);
+
+  Animation* array_spiderWolfIdle[16];
+  Animation* array_spiderWolfWalk[16];
+  Animation* array_spiderWolfAttack[16];
+
+  /*************** Chargetato *****************/
+
+  int chargerTatoIdleFrames     = 1;
+  int chargerTatoWalkFrames     = 17;
+  int chargerTatoAttackFrames   = 19;
+  int chargerTatoCoolDownFrames = 19;
+
+  AEGfxVertexList* chargerTatoIdleMesh     = GCreateMesh(516.f, 516.f, chargerTatoIdleFrames, 1);
+  AEGfxVertexList* chargerTatoWalkMesh     = GCreateMesh(516.f, 516.f, 1, chargerTatoWalkFrames);
+  AEGfxVertexList* chargerTatoAattackMesh  = GCreateMesh(516.f, 516.f, 1, chargerTatoAttackFrames);
+  AEGfxVertexList* chargerTatoCoolDownMesh = GCreateMesh(516.f, 516.f, 1, chargerTatoCoolDownFrames);
+
+  Animation* array_chargerTatoIdle[16];
+  Animation* array_chargerTatoWalk[16];
+  Animation* array_chargerTatoAttack[16];
+  Animation* array_chargerTatoCoolDown[16];
+
+  /*************** Stabby *****************/
+
+  int stabbyIdleFrames = 1;
+  int stabbyWalkFrames = 20;
+  int stabbyAttackFrames = 31;
+
+  AEGfxVertexList* mesh_stabbyIdle   = GCreateMesh(516.f, 516.f, stabbyIdleFrames, 1);
+  AEGfxVertexList* mesh_stabbyWalk   = GCreateMesh(516.f, 516.f, 3, 7);
+  AEGfxVertexList* mesh_stabbyAttack = GCreateMesh(516.f, 516.f, 4, 8);
+
+  Animation* array_stabbyIdle[16];
+  Animation* array_stabbyWalk[16];
+  Animation* array_stabbyAttack[16];
+
+  int i = 0;
+  for (i = 0; i < 16; ++i)
   {
-    walkFrames = 16;
-    idleFrames = 1;
-    attackFrames = 18;
+    array_spiderWolfIdle[i]   = GCreateAnimation(spiderWolfIdleFrames, GCreateTexture(AD_SpiderWolfIdle[i].filename), spiderWolfIdleMesh,       1);
+    array_spiderWolfWalk[i]   = GCreateAnimation(spiderWolfWalkFrames, GCreateTexture(AD_SpiderWolfWalk[i].filename), spiderWolfWalkMesh,       1);
+    array_spiderWolfAttack[i] = GCreateAnimation(spiderWolfAttackFrames, GCreateTexture(AD_SpiderWolfAttack[i].filename), spiderWolfAttackMesh, 1);
 
-    AEGfxVertexList* walkMesh = GCreateMesh(256.f, 256.f, walkFrames, 1);
-    AEGfxVertexList* idleMesh = GCreateMesh(256.f, 256.f, idleFrames, 1);
-    AEGfxVertexList* attackMesh = GCreateMesh(256.f, 256.f, attackFrames, 1);
+    array_chargerTatoIdle[i]     = GCreateAnimation(1, GCreateTexture(AD_ChargeTatoIdle[i].filename), chargerTatoIdleMesh, 1);
+    array_chargerTatoWalk[i]     = GCreateAnimation(1, GCreateTexture(AD_ChargeTatoWalk[i].filename), chargerTatoWalkMesh, chargerTatoWalkFrames);
+    array_chargerTatoAttack[i]   = GCreateAnimation(1, GCreateTexture(AD_ChargeTatoAttack[i].filename), chargerTatoAattackMesh, chargerTatoAttackFrames);
+    array_chargerTatoCoolDown[i] = GCreateAnimation(1, GCreateTexture(AD_ChargeTatoCooldown[i].filename), chargerTatoCoolDownMesh, chargerTatoCoolDownFrames);
 
-    int numAnimations = sizeof(animationSpiderWolf) / sizeof(AnimationDefinition);
-
-    int i = 0;
-    for (i = 0; i < numAnimations; ++i)
-    {
-      int frames;
-      AEGfxVertexList *mesh;
-      unsigned int maskedFlag = animationSpiderWolf[i].action & (ENEMY_IDLE + ENEMY_WALK + ENEMY_ATTACK);
-      switch (maskedFlag)
-      {
-      case ENEMY_IDLE:
-        frames = idleFrames;
-        mesh = idleMesh;
-        break;
-      case ENEMY_WALK:
-        frames = walkFrames;
-        mesh = walkMesh;
-        break;
-      case ENEMY_ATTACK:
-        frames = attackFrames;
-        mesh = attackMesh;
-      }
-      animationSpiderWolf[i].animation = GCreateAnimation(frames, GCreateTexture(animationSpiderWolf[i].filename), mesh, 1);
-    }
+    //array_stabbyIdle[i]   = GCreateAnimation(1, GCreateTexture(AD_StabbyIdle[i].filename), mesh_stabbyIdle, 1);
+    //array_stabbyWalk[i]   = GCreateAnimation(3, GCreateTexture(AD_StabbyWalk[i].filename), mesh_stabbyWalk, 7);
+    //array_stabbyAttack[i] = GCreateAnimation(4, GCreateTexture(AD_StabbyAttack[i].filename), mesh_stabbyAttack, 8);
   }
 
-  {
-    walkFrames = 17;
-    idleFrames = 1;
-    attackFrames = 19;
+  AS_SpiderWolfIdle   = CreateAnimationSet(array_spiderWolfIdle);
+  AS_SpiderWolfWalk   = CreateAnimationSet(array_spiderWolfWalk);
+  AS_SpiderWolfAttack = CreateAnimationSet(array_spiderWolfAttack);
 
-    AEGfxVertexList* walkMesh = GCreateMesh(516.f, 516.f, 1, walkFrames);
-    AEGfxVertexList* idleMesh = GCreateMesh(516.f, 516.f, idleFrames, 1);
-    AEGfxVertexList* attackMesh = GCreateMesh(516.f, 516.f, 1, attackFrames);
+  AS_ChargerTatoIdle     = CreateAnimationSet(array_chargerTatoIdle);
+  AS_ChargerTatoWalk     = CreateAnimationSet(array_chargerTatoWalk);
+  AS_ChargerTatoAttack   = CreateAnimationSet(array_chargerTatoAttack);
+  AS_ChargerTatoCooldown = CreateAnimationSet(array_chargerTatoCoolDown);
 
-    int numAnimations = sizeof(animationChargetato) / sizeof(AnimationDefinition);
-
-    int i = 0;
-    for (i = 0; i < numAnimations; ++i)
-    {
-      int frames;
-      AEGfxVertexList *mesh;
-      unsigned int maskedFlag = animationChargetato[i].action & (ENEMY_IDLE + ENEMY_WALK + ENEMY_ATTACK);
-      switch (maskedFlag)
-      {
-      case ENEMY_IDLE:
-        frames = idleFrames;
-        mesh = idleMesh;
-        animationChargetato[i].animation = GCreateAnimation(frames, GCreateTexture(animationChargetato[i].filename), mesh, idleFrames);
-        break;
-      case ENEMY_WALK:
-        frames = 1;
-        mesh = walkMesh;
-        animationChargetato[i].animation = GCreateAnimation(frames, GCreateTexture(animationChargetato[i].filename), mesh, walkFrames);
-        break;
-      case ENEMY_ATTACK:
-        frames = 1;
-        mesh = attackMesh;
-        animationChargetato[i].animation = GCreateAnimation(frames, GCreateTexture(animationChargetato[i].filename), mesh, attackFrames);
-      }
-    }
-  }
+  //AS_StabbyIdle = CreateAnimationSet(array_stabbyIdle);
+  //AS_StabbyWalk = CreateAnimationSet(array_stabbyWalk);
+  //AS_StabbyAttack = CreateAnimationSet(array_stabbyAttack);
 }
 
 void EnemyAnimationStateManager(GameObject* enemy)
 {
   EnemyContainer* enemyContainer = enemy->miscData;
-  unsigned int animationFlag = enemyContainer->enemyAnimationState;
-  int numAnimations;
+  Vector2D facingDirection;
+  facingDirection.x = enemy->target->physics->position.x - enemy->physics->position.x;
+  facingDirection.y = enemy->target->physics->position.y - enemy->physics->position.y;
 
+  Vector2DNormalize(&facingDirection, &facingDirection);
+
+  // Standard Spiders, Melee and Ranged
   if (enemyContainer->enemyType == ENEMY_TYPE_MELEE || enemyContainer->enemyType == ENEMY_TYPE_RANGED)
   {
-    numAnimations = sizeof(animationSpiderWolf) / sizeof(AnimationDefinition);
-    for (int i = 0; i < numAnimations; ++i)
+    switch (enemyContainer->enemyAnimationState)
     {
-      if ((animationFlag == animationSpiderWolf[i].action) && (animationSpiderWolf[i].animation != NULL))
-      {
-        enemy->sprite->animation = animationSpiderWolf[i].animation;
-        enemy->sprite->frameDelay = 3.0f;
-        enemy->sprite->offset.y = 60.0f;
+      case ENEMY_IDLE:
+        enemy->sprite->animation = AnimationPlay(AS_SpiderWolfIdle, &facingDirection);
         break;
-      }
+      case ENEMY_WALK:
+        enemy->sprite->animation = AnimationPlay(AS_SpiderWolfWalk, &facingDirection);
+        break;
+      case ENEMY_ATTACK:
+        enemy->sprite->animation = AnimationPlay(AS_SpiderWolfAttack, &facingDirection);
+        break;
     }
-  }
 
+    enemy->sprite->offset.y = 60.0f;
+    enemy->sprite->frameDelay = 3.0;
+  }
+  
+  // Big enemy
   if (enemyContainer->enemyType == ENEMY_TYPE_MELEE_BIG)
   {
-    numAnimations = sizeof(animationChargetato) / sizeof(AnimationDefinition);
-    for (int i = 0; i < numAnimations; ++i)
+    switch (enemyContainer->enemyAnimationState)
     {
-      if ((animationFlag == animationChargetato[i].action) && (animationChargetato[i].animation != NULL))
-      {
-        enemy->sprite->animation = animationChargetato[i].animation;
-        enemy->sprite->frameDelay = 9.0f;
-        enemy->sprite->offset.y = 150.0f;
-        break;
-      }
+    case ENEMY_IDLE:
+      enemy->sprite->animation = AnimationPlay(AS_ChargerTatoIdle, &facingDirection);
+      break;
+    case ENEMY_WALK:
+      enemy->sprite->animation = AnimationPlay(AS_ChargerTatoWalk, &facingDirection);
+      enemy->sprite->frameDelay = 3.0f;
+      break;
+    case ENEMY_ATTACK:
+      enemy->sprite->animation = AnimationPlay(AS_ChargerTatoAttack, &facingDirection);
+      enemy->sprite->frameDelay = 10.0f;
+      break;
+    case ENEMY_COOLDOWN:
+      enemy->sprite->animation = AnimationPlay(AS_ChargerTatoCooldown, &facingDirection);
+      enemy->sprite->frameDelay = 6.0f;
+      break;
     }
+    enemy->sprite->offset.y = 150.0f;
+  }
+  
+  // Stabby charger thing
+  if (enemyContainer->enemyType == ENEMY_TYPE_MELEE_CHARGE)
+  {
+    switch (enemyContainer->enemyAnimationState)
+    {
+    case ENEMY_IDLE:
+      enemy->sprite->animation = AnimationPlay(AD_StabbyIdle, &facingDirection);
+      break;
+    case ENEMY_WALK:
+      enemy->sprite->animation = AnimationPlay(AS_StabbyWalk, &facingDirection);
+      enemy->sprite->frameDelay = 3.0f;
+      break;
+    case ENEMY_ATTACK:
+      enemy->sprite->animation = AnimationPlay(AS_StabbyAttack, &facingDirection);
+      enemy->sprite->frameDelay = 3.0f;
+      break;
+    }
+    enemy->sprite->offset.y = 150.0f;
   }
 }

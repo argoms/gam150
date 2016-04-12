@@ -187,8 +187,21 @@ void TownScreenInit()
   level5_button = button;
   //end button 4------------------------------------------------------------------
 
+  //we are going to level 1
+  if (level == 1)
+  {
+    button_flag_level1 = 0;
+    button_flag_level2 = 0;
+    button_flag_level3 = 0;
+    button_flag_level4 = 0;
+
+    button_flag_level1 = 1;
+    button_flag_level2 = 1; 
+    FadeAndDisableButton(level3_button);
+    FadeAndDisableButton(level4_button);
+  }
   //we are going to level 2
-  if (level == 2)
+  else if (level == 2)
   {
     button_flag_level1 = 0;
     button_flag_level2 = 1;

@@ -65,7 +65,7 @@ int AnimationSetIndex(Vector2D* input)
 
   directionAngle *= -1; //flip around since apparently my render script actually goes clockwise instead of ccw
   int index = 0;
-  directionAngle *= 57.29578f;//shitty radians conversion
+  directionAngle *= 57.29578f;//shitty radians to degrees conversion
   directionAngle += 180; //add 180 degrees since atan2 gives from -180 to 180 intead of 0 to 360
 
   //printf("ANGLE: %f\n", directionAngle);

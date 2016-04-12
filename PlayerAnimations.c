@@ -4,7 +4,7 @@ Project (working title): Epoch
 \author James Do
 \par    email: j.do\@digipen.edu
 \brief
-Stores animation object constructor info for player's animations.
+Stores animation object constructor info for player's animations. Basically a bunch of hard coded variables.
 
 All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */

@@ -97,6 +97,8 @@
     <ClCompile Include="Matrix2D.c">
       <Filter>Back End</Filter>
     </ClCompile>
+    <ClCompile Include="ControlScreen.c" />
+    <ClCompile Include="CreditsScreen.c" />
     <ClCompile Include="EnemyAIMeleeBigBehavior.c">
       <Filter>Enemies\EnemyAI</Filter>
     </ClCompile>
@@ -115,19 +117,21 @@
     <ClCompile Include="EnvironmentEffects.c">
       <Filter>Environmental Objects</Filter>
     </ClCompile>
-    <ClCompile Include="stats.c">
+    <ClCompile Include="FancyBackground.c">
+      <Filter>Menu/UI</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerDeathTimer.c">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentAssets.c">
+      <Filter>MapGen</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerSmoke.c">
       <Filter>Player</Filter>
     </ClCompile>
     <ClCompile Include="ColorFilter.c" />
-    <ClCompile Include="EnvironmentAssets.c" />
-    <ClCompile Include="FancyBackground.c" />
-    <ClCompile Include="PlayerDeathTimer.c" />
-    <ClCompile Include="PlayerSmoke.c" />
-    <ClCompile Include="ControlScreen.c">
-      <Filter>Menu/UI</Filter>
-    </ClCompile>
-    <ClCompile Include="CreditsScreen.c">
-      <Filter>Menu/UI</Filter>
+    <ClCompile Include="EnemyAIMeleeChargerBehavior.c">
+      <Filter>Enemies\EnemyAI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -226,6 +230,8 @@
     <ClInclude Include="Matrix2D.h">
       <Filter>Back End</Filter>
     </ClInclude>
+    <ClInclude Include="ControlScreen.h" />
+    <ClInclude Include="CreditsScreen.h" />
     <ClInclude Include="EnemyAIMeleeBigBehavior.h">
       <Filter>Enemies\EnemyAI</Filter>
     </ClInclude>
@@ -244,19 +250,21 @@
     <ClInclude Include="EnvironmentalEffects.h">
       <Filter>Environmental Objects</Filter>
     </ClInclude>
-    <ClInclude Include="stats.h">
+    <ClInclude Include="FancyBackground.h">
+      <Filter>Menu/UI</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerDeathTimer.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentAssets.h">
+      <Filter>MapGen</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSmoke.h">
       <Filter>Player</Filter>
     </ClInclude>
     <ClInclude Include="ColorFilter.h" />
-    <ClInclude Include="EnvironmentAssets.h" />
-    <ClInclude Include="FancyBackground.h" />
-    <ClInclude Include="PlayerDeathTimer.h" />
-    <ClInclude Include="PlayerSmoke.h" />
-    <ClInclude Include="ControlScreen.h">
-      <Filter>Menu/UI</Filter>
-    </ClInclude>
-    <ClInclude Include="CreditsScreen.h">
-      <Filter>Menu/UI</Filter>
+    <ClInclude Include="EnemyAIMeleeChargerBehavior.h">
+      <Filter>Enemies\EnemyAI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -299,6 +307,9 @@
       <Filter>EnemyFiles</Filter>
     </Text>
     <Text Include="EnemyRanged.txt">
+      <Filter>EnemyFiles</Filter>
+    </Text>
+    <Text Include="EnemyMeleeCharger.txt">
       <Filter>EnemyFiles</Filter>
     </Text>
   </ItemGroup>

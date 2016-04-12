@@ -56,8 +56,8 @@ int button_flag_level1 = 0;
 int button_flag_level2 = 0;
 int button_flag_level3 = 0;
 int button_flag_level4 = 0;
-int button_flag_win = 1;
-int button_flag_lose = 1;
+int button_flag_win = 0;
+int button_flag_lose = 0;
 int buttin_flag_credits = 1;
 int button_flag_control = 1;
 int button_flag_play = 1;
@@ -501,10 +501,12 @@ void MainMenuInit()
     buttonx = 200;                          /* x position      */
     buttony = -50;                            /* y position      */
     meshx = 256.0f;                          /* mesh x          */
+    //meshx = 290.0f;                          /* mesh x          */
     meshy = 64.0f;                           /* mesh y          */
     buttonsize = 1.0f;                       /* size            */
     button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
-    text_offset = 90.0f;
+    //text_offset = 90.0f;
+    text_offset = 110.0f;
     main_menu_text = TextCreateHUDString("Controls", buttonx - text_offset, buttony);
     TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
     button_texture = GCreateTexture("animations/buttons/button_texture.png");

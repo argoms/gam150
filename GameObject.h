@@ -55,13 +55,9 @@ enum EnemyType {
   ENEMY_TYPE_MELEE_BIG,     // 2
   ENEMY_TYPE_MELEE_CHARGE,  // 3
   ENEMY_TYPE_RANGED,        // 4
-  ENEMY_TYPE_RANGED_ARC,    // 5
-  ENEMY_TYPE_RANGED_HOMING, // 6
 
   /* Special enemies */
   ENEMY_TYPE_HEALER, // 7
-  ENEMY_TYPE_SLIME,  // 8
-  ENEMY_TYPE_SHIELD, // 9
 };
 
 struct EnemyAI

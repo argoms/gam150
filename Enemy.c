@@ -28,7 +28,6 @@ void EnemyImportInfo(int enemyType, const char *file)
   FILE *infile = fopen(file, "r");
   if (infile)
   {
-    printf("OPENED FILE\n");
     while (!feof(infile))
     {
       int enemyTypeNumber;    /* Enemy type, refer to enum in GameObject.h | REMEMBER THIS TAKES AN INTEGER NUMBER NOT A STRING */
@@ -49,44 +48,7 @@ void EnemyImportInfo(int enemyType, const char *file)
       float attackKnockback;      /* Knockback the PLAYER feels when hit by an ENEMY'S attack */
       float enemyProjectileSpeed; /* Projectile speed for ranged enemies, set it to 0 for melee enemies obviously. Setting it to anything but 0 for melee enemies will do nothing anyways */
 
-                                  //Animation* enemyAnimation; /* Forward declaration for the enemy animation */
-
       fscanf(infile, "ENEMY - %i\n", &enemyTypeNumber);
-      /*
-      // Handles unchangable enemy information
-      // Each enemy will only have one animation set specific to it anyways
-      switch (enemyType)
-      {
-      case 1:
-      enemyType = ENEMY_TYPE_MELEE;
-      // REPLACE THE BELOW WITH PROPER ENEMY SPRITE/ANIMATION INFORMATION
-      enemyAnimation = GCreateAnimation(1,
-      GCreateTexture("isotilePlaceholder1.png"),
-      GCreateMesh(128.f, 64.f, 1, 1),
-      1);
-      break;
-      case 2:
-      enemyType = ENEMY_TYPE_MELEE_BIG;
-      enemyAnimation = GCreateAnimation(1,
-      GCreateTexture("isotilePlaceholder1.png"),
-      GCreateMesh(128.f, 64.f, 1, 1),
-      1);
-      break;
-      case 3:
-      enemyType = ENEMY_TYPE_MELEE_CHARGE;
-      break;
-      case 4:
-      enemyType = ENEMY_TYPE_RANGED;
-      enemyAnimation = GCreateAnimation(1,
-      GCreateTexture("isotilePlaceholder1.png"),
-      GCreateMesh(128.f, 64.f, 1, 1),
-      1);
-      break;
-      case 5:
-      enemyType = ENEMY_TYPE_HEALER;
-      break;
-      }
-      */
       fscanf(infile, "  SIZE     - %f\n", &size);
       fscanf(infile, "  HEALTH   - %i\n", &health);
 
@@ -126,7 +88,6 @@ void EnemyImportInfo(int enemyType, const char *file)
           enemyInfo[i].enemyProjectileSpeed = enemyProjectileSpeed;
         }
       }
-      //printf("%f                      ------\n", enemyInfo[0].chaseSpeed);
     }
     fclose(infile);
     printf("CLOSED FILE\n");
@@ -178,7 +139,6 @@ GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entit
 
 GameObject* EnemySpawn(float x, float y, int enemyType, GameObject* player)
 {
-  //printf("ENEMY SPAWNED HERE: %f, %f \n", x, y);
   float size;       /* Size */
 
   int health;         /* Duh */
@@ -300,39 +260,6 @@ void EnemyOnKilled(GameObject* _self)
   //Start_PS(pPS_B);
 }
 
-void EnemyChangeAnimationFlag(EnemyContainer* enemyContainer, Vector2D* worldFacingDirection)
-{
-  double worldFacingAngle = atan2(worldFacingDirection->y, worldFacingDirection->x) * (180.0f / PI);
-  //printf("%f\n", worldFacingAngle);
-  enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & (~(ENEMY_LEFT + ENEMY_RIGHT + ENEMY_UP + ENEMY_DOWN));
-
-  if (worldFacingAngle < 67.5 && worldFacingAngle > -67.5)
-  {
-    //printf("right");
-    //printf("%f\n", worldFacingAngle);
-    enemyContainer->enemyAnimationState += ENEMY_RIGHT;
-  }
-
-  if (worldFacingAngle > 112.5 || worldFacingAngle < -112.5)
-  {
-    //printf("left\n");
-    enemyContainer->enemyAnimationState += ENEMY_LEFT;
-  }
-
-  if (worldFacingAngle > 22.5 && worldFacingAngle < 157.5)
-  {
-    //printf("up\n");
-    enemyContainer->enemyAnimationState += ENEMY_UP;
-  }
-  if (worldFacingAngle < -22.5 && worldFacingAngle > -157.5)
-  {
-    //printf("down\n");
-    enemyContainer->enemyAnimationState += ENEMY_DOWN;
-  }
-
-}
-
-
 void EnemyMeleeAttack(GameObject* _thisObject, Vector2D attackDirection)
 {
   GameObject* tracer = GameObjectCreate(
@@ -394,4 +321,38 @@ static void EnemyKnockBack(GameObject* _thisObject, GameObject* _otherObject)
 
   //actually apply knockback:
   EntityApplyKnockback(_otherObject->entity, &knockbackVector);
+}
+
+// DEPRECATED OLD ANIMATION CODE
+// NEW ANIMATION CODE HOOKS INTO JAMES' ANIMATION SWITCHER
+void EnemyChangeAnimationFlag(EnemyContainer* enemyContainer, Vector2D* worldFacingDirection)
+{
+  //double worldFacingAngle = atan2(worldFacingDirection->y, worldFacingDirection->x) * (180.0f / PI);
+  ////printf("%f\n", worldFacingAngle);
+  ////enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & (~(ENEMY_LEFT + ENEMY_RIGHT + ENEMY_UP + ENEMY_DOWN));
+
+  //if (worldFacingAngle < 67.5 && worldFacingAngle > -67.5)
+  //{
+  //  //printf("right");
+  //  //printf("%f\n", worldFacingAngle);
+  //  enemyContainer->enemyAnimationState += ENEMY_RIGHT;
+  //}
+
+  //if (worldFacingAngle > 112.5 || worldFacingAngle < -112.5)
+  //{
+  //  //printf("left\n");
+  //  enemyContainer->enemyAnimationState += ENEMY_LEFT;
+  //}
+
+  //if (worldFacingAngle > 22.5 && worldFacingAngle < 157.5)
+  //{
+  //  //printf("up\n");
+  //  enemyContainer->enemyAnimationState += ENEMY_UP;
+  //}
+  //if (worldFacingAngle < -22.5 && worldFacingAngle > -157.5)
+  //{
+  //  //printf("down\n");
+  //  enemyContainer->enemyAnimationState += ENEMY_DOWN;
+  //}
+
 }
