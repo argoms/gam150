@@ -7,8 +7,7 @@
 \par    Course: GAM150
 \date   2/19/2016
 \brief
-This file contains the function implementations for conversions
-include this if you have warnings with type conversions
+This file contains the function implementations for buttons
 */
 /*****************************************************************************/
 #include "Button.h"
@@ -63,6 +62,7 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
   buttonComponent->Yscale = _scaley;                    /* set the y scale             */
   buttonComponent->size = _size;                        /* set the size                */
   buttonComponent->isSelected = 0;                      /* set button to not selected  */
+  buttonComponent->isActive = 1;                        /* set the button to active    */
 
   /* the type will determine where the next level will be upon function call */
 
@@ -418,6 +418,12 @@ void ButtonSimulate(GameObject *button)
 
 
   Button *button_data = button->miscData;
+
+  //skip inactive buttons
+  if (button_data->isActive == 0)
+  {
+    return;
+  }
  
   float x = button->sprite->x;                  /* button x position            */
   float y = button->sprite->y;                  /* button y position            */
@@ -491,6 +497,16 @@ void ButtonSimulate(GameObject *button)
   }
 }
 
+/*************************************************************************/
+/*!
+\par   Function: ScaleButtonSpriteColor
+
+\par Description: scales the buttons color
+
+\param  pointer to the button game object, not its component
+
+*/
+/*************************************************************************/
 void ScaleButtonSpriteColor(GameObject *button)
 {
   if (button == NULL)
@@ -511,6 +527,17 @@ void ScaleButtonSpriteColor(GameObject *button)
   button_sprite->tint.green = button_sprite->tint.green * BUTTON_GREEN_MODIFIER;//change green color
 }
 
+
+/*************************************************************************/
+/*!
+\par   Function: UnscaleButtonSpriteColor
+
+\par Description: unscales the button sprite color
+
+\param  pointer to the button game object, not its component
+
+*/
+/*************************************************************************/
 void UnscaleButtonSpriteColor(GameObject *button)
 {
   if (button == NULL)
@@ -536,4 +563,131 @@ void UnscaleButtonSpriteColor(GameObject *button)
   button_sprite->tint.red = button_sprite->tint.red / BUTTON_RED_MODIFIER;      //change red color
   button_sprite->tint.blue = button_sprite->tint.blue / BUTTON_BLUE_MODIFIER;   //change blue color
   button_sprite->tint.green = button_sprite->tint.green / BUTTON_GREEN_MODIFIER;//change green color
+}
+
+
+/*************************************************************************/
+/*!
+\par   Function: FadeAndDisableButton
+
+\par Description: fades the button color and disables the button
+
+\param  pointer to the button game object, not its component
+
+*/
+/*************************************************************************/
+void FadeAndDisableButton(GameObject *button)
+{
+
+  if (button == NULL)
+  {
+    return;
+  }
+
+  if (button->type != entity_button)
+  {
+    return;
+  }
+
+  if (!button->miscData)
+  {
+    return;
+  }
+
+  Button* button_data = button->miscData;
+
+  if (button->sprite)
+  {
+    button->sprite->tint.alpha = 0.1f;  //make it invisible
+    button_data->isActive = 0;          //make it inactive
+    
+  }
+  else
+  {
+    return;
+  }
+}
+
+/*************************************************************************/
+/*!
+\par   Function: ReactivateAndDisplayButton
+
+\par Description: reactivates the button and siaplays it to full alpha
+
+\param  pointer to the button game object, not its component
+
+*/
+/*************************************************************************/
+void ReactivateAndDisplayButton(GameObject *button)
+{
+
+  if (button == NULL)
+  {
+    return;
+  }
+
+  if (button->type != entity_button)
+  {
+    return;
+  }
+
+
+  if (!button->miscData)
+  {
+    return;
+  }
+
+  Button* button_data = button->miscData;
+
+  if (button->sprite)
+  {
+    button->sprite->tint.alpha = 1.0f;  // restore the alpha
+    button_data->isActive = 1;          // reactivate the button
+  }
+  else
+  {
+    return;
+  }
+}
+
+/*************************************************************************/
+/*!
+\par   Function: DisableAndHideButton
+
+\par Description: hides the button color and disables the button
+
+\param  pointer to the button game object, not its component
+
+*/
+/*************************************************************************/
+void DisableAndHideButton(GameObject *button)
+{
+
+  if (button == NULL)
+  {
+    return;
+  }
+
+  if (button->type != entity_button)
+  {
+    return;
+  }
+
+  if (!button->miscData)
+  {
+    return;
+  }
+
+  Button* button_data = button->miscData;
+
+  if (button->sprite)
+  {
+    button->sprite->tint.alpha = 0.0f;  //make it invisible
+    button_data->isActive = 0;          //make it inactive
+
+  }
+  else
+  {
+    return;
+  }
 }
