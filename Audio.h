@@ -1,4 +1,4 @@
-/******************************************************************
+/**************************************************************************************************
 Author        :  Matt Chasengnou
 File          :  Audio.h
 Created       :  1/25/16
@@ -8,8 +8,10 @@ ChangeLog
                 and StopSound functions.
   -2/16/16    : Cleaned up file.
                 Implemented black-box approach to accessing audio
-******************************************************************/
-#pragma once
+
+© Copyright 1996 - 2016, DigiPen Institute of Technology(USA).All rights reserved.
+**************************************************************************************************/
+
 #ifndef AUDIO_H
 #define AUDIO_H
 

@@ -7,17 +7,22 @@ ChangeLog
 
 4/1/16        :  Added oscillating behavior to compass
 
+4/12/16       :  Added comments to code
+
 © Copyright 1996 - 2016, DigiPen Institute of Technology(USA).All rights reserved.
 **************************************************************************************************/
-
 #include "AEEngine.h"
 #include "Vector2D.h"
 #include "Graphics.h"
 #include "Compass.h"
 #include "MyRandom.h"
 #include "Matrix2D.h"
-#include "Isometric.h"
+#include "Physics.h"
 #include <math.h>
+
+/*-------------------------------------------------------------------------------------------------
+DEFINES AND STRUCTS
+-------------------------------------------------------------------------------------------------*/
 
 #define COMPASS_DISTANCE 300
 #define COMPASS_SIZE 70
@@ -28,16 +33,50 @@ ChangeLog
 #define true 1
 #define false 0
 
+
+typedef struct Compass Compass;
+
+/* Contains compass information */
+struct Compass
+{
+  int loaded;               /* If the compass is loaded into memory. */
+  int active;               /* If the compass is active. */
+  AEGfxTexture *texture;    /* The texture used by the compass. */
+  AEGfxVertexList *mesh;    /* The mesh used by the compass. */
+  //Vector2D position;        /* The position of the compass. */
+  float angle;              /* The angle of the compass. */
+  float distance;           /* The distance from the compass to the player. */
+};
+/*-------------------------------------------------------------------------------------------------
+END DEFINES AND STRUCTS
+-------------------------------------------------------------------------------------------------*/
+
+/*-------------------------------------------------------------------------------------------------
+STATIC VARIABLES
+-------------------------------------------------------------------------------------------------*/
+
 static Compass compass = { 0 };
 static double time;
+/*-------------------------------------------------------------------------------------------------
+END STATIC VARIABLES
+-------------------------------------------------------------------------------------------------*/
 
-/* Loads the compass into memory. */
-void Compass_Load()
+/*-------------------------------------------------------------------------------------------------
+FUNCTIONS
+-------------------------------------------------------------------------------------------------*/
+
+/**************************************************************************************************
+Function      : Compass_Load
+Description   : Loads the compass into memory. Call during level initialization.
+Input         : No input.
+Output        : No output.
+**************************************************************************************************/
+void Compass_Load(void)
 {
   if (compass.loaded)
     return;
 
-  /* Draw the mesh for the compass. */
+  /* Create the mesh for the compass. */
   AEGfxMeshStart();
 
   AEGfxTriAdd(-0.5f, -0.5f, 0xFFFFFFFF, 0, 1,
@@ -55,20 +94,36 @@ void Compass_Load()
   compass.loaded = 1;
 }
 
-/* Sets the compass for use. */
-void Compass_Init()
+/**************************************************************************************************
+Function      : Compass_Init
+Description   : Sets the compass for use. Call in during level initialization.
+Input         : No input.
+Output        : No output.
+**************************************************************************************************/
+void Compass_Init(void)
 {
   compass.active = 1;
   time = 0;
 }
 
-/* Frees the compass from use. */
-void Compass_Free()
+/**************************************************************************************************
+Function      : Compass_Free
+Description   : Frees the compass from use. Call when freeing level.
+Input         : No input.
+Output        : No output.
+**************************************************************************************************/
+void Compass_Free(void)
 {
   compass.active = 0;
 }
 
-void Compass_Unload()
+/**************************************************************************************************
+Function      : Compass_Unload
+Description   : Unloads compass from memory. Call when unloading level.
+Input         : No input.
+Output        : No output.
+**************************************************************************************************/
+void Compass_Unload(void)
 {
   if (compass.loaded)
   {
@@ -78,17 +133,35 @@ void Compass_Unload()
   }
 }
 
-int Compass_IsLoaded()
+/**************************************************************************************************
+Function      : Compass_IsLoaded
+Description   : Returns loaded state of compass.
+Input         : No input.
+Output        : (int) Returns 1 if compass is loaded into memory, 0 if not.
+**************************************************************************************************/
+int Compass_IsLoaded(void)
 {
   return compass.loaded;
 }
 
-int Compass_IsActive()
+/**************************************************************************************************
+Function      : Compass_IsActive
+Description   : Returns active state of compass.
+Input         : No input.
+Output        : (int) Returns 1 if compass is active, 0 if not.
+**************************************************************************************************/
+int Compass_IsActive(void)
 {
   return compass.active;
 }
 
-/* Updates transform of compass. */
+/**************************************************************************************************
+Function      : Compass_Update
+Description   : Updates transform of compass. Call during game update.
+Input         : playerPos is position of player,
+                goal is position of goal.
+Output        : No output.
+**************************************************************************************************/
 void Compass_Update(Vector2D *playerPos, Vector2D *goal)
 {
   /* Create local copies of the position vectors so we don't mess them up. */
@@ -98,16 +171,9 @@ void Compass_Update(Vector2D *playerPos, Vector2D *goal)
   /* Calculate the angle between the player and the goal. */
   Vector2D direction;
   Vector2DSub(&direction, &goalCopy, &pPosCopy);
-  //direction.y /= 2.f;
-  //Vector2DNormalize(&direction, &direction);
 
+  /* Update the angle. */
   compass.angle = atan2f(direction.y, direction.x) - PI / 2.f + PI / 4.f;
-
-  /* Camera position. */
-  //float camX, camY;
-
-  /* Update transform of compass. */
-  //Vector2DScaleAdd(&compass.position, &direction, &pPosCopy, COMPASS_DISTANCE);
 
   /* Update distance from player to goal. */
   compass.distance = Vector2DLength(&direction);
@@ -118,17 +184,15 @@ void Compass_Update(Vector2D *playerPos, Vector2D *goal)
   time += AEFrameRateControllerGetFrameTime() * COMPASS_SPEED;
   if (time >= 2 * PI)
     time = 0;
-
-  //Doesn't work. ignore
-  ///* If player is close to goal, then deactivate compass. */
-  //if (compass.distance < 5)
-  //  compass.active = false;
-  //else
-  //  compass.active = true;
 }
 
-/* Draws the compass object. */
-void Compass_Draw()
+/**************************************************************************************************
+Function      : Compass_Draw
+Description   : Draws the compass object. Call during game render.
+Input         : No input
+Output        : No output.
+**************************************************************************************************/
+void Compass_Draw(void)
 {
   if (!compass.loaded)
     return;
@@ -137,25 +201,13 @@ void Compass_Draw()
   float CameraY;
   AEGfxGetCamPosition(&CameraX, &CameraY);
 
-  //AEGfxSetPosition(compass.position.x + CameraX, compass.position.y + CameraY);//set draw position
-  //AEGfxSetFullTransform(compass.position.x + CameraX, compass.position.y + CameraY, compass.angle, COMPASS_SIZE, COMPASS_SIZE);
-
   Matrix2D transform, scale, rot, trans, trans_local, iso_scale;
-
-  //Matrix2DSet(&transform, &compass.position);
-
 
   Matrix2DIdentity(&scale);
   Matrix2DScale(&scale, COMPASS_SIZE + (COMPASS_SIZE * 0.1f * ((float)sin(time))), COMPASS_SIZE + (COMPASS_SIZE * 0.1f * ((float)sin(time))));
 
   Matrix2DIdentity(&rot);
   Matrix2DRotRad(&rot, compass.angle);
-
-  //f32 targetPosX = 0.9f;
-  //f32 targetPosY = 0.9f;
-
-  //Vector2D drawPos;
-  //AEGfxConvertScreenCoordinatesToWorld(targetPosX, targetPosY, &drawPos.x, &drawPos.y);
 
   Vector2D direction;
   Vector2DFromAngleRad(&direction, compass.angle);
@@ -175,16 +227,9 @@ void Compass_Draw()
 
   Matrix2DConcat(&transform, &rot, &transform);
 
-  //Matrix2DConcat(&transform, &trans_local, &transform);
-
   Matrix2DConcat(&transform, &iso_scale, &transform);
 
   Matrix2DConcat(&transform, &trans, &transform);
-
-  //Matrix2DConcat(&iso_rotate, &iso_rotate, &rot);
-  //Matrix2DConcat(&iso_scale, &iso_scale, &iso_rotate);
-
-  //Matrix2DConcat(&transform, &, &trans_local);
 
   AEGfxSetTransform(transform.m);
 
@@ -198,5 +243,10 @@ void Compass_Draw()
 
   AEGfxSetBlendMode(AE_GFX_BM_BLEND);
 
+  /* Draw. */
+
   AEGfxMeshDraw(compass.mesh, AE_GFX_MDM_TRIANGLES);
 }
+/*-------------------------------------------------------------------------------------------------
+END FUNCTIONS
+-------------------------------------------------------------------------------------------------*/
