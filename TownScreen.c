@@ -37,8 +37,8 @@ void TownScreenInit()
   //printf("\nWELCOME TO TOWN");
   //char levelIndicator[3];
   //itoa(level, levelIndicator, 10);
-  //TextCreateString(levelIndicator, -350, 150);
-  TextString* cleared = TextCreateString("Level Cleared!", -350, 150);
+  //TextCreateString(levelIndicator, -350, 50);
+  TextString* cleared = TextCreateString("Level Cleared!", 50, 0);
   TextStringSetTint(cleared, GTint(1, 1, 1, 1));
   //TextCreateString("PRESS SPACE TO LEAVE", -300, -50);
 
@@ -74,8 +74,8 @@ void TownScreenInit()
     float text_offset = 90.0f;
     TextString *main_menu_text;
     main_menu_text = TextCreateHUDString("Level 1", buttonx - text_offset, buttony);
-    TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
-    AEGfxTexture* button_texture = GCreateTexture("isocircleGreen.png");
+    //TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
+    AEGfxTexture* button_texture = GCreateTexture("animations/buttons/button_texture.png");
     Animation* anim_button = GCreateAnimation(1,
       button_texture,   //was null
       button_mesh,
@@ -102,8 +102,8 @@ void TownScreenInit()
     button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
     text_offset = 90.0f;
     main_menu_text = TextCreateHUDString("Level 2", buttonx - text_offset, buttony);
-    TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
-    button_texture = GCreateTexture("isocircleGreen.png");
+    //TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
+    button_texture = GCreateTexture("animations/buttons/button_texture.png");
     anim_button = GCreateAnimation(1,
       button_texture,
       button_mesh,
@@ -126,8 +126,8 @@ void TownScreenInit()
     button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
     text_offset = 90.0f;
     main_menu_text = TextCreateHUDString("Level 3", buttonx - text_offset, buttony);
-    TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
-    button_texture = GCreateTexture("isocircleGreen.png");
+    //TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
+    button_texture = GCreateTexture("animations/buttons/button_texture.png");
     anim_button = GCreateAnimation(1,
       button_texture,
       button_mesh,
@@ -150,8 +150,8 @@ void TownScreenInit()
     button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
     text_offset = 90.0f;
     main_menu_text = TextCreateHUDString("Level 4", buttonx - text_offset, buttony);
-    TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
-    button_texture = GCreateTexture("isocircleGreen.png");
+    //TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
+    button_texture = GCreateTexture("animations/buttons/button_texture.png");
     anim_button = GCreateAnimation(1,
       button_texture,
       button_mesh,
@@ -175,8 +175,8 @@ void TownScreenInit()
   button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
   text_offset = 90.0f;
   main_menu_text = TextCreateHUDString("Menu", buttonx - text_offset, buttony);
-  TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
-  button_texture = GCreateTexture("isocircleGreen.png");
+  //TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
+  button_texture = GCreateTexture("animations/buttons/button_texture.png");
   anim_button = GCreateAnimation(1,
     button_texture,
     button_mesh,
