@@ -22,6 +22,8 @@ static GameObject* smokeEffect;
 void InitializePlayerSmoke()
 {
   smokeEffect = CreatePlayerSmoke();
+
+  SetSmoke(particle_inactive);
  
 }
 
@@ -36,6 +38,26 @@ void SetSmoke(int input)
   EffectSource* smokeComponent = (EffectSource*)(smokeEffect->miscData);
 
   smokeComponent->state = input;
+  if (input == particle_active) //if switching to active, create a puff of smoke
+  {
+    CreatePlayerSmokePuff(16);
+  }
+}
+
+
+/*!
+\brief Creates a short-lived puff of smoke at the player's position
+\param size Number of particles in the puff
+*/
+void CreatePlayerSmokePuff(int size)
+{
+  Audio_PlaySoundSample("hitSound.ogg", 0);
+  Vector2D puffPos = IsoWorldToScreen(&(GetPlayerObject()->physics->position));
+  SetParticleAnim(GetAsset_Animation(asset_smokeParticle));
+  GameObject* particleEffect = EffectCreate(Vec2(-2.f, -1.f), Vec2(4, 2), puffPos,
+    size, -1.0f, Vec2(0, 4), 0.99f, 0.4f, 26, Vec2(20, 35), 60, GTint(1, 1, 1, 1));
+  ParticleApplyBehavior(particleBehavior_linearAlpha, particleEffect);
+  ParticleSetLifetime(particleEffect, 0.05f);
 }
 
 /*!
@@ -45,8 +67,8 @@ GameObject* CreatePlayerSmoke()
 {
   SetParticleAnim(GetAsset_Animation(asset_smokeParticle));
   
-  GameObject* particleEffect =  EffectCreate(Vec2(-5.f, -2.f), Vec2(10, 4), Vec2(0,0),
-    64, 0.0f, Vec2(0, 4), 0.9f, 0.2f, 32, Vec2(30, 30), 60, GTint(1, 1, 1, 1));
+  GameObject* particleEffect =  EffectCreate(Vec2(-2.f, -1.f), Vec2(4, 2), Vec2(0,0),
+    64, 0.0f, Vec2(0, 4), 0.99f, 0.4f, 26, Vec2(30, 45), 60, GTint(1, 1, 1, 1));
   ParticleApplyBehavior(particleBehavior_linearAlpha, particleEffect);
   return particleEffect;
 }
@@ -56,10 +78,12 @@ GameObject* CreatePlayerSmoke()
 */
 void UpdateSmokePosition(Vector2D worldPos)
 {
-  if (!smokeEffect)
+  if (!smokeEffect) //safety check
   {
-    
+    return;
   }
+
+  //update position based on player's
   EffectSource* smokeComponent = (EffectSource*)(smokeEffect->miscData);
   smokeComponent->position = IsoWorldToScreen(&worldPos);
 }

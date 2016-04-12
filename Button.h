@@ -3,10 +3,10 @@
 #include "LevelManager.h"
 #include "Collision.h"
 
-#define BUTTON_ALPHA_MODIFIER              0.65f
-#define BUTTON_RED_MODIFIER                0.65f
-#define BUTTON_BLUE_MODIFIER               0.65f
-#define BUTTON_GREEN_MODIFIER              0.65f
+#define BUTTON_ALPHA_MODIFIER              1.65f
+#define BUTTON_RED_MODIFIER                1.65f
+#define BUTTON_BLUE_MODIFIER               1.65f
+#define BUTTON_GREEN_MODIFIER              1.65f
 
 #define DONT_CHANGE_LEVEL                  - 1
 
@@ -38,6 +38,7 @@ typedef struct
   float Yscale;           /* y scale of the sprite              */
   float size;             /* size of the button                 */
   int isSelected;         /* is the button pressed              */
+  int isActive;           /* is the button active               */
 }Button;
 
 GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _button_type, float _size, float _scalex, float _scaley);
@@ -50,3 +51,6 @@ void ChangeButtonType(GameObject *button, int type);
 void ButtonSimulate(GameObject *button);
 void ScaleButtonSpriteColor(GameObject *button);
 void UnscaleButtonSpriteColor(GameObject *button);
+void ReactivateAndDisplayButton(GameObject *button);
+void FadeAndDisableButton(GameObject *button);
+void DisableAndHideButton(GameObject *button);

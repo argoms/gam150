@@ -1,3 +1,13 @@
+/**************************************************************************************************
+Author        :  Matt Chasengnou
+File          :  ColorFilter.h
+Created       :  4/6/16
+Description   :  Contains the interface for working with ColorFilter.c.
+ChangeLog
+
+© Copyright 1996 - 2016, DigiPen Institute of Technology(USA).All rights reserved.
+**************************************************************************************************/
+
 #ifndef COLOR_FILTER_H
 #define COLOR_FILTER_H
 

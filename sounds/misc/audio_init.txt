@@ -9,6 +9,10 @@ music_sample4.ogg
 EPOCH_main_theme.ogg
 EPOCH_theme_funky.ogg
 EPOCH_theme_intensified.ogg
+EPOCH_theme_final_level.ogg
+EPOCH_theme_end.ogg
+
+death_tunes.ogg
 
 SAMPLES
 
@@ -44,3 +48,5 @@ Trumpets 3.ogg
 Trumpets 5.ogg
 Trumpets 7.ogg
 Wind Strong 1.ogg
+
+Creepy_Voice.ogg

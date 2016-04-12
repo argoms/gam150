@@ -13,7 +13,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Vector2D.h"
 
 
-#define MAX_PARTICLES_PER_EFFECT 64 //maximum number of particles that can be instantiated (increasing this increases memory footprint of each particle effect slightly)
+#define MAX_PARTICLES_PER_EFFECT 256 //maximum number of particles that can be instantiated (increasing this increases memory footprint of each particle effect slightly)
 
 typedef struct EffectSource EffectSource;
 typedef struct ParticleComponent ParticleComponent;

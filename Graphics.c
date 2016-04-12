@@ -27,7 +27,8 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 static SpriteList* spriteList; /**< list of sprites to draw*/
 static SpriteList* hudLayer; /**< list of hud sprites to draw on top*/
 static MeshList* meshList; /**< list of meshes loaded (in wrappers)*/
-static TextureList* textureList; /** list of textures loaded (in wrappers)*/
+static TextureList* textureList; /**< list of textures loaded (in wrappers)*/
+#define MAX_SPRITE_SIZE 1920 //maximum sprite size assumed for culling
 
 /*!
 \brief Initializes graphics management system (setting up lists of objects etc.)
@@ -69,19 +70,38 @@ void GRender()
     Sprite* spriteIndex = spriteList->first;
     //grab sprite object (linked list plus graphical info)
 
+    int lastBlendMode = AE_GFX_BM_BLEND; //caches the blend mode
+
 
     while (spriteIndex)
     {
-      AEGfxSetPosition(spriteIndex->x + spriteIndex->offset.x, spriteIndex->y + spriteIndex->offset.y);//set draw position
-                                                       
       SimAnimation(spriteIndex); //update sprite texture offsets according to animation
+      
+      //culling:
+      float drawPosX = spriteIndex->x + spriteIndex->offset.x;
+      float drawPosY = spriteIndex->y + spriteIndex->offset.y;
+
+      //if out of bounds, index to next sprite
+      if (drawPosX - MAX_SPRITE_SIZE> AEGfxGetWinMaxX() || drawPosX + MAX_SPRITE_SIZE < AEGfxGetWinMinX() 
+        || drawPosY - MAX_SPRITE_SIZE > AEGfxGetWinMaxY() || drawPosY + MAX_SPRITE_SIZE <  AEGfxGetWinMinY())
+      {
+        spriteIndex = spriteIndex->lowerSprite;
+        continue;
+      }
+
+      //otherwise, set up sprite drawing:
+      AEGfxSetPosition(drawPosX, drawPosY);//set draw position
       
       //set texture based on sprite's animation data (see animation struct for more details)
       AEGfxTextureSet(spriteIndex->animation->texture,
         spriteIndex->animation->frameOffsetX * (spriteIndex->frame % spriteIndex->animation->frameWidth) - 1,
         spriteIndex->animation->frameOffsetY * (spriteIndex->frame / spriteIndex->animation->frameWidth) - 1);
 
-      //adjust other render options:
+      //adjust blend modes only if needed
+      /*if (spriteIndex->blendMode != lastBlendMode)
+      {
+        AEGfxSetBlendMode(spriteIndex->blendMode);
+      }*/
       AEGfxSetBlendMode(spriteIndex->blendMode);
       
       AEGfxSetTintColor(spriteIndex->tint.red, spriteIndex->tint.green, spriteIndex->tint.blue, spriteIndex->tint.alpha);
@@ -89,7 +109,7 @@ void GRender()
       //DEPRECATED (jack's code?)
       if (spriteIndex->specialFX != NULL)
       {
-        spriteIndex->specialFX(spriteIndex);
+        //spriteIndex->specialFX(spriteIndex);
       }
       //
 

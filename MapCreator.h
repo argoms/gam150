@@ -1,6 +1,6 @@
 /**************************************************************************************************
 Author        :  Matt Chasengnou
-File          :  MapCreator.c
+File          :  MapCreator.h
 Created       :  3/1/16
 Description   :  Provides forward declarations for map creator functions
 ChangeLog
@@ -12,7 +12,7 @@ NOTES       REMEMBER TO CONVERT YOUR X/Y to the iso X/Y
 currently using matrix[y,x]
 convert   to    matrix[x,y]
 
-
+© Copyright 1996 - 2016, DigiPen Institute of Technology(USA).All rights reserved.
 **************************************************************************************************/
 
 #ifndef MAP_CREATOR_H

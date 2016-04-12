@@ -215,6 +215,7 @@
     <ClCompile Include="PlayerHUD.c" />
     <ClCompile Include="PlayerSmoke.c" />
     <ClCompile Include="SplashScreen.c" />
+    <ClCompile Include="stats.c" />
     <ClCompile Include="Text.c" />
     <ClCompile Include="TownScreen.c" />
     <ClCompile Include="Vector2D.c" />
@@ -267,6 +268,7 @@
     <ClInclude Include="PlayerHUD.h" />
     <ClInclude Include="PlayerSmoke.h" />
     <ClInclude Include="SplashScreen.h" />
+    <ClInclude Include="stats.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TownScreen.h" />
     <ClInclude Include="Vector2D.h" />

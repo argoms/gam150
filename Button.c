@@ -7,11 +7,11 @@
 \par    Course: GAM150
 \date   2/19/2016
 \brief
-This file contains the function implementations for conversions
-include this if you have warnings with type conversions
+This file contains the function implementations for buttons
 */
 /*****************************************************************************/
 #include "Button.h"
+#include "Audio.h"
 
 #define LEFT_CLICK 1
 #define RIGHT_CLICK 2
@@ -63,6 +63,7 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
   buttonComponent->Yscale = _scaley;                    /* set the y scale             */
   buttonComponent->size = _size;                        /* set the size                */
   buttonComponent->isSelected = 0;                      /* set button to not selected  */
+  buttonComponent->isActive = 1;                        /* set the button to active    */
 
   /* the type will determine where the next level will be upon function call */
 
@@ -85,7 +86,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_mainMenu;
-    level = level_mainMenu;
   }
   break;
   case LEVEL_ONE_BUTTON:
@@ -94,7 +94,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_level1;
-    level = 1;
   }
   break;
   case LEVEL_TWO_BUTTON:
@@ -103,7 +102,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_level1;
-    level = 2;
   }
   break;
   case LEVEL_THREE_BUTTON:
@@ -112,8 +110,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_level1;
-    level = level_level3;
-    level = 3;
   }
   break;
   case LEVEL_FOUR_BUTTON:
@@ -122,7 +118,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_level1;
-    level = 4;
   }
   break;
   case DEATH_SCREEN_BUTTON:
@@ -131,7 +126,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_deathScreen;
-    level = level_deathScreen;
   }
   break;
   case WIN_SCREEN:
@@ -140,7 +134,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_winScreen;
-    level = level_winScreen;
   }
   break;
   case CONTROL_SCREEN:
@@ -149,7 +142,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_controlScreen;
-    level = level_controlScreen;
   }
   break;
   case TOWN_SCREEN_BUTTON:
@@ -158,7 +150,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_town;
-    level = level_town;
   }
   break;
   case CREDIT_SCREEN:
@@ -167,7 +158,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_creditScreen;
-    level = level_creditScreen;
   }
   break;
   case DP_SPLASH_SCREEN_BUTTON:
@@ -176,7 +166,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_splashScreen;
-    level = level_splashScreen;
   }
   break;
   default:
@@ -186,7 +175,6 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = NULL;
     buttonComponent->onRelease = NULL;
     buttonComponent->next = level = level_level1;
-    level = level_level1;
   }
   break;
   }
@@ -383,6 +371,7 @@ void PlayButtonReleasedAnimation(GameObject *button)
   }
   else
   {
+    Audio_PlaySoundSample("ButtonClick2.ogg", 0);
     int level = button_data->next;          /* get the level            */
     LevelSetNext(level);                    /* set the next level       */
   }
@@ -431,6 +420,12 @@ void ButtonSimulate(GameObject *button)
 
 
   Button *button_data = button->miscData;
+
+  //skip inactive buttons
+  if (button_data->isActive == 0)
+  {
+    return;
+  }
  
   float x = button->sprite->x;                  /* button x position            */
   float y = button->sprite->y;                  /* button y position            */
@@ -504,6 +499,16 @@ void ButtonSimulate(GameObject *button)
   }
 }
 
+/*************************************************************************/
+/*!
+\par   Function: ScaleButtonSpriteColor
+
+\par Description: scales the buttons color
+
+\param  pointer to the button game object, not its component
+
+*/
+/*************************************************************************/
 void ScaleButtonSpriteColor(GameObject *button)
 {
   if (button == NULL)
@@ -524,6 +529,17 @@ void ScaleButtonSpriteColor(GameObject *button)
   button_sprite->tint.green = button_sprite->tint.green * BUTTON_GREEN_MODIFIER;//change green color
 }
 
+
+/*************************************************************************/
+/*!
+\par   Function: UnscaleButtonSpriteColor
+
+\par Description: unscales the button sprite color
+
+\param  pointer to the button game object, not its component
+
+*/
+/*************************************************************************/
 void UnscaleButtonSpriteColor(GameObject *button)
 {
   if (button == NULL)
@@ -549,4 +565,131 @@ void UnscaleButtonSpriteColor(GameObject *button)
   button_sprite->tint.red = button_sprite->tint.red / BUTTON_RED_MODIFIER;      //change red color
   button_sprite->tint.blue = button_sprite->tint.blue / BUTTON_BLUE_MODIFIER;   //change blue color
   button_sprite->tint.green = button_sprite->tint.green / BUTTON_GREEN_MODIFIER;//change green color
+}
+
+
+/*************************************************************************/
+/*!
+\par   Function: FadeAndDisableButton
+
+\par Description: fades the button color and disables the button
+
+\param  pointer to the button game object, not its component
+
+*/
+/*************************************************************************/
+void FadeAndDisableButton(GameObject *button)
+{
+
+  if (button == NULL)
+  {
+    return;
+  }
+
+  if (button->type != entity_button)
+  {
+    return;
+  }
+
+  if (!button->miscData)
+  {
+    return;
+  }
+
+  Button* button_data = button->miscData;
+
+  if (button->sprite)
+  {
+    button->sprite->tint.alpha = 0.1f;  //make it invisible
+    button_data->isActive = 0;          //make it inactive
+    
+  }
+  else
+  {
+    return;
+  }
+}
+
+/*************************************************************************/
+/*!
+\par   Function: ReactivateAndDisplayButton
+
+\par Description: reactivates the button and siaplays it to full alpha
+
+\param  pointer to the button game object, not its component
+
+*/
+/*************************************************************************/
+void ReactivateAndDisplayButton(GameObject *button)
+{
+
+  if (button == NULL)
+  {
+    return;
+  }
+
+  if (button->type != entity_button)
+  {
+    return;
+  }
+
+
+  if (!button->miscData)
+  {
+    return;
+  }
+
+  Button* button_data = button->miscData;
+
+  if (button->sprite)
+  {
+    button->sprite->tint.alpha = 1.0f;  // restore the alpha
+    button_data->isActive = 1;          // reactivate the button
+  }
+  else
+  {
+    return;
+  }
+}
+
+/*************************************************************************/
+/*!
+\par   Function: DisableAndHideButton
+
+\par Description: hides the button color and disables the button
+
+\param  pointer to the button game object, not its component
+
+*/
+/*************************************************************************/
+void DisableAndHideButton(GameObject *button)
+{
+
+  if (button == NULL)
+  {
+    return;
+  }
+
+  if (button->type != entity_button)
+  {
+    return;
+  }
+
+  if (!button->miscData)
+  {
+    return;
+  }
+
+  Button* button_data = button->miscData;
+
+  if (button->sprite)
+  {
+    button->sprite->tint.alpha = 0.0f;  //make it invisible
+    button_data->isActive = 0;          //make it inactive
+
+  }
+  else
+  {
+    return;
+  }
 }

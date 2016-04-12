@@ -34,7 +34,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 
 //dumb hard coding for alpha:
 // for game play levels not win/lose screens 
-int level; 
+int level = 1; 
 //
 
 //test particle effect istances
@@ -261,7 +261,7 @@ void GameLevelRun(void)
   
   if (player->sprite)
   {
-    Compass_Update(&player->physics->position, &DoorGetDoor()->physics->position);
+    Compass_Update(&player->physics->position, &(DoorGetDoor()->physics->position));
   }
 
 }

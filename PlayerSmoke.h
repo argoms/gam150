@@ -19,3 +19,4 @@ void UpdateSmokePosition(Vector2D worldPos);
 void SetSmoke(int input);
 void InitializePlayerSmoke();
 GameObject* CreatePlayerSmoke();
+void CreatePlayerSmokePuff(int size);
