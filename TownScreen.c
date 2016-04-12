@@ -74,7 +74,7 @@ void TownScreenInit()
     float text_offset = 90.0f;
     TextString *main_menu_text;
     main_menu_text = TextCreateHUDString("Level 1", buttonx - text_offset, buttony);
-    //TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
+    TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
     AEGfxTexture* button_texture = GCreateTexture("animations/buttons/button_texture.png");
     Animation* anim_button = GCreateAnimation(1,
       button_texture,   //was null
@@ -102,7 +102,7 @@ void TownScreenInit()
     button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
     text_offset = 90.0f;
     main_menu_text = TextCreateHUDString("Level 2", buttonx - text_offset, buttony);
-    //TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
+    TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
     button_texture = GCreateTexture("animations/buttons/button_texture.png");
     anim_button = GCreateAnimation(1,
       button_texture,
@@ -126,7 +126,7 @@ void TownScreenInit()
     button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
     text_offset = 90.0f;
     main_menu_text = TextCreateHUDString("Level 3", buttonx - text_offset, buttony);
-    //TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
+    TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
     button_texture = GCreateTexture("animations/buttons/button_texture.png");
     anim_button = GCreateAnimation(1,
       button_texture,
@@ -150,7 +150,7 @@ void TownScreenInit()
     button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
     text_offset = 90.0f;
     main_menu_text = TextCreateHUDString("Level 4", buttonx - text_offset, buttony);
-    //TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
+    TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
     button_texture = GCreateTexture("animations/buttons/button_texture.png");
     anim_button = GCreateAnimation(1,
       button_texture,
@@ -175,7 +175,7 @@ void TownScreenInit()
   button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
   text_offset = 90.0f;
   main_menu_text = TextCreateHUDString("Menu", buttonx - text_offset, buttony);
-  //TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
+  TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
   button_texture = GCreateTexture("animations/buttons/button_texture.png");
   anim_button = GCreateAnimation(1,
     button_texture,

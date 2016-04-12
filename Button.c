@@ -11,6 +11,7 @@ This file contains the function implementations for buttons
 */
 /*****************************************************************************/
 #include "Button.h"
+#include "Audio.h"
 
 #define LEFT_CLICK 1
 #define RIGHT_CLICK 2
@@ -370,6 +371,7 @@ void PlayButtonReleasedAnimation(GameObject *button)
   }
   else
   {
+    Audio_PlaySoundSample("ButtonClick2.ogg", 0);
     int level = button_data->next;          /* get the level            */
     LevelSetNext(level);                    /* set the next level       */
   }

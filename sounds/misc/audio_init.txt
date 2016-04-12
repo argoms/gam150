@@ -10,6 +10,7 @@ EPOCH_main_theme.ogg
 EPOCH_theme_funky.ogg
 EPOCH_theme_intensified.ogg
 EPOCH_theme_final_level.ogg
+EPOCH_theme_end.ogg
 
 death_tunes.ogg
 

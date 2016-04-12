@@ -56,8 +56,8 @@ int button_flag_level1 = 0;
 int button_flag_level2 = 0;
 int button_flag_level3 = 0;
 int button_flag_level4 = 0;
-int button_flag_win = 0;
-int button_flag_lose = 0;
+int button_flag_win = 1;
+int button_flag_lose = 1;
 int buttin_flag_credits = 1;
 int button_flag_control = 1;
 int button_flag_play = 1;
@@ -98,6 +98,7 @@ void LevelLoad(int _level)
     Audio_PauseMusicStream("music_sample4.ogg");
     Audio_PauseMusicStream("EPOCH_theme_final_level.ogg");
     Audio_PauseMusicStream("death_tunes.ogg");
+    Audio_PauseMusicStream("EPOCH_theme_end.ogg");
     if (!(currentLevel == level_splashScreen || currentLevel == level_creditScreen || currentLevel == level_controlScreen))
       Audio_PlayMusicStream("EPOCH_main_theme.ogg", 1);
     //Audio_PauseMusicStream("music_sample3.ogg");
@@ -135,6 +136,8 @@ void LevelLoad(int _level)
     WinScreenInit();
     Background_Init(BACKGROUND_BH_SWIRLY, BACKGROUND_MD_ENERGY);
     level = 0;
+    Audio_PlayMusicStream("EPOCH_theme_end.ogg", 0);
+    Audio_PauseMusicStream("EPOCH_main_theme.ogg");
     Audio_PauseMusicStream("music_sample4.ogg");
     Audio_PauseMusicStream("EPOCH_theme_final_level.ogg");
     //Audio_PauseMusicStream("EPOCH_theme_funky.ogg");
@@ -203,7 +206,7 @@ void LevelRun()
       Compass_Unload();
       break;
     default:
-      Audio_PlaySoundSample("ButtonClick2.ogg", 0);
+      //Audio_PlaySoundSample("ButtonClick2.ogg", 0);
       LevelUnload();
       LevelLoad(nextLevel);
       currentLevel = nextLevel;
@@ -306,6 +309,7 @@ void MainMenuInit()
   float text_offset = 90.0f;
   TextString *main_menu_text;
   main_menu_text = TextCreateHUDString("Level 1", buttonx - text_offset, buttony);
+  TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
   AEGfxTexture* button_texture = GCreateTexture("animations/buttons/button_texture.png");
   Animation* anim_button = GCreateAnimation(1,
     button_texture,   //was null
@@ -338,6 +342,7 @@ void MainMenuInit()
     button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
     text_offset = 90.0f;
     main_menu_text = TextCreateHUDString("Level 2", buttonx - text_offset, buttony);
+    TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
     button_texture = GCreateTexture("animations/buttons/button_texture.png");
     anim_button = GCreateAnimation(1,
       button_texture,
@@ -361,6 +366,7 @@ void MainMenuInit()
     button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
     text_offset = 90.0f;
     main_menu_text = TextCreateHUDString("Level 3", buttonx - text_offset, buttony);
+    TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
     button_texture = GCreateTexture("animations/buttons/button_texture.png");
     anim_button = GCreateAnimation(1,
       button_texture,
@@ -383,6 +389,7 @@ void MainMenuInit()
     button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
     text_offset = 90.0f;
     main_menu_text = TextCreateHUDString("Level 4", buttonx - text_offset, buttony);
+    TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
     button_texture = GCreateTexture("animations/buttons/button_texture.png");
     anim_button = GCreateAnimation(1,
       button_texture,
@@ -405,6 +412,7 @@ void MainMenuInit()
     button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
     text_offset = 90.0f;
     main_menu_text = TextCreateHUDString("Scrub", buttonx - text_offset, buttony);
+    TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
     button_texture = GCreateTexture("animations/buttons/button_texture.png");
     anim_button = GCreateAnimation(1,
       button_texture,
@@ -427,6 +435,7 @@ void MainMenuInit()
     button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
     text_offset = 90.0f;
     main_menu_text = TextCreateHUDString("Die", buttonx - text_offset, buttony);
+    TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
     button_texture = GCreateTexture("animations/buttons/button_texture.png");
     anim_button = GCreateAnimation(1,
       button_texture,
@@ -449,6 +458,7 @@ void MainMenuInit()
     button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
     text_offset = 90.0f;
     main_menu_text = TextCreateHUDString("Credits", buttonx - text_offset, buttony);
+    TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
     button_texture = GCreateTexture("animations/buttons/button_texture.png");
     anim_button = GCreateAnimation(1,
       button_texture,
@@ -473,6 +483,7 @@ void MainMenuInit()
     button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
     text_offset = 90.0f;
     main_menu_text = TextCreateHUDString("Play", buttonx - text_offset, buttony);
+    TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
     button_texture = GCreateTexture("animations/buttons/button_texture.png");
     anim_button = GCreateAnimation(1,
       button_texture,
@@ -495,6 +506,7 @@ void MainMenuInit()
     button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
     text_offset = 90.0f;
     main_menu_text = TextCreateHUDString("Controls", buttonx - text_offset, buttony);
+    TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
     button_texture = GCreateTexture("animations/buttons/button_texture.png");
     anim_button = GCreateAnimation(1,
       button_texture,
