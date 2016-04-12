@@ -7,7 +7,8 @@
 //#include "Enemy.h"
 #include "PlayerEntity.h"
 //#include "ParticleSystems(Redo).h"
-
+#include "PlayerSmoke.h"
+#include "EnvironmentalEffects.h"
 
 #define BRIEF_IFRAMES_RECOVERY             10  /* frames for recovery before granting brief invulnerability */
 #define BRIEF_IFRAMES                      30  /* i frames granted after taking damage                      */
