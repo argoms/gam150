@@ -53,3 +53,4 @@ void ScaleButtonSpriteColor(GameObject *button);
 void UnscaleButtonSpriteColor(GameObject *button);
 void ReactivateAndDisplayButton(GameObject *button);
 void FadeAndDisableButton(GameObject *button);
+void DisableAndHideButton(GameObject *button);

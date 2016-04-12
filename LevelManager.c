@@ -24,6 +24,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "CreditsScreen.h"
 #include "FancyBackground.h"
 #include "ColorFilter.h"
+#include "ControlScreen.h"
 
 
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
@@ -51,13 +52,16 @@ extern int level;
 
 // 1 show, 0 hide or not create, level 1 button will always be there
 // flags to turn off or turn on tarrants buttons to be creATED
-//int button_flag_level1 = 1;
+int button_flag_level1 = 0;
 int button_flag_level2 = 0;
 int button_flag_level3 = 0;
 int button_flag_level4 = 0;
 int button_flag_win = 0;
 int button_flag_lose = 0;
 int buttin_flag_credits = 1;
+int button_flag_control = 1;
+int button_flag_play = 1;
+int button_flag_exit = 1;
 
 /*
 \brief loads given level
@@ -127,6 +131,10 @@ void LevelLoad(int _level)
     CreditsScreenInit();
     Background_Init(BACKGROUND_BH_HORIZONTAL, BACKGROUND_MD_BLOCKS);
     break;
+  case level_controlScreen:
+    ControlScreenInit();
+    Background_Init(BACKGROUND_BH_SWIRLY, BACKGROUND_MD_ENERGY);
+    break;
   }
 }
 
@@ -167,6 +175,10 @@ void LevelRun()
     break;
   case level_creditScreen:
     CreditsScreenRun();
+    break;
+  case level_controlScreen:
+    ControlScreenRun();
+    break;
   }
 
   if (currentLevel != nextLevel)
@@ -271,7 +283,7 @@ void MainMenuInit()
 
   int button_type = LEVEL_ONE_BUTTON;             /* type of button  */
   float buttonx = -200;                           /* x position      */
-  float buttony = 100;                           /* y position      */
+  float buttony = 100;                            /* y position      */
   float meshx = 256.0f;                           /* mesh x          */
   float meshy = 64.0f;                            /* mesh y          */
   float buttonsize = 1.0f;                        /* size            */
@@ -292,6 +304,13 @@ void MainMenuInit()
   //PhysicsObject *button1_physics = PhysicsCreateObject(Vec2(button1x,button1y),1);
 
   GameObject* button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+  if (button_flag_level1 == 0)
+  {
+    DisableAndHideButton(button); //hide this button
+    TextStringSetTint(main_menu_text, GTint(0.0, 0.0, 0.0, 0.0));
+
+  }
+
   //end button level 1 ------------------------------
 
   //BUTTON TWO for level 2
@@ -314,6 +333,7 @@ void MainMenuInit()
 
     button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
     button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+
   }
   // --------------------end button level 2-----------------------
   //BUTTON three for level 3
@@ -404,12 +424,12 @@ void MainMenuInit()
     button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
   }
   //end lose screen ------------------------------------------------------------------
-
+  //credits button----------------------------------------------------------------
   if (buttin_flag_credits)
   {
     button_type = CREDIT_SCREEN;          /* type of button  */
     buttonx = 200;                          /* x position      */
-    buttony = 100;                            /* y position      */
+    buttony = 25;                            /* y position      */
     meshx = 256.0f;                          /* mesh x          */
     meshy = 64.0f;                           /* mesh y          */
     buttonsize = 1.0f;                       /* size            */
@@ -425,8 +445,53 @@ void MainMenuInit()
     button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
     button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
   }
-  //credits button----------------------------------------------------------------
 
+
+  //END credit BUTTONS-------------------------------------------------------------
+  //play level 1 button------------------------------------------------------
+  if (button_flag_play)
+  {
+    button_type = LEVEL_ONE_BUTTON;          /* type of button  */
+    buttonx = 200;                          /* x position      */
+    buttony = 100;                            /* y position      */
+    meshx = 256.0f;                          /* mesh x          */
+    meshy = 64.0f;                           /* mesh y          */
+    buttonsize = 1.0f;                       /* size            */
+    button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
+    text_offset = 90.0f;
+    main_menu_text = TextCreateHUDString("Play", buttonx - text_offset, buttony);
+    button_texture = GCreateTexture("animations/buttons/button_texture.png");
+    anim_button = GCreateAnimation(1,
+      button_texture,
+      button_mesh,
+      1);
+
+    button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
+    button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+  }
+ //END play BUTTON-------------------------------------------------------------
+  //start control button--------------------------------------------------------
+  if (button_flag_control)
+  {
+    button_type = CONTROL_SCREEN;          /* type of button  */
+    buttonx = 200;                          /* x position      */
+    buttony = -50;                            /* y position      */
+    meshx = 256.0f;                          /* mesh x          */
+    meshy = 64.0f;                           /* mesh y          */
+    buttonsize = 1.0f;                       /* size            */
+    button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
+    text_offset = 90.0f;
+    main_menu_text = TextCreateHUDString("Controls", buttonx - text_offset, buttony);
+    button_texture = GCreateTexture("animations/buttons/button_texture.png");
+    anim_button = GCreateAnimation(1,
+      button_texture,
+      button_mesh,
+      1);
+
+    button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
+    button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+  }
+  //end control button ----------------------------------------------------------
 
   //END BUTTONS-------------------------------------------------------------
   //END TARRANT CODE
