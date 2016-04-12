@@ -71,7 +71,7 @@ void DeathScreenInit()
   float text_offset = 90.0f;
   TextString *main_menu_text;
   main_menu_text = TextCreateHUDString(" Menu", buttonx - text_offset, buttony);
-  AEGfxTexture* button_texture = GCreateTexture("isocircleGreen.png");
+  AEGfxTexture* button_texture = GCreateTexture("animations/buttons/button_texture.png");
   Animation* anim_button = GCreateAnimation(1,
     button_texture,   //was null
     button_mesh,

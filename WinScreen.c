@@ -20,7 +20,8 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 void WinScreenInit()
 {
   TextInit();
-  TextCreateString("YOU WON!", -200, 0);
+  TextString *text = TextCreateString("YOU WON!", -200, 0);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
   //TextCreateString("PRESS SPACE TO RETURN", -360, -50);
   //TextCreateString("TO MAIN MENU", -300, -100);
 
@@ -71,7 +72,7 @@ void WinScreenInit()
   float text_offset = 90.0f;
   TextString *main_menu_text;
   main_menu_text = TextCreateHUDString(" Menu", buttonx - text_offset, buttony);
-  AEGfxTexture* button_texture = GCreateTexture("isocircleGreen.png");
+  AEGfxTexture* button_texture = GCreateTexture("animations/buttons/button_texture.png");
   Animation* anim_button = GCreateAnimation(1,
     button_texture,   //was null
     button_mesh,

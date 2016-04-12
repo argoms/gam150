@@ -3,10 +3,10 @@
 #include "LevelManager.h"
 #include "Collision.h"
 
-#define BUTTON_ALPHA_MODIFIER              0.65f
-#define BUTTON_RED_MODIFIER                0.65f
-#define BUTTON_BLUE_MODIFIER               0.65f
-#define BUTTON_GREEN_MODIFIER              0.65f
+#define BUTTON_ALPHA_MODIFIER              1.65f
+#define BUTTON_RED_MODIFIER                1.65f
+#define BUTTON_BLUE_MODIFIER               1.65f
+#define BUTTON_GREEN_MODIFIER              1.65f
 
 #define DONT_CHANGE_LEVEL                  - 1
 
