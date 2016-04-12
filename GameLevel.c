@@ -66,8 +66,26 @@ void GameLevelInit(void)
 
 	for (i = 0; i < 4; i++)
 	{
+		pDodgeSmoke2[i] = Create_PS_Burst(2.0f, 20);
+		pDodgeSmoke2[i]->PS_Burst->vpParticle_Create = Particle_Create_DodgeSmoke2;
+	}
+
+	for (i = 0; i < 4; i++)
+	{
+		pHitSplash2[i] = Create_PS_Burst(0.3f, 10);
+		pHitSplash2[i]->PS_Burst->vpParticle_Create = Particle_Create_HitSplash2;
+	}
+
+	for (i = 0; i < 4; i++)
+	{
 		pHitSplash[i] = Create_PS_Burst(0.5f, 10);
 		pHitSplash[i]->PS_Burst->vpParticle_Create = Particle_Create_HitSplash;
+	}
+
+	for (i = 0; i < 4; i++)
+	{
+		pHealthGather[i] = Create_PS_Burst(1.0f, 8);
+		pHealthGather[i]->PS_Burst->vpParticle_Create = Particle_Create_HealthGather;
 	}
 
 	

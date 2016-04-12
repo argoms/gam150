@@ -89,8 +89,10 @@ float           VectorX, VectorY, ImpactAngle;
 void SpawnDodgeSmokePS(float StartPosX, float StartPosY);
 void SpawnDodgeSmoke2PS(float StartPosX, float StartPosY);
 void SpawnFireHazardPS(float StartPosX, float StartPosY);
-void SpawnHitSplashPS(float StartPosX, float StartPosY, float ObjDistX, float ObjDistY);
+void SpawnHitSplashPS(float PlayerPosX, float PlayerPosY, float EnemyPosX, float EnemyPosY);
+void SpawnHitSplash2PS(float PlayerPosX, float PlayerPosY, float EnemyPosX, float EnemyPosY);
 void SpawnHealthGatherPS(float StartPosX, float StartPosY);
+void SpawnPlayerDamagePS(float PlayerPosX, float PlayerPosY);
 
 //default PS behavior functions
 void Default_Particle_Create_Continuous(int i, PS_Instance *pPS_Inst);
@@ -106,9 +108,17 @@ void Particle_Create_HealthGather(int i, PS_Instance *pPS_Inst);
 void Particle_Simulate_HealthGather(void);
 void Particle_Special_FX_HealthGather(Sprite *Owner);
 
+void Particle_Create_HitSplash2(int i, PS_Instance *pPS_Inst);
+void Particle_Simulate_HitSplash2(void);
+void Particle_Special_FX_HitSplash2(Sprite *Owner);
+
 void Particle_Create_HitSplash(int i, PS_Instance *pPS_Inst);
 void Particle_Simulate_HitSplash(void);
 void Particle_Special_FX_HitSplash(Sprite *Owner);
+
+void Particle_Create_PlayerDamage(int i, PS_Instance *pPS_Inst);
+void Particle_Simulate_PlayerDamage(void);
+void Particle_Special_FX_PlayerDamage(Sprite *Owner);
 
 void Particle_Create_DodgeSmoke2(int i, PS_Instance *pPS_Inst);
 void Particle_Simulate_DodgeSmoke2(void);
@@ -125,6 +135,8 @@ void Particle_Special_FX_DodgeSmoke(Sprite *Owner);
 void Particle_Create_FireHazard(int i, PS_Instance *pPS_Inst);
 void Particle_Simulate_FireHazard(void);
 void Particle_Special_FX_FireHazard(Sprite *Owner);
+
+
 void Particle_Special_FX_FireHazard0_0(void);
 void Particle_Special_FX_FireHazard1_0(void);
 void Particle_Special_FX_FireHazard0_1(void);
@@ -168,7 +180,10 @@ PS_Instance *pPS_B;
 
 //regular particle effect instances
 PS_Instance *pDodgeSmoke[4];
+PS_Instance *pDodgeSmoke2[4];
+PS_Instance *pHitSplash2[4];
 PS_Instance *pHitSplash[4];
+PS_Instance *pPlayerDamage[4];
 PS_Instance *pFireHazard[2];
 PS_Instance *pHealthGather[4];
 

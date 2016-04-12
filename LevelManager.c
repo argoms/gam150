@@ -117,9 +117,21 @@ void LevelRun()
 	  {
 		  SpawnDodgeSmokePS(4.0f, 4.0f);
 	  }
+	  if (AEInputCheckTriggered('R'))
+	  {
+		  SpawnDodgeSmoke2PS(4.0f, 4.0f);
+	  }
 	  if (AEInputCheckTriggered('T'))
 	  {
-		  SpawnHitSplashPS(4.0f, 4.0f, 1, 0);
+		  SpawnHitSplashPS(3.0f, 4.0f, 4.0f, 4.0f);
+	  }
+	  if (AEInputCheckTriggered('B'))
+	  {
+		  SpawnHitSplash2PS(3.0f, 4.0f, 4.0f, 4.0f);
+	  }
+	  if (AEInputCheckTriggered('U'))
+	  {
+		  SpawnHealthGatherPS(6.0f, 6.0f);
 	  }
     GameLevelRun();
     break;

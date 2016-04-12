@@ -22,7 +22,7 @@ This is the c source code file that contains the implementation of the particle 
 //array of PS instances
 PS_Instance		goiaPS_ObjectInstanceList[PS_OBJ_INST_MAX];
 
-float           VectorX, VectorY, ImpactAngle;
+float           VectorX, VectorY, ImpactAngle, HealthGatherAngle;
 
 AEGfxVertexList *pTempParticleMesh;
 
@@ -64,6 +64,30 @@ void SpawnDodgeSmokePS(float StartPosX, float StartPosY)
 
 /*!
 \brief
+Spawns a Dodge Smoke PS
+\param StartPosX
+float for the PS's Starting X Position.
+\param StartPosY
+float for the PS's Starting Y Position.
+*/
+void SpawnDodgeSmoke2PS(float StartPosX, float StartPosY)
+{
+	int i;
+
+	for (i = 0; i < sizeof(pDodgeSmoke2) / sizeof(*pDodgeSmoke2); i++)
+	{
+		if (pDodgeSmoke2[i]->PS_Burst->ShutDown)
+		{
+			pDodgeSmoke2[i]->PS_Burst->StartPosX = StartPosX;
+			pDodgeSmoke2[i]->PS_Burst->StartPosY = StartPosY;
+			Start_PS(pDodgeSmoke2[i]);
+			break;
+		}
+	}
+}
+
+/*!
+\brief
 Spawns a Fire Hazard PS
 \param StartPosX
 float for the PS's Starting X Position.
@@ -88,25 +112,59 @@ void SpawnFireHazardPS(float StartPosX, float StartPosY)
 
 /*!
 \brief
-Spawns a Hit Splash PS
-\param StartPosX
-float for the PS's Starting X Position.  Recommended to be the position of the enemy that was just hit.
-\param StartPosY
-float for the PS's Starting Y Position.  Recommended to be the position of the enemy that was just hit.
+Spawns a Hit Splash PS 2
+\param PlayerPosX
+float for the Player's X Position.
+\param PlayerPosY
+float for the Player's Y Position.
+\param EnemyPosX
+float for the Enemy's X Position and the PS's starting X Position.
+\param EnemyPosY
+float for the Enemy's Y Position and the PS's starting Y Position.
 */
-void SpawnHitSplashPS(float StartPosX, float StartPosY, float ObjDistX, float ObjDistY)
+void SpawnHitSplashPS(float PlayerPosX, float PlayerPosY, float EnemyPosX, float EnemyPosY)
 {
 	int i;
 
-	VectorX = ObjDistX;
-	VectorY = ObjDistY;
+	VectorX = EnemyPosX - PlayerPosX;
+	VectorY = EnemyPosY - PlayerPosY;
 	for (i = 0; i < sizeof(pHitSplash) / sizeof(*pHitSplash); i++)
 	{
 		if (pHitSplash[i]->PS_Burst->ShutDown)
 		{
-			pHitSplash[i]->PS_Burst->StartPosX = StartPosX;
-			pHitSplash[i]->PS_Burst->StartPosY = StartPosY;
+			pHitSplash[i]->PS_Burst->StartPosX = EnemyPosX;
+			pHitSplash[i]->PS_Burst->StartPosY = EnemyPosY;
 			Start_PS(pHitSplash[i]);
+			break;
+		}
+	}
+}
+
+/*!
+\brief
+Spawns a Hit Splash PS 2
+\param PlayerPosX
+float for the Player's X Position.
+\param PlayerPosY
+float for the Player's Y Position.
+\param EnemyPosX
+float for the Enemy's X Position and the PS's starting X Position.
+\param EnemyPosY
+float for the Enemy's Y Position and the PS's starting Y Position.
+*/
+void SpawnHitSplash2PS(float PlayerPosX, float PlayerPosY, float EnemyPosX, float EnemyPosY)
+{
+	int i;
+
+	VectorX = EnemyPosX - PlayerPosX;
+	VectorY = EnemyPosY - PlayerPosY;
+	for (i = 0; i < sizeof(pHitSplash2) / sizeof(*pHitSplash2); i++)
+	{
+		if (pHitSplash2[i]->PS_Burst->ShutDown)
+		{
+			pHitSplash2[i]->PS_Burst->StartPosX = EnemyPosX;
+			pHitSplash2[i]->PS_Burst->StartPosY = EnemyPosY;
+			Start_PS(pHitSplash2[i]);
 			break;
 		}
 	}
@@ -123,6 +181,7 @@ float for the PS's Starting Y Position.  Recommended to be the position of the h
 void SpawnHealthGatherPS(float StartPosX, float StartPosY)
 {
 	int i;
+	HealthGatherAngle = RANDOM_ANGLE;
 
 	for (i = 0; i < sizeof(pHealthGather) / sizeof(*pHealthGather); i++)
 	{
@@ -153,7 +212,6 @@ void Particle_Create_HealthGather(int i, PS_Instance *pPS_Inst)
 {
 	int j;
 	//you need to create and initialize these to make the particles work properly
-	float RandomAngle = RANDOM_ANGLE;
 	float RandomScale = (float)((rand() / (float)RAND_MAX));
 	Vector2D ParticlePosition;
 	Vector2D InitialVelocity;
@@ -166,8 +224,8 @@ void Particle_Create_HealthGather(int i, PS_Instance *pPS_Inst)
 	ParticlePosition.x = pPS_Inst->PS_Burst->StartPosX;
 	ParticlePosition.y = pPS_Inst->PS_Burst->StartPosY;
 	//launch particles in a random direction at a constant speed
-	InitialVelocity.x = (float)(0.1 * cos(RandomAngle + i * PI / 4));
-	InitialVelocity.y = (float)(0.1 * sin(RandomAngle + i * PI / 4));
+	InitialVelocity.x = (float)(0.1 * cos(HealthGatherAngle + i * PI / 4));
+	InitialVelocity.y = (float)(0.1 * sin(HealthGatherAngle + i * PI / 4));
 
 	//NECESSARY SET-UP STUFF
 	ParticlePhysics = PhysicsCreateObject(ParticlePosition, 1.0f);
@@ -175,9 +233,9 @@ void Particle_Create_HealthGather(int i, PS_Instance *pPS_Inst)
 	ParticlePhysics->active = 0;
 	ParticleAnimation = GCreateAnimation(1, GCreateTexture("WhiteBox.png"), GCreateMesh(10, 10, 1, 1), 1);
 	ParticleSprite = GCreateSprite(ParticlePosition.x, ParticlePosition.y, ParticleAnimation, 0.0f);
-	ParticleSprite->specialFX = Particle_Special_FX_HitSplash;
+	ParticleSprite->specialFX = Particle_Special_FX_HealthGather;
 	NewParticle = GameObjectCreate(ParticlePhysics, ParticleSprite, NULL, entity_particle);
-	NewParticle->simulate = Particle_Simulate_HitSplash;
+	NewParticle->simulate = Particle_Simulate_HealthGather;
 
 	NewParticle->miscData = malloc(sizeof(ParticleData));
 	((ParticleData *)(NewParticle->miscData))->ParticleID = i;
@@ -189,13 +247,14 @@ void Particle_Create_HealthGather(int i, PS_Instance *pPS_Inst)
 			break;
 		}
 	}
-
+	
+	ParticleSprite->owner = NewParticle;
 	pPS_Inst->PS_Burst->Particle[i] = NewParticle;
 }
 
 /*!
 \brief
-particle update behavior for Hit Splash
+particle update behavior for Health Gather
 */
 void Particle_Simulate_HealthGather(void)
 {
@@ -204,21 +263,29 @@ void Particle_Simulate_HealthGather(void)
 
 /*!
 \brief
-particle special visual effect for Hit Splash
+particle special visual effect for Health Gather
 */
 void Particle_Special_FX_HealthGather(Sprite *Owner)
 {
-	float VisualMod = pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pHitSplash[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime * 0.5f;
+	float VisualMod = pHealthGather[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pHealthGather[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime * 0.5f;
+	float x = GetPlayerObject()->sprite->x - Owner->x;
+	float y = GetPlayerObject()->sprite->y - Owner->y;
+
+	/*
+	float x = GetPlayerObject()->sprite->x - Owner->x;
+	float y = GetPlayerObject()->sprite->y - Owner->y;
+	/*
 	float x = GetPlayerObject()->sprite->x - pHealthGather[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->StartPosX;
 	float y = GetPlayerObject()->sprite->y - pHealthGather[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->StartPosY;
+	*/
 	float length = (float)sqrt(x * x + y * y);
 	x /= length;
 	y /= length;
 
-	Owner->owner->physics->velocity.x += x / 3000.0f;
-	Owner->owner->physics->velocity.y += y / 3000.0f;
+	Owner->owner->physics->velocity.x += x / 10.0f;
+	Owner->owner->physics->velocity.y += y / 10.0f;
 
-	AEGfxSetTintColor(0.5f + VisualMod, 1.0f, 0.5f + VisualMod, 0.8f);
+	AEGfxSetTintColor(1.0f - VisualMod, 1.0f, 1.0f - VisualMod, 0.8f);
 
 	/*
 	if (((ParticleData *)(Owner->owner->miscData))->ParticleID < 5)
@@ -244,6 +311,200 @@ void Particle_Special_FX_HealthGather(Sprite *Owner)
 		}
 	}
 	*/
+}
+
+/*!
+\brief
+creates a particle for a Player Damage
+\param i
+int for the ID of the particle.
+\param pPS_Inst
+PS_Instance * for the owner continuous PS.
+*/
+void Particle_Create_PlayerDamage(int i, PS_Instance *pPS_Inst)
+{
+	int j;
+	//you need to create and initialize these to make the particles work properly
+	float RandomAngle = RANDOM_ANGLE;
+	float RandomScale = (float)((rand() / (float)RAND_MAX));
+	float RandomScale2 = (float)((rand() / (float)RAND_MAX));
+	Vector2D ParticlePosition;
+	Vector2D InitialVelocity;
+	PhysicsObject *ParticlePhysics;
+	Animation *ParticleAnimation;
+	Sprite *ParticleSprite;
+	GameObject *NewParticle;
+
+	//spawn particles at the position of the PS.
+	ParticlePosition.x = pPS_Inst->PS_Burst->StartPosX;
+	ParticlePosition.y = pPS_Inst->PS_Burst->StartPosY;
+	//launch particles in a random direction at a constant speed
+	InitialVelocity.x = (float)((0.1 + RandomScale * 0.05) * cos(RandomAngle));
+	InitialVelocity.y = (float)((0.1 + RandomScale * 0.05) * sin(RandomAngle));
+
+	//NECESSARY SET-UP STUFF
+	ParticlePhysics = PhysicsCreateObject(ParticlePosition, 1.0f);
+	ParticlePhysics->velocity = InitialVelocity;
+	ParticlePhysics->active = 0;
+	ParticleAnimation = GCreateAnimation(1, GCreateTexture("WhiteBox.png"), GCreateMesh(10 + 5 * RandomScale2, 10 + 5 * RandomScale2, 1, 1), 1);
+	ParticleSprite = GCreateSprite(ParticlePosition.x, ParticlePosition.y, ParticleAnimation, 0.0f);
+	ParticleSprite->specialFX = Particle_Special_FX_PlayerDamage;
+	NewParticle = GameObjectCreate(ParticlePhysics, ParticleSprite, NULL, entity_particle);
+	NewParticle->simulate = Particle_Simulate_PlayerDamage;
+
+	NewParticle->miscData = malloc(sizeof(ParticleData));
+	((ParticleData *)(NewParticle->miscData))->ParticleID = i;
+	for (j = 0; j < sizeof(pPlayerDamage) / sizeof(*pPlayerDamage); j++)
+	{
+		if (pPS_Inst == pPlayerDamage[j])
+		{
+			((ParticleData *)(NewParticle->miscData))->PS_ID = j;
+			break;
+		}
+	}
+
+	ParticleSprite->owner = NewParticle;
+	pPS_Inst->PS_Burst->Particle[i] = NewParticle;
+}
+
+/*!
+\brief
+particle update behavior for Hit Splash 2
+*/
+void Particle_Simulate_PlayerDamage(void)
+{
+
+}
+
+/*!
+\brief
+particle special visual effect for Hit Splash 2
+*/
+void Particle_Special_FX_PlayerDamage(Sprite *Owner)
+{
+	Owner->owner->physics->velocity.x  -= 0.2f * pPlayerDamage[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pPlayerDamage[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime;
+	Owner->owner->physics->velocity.y  -= 0.2f * pPlayerDamage[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pPlayerDamage[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime;
+
+	if (((ParticleData *)(Owner->owner->miscData))->ParticleID < 5)
+	{
+		AEGfxSetTintColor(0.0f, 0.0f, 0.0f, 0.2f + 0.8f * pPlayerDamage[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pPlayerDamage[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime);
+	}
+	else
+	{
+		AEGfxSetTintColor(1.0f, 0.0f, 0.0f, 0.2f + 0.8f * pPlayerDamage[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pPlayerDamage[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime);
+	}
+}
+
+/*!
+\brief
+creates a particle for a Hit Splash 2
+\param i
+int for the ID of the particle.
+\param pPS_Inst
+PS_Instance * for the owner continuous PS.
+*/
+void Particle_Create_HitSplash2(int i, PS_Instance *pPS_Inst)
+{
+	int j;
+	//you need to create and initialize these to make the particles work properly
+	float RandomAngle = RANDOM_ANGLE;
+	float RandomAngle2 = RANDOM_ANGLE;
+	float RandomScale = (float)((rand() / (float)RAND_MAX));
+	float RandomScale2 = (float)((rand() / (float)RAND_MAX));
+	Vector2D ParticlePosition;
+	Vector2D InitialVelocity;
+	PhysicsObject *ParticlePhysics;
+	Animation *ParticleAnimation;
+	Sprite *ParticleSprite;
+	GameObject *NewParticle;
+
+	ImpactAngle = (float)acos(VectorX / sqrt(VectorX * VectorX + VectorY * VectorY));
+	if (asin(VectorX / sqrt(VectorX * VectorX + VectorY * VectorY)) < 0)
+	{
+		ImpactAngle = -ImpactAngle;
+	}
+
+	//spawn particles at the position of the PS.
+	ParticlePosition.x = pPS_Inst->PS_Burst->StartPosX;
+	ParticlePosition.y = pPS_Inst->PS_Burst->StartPosY;
+	//launch particles in a random direction at a constant speed
+	InitialVelocity.x = (float)((0.2 + RandomScale * 0.4) * cos(ImpactAngle + (RandomAngle - PI) / 8));
+	InitialVelocity.y = (float)((0.2 + RandomScale * 0.4) * sin(ImpactAngle + (RandomAngle - PI) / 8));
+
+	//NECESSARY SET-UP STUFF
+	ParticlePhysics = PhysicsCreateObject(ParticlePosition, 1.0f);
+	ParticlePhysics->velocity = InitialVelocity;
+	ParticlePhysics->active = 0;
+	ParticlePhysics->angle = RandomAngle2;
+	ParticleAnimation = GCreateAnimation(1, GCreateTexture("WhiteBox.png"), GCreateMesh(5 + 10 * RandomScale2, 5 + 10 * RandomScale2, 1, 1), 1);
+	ParticleSprite = GCreateSprite(ParticlePosition.x, ParticlePosition.y, ParticleAnimation, 0.0f);
+	ParticleSprite->specialFX = Particle_Special_FX_HitSplash2;
+	NewParticle = GameObjectCreate(ParticlePhysics, ParticleSprite, NULL, entity_particle);
+	NewParticle->simulate = Particle_Simulate_HitSplash2;
+
+	NewParticle->miscData = malloc(sizeof(ParticleData));
+	((ParticleData *)(NewParticle->miscData))->ParticleID = i;
+	for (j = 0; j < sizeof(pHitSplash2) / sizeof(*pHitSplash2); j++)
+	{
+		if (pPS_Inst == pHitSplash2[j])
+		{
+			((ParticleData *)(NewParticle->miscData))->PS_ID = j;
+			break;
+		}
+	}
+
+	ParticleSprite->owner = NewParticle;
+	pPS_Inst->PS_Burst->Particle[i] = NewParticle;
+}
+
+/*!
+\brief
+particle update behavior for Hit Splash 2
+*/
+void Particle_Simulate_HitSplash2(void)
+{
+
+}
+
+/*!
+\brief
+particle special visual effect for Hit Splash 2
+*/
+void Particle_Special_FX_HitSplash2(Sprite *Owner)
+{
+	if (((ParticleData *)(Owner->owner->miscData))->ParticleID < 3)
+	{
+		if (pHitSplash2[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer > 0.15f)
+		{
+			AEGfxSetTintColor(0.1f, 0.2f, 0.7f, 1.0f);
+		}
+		else
+		{
+			AEGfxSetTintColor(0.1f, 0.2f, 0.7f, 0.2f + 0.8f * pHitSplash2[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pHitSplash2[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime);
+		}
+	}
+	else if (((ParticleData *)(Owner->owner->miscData))->ParticleID < 6)
+	{
+		if (pHitSplash2[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer > 0.15f)
+		{
+			AEGfxSetTintColor(0.0f, 0.7f, 0.1f, 1.0f);
+		}
+		else
+		{
+			AEGfxSetTintColor(0.0f, 0.7f, 0.1f, 0.2f + 0.8f * pHitSplash2[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pHitSplash2[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime);
+		}
+	}
+	else
+	{
+		if (pHitSplash2[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer > 0.15f)
+		{
+			AEGfxSetTintColor(0.9f, 0.05f, 0.0f, 1.0f);
+		}
+		else
+		{
+			AEGfxSetTintColor(0.9f, 0.05f, 0.0f, 0.2f + 0.8f * pHitSplash2[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pHitSplash2[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime);
+		}
+	}
 }
 
 /*!
@@ -382,7 +643,7 @@ void Particle_Create_DodgeSmoke2(int i, PS_Instance *pPS_Inst)
 	ParticlePhysics->active = 0;
 	ParticleAnimation = GCreateAnimation(1, GCreateTexture("WhiteBox.png"), GCreateMesh(20, 20, 1, 1), 1);
 	ParticleSprite = GCreateSprite(ParticlePosition.x, ParticlePosition.y, ParticleAnimation, 0.0f);
-	ParticleSprite->specialFX = Particle_Special_FX_DodgeSmoke;
+	ParticleSprite->specialFX = Particle_Special_FX_DodgeSmoke2;
 	ParticleSprite->offset.y = 100.0f * RandomScale3;
 
 	/*
@@ -411,12 +672,12 @@ void Particle_Create_DodgeSmoke2(int i, PS_Instance *pPS_Inst)
 	*/
 
 	NewParticle = GameObjectCreate(ParticlePhysics, ParticleSprite, NULL, entity_particle);
-	NewParticle->simulate = Particle_Simulate_DodgeSmoke;
+	NewParticle->simulate = Particle_Simulate_DodgeSmoke2;
 	NewParticle->miscData = malloc(sizeof(ParticleData));
 	((ParticleData *)(NewParticle->miscData))->ParticleID = i;
-	for (j = 0; j < sizeof(pDodgeSmoke) / sizeof(*pDodgeSmoke); j++)
+	for (j = 0; j < sizeof(pDodgeSmoke2) / sizeof(*pDodgeSmoke2); j++)
 	{
-		if (pPS_Inst == pDodgeSmoke[j])
+		if (pPS_Inst == pDodgeSmoke2[j])
 		{
 			((ParticleData *)(NewParticle->miscData))->PS_ID = j;
 			break;
@@ -441,13 +702,13 @@ particle special visual effect for Dodge Smoke
 /*/
 void Particle_Special_FX_DodgeSmoke2(Sprite *Owner)
 {
-	if (pDodgeSmoke[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer > 1.0f)
+	if (pDodgeSmoke2[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer > 1.0f)
 	{
-		AEGfxSetTintColor(0.9f, 0.7f, 1.0f, 0.5f);
+		AEGfxSetTintColor(0.1f, 0.0f, 0.2f, 0.6f);
 	}
 	else
 	{
-		AEGfxSetTintColor(0.9f, 0.7f, 1.0f, 1.0f * pDodgeSmoke[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pDodgeSmoke[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime);
+		AEGfxSetTintColor(0.1f, 0.0f, 0.2f, 0.1f + pDodgeSmoke2[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pDodgeSmoke2[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime);
 	}
 }
 
@@ -548,11 +809,11 @@ void Particle_Special_FX_DodgeSmoke(Sprite *Owner)
 {
 	if (pDodgeSmoke[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer > 1.0f)
 	{
-		AEGfxSetTintColor(0.7f, 0.7f, 0.7f, 0.7f);
+		AEGfxSetTintColor(0.9f, 0.9f, 0.9f, 0.5f);
 	}
 	else
 	{
-		AEGfxSetTintColor(0.7f, 0.7f, 0.7f, 0.2f + 0.5f * pDodgeSmoke[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pDodgeSmoke[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime);
+		AEGfxSetTintColor(0.9f, 0.9f, 0.9f, 0.3f + 0.4f * pDodgeSmoke[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->DeathTimer / pDodgeSmoke[((ParticleData *)(Owner->owner->miscData))->PS_ID]->PS_Burst->LifeTime);
 	}
 }
 
