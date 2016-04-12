@@ -81,11 +81,19 @@ void LevelLoad(int _level)
       Audio_PlayMusicStream("music_sample4.ogg", 1);
       Audio_PauseMusicStream("EPOCH_main_theme.ogg");
     }
+    if (level == 3)
+    {
+      Audio_PlayMusicStream("EPOCH_theme_final_level.ogg", 1);
+      Audio_PauseMusicStream("music_sample4.ogg");
+    }
     break;
   case level_mainMenu:
     MainMenuInit();
     Background_Init(BACKGROUND_BH_SWIRLY, BACKGROUND_MD_BLOCKS);
     ColorFilter_Set(1.f, 1.f, 1.f);
+    Audio_PauseMusicStream("music_sample4.ogg");
+    Audio_PauseMusicStream("EPOCH_theme_final_level.ogg");
+    Audio_PauseMusicStream("death_tunes.ogg");
     if (!(currentLevel == level_splashScreen || currentLevel == level_creditScreen))
       Audio_PlayMusicStream("EPOCH_main_theme.ogg", 1);
     //Audio_PauseMusicStream("music_sample3.ogg");
@@ -106,7 +114,11 @@ void LevelLoad(int _level)
     level = 0;
     //Audio_PauseMusicStream("music_sample2A.ogg");
     Audio_PauseMusicStream("music_sample4.ogg");
+    Audio_PauseMusicStream("EPOCH_main_theme.ogg");
+    Audio_PauseMusicStream("EPOCH_theme_final_level.ogg");
     //Audio_PauseMusicStream("EPOCH_theme_funky.ogg");
+    Audio_PlayMusicStream("death_tunes.ogg", 1);
+    Audio_PlaySoundSample("Creepy_Voice.ogg", 0);
     ColorFilter_Set(1.f, 1.f, 1.f);
     break;
   case level_splashScreen:
@@ -120,6 +132,7 @@ void LevelLoad(int _level)
     Background_Init(BACKGROUND_BH_SWIRLY, BACKGROUND_MD_ENERGY);
     level = 0;
     Audio_PauseMusicStream("music_sample4.ogg");
+    Audio_PauseMusicStream("EPOCH_theme_final_level.ogg");
     //Audio_PauseMusicStream("EPOCH_theme_funky.ogg");
     ColorFilter_Set(1.f, 1.f, 1.f);
     break;
