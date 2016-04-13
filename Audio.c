@@ -17,7 +17,7 @@ ChangeLog
                 Cleaned up code, removed deprecated code.
   -3/8/16     : Added automatic initialization of sound assets
 
-
+© Copyright 1996 - 2016, DigiPen Institute of Technology(USA).All rights reserved.
 **************************************************************************************************/
 
 #include "Audio.h"
