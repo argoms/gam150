@@ -2,11 +2,11 @@
 /*
 typedef struct
 {
-  int kills;                  // enemies killed
-  int deaths;                 // times died
-  int time;                   // in seconds
-  int rooms_cleared;          // #rooms cleared
-  int highest_level_reached;  // highest level reached
+int kills;                  // enemies killed
+int deaths;                 // times died
+int time;                   // in seconds
+int rooms_cleared;          // #rooms cleared
+int highest_level_reached;  // highest level reached
 }statistics;
 */
 
@@ -14,7 +14,7 @@ typedef struct
 statistics* InitializePlayerStats()
 {
   statistics* stats = (statistics*)malloc(sizeof(statistics));  // malloc the staticsitc struct
-  // set everything to zero
+                                                                // set everything to zero
   stats->kills = 0;
   stats->deaths = 0;
   stats->time = 0;
@@ -72,7 +72,7 @@ void IncrementRoomsCleared(statistics* stats)
 
 void Incrementhighest_level_reached(statistics* stats)
 {
-  if(stats)
+  if (stats)
   {
     stats->highest_level_reached++;
   }
@@ -167,7 +167,7 @@ float GetMinutes(statistics* stats)
 
 float ResetStats(statistics* stats)
 {
-  if(stats)
+  if (stats)
   {
     stats->kills = 0;
     stats->deaths = 0;
@@ -179,6 +179,38 @@ float ResetStats(statistics* stats)
   {
     return;
   }
+}
+
+void PrintStats(statistics* stats)
+{
+  if (stats == NULL)
+  {
+    return;
+  }
+
+  TextInit();
+  // window size vars
+  float winMaxX;
+  float winMaxY;
+  float winMinX;
+  float winMinY;
+
+  // get the window values
+  winMaxX = AEGfxGetWinMaxX();
+  winMaxY = AEGfxGetWinMaxY();
+  winMinX = AEGfxGetWinMinX();
+  winMinY = AEGfxGetWinMinY();
+
+  // for my sanity
+  float screenWidth = winMaxX - winMinX;
+  float screenHeight = winMaxY - winMinY;
+
+  TextString* stat_print_data;
+
+  stat_print_data = TextCreateHUDString("Level 1", 0, 0);
+  TextStringSetTint(stat_print_data, GTint(1, 1, 1, 1));
+
+
 }
 
 void FreeStats(statistics* stats)

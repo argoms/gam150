@@ -6,6 +6,9 @@
 #include "Button.h"
 #include "ControlScreen.h"
 
+//test stats
+
+
 
 void ControlScreenInit()
 {
@@ -17,6 +20,7 @@ void ControlScreenInit()
   //TextCreateString("TO MAIN MENU", -300, -100);
 
 
+  
   //TARRANT CODE START
   //-----------------Tarant text------------------------------
   //text string
