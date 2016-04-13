@@ -553,6 +553,32 @@ void MainMenuInit()
     button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
   }
   //level select buttons end---------------------------------------------------
+  //quit button
+
+  if (button_flag_exit)
+  {
+    button_type = QUIT;          /* type of button  */
+    buttonx = 200;                          /* x position      */
+    buttony = -200;                            /* y position      */
+    meshx = 256.0f;                          /* mesh x          */
+                                             //meshx = 290.0f;                          /* mesh x          */
+    meshy = 64.0f;                           /* mesh y          */
+    buttonsize = 1.0f;                       /* size            */
+    button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
+                                                  //text_offset = 90.0f;
+    text_offset = 90.0f;
+    main_menu_text = TextCreateHUDString("Quit", buttonx - text_offset, buttony);
+    TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
+    button_texture = GCreateTexture("animations/buttons/button_texture.png");
+    anim_button = GCreateAnimation(1,
+      button_texture,
+      button_mesh,
+      1);
+
+    button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
+    button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+  }
+  //quit button
   //END BUTTONS-------------------------------------------------------------
   //END TARRANT CODE
 
