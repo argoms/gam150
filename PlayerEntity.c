@@ -7,7 +7,6 @@ Project (working title): Epoch
 Handles player-related functionality:
   -controls (movement/attacking)
   -animation
-  -health display
 
 All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
@@ -40,7 +39,7 @@ static double attackCooldown; /**< timer before player can attack again*/
 
 static double attackCooldownLength; /**< defined minimum time between attacks (attackCooldown is the timer)*/
 
-static Animation* tracerAnimation;
+//static Animation* tracerAnimation;
 
 signed long mouseX;
 signed long mouseY;
@@ -111,10 +110,11 @@ void PlayerInit()
   attackCooldown = 0;
   attackCooldownLength = 0.5f;
   attackDamage = 1;
+  /*
   tracerAnimation = GCreateAnimation(1,
     GCreateTexture("isotilePlaceholder1.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
-    1);
+    1);*/
 
   //set up player movement vars:
   playerMaxSpeed = 1;
@@ -160,23 +160,28 @@ void PlayerSimulate()
     return;
   }
 
+  //move camera to player if player not dead
   if (!isDead)
   {
     
     AEGfxSetCamPosition(player->sprite->x, player->sprite->y);
   }
 
-  UpdatePlayerHealthHUD();
-  UpdateSmokePosition(player->physics->position);
-  attackCooldown -= frameTime;
+  
   //printf("%f \n", frameTime);
 
   if (isDead)
   {
     return;
   }
-  PlayerInput();
-  PlayerAnimations();
+
+  //update player stuff:
+  UpdatePlayerHealthHUD();
+  UpdateSmokePosition(player->physics->position);
+  attackCooldown -= frameTime;
+  PlayerInput(); 
+  PlayerAnimations(); 
+
   //8
   
   //update the i frames
@@ -230,15 +235,17 @@ void PlayerSimulate()
     playerDrag = 0.7f;
   }
   */
-  //-------Tarrants code no touchie----------------------
+  //-------Tarrants code ends here no touchie----------------------
 
 
   //cheat codes:
+  //press 1 for 100 health
   if (AEInputCheckTriggered('1'))
   {
     player->entity->health = 100;
   }
 
+  //press 2 for super speed +damage
   if (AEInputCheckTriggered('2'))
   {
     if (playerAccel < 0.3)
@@ -262,20 +269,6 @@ void PlayerSimulate()
       attackDamage = 1;
     }
   }
-
-
-  
-  // cheat to restore hp, Tarrants code
-  if (AEInputCheckTriggered('M'))
-  {
-    SetSmoke(particle_inactive);
-    printf("restored hp\n");
-  }
-  if (AEInputCheckTriggered('N'))
-  {
-    SetSmoke(particle_active);
-    printf("restored hp\n");
-  }
   
  
 }
@@ -285,7 +278,6 @@ void PlayerSimulate()
 */
 void PlayerInput()
 {
-  //printf("frame %i \n", playerSprite->frame);
   //attacking:
   if (attackCooldown < 0 && AEInputCheckCurr(1))
   {
@@ -295,7 +287,9 @@ void PlayerInput()
   //player movement:
   if (!(playerAction & PLAYER_SWORD))
   {
+    //set player's animation speed:
     playerSprite->frameDelay = 3;
+
     //get movement vector:
     Vector2D input = Vec2((float)(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41)),
       ((float)(AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53)) / 2));
@@ -304,6 +298,7 @@ void PlayerInput()
     AEInputGetCursorPosition(&mouseX, &mouseY);
 
     
+    //play footstep sounds if velocity isn't 0:
     if (input.x != 0 || input.y != 0)
     {
       stepSoundTimer -= (float)frameTime;
@@ -334,10 +329,10 @@ void PlayerInput()
 
     //update positions
     //transform vector to use world (iso) coordinates while visually appearing to be straight orthogonal
-    player->physics->velocity.x += IsoScreenToWorld(&input).x * playerAccel; //= IsoScreenToWorld(&input);
+    player->physics->velocity.x += IsoScreenToWorld(&input).x * playerAccel; 
     player->physics->velocity.y += IsoScreenToWorld(&input).y * playerAccel;
   }
-  else if(playerAction & PLAYER_SWORD)
+  else if(playerAction & PLAYER_SWORD) //if currently attacking, movespeed is reduced
   {
     Vector2D input = Vec2((float)(AEInputCheckCurr(0x44) - AEInputCheckCurr(0x41)),
       ((float)(AEInputCheckCurr(0x57) - AEInputCheckCurr(0x53)) / 2));
@@ -347,8 +342,8 @@ void PlayerInput()
 
 
     playerSprite->frameDelay = 1;
-    //printf("AAA");
-    //stop animation after it's done
+
+    //stop animation after it's done and set state back to idle
     if (playerSprite->frame == 12)
     {
       playerAction -= PLAYER_SWORD;
@@ -356,17 +351,13 @@ void PlayerInput()
     }
   }
 
-  
+  //apply drag to player movement
   Vector2DScale(&(player->physics->velocity), &(player->physics->velocity), playerDrag);
-  
-  GSortSprite(playerSprite, player->physics->velocity.y); //NOTE: having to do this hints at some bugginess somewhere
-
-
 
 }
 
 /*!
-\brief internal, used to snap player to direction given by input vector
+\brief DEPRECATED internal, used to snap player to direction given by input vector
 
 \param _input Vector between player (center of screen) and mouse
 */
@@ -377,7 +368,6 @@ static void SnapVector(Vector2D* _input)
   float fortyFiveDegrees = 0.785398f;
   directionAngle = lroundf(directionAngle / fortyFiveDegrees) * fortyFiveDegrees;
   
-  //note: probably more efficient to switch
   //convert mouse angle into world angle (iso projection means x is twice as much as y)
   _input->x *= 2;
   Vector2DNormalize(_input, _input);
@@ -386,30 +376,8 @@ static void SnapVector(Vector2D* _input)
 
   //change player sprite direction:
   playerAction = playerAction & (~(PLAYER_LEFT + PLAYER_RIGHT + PLAYER_UP + PLAYER_DOWN));
-  printf("playeraction: %i", playerAction);
-  if (_input->x > EPSILON)
-  {
-    //playerAction += PLAYER_RIGHT;
-    //printf("ri");
-  }
-  if (_input->x < -EPSILON)
-  {
-    //playerAction += PLAYER_LEFT;
-   // printf("li");
-  }
-  if (_input->y > EPSILON)
-  {
-   // playerAction += PLAYER_UP;
-    //printf("ui");
-  }
-  if (_input->y < -EPSILON)
-  {
-   // playerAction += PLAYER_DOWN;
-    //printf("di");
-  }
-  
-  //printf("x: %f, y: %f |", _input->x, _input->y);
-  //printf("%f, AAA", directionAngle * (180 / 3.14159265358979));
+
+ // printf("playeraction: %i", playerAction);
 }
 
 /*!
@@ -417,7 +385,7 @@ static void SnapVector(Vector2D* _input)
 */
 static void PlayerAttack()
 {
-  //randomly pick sword sound
+  //randomly pick sword swing sound
   if (AERandFloat() < 0.5)
   {
     Audio_PlaySoundSample("SwordSwing1.ogg", 0);
@@ -426,32 +394,18 @@ static void PlayerAttack()
   {
     Audio_PlaySoundSample("SwordSwing2.ogg", 0);
   }
+
   //set up animation:
-  //playerAction = playerAction & (PLAYER_DOWN + PLAYER_UP + PLAYER_LEFT + PLAYER_RIGHT); //strip direction from current flags
   playerAction = PLAYER_SWORD;
   playerSprite->frame = 0;
 
   
 
-
+  //set player direction to look at mouse
   AEInputGetCursorPosition(&mouseX, &mouseY);
-
-  //HARD CODING MAGIC NUMBERS SPOOOOOKY
-  //these are half screen height/widths
-  /*
-  mouseX += -400;
-  mouseY += -300;
-  */
   mouseX += (long)((AEGfxGetWinMaxX() - AEGfxGetWinMinX()) / -2);
   mouseY += (long)((AEGfxGetWinMaxY() - AEGfxGetWinMinY()) / -2);
-  //printf("%f", (AEGfxGetWinMaxX() - AEGfxGetWinMinX()) / -2);
-  /***/
-
-  //printf("%i, %i|||", mouseX, mouseY);
-  //AEGfxConvertScreenCoordinatesToWorld(mouseX, mouseY, &(mousePos.x), &(mousePos.y));
   Vector2D mousePos = Vec2((float)mouseX, (float)mouseY * -1);
-  //SnapVector(&mousePos);
-
   mousePos = IsoScreenToWorld(&mousePos);
   Vector2DNormalize(&mousePos, &mousePos);
   playerDirection = mousePos;
@@ -461,34 +415,40 @@ static void PlayerAttack()
   //EntityApplyKnockback(player->entity, &mousePos);
 
   attackCooldown = attackCooldownLength;
+
+  //create attack collider (tracer) object:
   GameObject* tracer = GameObjectCreate(
     PhysicsCreateObject(Vec2(player->physics->position.x + mousePos.x, player->physics->position.y + mousePos.y), 1),
-    GCreateSprite(0, 40, tracerAnimation, 1),
+    GCreateSprite(0, 40, 0, 1),
     0,
     entity_friendlyProjectile);
   tracer->syncSpritePhysics = 1;
   tracer->simulate = &TracerSimulate;
   tracer->physics->onCollision = &TracerFriendlyProjectileCollision;
 
+  //push player in the direction that they attacked:
   Vector2DScale(&mousePos, &mousePos, 0.25);
   EntityApplyKnockback(player->entity, &mousePos);
-  //printf("M1\n");
 }
+
 /*!
-\brief simulates attack tracers, at the moment they just die immediately
+\brief Removes attack colliders after 1 game loop
 */
 void TracerSimulate(GameObject* _self)
 {
-  //printf("%p || %p \n", &_self, &player);
   GameObjectDestroy(&_self);
 }
 
+/*!
+\brief Collision handler for player's attacks
+*/
 void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _otherObject)
 {
-  //printf("%i", _otherObject->type);
-
+  
+  //if other object is ane nemy
   if (_otherObject && _otherObject->type == entity_enemy)
   {
+    //randomly play one of two sword clash sounds:
     if (AERandFloat() > 0.5f)
     {
       Audio_PlaySoundSample("SwordClash1.ogg", 0);
@@ -497,10 +457,23 @@ void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _oth
     {
       Audio_PlaySoundSample("SwordClash2.ogg", 0);
     }
-    printf("YOU HIT ENEMY FOR %i DAMAGE\n", attackDamage);
-    EntityTakeDamage(&_otherObject->entity, attackDamage);
+
+    //printf("YOU HIT ENEMY FOR %i DAMAGE\n", attackDamage);
+
+
+    //actually doing damage:
+    if (Vector2DSquareLength(&player->physics->velocity) > 0.045)
+    {
+      //more damage if dashing while attacking
+      EntityTakeDamage(&_otherObject->entity, attackDamage * 3);
+    }
+    else
+    {
+      EntityTakeDamage(&_otherObject->entity, attackDamage);
+    }
   }
 
+  //destroy own collider after hitting something:
   if (_otherObject->entity && _otherObject->entity->health <= 0)
   {
     GameObjectDestroy(&_thisObject);
@@ -514,15 +487,15 @@ void PlayerAnimations()
 {
   switch (playerAction)
   {
-    //PLAYER WALKING:
   case PLAYER_WALK:
-    playerDirection = (player->physics->velocity);
+    playerDirection = (player->physics->velocity); //running also updates player's current direction
     playerSprite->animation = AnimationPlay(playerWalkAnims, &(player->physics->velocity));
     break;
+
+
   case PLAYER_IDLE:
     playerSprite->animation = AnimationPlay(playerIdleAnims, &playerDirection);
     break;
-    //PLAYER SWORD:
 
   case PLAYER_SWORD:
     playerSprite->animation = AnimationPlay(playerSwordAnims, &playerDirection);
@@ -531,6 +504,32 @@ void PlayerAnimations()
   playerSprite->x = player->sprite->x;
   playerSprite->y = player->sprite->y;
 }
+
+/*!
+\brief called when player dies
+*/
+void OnPlayerKilled(void)
+{
+  //do nothing if already dead
+  if (isDead)
+  {
+    return;
+  }
+
+  //turn off player smoke effect
+  SetSmoke(particle_inactive);
+
+
+  printf("\n***\n***\nYOU DIED SO NOW YOU'RE IN MAIN MENU WOOO\n***\n***\n");
+  player->sprite->tint.alpha = 0;
+  Audio_PlaySoundSample("death.ogg", 0);
+  //PhysicsRemoveObject(&player->physics);
+  DeathTimerStart(player->physics->position);
+  isDead = 1;
+  //LevelSetNext(level_deathScreen);
+}
+
+//TARRANT'S CODE PAST THIS POINT
 
 void IncrementPlayerDrag()
 {
@@ -577,22 +576,3 @@ void RestoreHealth(GameObject* obj)
   }
 }
 
-/*!
-\brief called when player dies
-*/
-void OnPlayerKilled(void)
-{
-  //do nothing if already dead
-  if (isDead)
-  {
-    return;
-  }
-
-  printf("\n***\n***\nYOU DIED SO NOW YOU'RE IN MAIN MENU WOOO\n***\n***\n");
-  player->sprite->tint.alpha = 0;
-  Audio_PlaySoundSample("death.ogg", 0);
-  //PhysicsRemoveObject(&player->physics);
-  DeathTimerStart(player->physics->position);
-  isDead = 1;
-   //LevelSetNext(level_deathScreen);
-}

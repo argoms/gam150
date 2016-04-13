@@ -21,6 +21,8 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 int ChooseEnemyType();
 
 static int EnemiesPerRoom = 5;
+
+extern int level; //current game level
 /*
 struct MapRoomInfo
 {
@@ -123,6 +125,7 @@ void MapRoomBehavior_SmallRoom(MapRoom* roomData)
   Vector2D cursor = Vec2(roomData->position.x, roomData->position.y);
   roomData->numEnemies = 0;
 
+
   //create a number of enemies according to the per room variable
   for (int i = 0; i < EnemiesPerRoom / 2; i++)
   {
@@ -155,18 +158,66 @@ void MapRoomBehavior_SmallRoom(MapRoom* roomData)
 */
 int ChooseEnemyType()
 {
+
   float randomNumber = RandFloat();
 
-  if (randomNumber < 0.33f)
+  switch (level)
   {
+  //LEVEL 1
+    //always spiderwoofs
+  case 1:
     return ENEMY_TYPE_MELEE;
+    break;
+  
+  //LEVEL 2
+    //25% chance of big guys
+  case 2:
+    if (randomNumber > 0.25f)
+    {
+      return ENEMY_TYPE_MELEE;
+    }
+    else
+    {
+      return ENEMY_TYPE_MELEE_BIG;
+    }
+    break;
+
+  //LEVEL 3
+    //50% chance of spiderwoof, 25% chance of charger or big guy
+  case 3:
+    if (randomNumber > 0.5f)
+    {
+      randomNumber -= 0.5f;
+      if (randomNumber > 0.25f)
+      {
+        return ENEMY_TYPE_MELEE_BIG;
+      }
+      else
+      {
+        return ENEMY_TYPE_MELEE_CHARGE;
+      }
+    }
+    else
+    {
+      return ENEMY_TYPE_MELEE;
+    }
+    break;
+
+  //LEVEL 4:
+    //even split between 3 enemies
+  case 4:
+    if (randomNumber < 0.33f)
+    {
+      return ENEMY_TYPE_MELEE;
+    }
+    else if (randomNumber >= .33f && randomNumber <= .66f)
+    {
+      return ENEMY_TYPE_MELEE_BIG;
+    }
+    else
+    {
+      return ENEMY_TYPE_MELEE_CHARGE;
+    }
   }
-  else if (randomNumber >= .33f && randomNumber <= .66f)
-  {
-    return ENEMY_TYPE_MELEE_BIG;
-  }
-  else
-  {
-    return ENEMY_TYPE_MELEE_CHARGE;
-  }
+
 }
