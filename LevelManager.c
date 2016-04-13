@@ -263,8 +263,8 @@ void MainMenuInit()
 
 
   // Texture 1: From file
-  pTex1 = GCreateTexture("spiderwolfbrighter.png");
-  pTex2 = GCreateTexture("dffont.png");
+  pTex1 = GCreateTexture("animations/spiderwolfbrighter.png");
+  pTex2 = GCreateTexture("animations/dffont.png");
 
   AEGfxSetBackgroundColor(1.0f, 1.0f, 1.0f);
   AEGfxSetBlendMode(AE_GFX_BM_BLEND);

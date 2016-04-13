@@ -60,7 +60,7 @@ GameObject* DoorCreateDoorAt(Vector2D position)
 {
   //load door animation:
   Animation* anim2 = GCreateAnimation(1,
-    GCreateTexture("isoTileGreen.png"),
+    GCreateTexture("animations/isoTileGreen.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
     1);
 

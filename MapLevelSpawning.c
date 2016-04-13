@@ -51,7 +51,7 @@ void GenerateMapObjects()
   int mapHeight = gameMap->mapHeight;
 
   Animation* tileAnim = GCreateAnimation(1,
-    GCreateTexture("isotile.png"),
+    GCreateTexture("animations/isotile.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
     1);
   tileAnim_path = GCreateAnimation(1,

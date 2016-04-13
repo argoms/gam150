@@ -206,7 +206,7 @@ GameObject* EnemySpawn(float x, float y, int enemyType, GameObject* player)
   EntityInit(&enemyEntity);
 
   Animation* enemyAnimation = GCreateAnimation(1,
-    GCreateTexture("isotilePlaceholder1.png"),
+    GCreateTexture("animations/isotilePlaceholder1.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
     1);
   GameObject* newEnemy = EnemyCreate(PhysicsCreateObject(Vec2(x, y), size), GCreateSprite(0, 40, enemyAnimation, 1), enemyEntity, entity_enemy, enemyType,
@@ -240,7 +240,7 @@ void EnemyInitialize(GameObject* _thisObject)
 
   /*Melee attack visual effect*/
   tracerAnimation = GCreateAnimation(1,
-    GCreateTexture("isotilePlaceholder1.png"),
+    GCreateTexture("animations/isotilePlaceholder1.png"),
     GCreateMesh(128.f, 64.f, 10, 1),
     1);
 

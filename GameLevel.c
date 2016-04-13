@@ -109,17 +109,17 @@ void GameLevelInit(void)
 
   //load tile placeholder sprite:
   Animation* anim = GCreateAnimation(1, 
-                  GCreateTexture("isotilePlaceholder1.png"),
+                  GCreateTexture("animations/isotilePlaceholder1.png"),
                   GCreateMesh(128.f, 64.f, 1, 1),
                   1);
 
   Animation* anim2 = GCreateAnimation(1,
-    GCreateTexture("isoTileGreen.png"),
+    GCreateTexture("animations/isoTileGreen.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
     1);
 
   Animation* anim3 = GCreateAnimation(1,
-    GCreateTexture("isoTileRed.png"),
+    GCreateTexture("animations/isoTileRed.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
     1);
   

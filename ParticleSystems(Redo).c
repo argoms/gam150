@@ -174,7 +174,7 @@ void Particle_Create_HealthGather(int i, PS_Instance *pPS_Inst)
 	ParticlePhysics = PhysicsCreateObject(ParticlePosition, 1.0f);
 	ParticlePhysics->velocity = InitialVelocity;
 	ParticlePhysics->active = 0;
-	ParticleAnimation = GCreateAnimation(1, GCreateTexture("WhiteBox.png"), GCreateMesh(10, 10, 1, 1), 1);
+	ParticleAnimation = GCreateAnimation(1, GCreateTexture("animations/WhiteBox.png"), GCreateMesh(10, 10, 1, 1), 1);
 	ParticleSprite = GCreateSprite(ParticlePosition.x, ParticlePosition.y, ParticleAnimation, 0.0f);
 	ParticleSprite->specialFX = Particle_Special_FX_HitSplash;
 	NewParticle = GameObjectCreate(ParticlePhysics, ParticleSprite, NULL, entity_particle);
@@ -1280,7 +1280,7 @@ void Default_Particle_Create_Continuous(int i, PS_Instance *pPS_Inst)
 	ParticlePhysics = PhysicsCreateObject(ParticlePosition, 1.0f);
 	ParticlePhysics->velocity = InitialVelocity;
 	ParticlePhysics->active = 0;
-	ParticleAnimation = GCreateAnimation(1, GCreateTexture("isotilePlaceholder1.png"), GCreateMesh(10, 10, 1, 1), 1);
+	ParticleAnimation = GCreateAnimation(1, GCreateTexture("animations/isotilePlaceholder1.png"), GCreateMesh(10, 10, 1, 1), 1);
 	ParticleSprite = GCreateSprite(ParticlePosition.x, ParticlePosition.y, ParticleAnimation, 0.0f);
 	NewParticle = GameObjectCreate(ParticlePhysics, ParticleSprite, NULL, 5);
 	NewParticle->simulate = Default_Particle_Simulate;
@@ -1317,7 +1317,7 @@ void Default_Particle_Create_Burst(int i, PS_Instance *pPS_Inst)
 	ParticlePhysics = PhysicsCreateObject(ParticlePosition, 1.0f);
 	ParticlePhysics->velocity = InitialVelocity;
 	ParticlePhysics->active = 0;
-	ParticleAnimation = GCreateAnimation(1, GCreateTexture("isotile.png"), GCreateMesh(10, 10, 1, 1), 1);
+	ParticleAnimation = GCreateAnimation(1, GCreateTexture("animations/isotile.png"), GCreateMesh(10, 10, 1, 1), 1);
 	ParticleSprite = GCreateSprite(ParticlePosition.x, ParticlePosition.y, ParticleAnimation, 0.0f);
 	ParticleSprite->specialFX = Default_Particle_Special_FX_Burst;
 	NewParticle = GameObjectCreate(ParticlePhysics, ParticleSprite, NULL, entity_particle);
