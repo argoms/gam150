@@ -145,7 +145,7 @@ void MapRoomBehavior_SmallRoom(MapRoom* roomData)
       newEnemy = EnemySpawn(cursor.x, cursor.y, ChooseEnemyType(), GetPlayerObject());
       newEnemy->parent = roomData->parent;
       CreateEnemySpawnEffect(cursor, 16);
-      AddEnemyHealthBar(newEnemy, Vec2(0, 100));
+      AddEnemyHealthBar(newEnemy, Vec2(-100, 100));
     }
     else
     {
