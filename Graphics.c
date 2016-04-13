@@ -230,7 +230,7 @@ struct AEGfxVertexList* GCreateMesh(float _width, float _height, float _numFrame
 
 \return Returns a pointer to the newly loaded texture.
 */
-struct AEGfxTexture* GCreateTexture(char* _textureName)
+struct AEGfxTexture* GCreateTexture(const char* _textureName)
 {
   //load texture according to given name
   AEGfxTexture* temp;
