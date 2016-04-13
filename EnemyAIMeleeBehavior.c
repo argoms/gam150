@@ -101,7 +101,7 @@ void EnemyAI_Melee_AttackUpdate(GameObject* enemy, EnemyContainer* enemyContaine
 
   if (enemyContainer->attackWindup > 0)
   {
-    enemyContainer->attackWindup -= AEFrameRateControllerGetFrameTime();
+    enemyContainer->attackWindup -= (float)AEFrameRateControllerGetFrameTime();
   }
 
   if (enemyContainer->attackWindup <= 0)
@@ -138,7 +138,7 @@ void EnemyAI_Melee_CooldownUpdate(GameObject* enemy, EnemyContainer* enemyContai
   enemy->physics->velocity.y = 0;
   if (enemyContainer->attackCooldown > 0)
   {
-    enemyContainer->attackCooldown -= AEFrameRateControllerGetFrameTime();
+    enemyContainer->attackCooldown -= (float)AEFrameRateControllerGetFrameTime();
   }
 
   float distanceToPlayer = Vector2DSquareDistance(&(enemy->physics->position), &(enemy->target->physics->position));

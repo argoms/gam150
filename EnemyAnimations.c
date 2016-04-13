@@ -232,9 +232,9 @@ void EnemyAnimationInitialize()
   int spiderWolfWalkFrames   = 17;
   int spiderWolfAttackFrames = 18;
 
-  AEGfxVertexList* spiderWolfIdleMesh   = GCreateMesh(256.f, 256.f, spiderWolfIdleFrames, 1);
-  AEGfxVertexList* spiderWolfWalkMesh   = GCreateMesh(256.f, 256.f, spiderWolfWalkFrames, 1);
-  AEGfxVertexList* spiderWolfAttackMesh = GCreateMesh(256.f, 256.f, spiderWolfAttackFrames, 1);
+  AEGfxVertexList* spiderWolfIdleMesh   = GCreateMesh(256.f, 256.f, (float)spiderWolfIdleFrames, 1.f);
+  AEGfxVertexList* spiderWolfWalkMesh   = GCreateMesh(256.f, 256.f, (float)spiderWolfWalkFrames, 1.f);
+  AEGfxVertexList* spiderWolfAttackMesh = GCreateMesh(256.f, 256.f, (float)spiderWolfAttackFrames, 1.f);
 
   Animation* array_spiderWolfIdle[16];
   Animation* array_spiderWolfWalk[16];
@@ -247,10 +247,10 @@ void EnemyAnimationInitialize()
   int chargerTatoAttackFrames   = 19;
   int chargerTatoCoolDownFrames = 19;
 
-  AEGfxVertexList* chargerTatoIdleMesh     = GCreateMesh(516.f, 516.f, chargerTatoIdleFrames, 1);
-  AEGfxVertexList* chargerTatoWalkMesh     = GCreateMesh(516.f, 516.f, 1, chargerTatoWalkFrames);
-  AEGfxVertexList* chargerTatoAattackMesh  = GCreateMesh(516.f, 516.f, 1, chargerTatoAttackFrames);
-  AEGfxVertexList* chargerTatoCoolDownMesh = GCreateMesh(516.f, 516.f, 1, chargerTatoCoolDownFrames);
+  AEGfxVertexList* chargerTatoIdleMesh     = GCreateMesh(516.f, 516.f, (float)chargerTatoIdleFrames, 1.f);
+  AEGfxVertexList* chargerTatoWalkMesh     = GCreateMesh(516.f, 516.f, 1.f, (float)chargerTatoWalkFrames);
+  AEGfxVertexList* chargerTatoAattackMesh  = GCreateMesh(516.f, 516.f, 1.f, (float)chargerTatoAttackFrames);
+  AEGfxVertexList* chargerTatoCoolDownMesh = GCreateMesh(516.f, 516.f, 1.f, (float)chargerTatoCoolDownFrames);
 
   Animation* array_chargerTatoIdle[16];
   Animation* array_chargerTatoWalk[16];
@@ -263,9 +263,9 @@ void EnemyAnimationInitialize()
   int stabbyWalkFrames = 20;
   int stabbyAttackFrames = 31;
 
-  AEGfxVertexList* mesh_stabbyIdle   = GCreateMesh(516.f, 516.f, stabbyIdleFrames, 1);
-  AEGfxVertexList* mesh_stabbyWalk   = GCreateMesh(516.f, 516.f, stabbyWalkFrames, 1);
-  AEGfxVertexList* mesh_stabbyAttack = GCreateMesh(516.f, 516.f, 4, 8);
+  AEGfxVertexList* mesh_stabbyIdle   = GCreateMesh(516.f, 516.f, (float)stabbyIdleFrames, 1.f);
+  AEGfxVertexList* mesh_stabbyWalk   = GCreateMesh(516.f, 516.f, (float)stabbyWalkFrames, 1.f);
+  AEGfxVertexList* mesh_stabbyAttack = GCreateMesh(516.f, 516.f, 4.f, 8.f);
 
   Animation* array_stabbyIdle[16];
   Animation* array_stabbyWalk[16];
