@@ -16,8 +16,13 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Enemy.h"
 #include <stdio.h>
 #include "MyRandom.h"
+#include "EnemySpawnEffect.h"
 
 int ChooseEnemyType();
+
+static int EnemiesPerRoom = 5;
+
+extern int level; //current game level
 /*
 struct MapRoomInfo
 {
@@ -83,7 +88,8 @@ void MapRoomBehavior_BasicEnemies(MapRoom* roomData)
   Vector2D cursor = Vec2(roomData->position.x, roomData->position.y);
   roomData->numEnemies = 0;
 
-  for (int i = 0; i < 5; i++)
+  //create a number of enemies according to the per room variable
+  for (int i = 0; i < EnemiesPerRoom; i++)
   {
     //grab random positions within the room
     cursor.x += (((roomData->size - 4) / -2) + (RandFloat() * (roomData->size - 4)));
@@ -92,28 +98,23 @@ void MapRoomBehavior_BasicEnemies(MapRoom* roomData)
     //if far enough from the player, position is valid and spawn an enemy
     if (PhysicsDistSQ(cursor, GetPlayerObject()->physics->position) > 4)
     {
+      //initialize enemy:
       GameObject* newEnemy;
       roomData->numEnemies++;
       newEnemy = EnemySpawn(cursor.x, cursor.y, ChooseEnemyType(), GetPlayerObject());
       newEnemy->parent = roomData->parent;
+
+      //create particle effect
+      CreateEnemySpawnEffect(cursor, 16);
     } 
     else
     {
+      //otherwise, keep looping
       i--;
     }
     cursor = Vec2(roomData->position.x, roomData->position.y);
 
   }
-  /*
-  //printf("======= %f, %f======= ROOM POSITION\n", cursor.x, cursor.y);
-  roomData->numEnemies = 2;
-  GameObject* newEnemy;
-  newEnemy = EnemySpawn(cursor.x, cursor.y, ENEMY_TYPE_MELEE, GetPlayerObject());
-  newEnemy->parent = roomData->parent;
-  GameObject* yetAnotherEnemy;
-  yetAnotherEnemy = EnemySpawn(cursor.x, cursor.y, ENEMY_TYPE_MELEE_BIG, GetPlayerObject());
-  yetAnotherEnemy->parent = roomData->parent;
-  */
 }
 
 /*!
@@ -122,14 +123,34 @@ void MapRoomBehavior_BasicEnemies(MapRoom* roomData)
 void MapRoomBehavior_SmallRoom(MapRoom* roomData)
 {
   Vector2D cursor = Vec2(roomData->position.x, roomData->position.y);
-  //printf("======= %f, %f======= ROOM POSITION\n", cursor.x, cursor.y);
-  roomData->numEnemies = 2;
-  GameObject* newEnemy;
-  newEnemy = EnemySpawn(cursor.x, cursor.y, ENEMY_TYPE_MELEE, GetPlayerObject());
-  newEnemy->parent = roomData->parent;
-  GameObject* yetAnotherEnemy;
-  yetAnotherEnemy = EnemySpawn(cursor.x, cursor.y, ENEMY_TYPE_MELEE_BIG, GetPlayerObject());
-  yetAnotherEnemy->parent = roomData->parent;
+  roomData->numEnemies = 0;
+
+
+  //create a number of enemies according to the per room variable
+  for (int i = 0; i < EnemiesPerRoom / 2; i++)
+  {
+    //grab random positions within the room
+    cursor.x += (((roomData->size - 4) / -4) + (RandFloat() * 0.5 * (roomData->size - 4)));
+    cursor.y += (((roomData->size - 4) / -4) + (RandFloat() * 0.5 * (roomData->size - 4)));
+
+    //if far enough from the player, position is valid and spawn an enemy
+    if (PhysicsDistSQ(cursor, GetPlayerObject()->physics->position) > 4)
+    {
+      //initialize enemy:
+      GameObject* newEnemy;
+      roomData->numEnemies++;
+      newEnemy = EnemySpawn(cursor.x, cursor.y, ChooseEnemyType(), GetPlayerObject());
+      newEnemy->parent = roomData->parent;
+      CreateEnemySpawnEffect(cursor, 16);
+    }
+    else
+    {
+      //otherwise, keep looping
+      i--;
+    }
+    cursor = Vec2(roomData->position.x, roomData->position.y);
+
+  }
 }
 
 /*!
@@ -137,18 +158,66 @@ void MapRoomBehavior_SmallRoom(MapRoom* roomData)
 */
 int ChooseEnemyType()
 {
+
   float randomNumber = RandFloat();
 
-  if (randomNumber < 0.33f)
+  switch (level)
   {
+  //LEVEL 1
+    //always spiderwoofs
+  case 1:
     return ENEMY_TYPE_MELEE;
+    break;
+  
+  //LEVEL 2
+    //25% chance of big guys
+  case 2:
+    if (randomNumber > 0.25f)
+    {
+      return ENEMY_TYPE_MELEE;
+    }
+    else
+    {
+      return ENEMY_TYPE_MELEE_BIG;
+    }
+    break;
+
+  //LEVEL 3
+    //50% chance of spiderwoof, 25% chance of charger or big guy
+  case 3:
+    if (randomNumber > 0.5f)
+    {
+      randomNumber -= 0.5f;
+      if (randomNumber > 0.25f)
+      {
+        return ENEMY_TYPE_MELEE_BIG;
+      }
+      else
+      {
+        return ENEMY_TYPE_MELEE_CHARGE;
+      }
+    }
+    else
+    {
+      return ENEMY_TYPE_MELEE;
+    }
+    break;
+
+  //LEVEL 4:
+    //even split between 3 enemies
+  case 4:
+    if (randomNumber < 0.33f)
+    {
+      return ENEMY_TYPE_MELEE;
+    }
+    else if (randomNumber >= .33f && randomNumber <= .66f)
+    {
+      return ENEMY_TYPE_MELEE_BIG;
+    }
+    else
+    {
+      return ENEMY_TYPE_MELEE_CHARGE;
+    }
   }
-  else if (randomNumber >= .33f & randomNumber <= .66f)
-  {
-    return ENEMY_TYPE_MELEE_BIG;
-  }
-  else
-  {
-    return ENEMY_TYPE_MELEE_CHARGE;
-  }
+
 }

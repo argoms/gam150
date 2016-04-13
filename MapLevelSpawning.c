@@ -21,9 +21,11 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Cloud.h"
 #include <math.h>
 #include "EnvironmentalEffects.h"
+#include "LevelManager.h"
+#include "Text.h"
 
-//static void SpawnPillar(Vector2D tilePos);
 
+extern int level;
 
 //pointers to animation objects for various tile types:
 Animation* tileAnim_floor;
@@ -32,11 +34,12 @@ Animation* tileAnim_path;
 
 enum EnvironmentalFeatures //a list of environmental features that appear in empty space
 {
-  environment_pillar,
+  environment_pillar, //never was actually implemented :(
   environment_block
 };
 
 void MakeClouds();
+static void MakeTutorialText();
 
 void GenerateMapObjects()
 {
@@ -158,9 +161,23 @@ void GenerateMapObjects()
 
   MakeClouds();
 
-  
+  if (level == 1)
+  {
+    MakeTutorialText();
+  }
 }
 
+/*!
+\brief Makes the tutorial stuff on level 1
+*/
+static void MakeTutorialText()
+{
+  TextCreateString("WASD to move, click to attack", -300, 500);
+}
+
+/*!
+\brief Spawns a bunch of clouds under the level.
+*/
 void MakeClouds()
 {
 

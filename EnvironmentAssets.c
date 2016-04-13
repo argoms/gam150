@@ -66,4 +66,6 @@ Animation* GetAsset_Animation(int assetName)
     return Asset_particleDoor;
     break;
   }
+
+  return NULL;
 }
