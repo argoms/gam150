@@ -5,32 +5,32 @@
 
 /****************IDLE******************/
 
-EnemyAI_Ranged_IdleStart(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_Ranged_IdleStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemy->physics->velocity.x = 0;
   enemy->physics->velocity.y = 0;
 }
 
-EnemyAI_Ranged_IdleUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_Ranged_IdleUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
 
 }
 
-EnemyAI_Ranged_IdleExit(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_Ranged_IdleExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
 
 }
 
 /****************PATROL******************/
 
-EnemyAI_Ranged_PatrolStart(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_Ranged_PatrolStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemy->physics->velocity.x = 0;
   enemy->physics->velocity.y = 0;
   enemyContainer->enemyAnimationState = ENEMY_IDLE;
 }
 
-EnemyAI_Ranged_PatrolUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_Ranged_PatrolUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   float distanceToPlayer = Vector2DSquareDistance(&(enemy->physics->position), &(enemy->target->physics->position));
 
@@ -40,19 +40,19 @@ EnemyAI_Ranged_PatrolUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
   }
 }
 
-EnemyAI_Ranged_PatrolExit(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_Ranged_PatrolExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~ENEMY_IDLE;
 }
 
 /****************CHASE******************/
 
-EnemyAI_Ranged_ChaseStart(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_Ranged_ChaseStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = ENEMY_WALK;
 }
 
-EnemyAI_Ranged_ChaseUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_Ranged_ChaseUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   Vector2D facingDirection;
   facingDirection.x = enemy->target->physics->position.x - enemy->physics->position.x;
@@ -77,21 +77,21 @@ EnemyAI_Ranged_ChaseUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
   }
 }
 
-EnemyAI_Ranged_ChaseExit(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_Ranged_ChaseExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~ENEMY_WALK;
 }
 
 /****************ATTACK******************/
 
-EnemyAI_Ranged_AttackStart(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_Ranged_AttackStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = ENEMY_ATTACK;
   enemy->physics->velocity.x = 0;
   enemy->physics->velocity.y = 0;
 }
 
-EnemyAI_Ranged_AttackUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_Ranged_AttackUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   float distanceToPlayer = Vector2DSquareDistance(&(enemy->physics->position), &(enemy->target->physics->position));
 
@@ -124,7 +124,7 @@ EnemyAI_Ranged_AttackUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
   }
 }
 
-EnemyAI_Ranged_AttackExit(GameObject* enemy, EnemyContainer* enemyContainer)
+void EnemyAI_Ranged_AttackExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~ENEMY_ATTACK;
   enemyContainer->attackWindup = enemyContainer->attackWindupLength;

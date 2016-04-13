@@ -33,6 +33,8 @@
 
 int gGameRunning = 1;
 
+FILE *console;
+
 LRESULT CALLBACK MyWinCallBack(HWND hWin, UINT msg, WPARAM wp, LPARAM lp) ;
 
 // ---------------------------------------------------------------------------
@@ -68,7 +70,8 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
   AESysInit(&sysInitInfo);
 
   AllocConsole();
-  freopen("CONOUT$", "w", stdout);
+  freopen_s(&console, "CONOUT$", "w", stdout);
+  //freopen("CONOUT$", "w", stdout);
 
 	if(0 == AESysInit (&sysInitInfo))
 		printf("System Init Failed!\n");
