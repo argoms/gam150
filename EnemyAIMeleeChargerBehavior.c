@@ -141,7 +141,7 @@ void EnemyAI_MeleeCharger_AttackExit(GameObject* enemy, EnemyContainer* enemyCon
 
 void EnemyAI_MeleeCharger_CooldownStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
-  enemyContainer->enemyAnimationState = ENEMY_IDLE;
+  enemyContainer->enemyAnimationState = ENEMY_COOLDOWN;
 }
 
 void EnemyAI_MeleeCharger_CooldownUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
@@ -170,5 +170,5 @@ void EnemyAI_MeleeCharger_CooldownUpdate(GameObject* enemy, EnemyContainer* enem
 void EnemyAI_MeleeCharger_CooldownExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->attackCooldown = enemyContainer->attackCooldownLength;
-  enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~(ENEMY_IDLE);
+  enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~(ENEMY_COOLDOWN);
 }
