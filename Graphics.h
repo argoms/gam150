@@ -141,6 +141,6 @@ Sprite* GCreateHudSprite(float _spriteX, float _spriteY, Animation* _animation, 
 
 struct AEGfxVertexList* GCreateMesh(float _width, float _height, float _numFramesX, float _numFramesY); //call to create a mesh
 
-struct AEGfxTexture* GCreateTexture(char* _textureName); //call to create a texture
+struct AEGfxTexture* GCreateTexture(const char* _textureName); //call to create a texture
 
 Tint GTint(float r, float g, float b, float a); //fast constructor for tint object

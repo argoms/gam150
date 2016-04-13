@@ -99,7 +99,7 @@ void EnemyAI_MeleeCharger_AttackUpdate(GameObject* enemy, EnemyContainer* enemyC
 
   if (enemyContainer->attackWindup > 0)
   {
-    enemyContainer->attackWindup -= AEFrameRateControllerGetFrameTime();
+    enemyContainer->attackWindup -= (float)AEFrameRateControllerGetFrameTime();
   }
 
   if (enemyContainer->attackWindup <= .62f && enemyContainer->attackWindup > 0.6f)
@@ -150,7 +150,7 @@ void EnemyAI_MeleeCharger_CooldownUpdate(GameObject* enemy, EnemyContainer* enem
   enemy->physics->velocity.y = 0;
   if (enemyContainer->attackCooldown > 0)
   {
-    enemyContainer->attackCooldown -= AEFrameRateControllerGetFrameTime();
+    enemyContainer->attackCooldown -= (float)AEFrameRateControllerGetFrameTime();
   }
 
   float distanceToPlayer = Vector2DSquareDistance(&(enemy->physics->position), &(enemy->target->physics->position));

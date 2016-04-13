@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "EnemyStateMachine.h"
 
-#define PI 3.1415926535897
+//#define PI 3.1415926535897
 
 enum
 {
