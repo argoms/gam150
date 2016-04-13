@@ -145,6 +145,9 @@
     <ClCompile Include="ScreenShake.c">
       <Filter>Player</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyHealthIndicator.c">
+      <Filter>Enemies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -289,6 +292,9 @@
     </ClInclude>
     <ClInclude Include="ScreenShake.h">
       <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyHealthIndicator.h">
+      <Filter>Enemies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -9,5 +9,5 @@ Prototypes for text popups when entities take damage.
 All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #pragma once
-GameObject* DamageTextCreate(Vector2D position, int damage);
+GameObject* DamageTextCreate(Vector2D position, int damage, int isPlayer);
 void DamageTextSimulate(GameObject* instance);
