@@ -264,7 +264,7 @@ void EnemyAnimationInitialize()
   int stabbyAttackFrames = 31;
 
   AEGfxVertexList* mesh_stabbyIdle   = GCreateMesh(516.f, 516.f, stabbyIdleFrames, 1);
-  AEGfxVertexList* mesh_stabbyWalk   = GCreateMesh(516.f, 516.f, 3, 7);
+  AEGfxVertexList* mesh_stabbyWalk   = GCreateMesh(516.f, 516.f, stabbyWalkFrames, 1);
   AEGfxVertexList* mesh_stabbyAttack = GCreateMesh(516.f, 516.f, 4, 8);
 
   Animation* array_stabbyIdle[16];
@@ -283,9 +283,9 @@ void EnemyAnimationInitialize()
     array_chargerTatoAttack[i]   = GCreateAnimation(1, GCreateTexture(AD_ChargeTatoAttack[i].filename), chargerTatoAattackMesh, chargerTatoAttackFrames);
     array_chargerTatoCoolDown[i] = GCreateAnimation(1, GCreateTexture(AD_ChargeTatoCooldown[i].filename), chargerTatoCoolDownMesh, chargerTatoCoolDownFrames);
 
-    //array_stabbyIdle[i]   = GCreateAnimation(1, GCreateTexture(AD_StabbyIdle[i].filename), mesh_stabbyIdle, 1);
-    //array_stabbyWalk[i]   = GCreateAnimation(3, GCreateTexture(AD_StabbyWalk[i].filename), mesh_stabbyWalk, 7);
-    //array_stabbyAttack[i] = GCreateAnimation(4, GCreateTexture(AD_StabbyAttack[i].filename), mesh_stabbyAttack, 8);
+    array_stabbyIdle[i]   = GCreateAnimation(1, GCreateTexture(AD_StabbyIdle[i].filename), mesh_stabbyIdle, 1);
+    array_stabbyWalk[i]   = GCreateAnimation(stabbyWalkFrames, GCreateTexture(AD_StabbyWalk[i].filename), mesh_stabbyWalk, 1);
+    array_stabbyAttack[i] = GCreateAnimation(1, GCreateTexture(AD_StabbyAttack[i].filename), mesh_stabbyAttack, 8);
   }
 
   AS_SpiderWolfIdle   = CreateAnimationSet(array_spiderWolfIdle);
@@ -297,9 +297,9 @@ void EnemyAnimationInitialize()
   AS_ChargerTatoAttack   = CreateAnimationSet(array_chargerTatoAttack);
   AS_ChargerTatoCooldown = CreateAnimationSet(array_chargerTatoCoolDown);
 
-  //AS_StabbyIdle = CreateAnimationSet(array_stabbyIdle);
-  //AS_StabbyWalk = CreateAnimationSet(array_stabbyWalk);
-  //AS_StabbyAttack = CreateAnimationSet(array_stabbyAttack);
+  AS_StabbyIdle = CreateAnimationSet(array_stabbyIdle);
+  AS_StabbyWalk = CreateAnimationSet(array_stabbyWalk);
+  AS_StabbyAttack = CreateAnimationSet(array_stabbyAttack);
 }
 
 void EnemyAnimationStateManager(GameObject* enemy)
@@ -321,14 +321,15 @@ void EnemyAnimationStateManager(GameObject* enemy)
         break;
       case ENEMY_WALK:
         enemy->sprite->animation = AnimationPlay(AS_SpiderWolfWalk, &facingDirection);
+        enemy->sprite->frameDelay = 3.0;
         break;
       case ENEMY_ATTACK:
         enemy->sprite->animation = AnimationPlay(AS_SpiderWolfAttack, &facingDirection);
+        enemy->sprite->frameDelay = 4.0;
         break;
     }
 
     enemy->sprite->offset.y = 60.0f;
-    enemy->sprite->frameDelay = 3.0;
   }
   
   // Big enemy
@@ -344,11 +345,11 @@ void EnemyAnimationStateManager(GameObject* enemy)
       enemy->sprite->frameDelay = 3.0f;
       break;
     case ENEMY_ATTACK:
-      enemy->sprite->animation = AnimationPlay(AS_ChargerTatoAttack, &facingDirection);
+      enemy->sprite->animation = AnimationPlay(AS_ChargerTatoAttack, &(enemyContainer->lookDirection));
       enemy->sprite->frameDelay = 10.0f;
       break;
     case ENEMY_COOLDOWN:
-      enemy->sprite->animation = AnimationPlay(AS_ChargerTatoCooldown, &facingDirection);
+      enemy->sprite->animation = AnimationPlay(AS_ChargerTatoCooldown, &(enemyContainer->lookDirection));
       enemy->sprite->frameDelay = 6.0f;
       break;
     }
@@ -361,17 +362,19 @@ void EnemyAnimationStateManager(GameObject* enemy)
     switch (enemyContainer->enemyAnimationState)
     {
     case ENEMY_IDLE:
-      enemy->sprite->animation = AnimationPlay(AD_StabbyIdle, &facingDirection);
+      enemy->sprite->animation = AnimationPlay(AS_StabbyIdle, &facingDirection);
+      enemy->sprite->offset.y = 180.0f;
       break;
     case ENEMY_WALK:
       enemy->sprite->animation = AnimationPlay(AS_StabbyWalk, &facingDirection);
       enemy->sprite->frameDelay = 3.0f;
+      enemy->sprite->offset.y = 180.0f;
       break;
     case ENEMY_ATTACK:
-      enemy->sprite->animation = AnimationPlay(AS_StabbyAttack, &facingDirection);
-      enemy->sprite->frameDelay = 3.0f;
+      enemy->sprite->animation = AnimationPlay(AS_StabbyAttack, &(enemyContainer->lookDirection));
+      enemy->sprite->frameDelay = 8.0f;
+      enemy->sprite->offset.y = 180.0f;
       break;
     }
-    enemy->sprite->offset.y = 150.0f;
   }
 }

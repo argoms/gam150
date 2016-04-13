@@ -96,6 +96,8 @@ struct EnemyContainer
   float attackKnockbackForce;
 
   float projectileSpeed;
+  
+  Vector2D lookDirection;
 };
 
 /**************************************************************************************************

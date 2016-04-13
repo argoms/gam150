@@ -84,13 +84,13 @@ void EnemyAI_Melee_ChaseExit(GameObject* enemy, EnemyContainer* enemyContainer)
 void EnemyAI_Melee_AttackStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = ENEMY_ATTACK;
-  enemy->physics->velocity.x = 0;
-  enemy->physics->velocity.y = 0;
   enemy->sprite->frame = 0;
 }
 
 void EnemyAI_Melee_AttackUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
+  enemy->physics->velocity.x = 0;
+  enemy->physics->velocity.y = 0;
   float distanceToPlayer = Vector2DSquareDistance(&(enemy->physics->position), &(enemy->target->physics->position));
 
   //if (distanceToPlayer > enemyContainer->attackRange)
@@ -111,8 +111,6 @@ void EnemyAI_Melee_AttackUpdate(GameObject* enemy, EnemyContainer* enemyContaine
     attackDirection.y = enemy->target->physics->position.y - enemy->physics->position.y;
     Vector2DNormalize(&attackDirection, &attackDirection);
 
-    enemy->physics->velocity.x = 0;
-    enemy->physics->velocity.y = 0;
     enemyContainer->attackCooldown = enemyContainer->attackCooldownLength;
 
     EnemyMeleeAttack(enemy, attackDirection);
@@ -136,6 +134,8 @@ void EnemyAI_Melee_CooldownStart(GameObject* enemy, EnemyContainer* enemyContain
 
 void EnemyAI_Melee_CooldownUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
+  enemy->physics->velocity.x = 0;
+  enemy->physics->velocity.y = 0;
   if (enemyContainer->attackCooldown > 0)
   {
     enemyContainer->attackCooldown -= AEFrameRateControllerGetFrameTime();
