@@ -94,6 +94,7 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_level1;
+    //level = 1;
   }
   break;
   case LEVEL_TWO_BUTTON:
@@ -102,6 +103,7 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_level1;
+    //level = 2;
   }
   break;
   case LEVEL_THREE_BUTTON:
@@ -110,6 +112,7 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_level1;
+    //level = 3;
   }
   break;
   case LEVEL_FOUR_BUTTON:
@@ -118,6 +121,7 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_level1;
+    //level = 4;
   }
   break;
   case DEATH_SCREEN_BUTTON:
@@ -166,6 +170,14 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->onOver = &PlayButtonHoverAnimation;
     buttonComponent->onRelease = &PlayButtonReleasedAnimation;
     buttonComponent->next = level_splashScreen;
+  }
+  break;
+  case LEVEL_SELECT:
+  {
+    buttonComponent->onClick = &PlayPressedAnimation;
+    buttonComponent->onOver = &PlayButtonHoverAnimation;
+    buttonComponent->onRelease = &PlayButtonReleasedAnimation;
+    buttonComponent->next = level_selectScreen;
   }
   break;
   default:

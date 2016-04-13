@@ -23,6 +23,7 @@ enum ButtonTypes
   DP_SPLASH_SCREEN_BUTTON, /* digipen splashscreen level                    */
   CONTROL_SCREEN,          /* button for the control screen                 */
   CREDIT_SCREEN,           /* button for the credit screen                  */
+  LEVEL_SELECT,            /* level select                                  */
   NUMBER_OF_BUTTON_TYPES,  /* number of buttons in this enum. MUST B LAST   */ 
   QUIT                     /* buttton for quitting                          */
 };

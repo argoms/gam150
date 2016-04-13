@@ -89,6 +89,7 @@
     </ClCompile>
     <ClCompile Include="EnemyStateMachine.c" />
     <ClCompile Include="EntityAnimation.c" />
+    <ClCompile Include="MapRoomInfo.c" />
     <ClCompile Include="PlayerAnimations.c" />
     <ClCompile Include="Compass.c">
       <Filter>Menu/UI</Filter>
@@ -133,11 +134,8 @@
       <Filter>Enemies\EnemyAI</Filter>
     </ClCompile>
     <ClCompile Include="stats.c" />
-    <ClCompile Include="EnemySpawnEffect.c">
-      <Filter>Enemies</Filter>
-    </ClCompile>
-    <ClCompile Include="MapRoomInfo.c">
-      <Filter>MapGen</Filter>
+    <ClCompile Include="LevelSelect.c">
+      <Filter>Menu/UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -228,6 +226,7 @@
     </ClInclude>
     <ClInclude Include="EnemyStateMachine.h" />
     <ClInclude Include="EntityAnimation.h" />
+    <ClInclude Include="MapRoomInfo.h" />
     <ClInclude Include="PlayerAnimations.h" />
     <ClInclude Include="Compass.h">
       <Filter>Menu/UI</Filter>
@@ -272,11 +271,8 @@
       <Filter>Enemies\EnemyAI</Filter>
     </ClInclude>
     <ClInclude Include="stats.h" />
-    <ClInclude Include="EnemySpawnEffect.h">
-      <Filter>Enemies</Filter>
-    </ClInclude>
-    <ClInclude Include="MapRoomInfo.h">
-      <Filter>MapGen</Filter>
+    <ClInclude Include="LevelSelect.h">
+      <Filter>Menu/UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
