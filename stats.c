@@ -1,4 +1,4 @@
-#include "stats.h";
+#include "stats.h"
 /*
 typedef struct
 {
@@ -82,6 +82,65 @@ void Incrementhighest_level_reached(statistics* stats)
   }
 }
 
+void ResetKills(statistics* stats)
+{
+  if (stats)
+  {
+    stats->kills = 0;
+  }
+  else
+  {
+    return;
+  }
+}
+
+void ResetDeaths(statistics* stats)
+{
+  if (stats)
+  {
+    stats->deaths = 0;
+  }
+  else
+  {
+    return;
+  }
+}
+void ResetRoomsCleared(statistics* stats)
+{
+  if (stats)
+  {
+    stats->highest_level_reached = 0;
+  }
+  else
+  {
+    return;
+  }
+}
+
+void Resethighest_level_reached(statistics* stats)
+{
+  if (stats)
+  {
+    stats->highest_level_reached = 0;
+  }
+  else
+  {
+    return;
+  }
+}
+
+void ResetTime(statistics* stats)
+{
+  if (stats)
+  {
+    stats->time = 0;
+  }
+  else
+  {
+    return;
+  }
+}
+
 float GetSeconds(statistics* stats)
 {
   if (stats)
@@ -122,7 +181,7 @@ float ResetStats(statistics* stats)
   }
 }
 
-int FreeStats(statistics* stats)
+void FreeStats(statistics* stats)
 {
   free(stats);
 }
