@@ -180,6 +180,14 @@ GameObject *CreateButton(PhysicsObject* _physics, Sprite* _sprite, Entity* _enti
     buttonComponent->next = level_selectScreen;
   }
   break;
+  case QUIT:
+  {
+    buttonComponent->onClick = &PlayPressedAnimation;
+    buttonComponent->onOver = &PlayButtonHoverAnimation;
+    buttonComponent->onRelease = &PlayButtonReleasedAnimation;
+    buttonComponent->next = level_exit;
+  }
+  break;
   default:
   {
     /* set everything to null for the default */
