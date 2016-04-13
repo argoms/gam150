@@ -283,12 +283,12 @@ void EnemyAnimationInitialize()
   int stabbyIdleFrames = 1;
   int stabbyWalkFrames = 20;
   int stabbyAttackFrames = 31;
-  int stabbyCooldownFrames = 10;
+  int stabbyCooldownFrames = 11;
 
   AEGfxVertexList* mesh_stabbyIdle   = GCreateMesh(516.f, 516.f, (float)stabbyIdleFrames, 1.f);
   AEGfxVertexList* mesh_stabbyWalk   = GCreateMesh(516.f, 516.f, (float)stabbyWalkFrames, 1.f);
   AEGfxVertexList* mesh_stabbyAttack = GCreateMesh(516.f, 516.f, 4.f, 8.f);
-  AEGfxVertexList* mesh_stabbyCooldown = GCreateMesh(516.f, 516.f, 2.f, 6.f);
+  AEGfxVertexList* mesh_stabbyCooldown = GCreateMesh(516.f, 516.f, 1, (float)(stabbyCooldownFrames));
 
   Animation* array_stabbyIdle[16];
   Animation* array_stabbyWalk[16];
@@ -310,7 +310,7 @@ void EnemyAnimationInitialize()
     array_stabbyIdle[i]   = GCreateAnimation(1, GCreateTexture(AD_StabbyIdle[i].filename), mesh_stabbyIdle, 1);
     array_stabbyWalk[i]   = GCreateAnimation(stabbyWalkFrames, GCreateTexture(AD_StabbyWalk[i].filename), mesh_stabbyWalk, 1);
     array_stabbyAttack[i] = GCreateAnimation(1, GCreateTexture(AD_StabbyAttack[i].filename), mesh_stabbyAttack, 8);
-    array_stabbyCooldown[i] = GCreateAnimation(2, GCreateTexture(AD_StabbyCooldown[i].filename), mesh_stabbyCooldown, 6);
+    array_stabbyCooldown[i] = GCreateAnimation(1, GCreateTexture(AD_StabbyCooldown[i].filename), mesh_stabbyCooldown, stabbyCooldownFrames);
   }
 
   AS_SpiderWolfIdle   = CreateAnimationSet(array_spiderWolfIdle);
@@ -403,7 +403,7 @@ void EnemyAnimationStateManager(GameObject* enemy)
       break;
     case ENEMY_COOLDOWN:
       enemy->sprite->animation = AnimationPlay(AS_StabbyCooldown, &(enemyContainer->lookDirection));
-      enemy->sprite->frameDelay = 8.0f;
+      enemy->sprite->frameDelay = 9.0f;
       enemy->sprite->offset.y = 180.0f;
     }
   }
