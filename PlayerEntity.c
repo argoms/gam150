@@ -95,6 +95,8 @@ static AnimationSet* playerSwordAnims;
 
 static Vector2D playerDirection;
 
+static int PlayerHealth = 10;
+
 void PlayerInit()
 {
   
@@ -103,7 +105,7 @@ void PlayerInit()
   player = GetPlayerObject();
 
   //set up player health:
-  player->entity->health = 3;
+  player->entity->health = PlayerHealth;
   //
 
   attackCooldown = 0;

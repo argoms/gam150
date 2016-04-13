@@ -30,3 +30,5 @@ void ESMachineMeleeStateChange(GameObject* enemy);
 void ESMachineRangedStateChange(GameObject* enemy);
 
 void ESMachineMeleeBigStateChange(GameObject* enemy);
+
+void ESMachineMeleeChargerStateChange(GameObject* enemy);

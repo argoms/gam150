@@ -83,7 +83,6 @@ void MapRoomBehavior_BasicEnemies(MapRoom* roomData)
   Vector2D cursor = Vec2(roomData->position.x, roomData->position.y);
   roomData->numEnemies = 0;
 
-  
   for (int i = 0; i < 5; i++)
   {
     //grab random positions within the room
@@ -138,12 +137,18 @@ void MapRoomBehavior_SmallRoom(MapRoom* roomData)
 */
 int ChooseEnemyType()
 {
-  if (RandFloat() > 0.35f)
+  float randomNumber = RandFloat();
+
+  if (randomNumber < 0.33f)
   {
     return ENEMY_TYPE_MELEE;
   }
-  else
+  else if (randomNumber >= .33f & randomNumber <= .66f)
   {
     return ENEMY_TYPE_MELEE_BIG;
+  }
+  else
+  {
+    return ENEMY_TYPE_MELEE_CHARGE;
   }
 }

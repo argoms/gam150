@@ -9,6 +9,8 @@
 #include <math.h>
 #include "ParticleSystems(Redo).h"
 #include "EnemyAIMeleeBehavior.h"
+#include "EnemyAIMeleeBigBehavior.h"
+#include "EnemyAIMeleeChargerBehavior.h"
 
 static Animation* tracerAnimation;
 
@@ -24,7 +26,6 @@ static EnemyInfo enemyInfo[] =
 //call once
 void EnemyImportInfo(int enemyType, const char *file)
 {
-  //GameObject* newEnemy;
   FILE *infile = fopen(file, "r");
   if (infile)
   {
@@ -112,9 +113,25 @@ GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entit
 
   enemy->enemyAI = (EnemyAI*)malloc(sizeof(EnemyAI));
   enemy->enemyAI->currentEnemyState = ENEMY_STATE_PATROL;
-  enemy->enemyAI->EnemyStateStart = EnemyAI_Melee_PatrolStart;
-  enemy->enemyAI->EnemyStateUpdate = EnemyAI_Melee_PatrolUpdate;
-  enemy->enemyAI->EnemyStateExit = EnemyAI_Melee_PatrolExit;
+
+  switch (enemyType)
+  {
+    case ENEMY_TYPE_MELEE:
+      enemy->enemyAI->EnemyStateStart = EnemyAI_Melee_PatrolStart;
+      enemy->enemyAI->EnemyStateUpdate = EnemyAI_Melee_PatrolUpdate;
+      enemy->enemyAI->EnemyStateExit = EnemyAI_Melee_PatrolExit;
+    break;
+    case ENEMY_TYPE_MELEE_BIG:
+      enemy->enemyAI->EnemyStateStart = EnemyAI_MeleeBig_PatrolStart;
+      enemy->enemyAI->EnemyStateUpdate = EnemyAI_MeleeBig_PatrolUpdate;
+      enemy->enemyAI->EnemyStateExit = EnemyAI_MeleeBig_PatrolExit;
+    break;
+    case ENEMY_TYPE_MELEE_CHARGE:
+      enemy->enemyAI->EnemyStateStart = EnemyAI_MeleeCharger_PatrolStart;
+      enemy->enemyAI->EnemyStateUpdate = EnemyAI_MeleeCharger_PatrolUpdate;
+      enemy->enemyAI->EnemyStateExit = EnemyAI_MeleeCharger_PatrolExit;
+    break;
+  }
 
   EnemyContainer* enemyContainer = (EnemyContainer*)malloc(sizeof(EnemyContainer));
   enemyContainer->enemyType = enemyType;
@@ -129,8 +146,13 @@ GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entit
   enemyContainer->attackKnockbackForce = attackKnockbackForce;
   enemyContainer->attackDamage = attackDamage;
   enemyContainer->projectileSpeed = projectileSpeed;
+  
+  Vector2D lookDirection;
+  lookDirection.x = 0;
+  lookDirection.y = 0;
+  enemyContainer->lookDirection = lookDirection;
 
-  enemyContainer->animationCooldown = .2f;
+  //enemyContainer->animationCooldown = .2f;
 
   enemy->miscData = enemyContainer;
 
@@ -219,7 +241,7 @@ void EnemyInitialize(GameObject* _thisObject)
   /*Melee attack visual effect*/
   tracerAnimation = GCreateAnimation(1,
     GCreateTexture("isotilePlaceholder1.png"),
-    GCreateMesh(128.f, 64.f, 1, 1),
+    GCreateMesh(128.f, 64.f, 10, 1),
     1);
 
 
@@ -240,7 +262,7 @@ void EnemySimulate(GameObject* _thisObject)
 */
 void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject)
 {
-  if (_thisObject->type == entity_enemy && _otherObject->type == entity_player)
+  if (_thisObject->type == entity_enemy && (_otherObject->type == entity_player || _otherObject->type == entity_enemy))
   {
     EnemyKnockBack(_thisObject, _otherObject);
     //EntityTakeDamage(&(_otherObject->entity), 2);
@@ -255,9 +277,6 @@ void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject)
 void EnemyOnKilled(GameObject* _self)
 {
   GameObjectDestroy(&_self);
-  //pPS_B->PS_Burst->StartPosX = _self->physics->position.x;
-  //pPS_B->PS_Burst->StartPosY = _self->physics->position.y;
-  //Start_PS(pPS_B);
 }
 
 void EnemyMeleeAttack(GameObject* _thisObject, Vector2D attackDirection)
@@ -304,7 +323,6 @@ void EnemyTracerSimulate(GameObject* _thisTracer)
     GameObjectDestroy(&_thisTracer);
   }
   _thisTracer->projectileLifeTime -= (float)AEFrameRateControllerGetFrameTime();
-
 }
 
 /*

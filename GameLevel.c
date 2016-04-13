@@ -51,6 +51,7 @@ void GameLevelInit(void)
 {
   EnemyImportInfo(ENEMY_TYPE_MELEE, "EnemyMelee.txt");
   EnemyImportInfo(ENEMY_TYPE_MELEE_BIG, "EnemyMeleeBig.txt");
+  EnemyImportInfo(ENEMY_TYPE_MELEE_CHARGE, "EnemyMeleeCharger.txt");
   EnemyAnimationInitialize();
   //EnemyImportInfo(ENEMY_TYPE_RANGED, "EnemyRanged.txt");
   Entity* playerEntity;
