@@ -65,8 +65,5 @@ Animation* GetAsset_Animation(int assetName)
   case asset_particleDoor:
     return Asset_particleDoor;
     break;
-  default:
-    break;
   }
-  return NULL;
 }

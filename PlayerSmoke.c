@@ -14,7 +14,6 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "EnvironmentAssets.h"
 #include "GameObject.h"
 #include "PlayerEntity.h"
-#include "Audio.h"
 
 static GameObject* smokeEffect;
 /*!
