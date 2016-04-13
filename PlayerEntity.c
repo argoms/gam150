@@ -462,7 +462,7 @@ void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _oth
 
 
     //actually doing damage:
-    if (Vector2DSquareLength(&player->physics->velocity) > 0.045)
+    if (Vector2DSquareLength(&player->physics->velocity) > 0.065f)
     {
       //more damage if dashing while attacking
       EntityTakeDamage(&_otherObject->entity, attackDamage * 3);
