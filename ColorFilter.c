@@ -8,27 +8,49 @@ ChangeLog
 © Copyright 1996 - 2016, DigiPen Institute of Technology(USA).All rights reserved.
 **************************************************************************************************/
 
-
 #include "AEEngine.h"
-#include <Windows.h>
+//#include <Windows.h>
 #include <math.h>
 
-#define PI 3.14159265359f
+/*-------------------------------------------------------------------------------------------------
+DEFINES
+-------------------------------------------------------------------------------------------------*/
 
-static AEGfxTexture *Screen_Texture;
-static AEGfxVertexList *Mesh;
-static float Scale_X, Scale_Y;
+//#define PI 3.14159265359f
+/*-------------------------------------------------------------------------------------------------
+END DEFINES
+-------------------------------------------------------------------------------------------------*/
 
-static float R = 1, G = 1, B = 1;
+/*-------------------------------------------------------------------------------------------------
+STATIC VARIABLES
+-------------------------------------------------------------------------------------------------*/
 
-static float time = 0;
+static AEGfxTexture *Screen_Texture;    /* Texture used for filter. */
+static AEGfxVertexList *Mesh;           /* Mesh used for filter. */
 
-static int loaded = 0;
+static float Scale_X, Scale_Y;          /* Draw size. */
+static float R = 1, G = 1, B = 1;       /* Filter color values. */
 
-static int fluctuate = 0;
-static float fluc_R = 0, fluc_G = 0, fluc_B = 0;
+static float time = 0;                  /* Cumulative time. Used to oscillate values. */
 
-/* Initializes the fader. */
+static int loaded = 0;                  /* Loaded state of texture and mesh. */
+
+static int fluctuate = 0;                         /* Flag for fluctuation to oscillate color values. */
+static float fluc_R = 0, fluc_G = 0, fluc_B = 0;  /* Amounts to offset each color value by. */
+/*-------------------------------------------------------------------------------------------------
+END STATIC VARIABLES
+-------------------------------------------------------------------------------------------------*/
+
+/*-------------------------------------------------------------------------------------------------
+FUNCTIONS
+-------------------------------------------------------------------------------------------------*/
+
+/**************************************************************************************************
+Function      : ColorFilter_Init
+Description   : Initializes the color filter. Call during level initialization.
+Input         : No input.
+Output        : No output.
+**************************************************************************************************/
 void ColorFilter_Init(void)
 {
   if (loaded)
@@ -62,7 +84,12 @@ void ColorFilter_Init(void)
   loaded = 1;
 }
 
-/* Unloads the filter from memory */
+/**************************************************************************************************
+Function      : ColorFilter_Unload
+Description   : Unloads the filter from memory. Call during level unload.
+Input         : No input.
+Output        : No output.
+**************************************************************************************************/
 void ColorFilter_Unload(void)
 {
   if (loaded)
@@ -77,7 +104,14 @@ void ColorFilter_Unload(void)
   }
 }
 
-/* Sets the color of the filter. */
+/**************************************************************************************************
+Function      : ColorFilter_Set
+Description   : Sets colors to filter out. Set values from 0 to 2. 1 retains original color.
+Input         : r is amount of red to filter,
+                g is amount of green to filter,
+                b is amount of blue to filter.
+Output        : No output.
+**************************************************************************************************/
 void ColorFilter_Set(float r, float g, float b) 
 {
   R = r;
@@ -85,10 +119,15 @@ void ColorFilter_Set(float r, float g, float b)
   B = b;
 }
 
-/* 
-  Sets the fluctuation flag of the filter.
-  Keep values between 0 and 1. 
-*/
+/**************************************************************************************************
+Function      : ColorFilter_Fluctuate
+Description   : Sets oscillating behavior of filter.
+Input         : useF is value to set flag to (use 1 to activate, 0 to deactivate),
+                r_amt is amount of red to oscillate (0 to 2),
+                g_amt is amount of green to oscillate (0 to 2),
+                b_amt is amount of blue to oscillate (0 to 2).
+Output        : No output.
+**************************************************************************************************/
 void ColorFilter_Fluctuate(int useF, float r_amt, float g_amt, float b_amt)
 {
   fluctuate = useF;
@@ -97,7 +136,12 @@ void ColorFilter_Fluctuate(int useF, float r_amt, float g_amt, float b_amt)
   fluc_B = b_amt;
 }
 
-/* Applies the filter. */
+/**************************************************************************************************
+Function      : ColorFilter_Draw
+Description   : Draws the filter.
+Input         : No input.
+Output        : No output.
+**************************************************************************************************/
 void ColorFilter_Draw(void)
 {
   if (!loaded)
@@ -115,7 +159,7 @@ void ColorFilter_Draw(void)
   float CameraY;
   AEGfxGetCamPosition(&CameraX, &CameraY);
 
-  /* Draw the filter. */
+  /* Prepare for draw. */
 
   AEGfxSetFullTransform(CameraX, CameraY, 0, Scale_X, Scale_Y);
 
@@ -161,3 +205,6 @@ void ColorFilter_Draw(void)
 
   AEGfxMeshDraw(Mesh, AE_GFX_MDM_TRIANGLES);
 }
+/*-------------------------------------------------------------------------------------------------
+END FUNCTIONS
+-------------------------------------------------------------------------------------------------*/

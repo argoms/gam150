@@ -13,7 +13,7 @@ ChangeLog
 **************************************************************************************************/
 
 #include <stdlib.h>
-#include <Windows.h>
+//#include <Windows.h>
 
 #include "AEEngine.h"
 
@@ -21,6 +21,10 @@ ChangeLog
 #include "Matrix2D.h"
 #include "MyRandom.h"
 #include "FancyBackground.h"
+
+/*-------------------------------------------------------------------------------------------------
+DEFINES AND STRUCTS
+-------------------------------------------------------------------------------------------------*/
 
 #define true 1
 #define false 0
@@ -48,24 +52,30 @@ ChangeLog
 #define MAX_SIZE_Y 100.f
 #define MIN_SIZE_Y 10.f
 
+/* Contains information for each sprite. */
 typedef struct BackgroundSprite
 {
-  AEGfxTexture *texture;
-  float local_posX;
-  float local_posY;
-  float centerX;
-  float centerY;
-  float scaleX;
-  float scaleY;
-  float distance;
-  float rotation;
-  float time;
-  float osc_speedX;
-  float osc_speedY;
-  float direction;
+  AEGfxTexture *texture;  /* texture used for render. */
+  float local_posX;       /* local x position of sprite. */
+  float local_posY;       /* local y position of sprite. */
+  float centerX;          /* x position of the center of the sprite. */
+  float centerY;          /* y position of the center of the sprite. */
+  float scaleX;           /* x scale of the sprite. */
+  float scaleY;           /* y scale of the sprite. */
+  float distance;         /* distance of sprite from the center. */
+  float rotation;         /* rotation of sprite. */
+  float time;             /* cumulative time. Used to oscillate movement and other behaviors. */
+  float osc_speedX;       /* oscillating speed for rotating. */
+  float osc_speedY;       /* oscillating speed for translations. */
+  float direction;        /* determines which direction sprite moves towards. d < 0 is clockwise, otherwise counterclockwise. */
 }BackgroundSprite;
+/*-------------------------------------------------------------------------------------------------
+END DEFINES AND STRUCTS
+-------------------------------------------------------------------------------------------------*/
 
-
+/*-------------------------------------------------------------------------------------------------
+STATIC VARIABLES
+-------------------------------------------------------------------------------------------------*/
 
 /* Background base sprite */
 static BackgroundSprite *backbase;
@@ -90,8 +100,25 @@ static int Sprite_Mode;
 
 /* Flag if already initialized and loaded into memory. */
 static int isLoaded = false;
+/*-------------------------------------------------------------------------------------------------
+ END STATIC VARIABLES
+-------------------------------------------------------------------------------------------------*/
 
-/* Initializes the background visuals */
+/*-------------------------------------------------------------------------------------------------
+FUNCTIONS
+-------------------------------------------------------------------------------------------------*/
+
+/**************************************************************************************************
+Function      : Background_Init
+Description   : Initializes the background visuals. Call during level initialization.
+Input         : behavior defines how background behaves. 
+                    BACKGROUND_BH_SWIRLY uses swirling particles.
+                    BACKGROUND_BH_HORIZONTAL uses a scanning bar effect.
+                sprite_mode defines what sprite style to use for the system.
+                    BACKGROUND_MD_ENERGY uses circular energy particles.
+                    BACKGROUND_MD_BLOCKS uses blocks.
+Output        : No output.
+**************************************************************************************************/
 void Background_Init(unsigned int behavior, unsigned int sprite_mode)
 {
   /* If already loaded, don't initialize, just return. */
@@ -190,7 +217,12 @@ void Background_Init(unsigned int behavior, unsigned int sprite_mode)
   isLoaded = true;
 }
 
-/* Unloads the background visuals from memory */
+/**************************************************************************************************
+Function      : Background_Unload
+Description   : Unloads the background visuals from memory. Call during level unload.
+Input         : No input.
+Output        : No output.
+**************************************************************************************************/
 void Background_Unload(void)
 {
   if (isLoaded)
@@ -221,8 +253,13 @@ void Background_Unload(void)
   }
 }
 
-/* Updates swirly behavior. */
-void BG_Update_Swirl(float deltaTime)
+/**************************************************************************************************
+Function      : BG_Update_Swirl
+Description   : Updates swirly behavior.
+Input         : deltaTime is the frame time.
+Output        : No output.
+**************************************************************************************************/
+static void BG_Update_Swirl(float deltaTime)
 {
   int i;  /* Iterator. */
 
@@ -275,7 +312,13 @@ void BG_Update_Swirl(float deltaTime)
   }
 }
 
-void BG_Update_Horizontal(float deltaTime)
+/**************************************************************************************************
+Function      : BG_Update_Horizontal
+Description   : Updates horizontal behavior.
+Input         : deltaTime is the frame time.
+Output        : No output.
+**************************************************************************************************/
+static void BG_Update_Horizontal(float deltaTime)
 {
   int i;  /* Iterator. */
 
@@ -330,8 +373,13 @@ void BG_Update_Horizontal(float deltaTime)
   }
 }
 
-/* Updates the transform information about the sprites. */
-void Background_Update()
+/**************************************************************************************************
+Function      : Background_Update
+Description   : Updates the transform information about the sprites.
+Input         : No input.
+Output        : No output.
+**************************************************************************************************/
+void Background_Update(void)
 {
   if (!isLoaded)
     return;
@@ -358,15 +406,20 @@ void Background_Update()
   default:
     break;
   }
-
 }
 
-/* Draws a batch of sprites. Draws sprites that has the matching texture. */
-void BG_DrawBatch(int start, int stop, AEGfxTexture *texture)
+/**************************************************************************************************
+Function      : BG_DrawBatch
+Description   : Draws a batch of sprites. Draws sprites that has the matching texture.
+Input         : start is position in sprite array to draw from,
+                stop is position in sprite array to stop drawing at,
+                texture is the texture to draw.
+Output        : No output.
+**************************************************************************************************/
+static void BG_DrawBatch(int start, int stop, AEGfxTexture *texture)
 {
+  int i;  /* Iterator */
 
-
-  int i;
   for (i = start; i < stop; ++i)
   {
     /* The current sprite. */
@@ -412,46 +465,58 @@ void BG_DrawBatch(int start, int stop, AEGfxTexture *texture)
       AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
     }
   }
-
 }
 
-/* Draw the background. */
-void Background_Draw()
+/**************************************************************************************************
+Function      : Background_Draw
+Description   : Renders the background.
+Input         : No input.
+Output        : No output.
+**************************************************************************************************/
+void Background_Draw(void)
 {
   if (!isLoaded)
     return;
 
   int i;
 
+  /* Frame time. */
   float deltaTime = (float)AEFrameRateControllerGetFrameTime();
 
+  /* Camera position */
   float CameraX;
   float CameraY;
   AEGfxGetCamPosition(&CameraX, &CameraY);
 
+  /* Set render mode. */
   AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 
-  /* Draw the back. */
+  /* Prepare for draw. */
 
   AEGfxSetFullTransform(CameraX, CameraY, 0, backbase->scaleX, backbase->scaleY);
   
+  /* Set backdrop texture based on background mode. */
   if (mode == BACKGROUND_BH_HORIZONTAL)
     AEGfxTextureSet(backbase->texture, 0, sinf(backbase->time * 0.5f * sinf(2 * backbase->time)));
   else
     AEGfxTextureSet(backbase->texture, 0, 0);
 
+  /* Generate colors for the background. */
   float osc_valueR = 0.5f - 0.3f * fabsf(((float)sin(backbase->time)));
   float osc_valueG = 0.2f - 0.2f * fabsf(((float)sin(backbase->time - 0.1f)));
   float osc_valueB = 0.5f - 0.2f * fabsf(((float)sin(backbase->time - 0.2f)));
   float osc_valueA = 1 - 0.5f * fabsf(((float)sin(backbase->time - 0.3f)));
 
+  /* Set the background color. */
   AEGfxSetBackgroundColor(osc_valueR, osc_valueG, osc_valueB);
-  //AEGfxSetBackgroundColor(0, 0, 0);
 
+  /* Generate new colors for the backdrop (goes over the background). */
   osc_valueR = 1 - 0.3f * fabsf(((float)sin(backbase->time)));
   osc_valueG = 1 - 0.5f * fabsf(((float)sin(backbase->time - 1)));
   osc_valueB = 1 - 0.2f * fabsf(((float)sin(backbase->time - 2)));
   osc_valueA = 1 - 0.5f * fabsf(((float)sin(backbase->time - 3)));
+
+  /* Prepare to draw the backdrop. */
 
   AEGfxSetTintColor(osc_valueR, osc_valueG, osc_valueB, osc_valueA);
 
@@ -459,10 +524,68 @@ void Background_Draw()
 
   AEGfxSetBlendMode(AE_GFX_BM_ADD);
 
+  /* Draw the backdrop. */
   AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
 
+  /* Draw each background sprite. */
 
-  // DEPRECATED CODE. REPLACED WITH OPTIMIZED VERSION BELOW.
+  /* Batch draws by texture to reduce render time. */
+  for (i = 0; i < NUM_TEXTURES; ++i)
+  {
+    /* Set the texture. */
+    AEGfxTextureSet(textures[i], 0, 0);
+
+    /* Tint values to make different colors. */
+    float osc_valueR = 1 - 0.3f * fabsf((sinf(backgroundSprites[NUM_SPRITES / (i + 2)]->time)));
+    float osc_valueG = 1 - 0.5f * fabsf((sinf(backgroundSprites[NUM_SPRITES / (i + 3)]->time - 1)));
+    float osc_valueB = 1 - 0.2f * fabsf((sinf(backgroundSprites[NUM_SPRITES / (i + 4)]->time - 2)));
+    float osc_valueA = fabsf((sinf(backgroundSprites[NUM_SPRITES / (i + 5)]->time - 3)));
+
+    AEGfxSetTintColor(osc_valueR, osc_valueG, osc_valueB, osc_valueA);
+
+    /* Go through the first half of the sprites with one color. */
+    BG_DrawBatch(0, NUM_SPRITES / 2, textures[i]);
+
+    /* Tint values to make different colors */
+    osc_valueR = 1 - 0.3f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 6)]->time - 4)));
+    osc_valueG = 1 - 0.5f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 7)]->time - 5)));
+    osc_valueB = 1 - 0.2f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 8)]->time - 6)));
+    osc_valueA = fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 9)]->time - 7)));
+
+    AEGfxSetTintColor(osc_valueR, osc_valueG, osc_valueB, osc_valueA);
+
+    /* Go through the second half with a different color. */
+    BG_DrawBatch(NUM_SPRITES / 2, NUM_SPRITES, textures[i]);
+  }
+
+  /* Prepare to overlay the backdrop over the scene. */
+
+  AEGfxSetFullTransform(CameraX, CameraY, 0, backbase->scaleX, backbase->scaleY);
+
+  /* Set backdrop texture based on background mode. */
+  if (mode == BACKGROUND_BH_HORIZONTAL)
+    AEGfxTextureSet(backbase->texture, 0, sinf(backbase->time * 0.2f * sinf(backbase->time)));
+  else
+    AEGfxTextureSet(backbase->texture, 0, 0);
+
+  /* Generate colors for overlay. */
+  osc_valueR = 1 - 0.3f * fabsf(((float)sin(backbase->time)));
+  osc_valueG = 1 - 0.5f * fabsf(((float)sin(backbase->time - 0.1f)));
+  osc_valueB = 1 - 0.2f * fabsf(((float)sin(backbase->time - 0.2f)));
+  osc_valueA = 1 - 0.5f * fabsf(((float)sin(backbase->time - 0.3f)));
+
+  AEGfxSetTintColor(osc_valueR, osc_valueG, osc_valueB, osc_valueA);
+
+  /* Prepare for draw. */
+
+  AEGfxSetTransparency(osc_valueA);
+
+  AEGfxSetBlendMode(AE_GFX_BM_MULTIPLY);
+
+  /* Draw the overlay. */
+  AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
+
+  // DEPRECATED CODE FOR DRAWING SPRITES. REPLACED WITH OPTIMIZED VERSION THAT USES BATCHED DRAWS.
   ///* Set blend mode. */
   //AEGfxSetBlendMode(AE_GFX_BM_ADD);
 
@@ -525,59 +648,7 @@ void Background_Draw()
   //  AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
 
   //}
-
-  /* Draw each background sprite. */
-
-  /* Batch draws by texture to reduce render time. */
-  for (i = 0; i < NUM_TEXTURES; ++i)
-  {
-    //int j;
-
-    /* Set the texture. */
-    AEGfxTextureSet(textures[i], 0, 0);
-
-    /* Tint values to make different colors. */
-    float osc_valueR = 1 - 0.3f * fabsf((sinf(backgroundSprites[NUM_SPRITES / (i + 2)]->time)));
-    float osc_valueG = 1 - 0.5f * fabsf((sinf(backgroundSprites[NUM_SPRITES / (i + 3)]->time - 1)));
-    float osc_valueB = 1 - 0.2f * fabsf((sinf(backgroundSprites[NUM_SPRITES / (i + 4)]->time - 2)));
-    float osc_valueA = fabsf((sinf(backgroundSprites[NUM_SPRITES / (i + 5)]->time - 3)));
-
-    AEGfxSetTintColor(osc_valueR, osc_valueG, osc_valueB, osc_valueA);
-
-    /* Go through the first half of the sprites with one color. */
-    BG_DrawBatch(0, NUM_SPRITES / 2, textures[i]);
-
-    /* Tint values to make different colors */
-    osc_valueR = 1 - 0.3f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 6)]->time - 4)));
-    osc_valueG = 1 - 0.5f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 7)]->time - 5)));
-    osc_valueB = 1 - 0.2f * fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 8)]->time - 6)));
-    osc_valueA = fabsf(((float)sin(backgroundSprites[NUM_SPRITES / (i + 9)]->time - 7)));
-
-    AEGfxSetTintColor(osc_valueR, osc_valueG, osc_valueB, osc_valueA);
-
-    /* Go through the second half with a different color. */
-    BG_DrawBatch(NUM_SPRITES / 2, NUM_SPRITES, textures[i]);
-
-  }
-
-  AEGfxSetFullTransform(CameraX, CameraY, 0, backbase->scaleX, backbase->scaleY);
-
-  if (mode == BACKGROUND_BH_HORIZONTAL)
-    AEGfxTextureSet(backbase->texture, 0, sinf(backbase->time * 0.2f * sinf(backbase->time)));
-  else
-    AEGfxTextureSet(backbase->texture, 0, 0);
-
-  osc_valueR = 1 - 0.3f * fabsf(((float)sin(backbase->time)));
-  osc_valueG = 1 - 0.5f * fabsf(((float)sin(backbase->time - 0.1f)));
-  osc_valueB = 1 - 0.2f * fabsf(((float)sin(backbase->time - 0.2f)));
-  osc_valueA = 1 - 0.5f * fabsf(((float)sin(backbase->time - 0.3f)));
-
-  AEGfxSetTintColor(osc_valueR, osc_valueG, osc_valueB, osc_valueA);
-
-  AEGfxSetTransparency(osc_valueA);
-
-  AEGfxSetBlendMode(AE_GFX_BM_MULTIPLY);
-
-  AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
-
 }
+/*-------------------------------------------------------------------------------------------------
+END FUNCTIONS
+-------------------------------------------------------------------------------------------------*/
