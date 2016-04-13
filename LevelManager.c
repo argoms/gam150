@@ -303,6 +303,26 @@ void MainMenuInit()
   textString = TextCreateString("EPOCH", string_xpos, string_ypos); // title
   TextStringSetTint(textString, GTint(1, 1, 1, 1));
 
+  string_xpos += - 0.4f * screenWidth;
+  string_ypos += -0.6f * screenHeight;
+           //     0123456789ABCDEFGHIJKLMNOPQRSTUV
+  char* buffer = "All content © 2016 DigiPen (USA) Corporation,";
+  char* buffer2 = " all rights reserved.";
+  buffer[12] = 2;// for the copyright stuff
+
+  //All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+  textString = TextCreateString(buffer,
+    string_xpos, string_ypos); // copyright stuff
+  TextStringSetTint(textString, GTint(1, 1, 1, 1));
+
+  
+  
+
+  textString = TextCreateString(buffer2,
+    - 0.42f * screenWidth, -0.45f * screenHeight); // copyright stuff
+
+  TextStringSetTint(textString, GTint(1, 1, 1, 1));
+
   //BUTTONS------------------------------------------------------
   // BUTTON LEVEL 1
 
