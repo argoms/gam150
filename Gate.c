@@ -22,6 +22,8 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Audio.h"
 #include <stdio.h>
 #include "ScreenShake.h"
+#include "stats.h"
+#include "PlayerEntity.h"
 
 static float GATE_FADE_DIST = 5.f;
 
@@ -34,15 +36,6 @@ GameObject* CreateWorldGate(Vector2D position, int orientation)
 
   Entity* gateEntity = malloc(sizeof(Entity));
   gateEntity->health = 5;
-  
-  /*
-  switch (orientation)
-  {
-  case gate_vertical:
-    break;
-  case gate_horizontal:
-    break;
-  }*/
 
   //grab an animation based on the orientation of the gate
   Animation* anim2 = GetGateAnimation(orientation);
@@ -114,6 +107,8 @@ void GateOpened(GameObject* DeadGate)
     IsoTileSet(GetWorldGate(DeadGate)->positionX, GetWorldGate(DeadGate)->positionY - 1, tile_floor);
     break;
   }
+
+  IncrementRoomsCleared(GetPlayerStats());
   GameObjectDestroy(&DeadGate);
 }
 

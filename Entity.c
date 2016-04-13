@@ -18,6 +18,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "GameLevel.h"
 #include "Audio.h"
 #include "ScreenShake.h"
+#include "stats.h"
 
 #define BREIF_INVULNERABILITY_ENABLED  1    /* allow breif invulnerability after a hit    */
 #define BREIF_INVULNERABILITY_DISABLED 0    /* disallow brief invunerability after a hit  */
@@ -58,6 +59,12 @@ void EntityTakeDamage(Entity** _entity, int _damage)
 
         //damage number popup
         DamageTextCreate((*_entity)->owner->physics->position, _damage, 1);
+
+        //increment stats:
+        for (int i = 0; i < _damage; i++)
+        {
+          IncrementDamageTaken(GetPlayerStats());
+        }
       }
       else
       {
@@ -92,6 +99,7 @@ void EntityTakeDamage(Entity** _entity, int _damage)
       {
         if ((*_entity)->owner->type == entity_enemy)
         {
+          IncrementKills(GetPlayerStats());
           EnemyKilled((*_entity)->owner->parent);
         }
         (*_entity)->onEntityKilled(((*_entity)->owner));

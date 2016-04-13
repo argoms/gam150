@@ -3,7 +3,7 @@
 typedef struct
 {
 int kills;                  // enemies killed
-int deaths;                 // times died
+int damageTaken;                 // times died
 int time;                   // in seconds
 int rooms_cleared;          // #rooms cleared
 int highest_level_reached;  // highest level reached
@@ -16,10 +16,12 @@ statistics* InitializePlayerStats()
   statistics* stats = (statistics*)malloc(sizeof(statistics));  // malloc the staticsitc struct
                                                                 // set everything to zero
   stats->kills = 0;
-  stats->deaths = 0;
+  stats->damageTaken = 0;
   stats->time = 0;
   stats->rooms_cleared = 0;
   stats->highest_level_reached = 0;
+
+  return stats;
 }
 
 void IncrementKills(statistics* stats)
@@ -34,11 +36,11 @@ void IncrementKills(statistics* stats)
   }
 }
 
-void IncrementDeaths(statistics* stats)
+void IncrementDamageTaken(statistics* stats)
 {
   if (stats)
   {
-    stats->deaths++;
+    stats->damageTaken++;
   }
   else
   {
@@ -94,11 +96,11 @@ void ResetKills(statistics* stats)
   }
 }
 
-void ResetDeaths(statistics* stats)
+void ResetDamageTaken(statistics* stats)
 {
   if (stats)
   {
-    stats->deaths = 0;
+    stats->damageTaken = 0;
   }
   else
   {
@@ -170,7 +172,7 @@ float ResetStats(statistics* stats)
   if (stats)
   {
     stats->kills = 0;
-    stats->deaths = 0;
+    stats->damageTaken = 0;
     stats->time = 0;
     stats->rooms_cleared = 0;
     stats->highest_level_reached = 0;

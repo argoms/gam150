@@ -308,7 +308,7 @@ void MainMenuInit()
            //     0123456789ABCDEFGHIJKLMNOPQRSTUV
   char* buffer = "All content © 2016 DigiPen (USA) Corporation,";
   char* buffer2 = " all rights reserved.";
-  buffer[12] = 2;// for the copyright stuff
+//  buffer[12] = 2;// for the copyright stuff
 
   //All content © 2016 DigiPen (USA) Corporation, all rights reserved.
   textString = TextCreateString(buffer,
