@@ -197,6 +197,7 @@
     <ClCompile Include="Hazard.c" />
     <ClCompile Include="Isometric.c" />
     <ClCompile Include="LevelManager.c" />
+    <ClCompile Include="LevelSelect.c" />
     <ClCompile Include="Main_CS230.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -254,6 +255,7 @@
     <ClInclude Include="Hazard.h" />
     <ClInclude Include="Isometric.h" />
     <ClInclude Include="LevelManager.h" />
+    <ClInclude Include="LevelSelect.h" />
     <ClInclude Include="MapCreator.h" />
     <ClInclude Include="MapGen.h" />
     <ClInclude Include="MapLevelSpawning.h" />

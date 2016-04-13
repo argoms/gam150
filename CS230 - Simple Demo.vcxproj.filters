@@ -133,6 +133,10 @@
     <ClCompile Include="EnemyAIMeleeChargerBehavior.c">
       <Filter>Enemies\EnemyAI</Filter>
     </ClCompile>
+    <ClCompile Include="stats.c" />
+    <ClCompile Include="LevelSelect.c">
+      <Filter>Menu/UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -265,6 +269,10 @@
     <ClInclude Include="ColorFilter.h" />
     <ClInclude Include="EnemyAIMeleeChargerBehavior.h">
       <Filter>Enemies\EnemyAI</Filter>
+    </ClInclude>
+    <ClInclude Include="stats.h" />
+    <ClInclude Include="LevelSelect.h">
+      <Filter>Menu/UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -25,7 +25,8 @@ enum LevelStates
   level_deathScreen,  /**< end game loss/death screen   */
   level_winScreen,    /**< end game victory screen      */
   level_creditScreen, /**< credits screen               */
-  level_controlScreen /**< control screen               */
+  level_controlScreen,/**< control screen               */
+  level_selectScreen  /**< level select screen          */
 };
 void LevelLoad();
 void LevelUnload();

@@ -25,6 +25,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "FancyBackground.h"
 #include "ColorFilter.h"
 #include "ControlScreen.h"
+#include "LevelSelect.h"
 
 
 //EXAMPLE VARIABLES, NOT STRICTLY NEEDED
@@ -61,6 +62,7 @@ int button_flag_lose = 0;
 int buttin_flag_credits = 1;
 int button_flag_control = 1;
 int button_flag_play = 1;
+int button_flag_level_select = 1;
 int button_flag_exit = 1;
 
 /*
@@ -151,6 +153,10 @@ void LevelLoad(int _level)
     ControlScreenInit();
     Background_Init(BACKGROUND_BH_SWIRLY, BACKGROUND_MD_ENERGY);
     break;
+  case level_selectScreen:
+    LevelSelectScreenInit();
+    Background_Init(BACKGROUND_BH_SWIRLY, BACKGROUND_MD_ENERGY);
+    break;
   }
 }
 
@@ -194,6 +200,9 @@ void LevelRun()
     break;
   case level_controlScreen:
     ControlScreenRun();
+    break;
+  case level_selectScreen:
+    LevelSelectScreenRun();
     break;
   }
 
@@ -519,7 +528,31 @@ void MainMenuInit()
     button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
   }
   //end control button ----------------------------------------------------------
+  //level select buttons --------------------------------------------------------
+  if (button_flag_level_select)
+  {
+    button_type = LEVEL_SELECT;          /* type of button  */
+    buttonx = 200;                          /* x position      */
+    buttony = -125;                            /* y position      */
+    meshx = 256.0f;                          /* mesh x          */
+                                             //meshx = 290.0f;                          /* mesh x          */
+    meshy = 64.0f;                           /* mesh y          */
+    buttonsize = 1.0f;                       /* size            */
+    button_mesh = GCreateMesh(meshx, meshy, 1, 1);/* create the mesh */
+                                                  //text_offset = 90.0f;
+    text_offset = 90.0f;
+    main_menu_text = TextCreateHUDString("Levels", buttonx - text_offset, buttony);
+    TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
+    button_texture = GCreateTexture("animations/buttons/button_texture.png");
+    anim_button = GCreateAnimation(1,
+      button_texture,
+      button_mesh,
+      1);
 
+    button_sprite = GCreateSprite(buttonx, buttony, anim_button, 1);
+    button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
+  }
+  //level select buttons end---------------------------------------------------
   //END BUTTONS-------------------------------------------------------------
   //END TARRANT CODE
 
