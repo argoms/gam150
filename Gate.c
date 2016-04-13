@@ -21,6 +21,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "EnvironmentAssets.h"
 #include "Audio.h"
 #include <stdio.h>
+#include "ScreenShake.h"
 
 static float GATE_FADE_DIST = 5.f;
 
@@ -121,6 +122,7 @@ void GateOpened(GameObject* DeadGate)
 */
 void GateClosed(GameObject* inst)
 {
+  AddScreenShake(0.12, 100);
   Audio_PlaySoundSample("RoomClosed.ogg", 0);
 
 

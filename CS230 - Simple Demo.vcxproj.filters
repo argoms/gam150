@@ -90,7 +90,6 @@
     <ClCompile Include="EnemyStateMachine.c" />
     <ClCompile Include="EntityAnimation.c" />
     <ClCompile Include="MapRoomInfo.c" />
-    <ClCompile Include="PlayerAnimations.c" />
     <ClCompile Include="Compass.c">
       <Filter>Menu/UI</Filter>
     </ClCompile>
@@ -136,6 +135,15 @@
     <ClCompile Include="stats.c" />
     <ClCompile Include="LevelSelect.c">
       <Filter>Menu/UI</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerAnimations.c">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemySpawnEffect.c">
+      <Filter>Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenShake.c">
+      <Filter>Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -227,7 +235,6 @@
     <ClInclude Include="EnemyStateMachine.h" />
     <ClInclude Include="EntityAnimation.h" />
     <ClInclude Include="MapRoomInfo.h" />
-    <ClInclude Include="PlayerAnimations.h" />
     <ClInclude Include="Compass.h">
       <Filter>Menu/UI</Filter>
     </ClInclude>
@@ -273,6 +280,15 @@
     <ClInclude Include="stats.h" />
     <ClInclude Include="LevelSelect.h">
       <Filter>Menu/UI</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerAnimations.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemySpawnEffect.h">
+      <Filter>Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenShake.h">
+      <Filter>Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

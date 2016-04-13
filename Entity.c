@@ -17,6 +17,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "EnvironmentAssets.h"
 #include "GameLevel.h"
 #include "Audio.h"
+#include "ScreenShake.h"
 
 #define BREIF_INVULNERABILITY_ENABLED  1    /* allow breif invulnerability after a hit    */
 #define BREIF_INVULNERABILITY_DISABLED 0    /* disallow brief invunerability after a hit  */
@@ -52,6 +53,7 @@ void EntityTakeDamage(Entity** _entity, int _damage)
       if ((*_entity)->owner == GetPlayerObject())
       {
         //CreatePlayerSmokePuff(4);
+        AddScreenShake(0.1f, 300 * _damage);
         Audio_PlaySoundSample("hitSound.ogg", 0);
       }
 

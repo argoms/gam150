@@ -13,12 +13,14 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "PlayerEntity.h"
 #include "GameLevel.h"
 #include "Text.h"
+#include "ScreenShake.h"
 
 static TextString* healthText = NULL;
 
 #define HEART_SCALE 1 //number of health points per heart
 void UpdatePlayerHealthHUD()
 {
+  ScreenShakeSimulate();
   GameObject* player = GetPlayerObject();
   {
     char hpstring[20] = "Health:            ";

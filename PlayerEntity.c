@@ -28,6 +28,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "PlayerSmoke.h"
 #include "EnvironmentalEffects.h"
 #include "Audio.h"
+#include "ScreenShake.h"
 
 extern double frameTime;
 
@@ -143,10 +144,9 @@ void PlayerInit()
 
   playerAction = PLAYER_IDLE;
 
-  //shitty alpha fast coding:
   TextInit();
   
-  
+  AddScreenShake(4, 8);
 }
 
 /*!
@@ -161,22 +161,25 @@ void PlayerSimulate()
   }
 
   //move camera to player if player not dead
-  if (!isDead)
+  if (1 || !isDead)
   {
     
-    AEGfxSetCamPosition(player->sprite->x, player->sprite->y);
+    AEGfxSetCamPosition(player->sprite->x + GetScreenShakeOffset().x, player->sprite->y + GetScreenShakeOffset().y);
   }
 
   
   //printf("%f \n", frameTime);
 
+
+  //hud updates before death check so health can hit 0 on screen
+
+  UpdatePlayerHealthHUD();
   if (isDead)
   {
     return;
   }
-
   //update player stuff:
-  UpdatePlayerHealthHUD();
+  
   UpdateSmokePosition(player->physics->position);
   attackCooldown -= frameTime;
   PlayerInput(); 
@@ -385,6 +388,7 @@ static void SnapVector(Vector2D* _input)
 */
 static void PlayerAttack()
 {
+  
   //randomly pick sword swing sound
   if (AERandFloat() < 0.5)
   {
@@ -510,12 +514,13 @@ void PlayerAnimations()
 */
 void OnPlayerKilled(void)
 {
+
   //do nothing if already dead
   if (isDead)
   {
     return;
   }
-
+  AddScreenShake(0.1f, 2000);
   //turn off player smoke effect
   SetSmoke(particle_inactive);
 

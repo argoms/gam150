@@ -216,6 +216,7 @@
     <ClCompile Include="PlayerEntity.c" />
     <ClCompile Include="PlayerHUD.c" />
     <ClCompile Include="PlayerSmoke.c" />
+    <ClCompile Include="ScreenShake.c" />
     <ClCompile Include="SplashScreen.c" />
     <ClCompile Include="stats.c" />
     <ClCompile Include="Text.c" />
@@ -271,6 +272,7 @@
     <ClInclude Include="PlayerEntity.h" />
     <ClInclude Include="PlayerHUD.h" />
     <ClInclude Include="PlayerSmoke.h" />
+    <ClInclude Include="ScreenShake.h" />
     <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="stats.h" />
     <ClInclude Include="Text.h" />
