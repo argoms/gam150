@@ -17,6 +17,7 @@ static AnimationSet* AS_ChargerTatoCooldown;
 static AnimationSet* AS_StabbyIdle;
 static AnimationSet* AS_StabbyWalk;
 static AnimationSet* AS_StabbyAttack;
+static AnimationSet* AS_StabbyCooldown;
 
 typedef struct
 {
@@ -224,6 +225,26 @@ static AnimationDefinition AD_StabbyAttack[] =
   { "animations/stabby/Attack3.png",  NULL }
 };
 
+static AnimationDefinition AD_StabbyCooldown[] =
+{
+  { "animations/stabby/Cooldown4.png",  NULL },
+  { "animations/stabby/Cooldown5.png",  NULL },
+  { "animations/stabby/Cooldown6.png",  NULL },
+  { "animations/stabby/Cooldown7.png",  NULL },
+  { "animations/stabby/Cooldown8.png",  NULL },
+  { "animations/stabby/Cooldown9.png",  NULL },
+  { "animations/stabby/Cooldown10.png",  NULL },
+  { "animations/stabby/Cooldown11.png",  NULL },
+  { "animations/stabby/Cooldown12.png",  NULL },
+  { "animations/stabby/Cooldown13.png",  NULL },
+  { "animations/stabby/Cooldown14.png",  NULL },
+  { "animations/stabby/Cooldown15.png",  NULL },
+  { "animations/stabby/Cooldown0.png",  NULL },
+  { "animations/stabby/Cooldown1.png",  NULL },
+  { "animations/stabby/Cooldown2.png",  NULL },
+  { "animations/stabby/Cooldown3.png",  NULL }
+};
+
 void EnemyAnimationInitialize()
 {
   /*************** Spider *****************/
@@ -262,14 +283,17 @@ void EnemyAnimationInitialize()
   int stabbyIdleFrames = 1;
   int stabbyWalkFrames = 20;
   int stabbyAttackFrames = 31;
+  int stabbyCooldownFrames = 10;
 
   AEGfxVertexList* mesh_stabbyIdle   = GCreateMesh(516.f, 516.f, (float)stabbyIdleFrames, 1.f);
   AEGfxVertexList* mesh_stabbyWalk   = GCreateMesh(516.f, 516.f, (float)stabbyWalkFrames, 1.f);
   AEGfxVertexList* mesh_stabbyAttack = GCreateMesh(516.f, 516.f, 4.f, 8.f);
+  AEGfxVertexList* mesh_stabbyCooldown = GCreateMesh(516.f, 516.f, 2.f, 6.f);
 
   Animation* array_stabbyIdle[16];
   Animation* array_stabbyWalk[16];
   Animation* array_stabbyAttack[16];
+  Animation* array_stabbyCooldown[16];
 
   int i = 0;
   for (i = 0; i < 16; ++i)
@@ -286,6 +310,7 @@ void EnemyAnimationInitialize()
     array_stabbyIdle[i]   = GCreateAnimation(1, GCreateTexture(AD_StabbyIdle[i].filename), mesh_stabbyIdle, 1);
     array_stabbyWalk[i]   = GCreateAnimation(stabbyWalkFrames, GCreateTexture(AD_StabbyWalk[i].filename), mesh_stabbyWalk, 1);
     array_stabbyAttack[i] = GCreateAnimation(1, GCreateTexture(AD_StabbyAttack[i].filename), mesh_stabbyAttack, 8);
+    array_stabbyCooldown[i] = GCreateAnimation(2, GCreateTexture(AD_StabbyCooldown[i].filename), mesh_stabbyCooldown, 6);
   }
 
   AS_SpiderWolfIdle   = CreateAnimationSet(array_spiderWolfIdle);
@@ -300,6 +325,7 @@ void EnemyAnimationInitialize()
   AS_StabbyIdle = CreateAnimationSet(array_stabbyIdle);
   AS_StabbyWalk = CreateAnimationSet(array_stabbyWalk);
   AS_StabbyAttack = CreateAnimationSet(array_stabbyAttack);
+  AS_StabbyCooldown = CreateAnimationSet(array_stabbyCooldown);
 }
 
 void EnemyAnimationStateManager(GameObject* enemy)
@@ -375,6 +401,10 @@ void EnemyAnimationStateManager(GameObject* enemy)
       enemy->sprite->frameDelay = 8.0f;
       enemy->sprite->offset.y = 180.0f;
       break;
+    case ENEMY_COOLDOWN:
+      enemy->sprite->animation = AnimationPlay(AS_StabbyCooldown, &(enemyContainer->lookDirection));
+      enemy->sprite->frameDelay = 8.0f;
+      enemy->sprite->offset.y = 180.0f;
     }
   }
 }
