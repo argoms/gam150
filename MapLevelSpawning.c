@@ -97,6 +97,8 @@ void GenerateMapObjects()
         newObj->offset.y = -112;
         newObj->tint.alpha = 0.9f;// (0.3 * RandFloat()) + 0.5;
 
+
+        //create a random number of blocks under the main floor block to create the impression of a thicker platform
         int i = 0;
         while (i < 4 && (i < 2 || RandFloat() < 0.6))
         {
@@ -113,7 +115,7 @@ void GenerateMapObjects()
 
       }
 
-      //FOR DEBUG PURPOSES:
+      //path spawning (flat tile)
       if (IsoTileGet(i, j) == tile_path)
       {
         Vector2D tilePos = Vec2((float)i, (float)j);
@@ -125,6 +127,7 @@ void GenerateMapObjects()
         newObj->offset.y = -96;
       }
 
+      //wall "spawning" actually just spawns random environmental blocks since we're floating
       if (IsoTileGet(i, j) == tile_wall)
       {
         if (RandFloat() > 0.5f)
@@ -173,6 +176,7 @@ void GenerateMapObjects()
 static void MakeTutorialText()
 {
   TextCreateString("WASD to move, click to attack", -300, 500);
+  TextCreateString("Press space to dodge", -250, 450);
 }
 
 /*!
