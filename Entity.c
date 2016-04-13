@@ -53,7 +53,7 @@ void EntityTakeDamage(Entity** _entity, int _damage)
       if ((*_entity)->owner == GetPlayerObject())
       {
         //CreatePlayerSmokePuff(4);
-        AddScreenShake(0.1f, 300 * _damage);
+        AddScreenShake(0.1f, 300.f * _damage);
         Audio_PlaySoundSample("hitSound.ogg", 0);
       }
 

@@ -20,14 +20,14 @@ static float effectStrengthModifier;
 void ScreenShakeSimulate()
 {
   screenOffset.x = 0;
-  timeElapsed += AEFrameRateControllerGetFrameTime();
+  timeElapsed += (float)AEFrameRateControllerGetFrameTime();
 
   //if effect is currently active (duration > 0)
   if (effectDuration > 0)
   {
     //shake is based on a sine wave with progressively decreasing magnitude
     screenOffset.y = sinf(timeElapsed * effectStrengthModifier) * effectDuration * effectStrengthModifier;
-    effectDuration -= AEFrameRateControllerGetFrameTime();
+    effectDuration -= (float)AEFrameRateControllerGetFrameTime();
   }
   else
   {

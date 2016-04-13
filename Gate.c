@@ -122,7 +122,7 @@ void GateOpened(GameObject* DeadGate)
 */
 void GateClosed(GameObject* inst)
 {
-  AddScreenShake(0.12, 100);
+  AddScreenShake(0.12f, 100);
   Audio_PlaySoundSample("RoomClosed.ogg", 0);
 
 

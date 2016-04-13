@@ -130,8 +130,8 @@ void MapRoomBehavior_SmallRoom(MapRoom* roomData)
   for (int i = 0; i < EnemiesPerRoom / 2; i++)
   {
     //grab random positions within the room
-    cursor.x += (((roomData->size - 4) / -4) + (RandFloat() * 0.5 * (roomData->size - 4)));
-    cursor.y += (((roomData->size - 4) / -4) + (RandFloat() * 0.5 * (roomData->size - 4)));
+    cursor.x += (((roomData->size - 4) / -4) + (RandFloat() * 0.5f * (roomData->size - 4)));
+    cursor.y += (((roomData->size - 4) / -4) + (RandFloat() * 0.5f * (roomData->size - 4)));
 
     //if far enough from the player, position is valid and spawn an enemy
     if (PhysicsDistSQ(cursor, GetPlayerObject()->physics->position) > 4)
@@ -218,6 +218,9 @@ int ChooseEnemyType()
     {
       return ENEMY_TYPE_MELEE_CHARGE;
     }
+    break;
   }
 
+  //how did you get here
+  return 0;
 }
