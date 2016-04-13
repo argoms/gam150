@@ -1,17 +1,21 @@
 #pragma once
-//#include "Text.h"
-#include "Button.h"
-#include "AEEngine.h"
-#include <stdlib.h>
 
-typedef struct
+//#include "AEEngine.h"
+//#include <stdlib.h>
+#include "GameLevel.h"
+#include "Graphics.h"
+#include "GameObject.h"
+#include "Text.h"
+
+typedef struct statistics statistics;
+struct statistics
 {
   int kills;                  // enemies killed
   int deaths;                 // times died
   float time;                 // in seconds
   int rooms_cleared;          // #rooms cleared
   int highest_level_reached;  // highest level reached
-}statistics;
+};
 
 statistics* InitializePlayerStats();
 
@@ -31,5 +35,7 @@ void ResetTime(statistics* stats);
 float GetSeconds(statistics* stats);
 float GetMinutes(statistics* stats);
 float ResetStats(statistics* stats);
+
+void PrintStats(statistics* stats);
 
 void FreeStats(statistics* stats);

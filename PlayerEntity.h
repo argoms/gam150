@@ -11,6 +11,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #pragma once
 
 #include "GameObject.h"
+#include "stats.h"
 #define LEFT_CLICK 1
 #define RIGHT_CLICK 2
 void PlayerInit();
@@ -26,3 +27,4 @@ void SetPlayerDrag(float drag);
 float  GetPlayerDrag();
 void RestoreHealth(GameObject* obj);
 void OnPlayerKilled(void);
+statistics* GetPlayerStats();
