@@ -1,4 +1,3 @@
-#include "stats.h"
 /*
 typedef struct
 {
@@ -9,6 +8,7 @@ int rooms_cleared;          // #rooms cleared
 int highest_level_reached;  // highest level reached
 }statistics;
 */
+#include "stats.h"
 #define BUFFER_SIZE 64
 
 statistics* InitializePlayerStats()

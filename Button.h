@@ -1,3 +1,15 @@
+/*****************************************************************************/
+/*!
+\file   Button.h
+\author Tarrant Mangasarian
+\par    email: tarrant.mangasarian\@digipen.edu
+\par    DigiPen login: tarrant.mangasarian
+\par    Course: GAM150
+\date   2/19/2016
+\brief
+This file contains the function declarations for buttons
+*/
+/*****************************************************************************/
 #include "GameObject.h"
 #include "AEEngine.h"
 #include "LevelManager.h"
@@ -31,9 +43,9 @@ enum ButtonTypes
 typedef struct 
 {
   int type;               /* type of button                     */
-  void (*onClick)(int);   /* function pointer for a click       */
-  void (*onOver)(int);    /* function pointer for mouse over    */
-  void (*onRelease)(int); /* function pointer for mouse release */
+  void (*onClick)(void);   /* function pointer for a click       */
+  void (*onOver)(void);    /* function pointer for mouse over    */
+  void (*onRelease)(void); /* function pointer for mouse release */
   int next;               /* next level to load                 */
   float Xscale;           /* x scale of the sprite              */
   float Yscale;           /* y scale of the sprite              */
