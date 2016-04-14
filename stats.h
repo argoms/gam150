@@ -6,6 +6,7 @@
 #include "Graphics.h"
 #include "GameObject.h"
 #include "Text.h"
+#include  <stdio.h>
 
 typedef struct statistics statistics;
 struct statistics

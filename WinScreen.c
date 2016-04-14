@@ -15,6 +15,8 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include <stdio.h>
 #include "Button.h"
 #include "WinScreen.h"
+#include "stats.h"
+#include "PlayerEntity.h"
 
 
 void WinScreenInit()
@@ -50,6 +52,8 @@ void WinScreenInit()
   // string positions
   float string_xpos = 0.0f; // default x
   float string_ypos = 0.0f; // default y
+
+  PrintStats(GetPlayerStats());
 
   string_xpos += 0;
   string_ypos += 0.25f * screenHeight;

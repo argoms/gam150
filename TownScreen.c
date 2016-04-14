@@ -40,7 +40,7 @@ void TownScreenInit()
   //char levelIndicator[3];
   //itoa(level, levelIndicator, 10);
   //TextCreateString(levelIndicator, -350, 50);
-  TextString* cleared = TextCreateString("Level Cleared!", 200, 0);
+  TextString* cleared = TextCreateString("Level Cleared!", 200, 300);
   TextStringSetTint(cleared, GTint(1, 1, 1, 1));
   //TextCreateString("PRESS SPACE TO LEAVE", -300, -50);
 
