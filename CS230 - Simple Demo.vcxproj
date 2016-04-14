@@ -20,8 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{99C44468-B6FA-417A-818E-F61E863B4D40}</ProjectGuid>
-    <RootNamespace>CS230SimpleDemo</RootNamespace>
+    <RootNamespace>Epoch</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <ProjectName>Epoch</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
