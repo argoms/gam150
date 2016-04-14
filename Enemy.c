@@ -24,6 +24,14 @@ static EnemyInfo enemyInfo[] =
   { ENEMY_TYPE_HEALER       , 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL }  //4
 };
 
+void EnemyHitBoxInitialize()
+{
+  tracerAnimation = GCreateAnimation(1,
+    GCreateTexture("animations/isotilePlaceholder1.png"),
+    GCreateMesh(128.f, 64.f, 10, 1),
+    1);
+}
+
 //call once
 void EnemyImportInfo(int enemyType, const char *file)
 {
@@ -210,7 +218,7 @@ GameObject* EnemySpawn(float x, float y, int enemyType, GameObject* player)
 /*  Animation* enemyAnimation = GCreateAnimation(1,
     GCreateTexture("animations/isotilePlaceholder1.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
-    1);     */  
+    1);   */  
   GameObject* newEnemy = EnemyCreate(PhysicsCreateObject(Vec2(x, y), size), GCreateSprite(0, 40, NULL, 1), enemyEntity, entity_enemy, enemyType,
     chaseSpeed, detectRange, knockbackForce, attackCooldown, attackCooldownLength,
     attackWindup, attackWindupLength, attackRange, attackKnockback, attackDamage, enemyProjectileSpeed, health);
@@ -248,12 +256,6 @@ void EnemyInitialize(GameObject* _thisObject)
     printf("Why no enemy, sucka");
     return;
   }
-
-  /*Melee attack visual effect*/
-  tracerAnimation = GCreateAnimation(1,
-    GCreateTexture("animations/isotilePlaceholder1.png"),
-    GCreateMesh(128.f, 64.f, 10, 1),
-    1);
 
 
 }

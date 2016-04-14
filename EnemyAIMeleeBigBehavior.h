@@ -1,13 +1,6 @@
 #pragma once
 #include "EnemyStateMachine.h"
 
-void EnemyAI_MeleeBig_IdleStart(GameObject* enemy, EnemyContainer* enemyContainer);
-
-void EnemyAI_MeleeBig_IdleUpdate(GameObject* enemy, EnemyContainer* enemyContainer);
-
-void EnemyAI_MeleeBig_IdleExit(GameObject* enemy, EnemyContainer* enemyContainer);
-
-
 void EnemyAI_MeleeBig_PatrolStart(GameObject* enemy, EnemyContainer* enemyContainer);
 
 void EnemyAI_MeleeBig_PatrolUpdate(GameObject* enemy, EnemyContainer* enemyContainer);
