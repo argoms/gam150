@@ -1,6 +1,7 @@
 /**************************************************************************************************
-Author        :  Matt Chasengnou
+Project       :  EPOCH
 File          :  Audio.h
+Author        :  Matt Chasengnou
 Created       :  1/25/16
 Description   :  Contains forward declarations used by Audio.c
 ChangeLog
@@ -9,7 +10,7 @@ ChangeLog
   -2/16/16    : Cleaned up file.
                 Implemented black-box approach to accessing audio
 
-© Copyright 1996 - 2016, DigiPen Institute of Technology(USA).All rights reserved.
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 **************************************************************************************************/
 
 #ifndef AUDIO_H

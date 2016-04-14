@@ -1,11 +1,14 @@
 /**************************************************************************************************
-Author        :   Matt Chasengnou
-File          :   Hazards.c
-Created       :   2/19/16
-Description   :   Provides functionality for working with audio
+Project       :  EPOCH
+File          :  Hazard.c
+Author        :  Matt Chasengnou
+Created       :  2/19/16
+Description   :  Provides functionality for working with audio
 ChangeLog
--2/19/16      :   Initial Implementation.
--2/26/16      :   Moved hazard component into miscData
+-2/19/16      :  Initial Implementation.
+-2/26/16      :  Moved hazard component into miscData
+
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 **************************************************************************************************/
 
 #include "Hazard.h"

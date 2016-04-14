@@ -1,6 +1,7 @@
 /**************************************************************************************************
-Author        :  Matt Chasengnou
+Project       :  EPOCH
 File          :  Compass.h
+Author        :  Matt Chasengnou
 Created       :  3/28/16
 Description   :  Contains the functionality of the compass on the screen.
 ChangeLog
@@ -9,7 +10,7 @@ ChangeLog
 
 4/12/16       :  Added comments to code
 
-© Copyright 1996 - 2016, DigiPen Institute of Technology(USA).All rights reserved.
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 **************************************************************************************************/
 
 #ifndef COMPASS_H

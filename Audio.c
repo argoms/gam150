@@ -1,6 +1,7 @@
 /**************************************************************************************************
-Author        :  Matt Chasengnou
+Project       :  EPOCH
 File          :  Audio.c
+Author        :  Matt Chasengnou
 Created       :  1/25/16
 Description   :  Provides functionality for working with audio
 ChangeLog
@@ -17,7 +18,7 @@ ChangeLog
                 Cleaned up code, removed deprecated code.
   -3/8/16     : Added automatic initialization of sound assets
 
-© Copyright 1996 - 2016, DigiPen Institute of Technology(USA).All rights reserved.
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 **************************************************************************************************/
 
 #include "Audio.h"

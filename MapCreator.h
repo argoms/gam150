@@ -1,6 +1,7 @@
 /**************************************************************************************************
-Author        :  Matt Chasengnou
+Project       :  EPOCH
 File          :  MapCreator.h
+Author        :  Matt Chasengnou
 Created       :  3/1/16
 Description   :  Provides forward declarations for map creator functions
 ChangeLog
@@ -12,7 +13,7 @@ NOTES       REMEMBER TO CONVERT YOUR X/Y to the iso X/Y
 currently using matrix[y,x]
 convert   to    matrix[x,y]
 
-© Copyright 1996 - 2016, DigiPen Institute of Technology(USA).All rights reserved.
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 **************************************************************************************************/
 
 #ifndef MAP_CREATOR_H

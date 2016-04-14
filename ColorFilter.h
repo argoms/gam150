@@ -1,11 +1,12 @@
 /**************************************************************************************************
-Author        :  Matt Chasengnou
+Project       :  EPOCH
 File          :  ColorFilter.h
+Author        :  Matt Chasengnou
 Created       :  4/6/16
 Description   :  Contains the interface for working with ColorFilter.c.
 ChangeLog
 
-© Copyright 1996 - 2016, DigiPen Institute of Technology(USA).All rights reserved.
+All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 **************************************************************************************************/
 
 /*-------------------------------------------------------------------------------------------------
