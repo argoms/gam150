@@ -1,4 +1,4 @@
-//@James
+//cs230, not counted in code count
 #pragma once
 /*-------------------------------------------------------------------------- -
 Project Title : CS 230 : Project 2 Part 1
