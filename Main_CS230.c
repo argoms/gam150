@@ -133,7 +133,7 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
   //GInitialize();
 
 	// Changing the window title
-	AESysSetWindowTitle("My New Title!");
+	AESysSetWindowTitle("EPOCH");
 
 	// reset the system modules
 	AESysReset();
