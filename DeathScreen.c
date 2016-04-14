@@ -15,7 +15,8 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include <stdio.h>
 #include "Button.h"
 #include "DeathScreen.h"
-
+#include "stats.h"
+#include "PlayerEntity.h"
 
 void DeathScreenInit()
 {
@@ -25,6 +26,7 @@ void DeathScreenInit()
   //TextCreateString("PRESS SPACE TO RETURN", -360, -50);
   //TextCreateString("TO MAIN MENU", -300, -100);
   
+  PrintStats(GetPlayerStats()); // print the player stats
   //TARRANT CODE START
   //-----------------Tarant text------------------------------
   //text string

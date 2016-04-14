@@ -9,7 +9,7 @@ int rooms_cleared;          // #rooms cleared
 int highest_level_reached;  // highest level reached
 }statistics;
 */
-
+#define BUFFER_SIZE 64
 
 statistics* InitializePlayerStats()
 {
@@ -143,7 +143,7 @@ void ResetTime(statistics* stats)
   }
 }
 
-float GetSeconds(statistics* stats)
+int GetSeconds(statistics* stats)
 {
   if (stats)
   {
@@ -155,7 +155,7 @@ float GetSeconds(statistics* stats)
   }
 }
 
-float GetMinutes(statistics* stats)
+int GetMinutes(statistics* stats)
 {
   if (stats)
   {
@@ -167,7 +167,31 @@ float GetMinutes(statistics* stats)
   }
 }
 
-float ResetStats(statistics* stats)
+int GetRoomsCleared(statistics* stats)
+{
+  if (stats)
+  {
+    return (stats->rooms_cleared);
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+int GetHighestLevelReached(statistics* stats)
+{
+  if (stats)
+  {
+    return (stats->highest_level_reached);
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+int ResetStats(statistics* stats)
 {
   if (stats)
   {
@@ -207,15 +231,41 @@ void PrintStats(statistics* stats)
   float screenWidth = winMaxX - winMinX;
   float screenHeight = winMaxY - winMinY;
 
+
   TextString* stat_print_data;
 
-  stat_print_data = TextCreateHUDString("Level 1", 0, 0);
+  // init buffers for the 
+  char buffer_kills[BUFFER_SIZE];
+  char buffer_damage_taken[BUFFER_SIZE];
+  char buffer_time[BUFFER_SIZE];
+  char buffer_rooms_cleared[BUFFER_SIZE];
+  char buffer_highest_level_reached[BUFFER_SIZE];
+  
+  // put the stats into buffers
+  sprintf_s(&buffer_kills,"%d enemies killed.", stats->kills);
+  sprintf_s(&buffer_damage_taken, "%d damage taken", stats->damageTaken);
+  sprintf_s(&buffer_time,"Time: %d minutes %d seconds", GetMinutes(stats), GetSeconds(stats));
+  sprintf_s(&buffer_rooms_cleared,"%d rooms cleared", GetRoomsCleared(stats));
+  sprintf_s(&buffer_highest_level_reached, "Highest Level: %d", GetHighestLevelReached(stats));
+
+  
+
+  stat_print_data = TextCreateHUDString(buffer_kills, 0, 0);
   TextStringSetTint(stat_print_data, GTint(1, 1, 1, 1));
-
-
 }
 
 void FreeStats(statistics* stats)
 {
   free(stats);
 }
+
+/*
+typedef struct
+{
+int kills;                  // enemies killed
+int damageTaken;                 // times died
+int time;                   // in seconds
+int rooms_cleared;          // #rooms cleared
+int highest_level_reached;  // highest level reached
+}statistics;
+*/

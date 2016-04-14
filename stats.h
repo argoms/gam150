@@ -32,10 +32,11 @@ void Resethighest_level_reached(statistics* stats);
 void ResetTime(statistics* stats);
 
 
-float GetSeconds(statistics* stats);
-float GetMinutes(statistics* stats);
-float ResetStats(statistics* stats);
+int GetSeconds(statistics* stats);
+int GetMinutes(statistics* stats);
+int GetHighestLevelReached(statistics* stats);
+int GetRoomsCleared(statistics* stats);
 
+int ResetStats(statistics* stats);
 void PrintStats(statistics* stats);
-
 void FreeStats(statistics* stats);
