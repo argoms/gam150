@@ -118,7 +118,7 @@ void GateOpened(GameObject* DeadGate)
   }
 
   IncrementRoomsCleared(GetPlayerStats());
-  HealthPickupSpawn(GetWorldGate(DeadGate)->positionX, GetWorldGate(DeadGate)->positionY);
+  HealthPickupSpawn((float)GetWorldGate(DeadGate)->positionX, (float)GetWorldGate(DeadGate)->positionY);
   GameObjectDestroy(&DeadGate);
 }
 
