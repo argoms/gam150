@@ -22,7 +22,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 void WinScreenInit()
 {
   TextInit();
-  TextString *text = TextCreateString("YOU WON!", -200, 0);
+  TextString *text = TextCreateString("YOU WON!", -300, 0);
   TextStringSetTint(text, GTint(1, 1, 1, 1));
   //TextCreateString("PRESS SPACE TO RETURN", -360, -50);
   //TextCreateString("TO MAIN MENU", -300, -100);
