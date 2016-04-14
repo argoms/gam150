@@ -36,9 +36,10 @@ struct DamageText
 
 \param position World position to spawn object at (will be translated into screen position for object).
 \param damage Amount of damage dealt (will break past 999999999)
+\param isPlayer whether or not player is being damaged
 \return Returns a pointer to the newly created object
 */
-GameObject* DamageTextCreate(Vector2D position, int damage)
+GameObject* DamageTextCreate(Vector2D position, int damage, int isPlayer)
 {
   //create a buffer and write the damage values to it
   //char buffer[10];
@@ -66,7 +67,7 @@ GameObject* DamageTextCreate(Vector2D position, int damage)
   while (tempHP > 0 && count < 10)
   {
     count++;
-    hpstring[count] = 3;
+    hpstring[count] = isPlayer ? 3 : 4;
     tempHP -= 1;
   }
 

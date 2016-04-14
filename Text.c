@@ -8,11 +8,9 @@ Functions for creating/moving/setting text objects (groups of sprites).
 
 All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
-#include "Graphics.h"
-#include "Text.h"
-#include "AEEngine.h"
 
-#include <stdlib.h>
+#include "Text.h"
+
 static AEGfxVertexList*	charMesh; /**< mesh of each lettter*/
 static AEGfxTexture *charFont; /**< texture containing font sprite*/
 static Animation* charAnim; /**< animation of font*/
@@ -222,7 +220,7 @@ void TextStringSetTint(TextString* _textString, Tint newTint)
 
   while (textChar)
   {
-    if (textChar->value != 3) //hearts are special characters only affected by alpha, others just take the tint
+    if (textChar->value != 3 && textChar->value != 4) //hearts are special characters only affected by alpha, others just take the tint
     {
       textChar->sprite->tint = newTint;
     }

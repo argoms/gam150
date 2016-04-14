@@ -29,6 +29,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "EnvironmentalEffects.h"
 #include "Audio.h"
 #include "ScreenShake.h"
+#include "stats.h"
 
 extern double frameTime;
 
@@ -97,6 +98,8 @@ static Vector2D playerDirection;
 
 static int PlayerHealth = 10;
 
+static statistics* player_stats;
+
 void PlayerInit()
 {
   
@@ -104,9 +107,13 @@ void PlayerInit()
 
   player = GetPlayerObject();
 
+  // init player stats
+  player_stats = InitializePlayerStats();
+  
+
   //set up player health:
   player->entity->health = PlayerHealth;
-  //
+  
 
   attackCooldown = 0;
   attackCooldownLength = 0.5f;
@@ -579,5 +586,10 @@ void RestoreHealth(GameObject* obj)
   {
     obj->entity->health = 10;
   }
+}
+
+statistics* GetPlayerStats()
+{
+  return player_stats;
 }
 

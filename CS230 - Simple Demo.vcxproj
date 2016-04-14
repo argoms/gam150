@@ -184,6 +184,7 @@
     <ClCompile Include="EnemyAIMeleeChargerBehavior.c" />
     <ClCompile Include="EnemyAIRangedBehavior.c" />
     <ClCompile Include="EnemyAnimations.c" />
+    <ClCompile Include="EnemyHealthIndicator.c" />
     <ClCompile Include="EnemySpawnEffect.c" />
     <ClCompile Include="EnemyStateMachine.c" />
     <ClCompile Include="Entity.c" />
@@ -245,6 +246,7 @@
     <ClInclude Include="EnemyAIMeleeChargerBehavior.h" />
     <ClInclude Include="EnemyAIRangedBehavior.h" />
     <ClInclude Include="EnemyAnimations.h" />
+    <ClInclude Include="EnemyHealthIndicator.h" />
     <ClInclude Include="EnemySpawnEffect.h" />
     <ClInclude Include="EnemyStateMachine.h" />
     <ClInclude Include="Entity.h" />
