@@ -42,9 +42,9 @@ enum ButtonTypes
 typedef struct 
 {
   int type;               /* type of button                     */
-  void (*onClick)(void);   /* function pointer for a click       */
-  void (*onOver)(void);    /* function pointer for mouse over    */
-  void (*onRelease)(void); /* function pointer for mouse release */
+  void (*onClick)();   /* function pointer for a click       */
+  void (*onOver)();    /* function pointer for mouse over    */
+  void (*onRelease)(); /* function pointer for mouse release */
   int next;               /* next level to load                 */
   float Xscale;           /* x scale of the sprite              */
   float Yscale;           /* y scale of the sprite              */

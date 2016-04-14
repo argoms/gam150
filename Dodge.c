@@ -47,7 +47,7 @@ void UpdateEntityIFs(GameObject *obj)
   Entity *ent = obj->entity; /* reference the entity */
 
                              //it should have been destroyed
-  if (ent->health == NULL || ent->maxHealth == NULL || ent->health <= 0)
+  if (ent->health == 0 || ent->maxHealth == 0 || ent->health <= 0)
   {
     return;
   }
@@ -338,7 +338,7 @@ void BriefInvulnerability(GameObject *GameObj, int PlayerOnly)
   }
 
 
-  if (GameObj->entity->health == NULL)
+  if (GameObj->entity->health == 0)
   {
     return;
   }

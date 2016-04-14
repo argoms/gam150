@@ -486,8 +486,8 @@ void ButtonSimulate(GameObject *button)
   float scalex = button_data->Xscale;           /* button width                 */
   float scaley = button_data->Yscale;           /* button height                */
                                                     
-  signed long mouse_x = 0.0f;                   /* mouse x position             */
-  signed long mouse_y = 0.0f;                   /* mouse y position             */
+  signed long mouse_x = 0;                   /* mouse x position             */
+  signed long mouse_y = 0;                   /* mouse y position             */
   AEInputGetCursorPosition(&mouse_x, &mouse_y); /* modify the x and y positions */
   //mouse_x += - (winMaxX - winMinX) / 2;
   //mouse_y = -1 * mouse_y + (winMaxY - winMinY) / 2;
@@ -495,12 +495,12 @@ void ButtonSimulate(GameObject *button)
   //mouse_x = mouse_x + (screenWidth / 2);
   //mouse_y = (screenHeight / 2) - mouse_y;
 
-  mouse_x = mouse_x - (screenWidth / 2);
-  mouse_y = (screenHeight / 2) - mouse_y;
+  mouse_x = (long)(mouse_x - (screenWidth / 2));
+  mouse_y = (long)((screenHeight / 2) - mouse_y);
 
   Vector2D point;                               /* vector for the mouse pos     */
-  point.x = mouse_x;      /* set the x of the mouse       */
-  point.y = mouse_y;      /* set the y of the mouse       */
+  point.x = (float)mouse_x;      /* set the x of the mouse       */
+  point.y = (float)mouse_y;      /* set the y of the mouse       */
 
   //debug mose
   //printf("|Moux %f Mouy %f |Buttx %f  Butty %f W %f H %f\n", point.x, point.y, position.x, position.y, screenWidth, screenHeight);

@@ -74,8 +74,9 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
   sysInitInfo.mHandleWindowMessages = 1;
   AESysInit(&sysInitInfo);
 
-  AllocConsole();
-  freopen("CONOUT$", "w", stdout);
+  //comment back in to get console printing (no need in release):
+//  AllocConsole();
+//  freopen("CONOUT$", "w", stdout);
 
 	if(0 == AESysInit (&sysInitInfo))
 		printf("System Init Failed!\n");

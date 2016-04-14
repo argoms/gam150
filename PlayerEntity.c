@@ -62,6 +62,8 @@ static int dodge_key = VK_SPACE;
 
 static int isDead;
 
+static float DASH_VELOCITY_THRESHOLD = 0.065f;
+
 static float liveTime; //amount of time that player has been alive
 
 //the following enums are used for the player action bit field:
@@ -477,7 +479,7 @@ void TracerFriendlyProjectileCollision(GameObject* _thisObject, GameObject* _oth
 
 
     //actually doing damage:
-    if (Vector2DSquareLength(&player->physics->velocity) > 0.055f)
+    if (Vector2DSquareLength(&player->physics->velocity) > DASH_VELOCITY_THRESHOLD)
     {
       //more damage if dashing while attacking
       EntityTakeDamage(&_otherObject->entity, attackDamage * 3);

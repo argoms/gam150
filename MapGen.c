@@ -25,6 +25,7 @@ Functions for procedurally generating game levels.
 #include "EnvironmentAssets.h"
 #include "stats.h"
 #include "HealthPickup.h"
+#include "PlayerEntity.h"
 
 //private info 
 #define NUM_ROOMS 12
