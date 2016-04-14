@@ -35,6 +35,8 @@ typedef struct
   Animation* enemyAnimation;
 }EnemyInfo;
 
+void EnemyHitBoxInitialize();
+
 void EnemyImportInfo(int enemyType, const char *file);
 
 GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _type,

@@ -1,13 +1,6 @@
 #pragma once
 #include "EnemyStateMachine.h"
 
-void EnemyAI_MeleeCharger_IdleStart(GameObject* enemy, EnemyContainer* enemyContainer);
-
-void EnemyAI_MeleeCharger_IdleUpdate(GameObject* enemy, EnemyContainer* enemyContainer);
-
-void EnemyAI_MeleeCharger_IdleExit(GameObject* enemy, EnemyContainer* enemyContainer);
-
-
 void EnemyAI_MeleeCharger_PatrolStart(GameObject* enemy, EnemyContainer* enemyContainer);
 
 void EnemyAI_MeleeCharger_PatrolUpdate(GameObject* enemy, EnemyContainer* enemyContainer);

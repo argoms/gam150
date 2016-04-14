@@ -3,24 +3,6 @@
 #include "Isometric.h"
 #include "AEEngine.h"
 
-/****************IDLE******************/
-
-void EnemyAI_Ranged_IdleStart(GameObject* enemy, EnemyContainer* enemyContainer)
-{
-  enemy->physics->velocity.x = 0;
-  enemy->physics->velocity.y = 0;
-}
-
-void EnemyAI_Ranged_IdleUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
-{
-
-}
-
-void EnemyAI_Ranged_IdleExit(GameObject* enemy, EnemyContainer* enemyContainer)
-{
-
-}
-
 /****************PATROL******************/
 
 void EnemyAI_Ranged_PatrolStart(GameObject* enemy, EnemyContainer* enemyContainer)

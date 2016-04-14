@@ -62,11 +62,6 @@ void ESMachineMeleeStateChange(GameObject* enemy)
 {
   switch (enemy->enemyAI->currentEnemyState)
   {
-  case ENEMY_STATE_IDLE:
-    enemy->enemyAI->EnemyStateStart = EnemyAI_Melee_IdleStart;
-    enemy->enemyAI->EnemyStateUpdate = EnemyAI_Melee_IdleUpdate;
-    enemy->enemyAI->EnemyStateExit = EnemyAI_Melee_IdleExit;
-    break;
   case ENEMY_STATE_PATROL:
     enemy->enemyAI->EnemyStateStart = EnemyAI_Melee_PatrolStart;
     enemy->enemyAI->EnemyStateUpdate = EnemyAI_Melee_PatrolUpdate;
@@ -94,11 +89,6 @@ void ESMachineRangedStateChange(GameObject* enemy)
 {
   switch (enemy->enemyAI->currentEnemyState)
   {
-  case ENEMY_STATE_IDLE:
-    enemy->enemyAI->EnemyStateStart = EnemyAI_Ranged_IdleStart;
-    enemy->enemyAI->EnemyStateUpdate = EnemyAI_Ranged_IdleUpdate;
-    enemy->enemyAI->EnemyStateExit = EnemyAI_Ranged_IdleExit;
-    break;
   case ENEMY_STATE_PATROL:
     enemy->enemyAI->EnemyStateStart = EnemyAI_Ranged_PatrolStart;
     enemy->enemyAI->EnemyStateUpdate = EnemyAI_Ranged_PatrolUpdate;
@@ -126,11 +116,6 @@ void ESMachineMeleeBigStateChange(GameObject* enemy)
 {
   switch (enemy->enemyAI->currentEnemyState)
   {
-  case ENEMY_STATE_IDLE:
-    enemy->enemyAI->EnemyStateStart = EnemyAI_MeleeBig_IdleStart;
-    enemy->enemyAI->EnemyStateUpdate = EnemyAI_MeleeBig_IdleUpdate;
-    enemy->enemyAI->EnemyStateExit = EnemyAI_MeleeBig_IdleExit;
-    break;
   case ENEMY_STATE_PATROL:
     enemy->enemyAI->EnemyStateStart = EnemyAI_MeleeBig_PatrolStart;
     enemy->enemyAI->EnemyStateUpdate = EnemyAI_MeleeBig_PatrolUpdate;
@@ -158,11 +143,6 @@ void ESMachineMeleeChargerStateChange(GameObject* enemy)
 {
   switch (enemy->enemyAI->currentEnemyState)
   {
-  case ENEMY_STATE_IDLE:
-    enemy->enemyAI->EnemyStateStart = EnemyAI_MeleeCharger_IdleStart;
-    enemy->enemyAI->EnemyStateUpdate = EnemyAI_MeleeCharger_IdleUpdate;
-    enemy->enemyAI->EnemyStateExit = EnemyAI_MeleeCharger_IdleExit;
-    break;
   case ENEMY_STATE_PATROL:
     enemy->enemyAI->EnemyStateStart = EnemyAI_MeleeCharger_PatrolStart;
     enemy->enemyAI->EnemyStateUpdate = EnemyAI_MeleeCharger_PatrolUpdate;

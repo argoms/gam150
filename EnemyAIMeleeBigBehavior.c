@@ -3,24 +3,6 @@
 #include "Isometric.h"
 #include "AEEngine.h"
 
-/****************IDLE******************/
-
-void EnemyAI_MeleeBig_IdleStart(GameObject* enemy, EnemyContainer* enemyContainer)
-{
-  enemy->physics->velocity.x = 0;
-  enemy->physics->velocity.y = 0;
-}
-
-void EnemyAI_MeleeBig_IdleUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
-{
-
-}
-
-void EnemyAI_MeleeBig_IdleExit(GameObject* enemy, EnemyContainer* enemyContainer)
-{
-
-}
-
 /****************PATROL******************/
 
 void EnemyAI_MeleeBig_PatrolStart(GameObject* enemy, EnemyContainer* enemyContainer)
