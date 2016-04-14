@@ -262,12 +262,12 @@ void PrintStats(statistics* stats)
   TextStringSetTint(stat_print_data, GTint(1, 1, 1, 1));
 
   // print time
-  //stat_print_data = TextCreateHUDString(buffer_time, 0, -125);
-  //TextStringSetTint(stat_print_data, GTint(1, 1, 1, 1));
+  stat_print_data = TextCreateHUDString(buffer_time, 0, -125);
+  TextStringSetTint(stat_print_data, GTint(1, 1, 1, 1));
 
   //print highest level
-  //stat_print_data = TextCreateHUDString(buffer_highest_level_reached, 0, -200);
-  //TextStringSetTint(stat_print_data, GTint(1, 1, 1, 1));
+  stat_print_data = TextCreateHUDString(buffer_highest_level_reached, 0, -200);
+  TextStringSetTint(stat_print_data, GTint(1, 1, 1, 1));
 }
 
 void FreeStats(statistics* stats)
