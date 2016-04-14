@@ -273,7 +273,7 @@ void PrintStats(statistics* stats)
   sprintf_s(&buffer_time, (size_t)BUFFER_SIZE, "Time: %d\' %d\"", GetMinutes(stats), GetSeconds(stats));
   sprintf_s(&buffer_rooms_cleared, (size_t)BUFFER_SIZE, "%d rooms cleared", GetRoomsCleared(stats));
   sprintf_s(&buffer_highest_level_reached, (size_t)BUFFER_SIZE, "Highest Level: %d", GetHighestLevelReached(stats));
-  sprintf_s(&buffer_overall_score, (size_t)BUFFER_SIZE, "Your score is %.3f", score);
+  sprintf_s(&buffer_overall_score, (size_t)BUFFER_SIZE, "Your score is %.1f", score);
   
   // print kills
   stat_print_data = TextCreateHUDString(buffer_kills, 0, 100);
