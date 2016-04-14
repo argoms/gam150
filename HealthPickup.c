@@ -2,6 +2,9 @@
 #include "Physics.h"
 #include "HealthPickup.h"
 #include "Entity.h"
+#include "EnvironmentAssets.h"
+#include "EnvironmentalEffects.h"
+#include "Isometric.h"
 
 static int HealthBoost = 10;
 static Animation* healthAnimation;
@@ -22,6 +25,15 @@ void HealthPickupSpawn(float x, float y)
 
   healthPowerup->physics->onCollision = &HealthPickupCollide;
   healthPowerup->type = entity_healthpowerup;
+
+  SetParticleAnim(GetAsset_Animation(asset_particleHeart));
+
+  GameObject* particleEffect = EffectCreate(Vec2(-5.f, -3.f), Vec2(10, 6), IsoWorldToScreen(&position),
+    64, 0.1f, Vec2(5, 10), 0.9f, 0.4f, 0, Vec2(60, 60), 10, GTint(1, 1, 1, 1));
+  ParticleApplyBehavior(particleBehavior_linearAlpha, particleEffect);
+
+  healthPowerup->miscData = particleEffect;
+  //EffectRemove((GameObject*)(healthPowerup->miscData));
 }
 
 void HealthPickupCollide(GameObject* thisObject, GameObject* otherObject)
@@ -30,5 +42,6 @@ void HealthPickupCollide(GameObject* thisObject, GameObject* otherObject)
   {
     otherObject->entity->health = HealthBoost;
     GameObjectDestroy(&thisObject);
+    EffectRemove((GameObject*)(thisObject->miscData));
   }
 }

@@ -154,7 +154,7 @@ static void GameObjectRemove(GameObject** _input)
   {
     free((*_input)->enemyAI);
   }
-  if ((*_input)->miscData)
+  if ((*_input)->miscData && (*_input)->type != entity_healthpowerup)
   {
     free((*_input)->miscData);
   }

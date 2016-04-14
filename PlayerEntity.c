@@ -62,6 +62,8 @@ static int dodge_key = VK_SPACE;
 
 static int isDead;
 
+static float liveTime; //amount of time that player has been alive
+
 //the following enums are used for the player action bit field:
  enum directions 
 {
@@ -102,7 +104,7 @@ static statistics* player_stats;
 
 void PlayerInit()
 {
-  
+  liveTime = 0;
   isDead = 0;
 
   player = GetPlayerObject();
@@ -187,6 +189,8 @@ void PlayerSimulate()
   }
   //update player stuff:
   
+  liveTime += (float)AEFrameRateControllerGetFrameTime();
+  SetTime(GetPlayerStats(), liveTime);
   UpdateSmokePosition(player->physics->position);
   attackCooldown -= frameTime;
   PlayerInput(); 

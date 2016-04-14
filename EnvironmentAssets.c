@@ -44,9 +44,10 @@ void EnvironmentAssetsInitialize()
     GCreateMesh(24.f, 24.f, 1, 1),
     1);
 
+
   Asset_particleHeart = GCreateAnimation(1,
     GCreateTexture("animations/heart.png"),
-    GCreateMesh(8.f, 12.f, 1, 1),
+    GCreateMesh(24.f, 24.f, 1, 1),
     1);
 
 
