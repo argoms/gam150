@@ -525,9 +525,13 @@ void OpenRoom(GameObject* room)
   }
 
   IncrementRoomsCleared(GetPlayerStats());
+
   MapRoom* roomData = (MapRoom*)(room->miscData);
 
-  HealthPickupSpawn(roomData->position.x, roomData->position.y);
+  if (roomData->type != roomtype_small)
+  {
+    HealthPickupSpawn(roomData->position.x, roomData->position.y);
+  }
   
   int i = 0;
   while (i < 4)
