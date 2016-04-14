@@ -3,6 +3,8 @@ Project (working title): Epoch
 \file   Physics.c
 \author James Do
 \par    email: j.do\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
 Basic physics/collision implementation.
 
@@ -11,8 +13,6 @@ Changelog:
 2/29/16   Matt - Finished tilecollision fixes
                  Added circle to rect collision function
                  Added coordinate snapping function
-
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "Physics.h"
 #include "Isometric.h"

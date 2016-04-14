@@ -3,10 +3,10 @@ Project (working title): Epoch
 \file   Entity.c
 \author James Do
 \par    email: j.do\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
 Contains functionality for entities- objects that can take/receive damage.
-
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "Entity.h"
 #include "GameObject.h"

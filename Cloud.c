@@ -3,10 +3,10 @@ Project (working title): Epoch
 \file   Cloud.c
 \author James Do
 \par    email: j.do\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
 Contains implementation of clouds (background graphical effect)
-
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 
 #include "Cloud.h"

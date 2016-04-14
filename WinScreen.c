@@ -1,13 +1,17 @@
 /*!
 Project (working title): Epoch
 \file   WinScreen.c
-\author James Do
+\author Tarrant Mangasarian, James Do
 \par    email: j.do\@digipen.edu
+\par    email: tarrant.mangasarian\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
 Functions handling the victory screen
 
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
+
+
 #include "Graphics.h"
 #include "AEEngine.h"
 #include "LevelManager.h"

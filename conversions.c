@@ -1,16 +1,15 @@
-
-/*****************************************************************************/
 /*!
+Project (working title): Epoch
 \file   conversions.c
 \author Tarrant Mangasarian
 \par    email: tarrant.mangasarian\@digipen.edu
-\par    DigiPen login: tarrant.mangasarian
 \par    Course: GAM150
-\date   2/14/2016
+\par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
-This file contains the functions for conversions
+This file contains the functions for conversions between variable types.
+
+note by james: semi-deprecated
 */
-/*****************************************************************************/
 #include "conversions.h"
 
 /*************************************************************************/

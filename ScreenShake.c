@@ -3,10 +3,11 @@ Project (working title): Epoch
 \file   ScreenShake.c
 \author James Do
 \par    email: j.do\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
-Simple implementation of screenshake
+Simple implementation of screenshake based on sine waves.
 
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "ScreenShake.h"
 static float timeElapsed = 0;

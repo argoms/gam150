@@ -3,10 +3,10 @@ Project (working title): Epoch
 \file   Entity.h
 \author James Do
 \par    email: j.do\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
 Contains prototypes/declarations for entities- objects that can take/receive damage.
-
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #pragma once
 #include "Vector2D.h"

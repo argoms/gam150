@@ -1,3 +1,13 @@
+/*!
+Project (working title): Epoch
+\file   stats.c
+\author Tarrant Mangasarian
+\par    email: tarrant.mangasarian\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
+\brief
+This file contains function implementations for player stats/end of level scoring
+*/
 /*
 typedef struct
 {

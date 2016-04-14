@@ -1,6 +1,6 @@
 /*!
 Project (working title): Epoch
-\file   PlayerHUD.h
+\file   PlayerHUD.c
 \author James Do
 \par    email: j.do\@digipen.edu
 \par    Course: GAM150

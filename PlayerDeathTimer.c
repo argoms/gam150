@@ -1,3 +1,13 @@
+/*!
+Project (working title): Epoch
+\file   PlayerDeathTimer.c
+\author James Do
+\par    email: j.do\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
+\brief
+Creates the "you died" text and switches levels afer a set amount of time.
+*/
 #include "LevelManager.h"
 #include "GameObject.h"
 #include "AEEngine.h"
