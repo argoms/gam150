@@ -96,8 +96,6 @@
     <ClCompile Include="Matrix2D.c">
       <Filter>Back End</Filter>
     </ClCompile>
-    <ClCompile Include="ControlScreen.c" />
-    <ClCompile Include="CreditsScreen.c" />
     <ClCompile Include="EnemyAIMeleeBigBehavior.c">
       <Filter>Enemies\EnemyAI</Filter>
     </ClCompile>
@@ -146,6 +144,13 @@
       <Filter>Player</Filter>
     </ClCompile>
     <ClCompile Include="HealthPickup.c" />
+    <ClCompile Include="EnemyHealthIndicator.c" />
+    <ClCompile Include="ControlScreen.c">
+      <Filter>Menu/UI</Filter>
+    </ClCompile>
+    <ClCompile Include="CreditsScreen.c">
+      <Filter>Menu/UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -242,8 +247,6 @@
     <ClInclude Include="Matrix2D.h">
       <Filter>Back End</Filter>
     </ClInclude>
-    <ClInclude Include="ControlScreen.h" />
-    <ClInclude Include="CreditsScreen.h" />
     <ClInclude Include="EnemyAIMeleeBigBehavior.h">
       <Filter>Enemies\EnemyAI</Filter>
     </ClInclude>
@@ -292,6 +295,13 @@
       <Filter>Player</Filter>
     </ClInclude>
     <ClInclude Include="HealthPickup.h" />
+    <ClInclude Include="EnemyHealthIndicator.h" />
+    <ClInclude Include="ControlScreen.h">
+      <Filter>Menu/UI</Filter>
+    </ClInclude>
+    <ClInclude Include="CreditsScreen.h">
+      <Filter>Menu/UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="EnemyFiles">
