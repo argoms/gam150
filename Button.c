@@ -349,6 +349,32 @@ void PlayButtonHoverAnimation(GameObject *button)
   //printf("played hover animation");
   //ScaleButtonSpriteColor(button);
 
+  if (button_data->type == LEVEL_ONE_BUTTON)
+  {
+    level = LEVEL_ONE_BUTTON;  //set the level
+  }
+  else
+  if (button_data->type == LEVEL_TWO_BUTTON)
+  {
+    level = LEVEL_TWO_BUTTON;  //set the level
+  }
+  else
+  if (button_data->type == LEVEL_THREE_BUTTON)
+  {
+    level = LEVEL_THREE_BUTTON;  //set the level
+  }
+  else
+  if (button_data->type == LEVEL_FOUR_BUTTON)
+  {
+    level = LEVEL_FOUR_BUTTON;  //set the level
+  }
+  else
+  {
+    //do nothing
+  }
+  
+
+
   // only change color if not pressed
   if (button_data->isSelected != 1)
   {

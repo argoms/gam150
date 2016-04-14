@@ -22,7 +22,7 @@ void DeathScreenInit()
 {
   
   TextInit();
-  TextCreateString("YOU DIED", -100, 0);
+  TextCreateString("YOU DIED", -300, 0);
   //TextCreateString("PRESS SPACE TO RETURN", -360, -50);
   //TextCreateString("TO MAIN MENU", -300, -100);
   
