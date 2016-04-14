@@ -79,17 +79,33 @@ void CreditsScreenInit()
   TextStringSetTint(text, GTint(1, 1, 1, 1));
 
 
-  text = TextCreateString("President:", winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 + 170);
+  float rhs_offset = -100.0f;
+
+
+  text = TextCreateString("President:", rhs_offset + winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 + 170);
   TextStringSetTint(text, GTint(1, 1, 0, 1));
-  text = TextCreateString("Claude Comair", winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 + 130);
+  text = TextCreateString("Claude Comair", rhs_offset + winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 + 130);
   TextStringSetTint(text, GTint(1, 1, 1, 1));
 
-  text = TextCreateString("Instructors:", winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 + 60);
+  text = TextCreateString("Instructors:",  rhs_offset + winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 + 60);
   TextStringSetTint(text, GTint(1, 1, 0, 1));
-  text = TextCreateString("Doug Schilling", winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 + 20);
+  text = TextCreateString("Doug Schilling", rhs_offset + winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 + 20);
   TextStringSetTint(text, GTint(1, 1, 1, 1));
 
-  text = TextCreateString("Matthew Picioccio", winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 - 20);
+  text = TextCreateString("Matthew Picioccio",rhs_offset + winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 - 20);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
+
+
+  //fmod
+  text = TextCreateString("FMOD:", rhs_offset + winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 + - 80);
+  TextStringSetTint(text, GTint(1, 1, 0, 1));
+  text = TextCreateString("FMOD Sound System,", rhs_offset + winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 - 120);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
+  text = TextCreateString("© 2015 Firelight ", rhs_offset + winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 - 170);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
+  text = TextCreateString("Technologies Pty,", rhs_offset + winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 - 230);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
+  text = TextCreateString("Ltd.", rhs_offset + winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 - 280);
   TextStringSetTint(text, GTint(1, 1, 1, 1));
 
   // string positions
