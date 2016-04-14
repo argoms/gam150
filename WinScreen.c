@@ -1,7 +1,7 @@
 /*!
 Project (working title): Epoch
 \file   WinScreen.c
-\author Tarrant Mangasarian, James Do
+\author Tarrant Mangasarian
 \par    email: j.do\@digipen.edu
 \par    email: tarrant.mangasarian\@digipen.edu
 \par    Course: GAM150

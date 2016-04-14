@@ -1,3 +1,12 @@
+/*!
+Project (working title): Epoch
+\file   Enemy.h
+\author Harmonson Park
+\par    email: h.noah\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
+\brief
+*/
 #pragma once
 #include "GameObject.h"
 #include "EnemyStateMachine.h"

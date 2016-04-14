@@ -256,13 +256,13 @@ void PlayerSimulate()
 
   //cheat codes:
   //press 1 for 100 health
-  if (AEInputCheckTriggered('1'))
+  if (AEInputCheckTriggered('O'))
   {
     player->entity->health = 100;
   }
 
   //press 2 for super speed +damage
-  if (AEInputCheckTriggered('2'))
+  if (AEInputCheckTriggered('P'))
   {
     if (playerAccel < 0.3)
     {
@@ -274,7 +274,7 @@ void PlayerSimulate()
     }
   }
   
-  if (AEInputCheckTriggered('2'))
+  if (AEInputCheckTriggered('P'))
   {
     if (attackDamage < 15)
     {

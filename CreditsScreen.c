@@ -1,4 +1,13 @@
-
+/*!
+Project (working title): Epoch
+\file   CreditsScreen.c
+\author Tarrant Mangasarian
+\par    email: tarrant.mangasarian\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
+\brief
+This file contains the function implementation to set up the credits screen
+*/
 #include "Graphics.h"
 #include "AEEngine.h"
 #include "LevelManager.h"

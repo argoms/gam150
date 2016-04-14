@@ -1,8 +1,7 @@
 /*!
 Project (working title): Epoch
 \file   TownScreen.c
-\author Tarrant Mangasarian, James Do
-\par    email: j.do\@digipen.edu
+\author Tarrant Mangasarian
 \par    email: tarrant.mangasarian\@digipen.edu
 \par    Course: GAM150
 \par    Copyright © 2016 DigiPen (USA) Corporation.

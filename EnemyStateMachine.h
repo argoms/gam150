@@ -1,3 +1,12 @@
+/*!
+Project (working title): Epoch
+\file   EnemyStateMachine.h
+\author Harmonson Park
+\par    email: h.noah\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
+\brief
+*/
 /* SHITTY HEADER */
 /* Noah made dis */
 /* Like a few days ago */

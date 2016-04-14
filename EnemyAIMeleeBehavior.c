@@ -1,3 +1,12 @@
+/*!
+Project (working title): Epoch
+\file   EnemyAIMeleeBehavior.c
+\author Harmonson Park
+\par    email: h.noah\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
+\brief
+*/
 #include "EnemyAIMeleeBehavior.h"
 #include "EnemyAnimations.h"
 #include "Isometric.h"

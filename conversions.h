@@ -12,7 +12,7 @@ include this if you have warnings with type conversions
 //to int
 int DoubleToInt(double d);
 int FloatToInt(float f);
-int LongFloatToInt(long float lf);//to do
+//int LongFloatToInt(long float lf);//to do
 //to float
 float DoubleToFloat(double d);
 float IntToFloat(int i);

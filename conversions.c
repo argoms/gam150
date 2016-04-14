@@ -93,8 +93,8 @@ float IntToFloat(int i)
 }
 
 /*************************************************************************/
-/*!
-\par   Function: LongIntToFloat
+/*! 
+\par DEPRECATED   Function: LongIntToFloat
 
 \par Description: converts a long int to a float
 
@@ -103,16 +103,16 @@ float IntToFloat(int i)
 \return  A converted float
 */
 /*************************************************************************/
-float LongIntToFloat(long int li)
-{
-  float f;      /* float for the result            */
-  f = (float)li;/* cast the long int to a float    */
-  return f;     /* return the result               */
-}
+//float LongIntToFloat(long int li)
+//{
+//  float f;      /* float for the result            */
+//  f = (float)li;/* cast the long int to a float    */
+//  return f;     /* return the result               */
+//}
 
 /*************************************************************************/
 /*!
-\par   Function: LongFloatToInt
+\par  DEPRECATED Function: LongFloatToInt
 
 \par Description: converts a long float to a int
 
@@ -121,12 +121,12 @@ float LongIntToFloat(long int li)
 \return  A converted int
 */
 /*************************************************************************/
-int LongFloatToInt(long float lf)
-{
-  int i;      /* int for the result            */
-  i = (int)lf;/* cast the long float to a int  */
-  return i;   /* return the result             */
-}
+//int LongFloatToInt(long float lf)
+//{
+//  int i;      /* int for the result            */
+//  i = (int)lf;/* cast the long float to a int  */
+//  return i;   /* return the result             */
+//}
 
 /*************************************************************************/
 /*!

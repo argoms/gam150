@@ -1,3 +1,12 @@
+/*!
+Project (working title): Epoch
+\file   EnemyStateMachine.c
+\author Harmonson Park
+\par    email: h.noah\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
+\brief
+*/
 #include "EnemyStateMachine.h"
 #include "EnemyAIMeleeBehavior.h"
 #include "EnemyAIRangedBehavior.h"

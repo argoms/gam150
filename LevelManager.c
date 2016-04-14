@@ -1,7 +1,7 @@
 /*!
 Project (working title): Epoch
 \file   LevelManager.c
-\author James Do
+\author James Do, Tarrant Mangasarian
 \par    email: j.do\@digipen.edu
 \par    Course: GAM150
 \par    Copyright © 2016 DigiPen (USA) Corporation.
