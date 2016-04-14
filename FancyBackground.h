@@ -1,17 +1,19 @@
-/**************************************************************************************************
-Project       :  EPOCH
-File          :  FancyBackground.h
-Author        :  Matt Chasengnou
-Created       :  4/5/16
-Description   :  Contains the functionality for doing fancy menu backgrounds.
-ChangeLog
+/*!
+Project (working title): Epoch
+\file   FancyBackground.h
+\author Matt Chasengnou
+\par    email: chasengnou.m@digipen.edu
+\par    Course: GAM150
+\par    Created:  4/5/16
+\par    Copyright © 2016 DigiPen (USA) Corporation.
+\brief
+Contains the functionality for doing fancy menu backgrounds.
 
+\ChangeLog
 4/6/16           Added in a base background
-
 4/10/16          Added in different behaviour. Now has horizontal scrolling and swirly behaviour.
 
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
-**************************************************************************************************/
+*/
 
 #ifndef FANCY_BACKGROUND_H
 #define FANCY_BACKGROUND_H

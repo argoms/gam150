@@ -1,21 +1,24 @@
-/**************************************************************************************************
-Project       :  EPOCH
-File          :  MapCreator.c
-Author        :  Matt Chasengnou
-Created       :  3/1/16
-Description   :  Provides functionality for generating tilemap info
-ChangeLog
+/*!
+Project (working title): Epoch
+\file   MapCreator.c
+\author Matt Chasengnou
+\par    email: chasengnou.m@digipen.edu
+\par    Course: GAM150
+\par    Created: 3/1/16
+\par    Copyright © 2016 DigiPen (USA) Corporation.
+\brief
+Provides functionality for map creator functions
 
+\ChangeLog
 -3/2/16       :  Renamed functions to more consistent convention
-                 Added pipelining functionality into iso maps
+Added pipelining functionality into iso maps
 
-
+DON'T READ
 NOTES       REMEMBER TO CONVERT YOUR X/Y to the iso X/Y
-            currently using matrix[y,x]
-            convert   to    matrix[x,y]
+currently using matrix[y,x]
+convert   to    matrix[x,y]
 
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
-**************************************************************************************************/
+*/
 /*-------------------------------------------------------------------------------------------------
 INCLUDES
 -------------------------------------------------------------------------------------------------*/

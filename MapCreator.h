@@ -1,11 +1,15 @@
-/**************************************************************************************************
-Project       :  EPOCH
-File          :  MapCreator.h
-Author        :  Matt Chasengnou
-Created       :  3/1/16
-Description   :  Provides forward declarations for map creator functions
-ChangeLog
+/*!
+Project (working title): Epoch
+\file   MapCreator.h
+\author Matt Chasengnou
+\par    email: chasengnou.m@digipen.edu
+\par    Course: GAM150
+\par    Created: 3/1/16
+\par    Copyright © 2016 DigiPen (USA) Corporation.
+\brief
+Provides interface for map creator functions
 
+\ChangeLog
 -3/2/16       :  Added generate to map direct pipelining
 
 DON'T READ
@@ -13,8 +17,7 @@ NOTES       REMEMBER TO CONVERT YOUR X/Y to the iso X/Y
 currently using matrix[y,x]
 convert   to    matrix[x,y]
 
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
-**************************************************************************************************/
+*/
 
 #ifndef MAP_CREATOR_H
 #define MAP_CREATOR_H

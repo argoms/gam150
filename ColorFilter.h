@@ -1,13 +1,17 @@
-/**************************************************************************************************
-Project       :  EPOCH
-File          :  ColorFilter.h
-Author        :  Matt Chasengnou
-Created       :  4/6/16
-Description   :  Contains the interface for working with ColorFilter.c.
-ChangeLog
+/*!
+Project (working title): Epoch
+\file   ColorFilter.h
+\author Matt Chasengnou
+\par    email: chasengnou.m@digipen.edu
+\par    Course: GAM150
+\par    Created:  4/6/16
+\par    Copyright © 2016 DigiPen (USA) Corporation.
+\brief
+Contains the interface for working with ColorFilter.c.
 
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
-**************************************************************************************************/
+\ChangeLog
+
+*/
 
 /*-------------------------------------------------------------------------------------------------
 DEFINES

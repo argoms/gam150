@@ -1,25 +1,28 @@
-/**************************************************************************************************
-Project       :  EPOCH
-File          :  Audio.c
-Author        :  Matt Chasengnou
-Created       :  1/25/16
-Description   :  Provides functionality for working with audio
-ChangeLog
-  -2/3/16     : Added LoadSoundSample, LoadSoundStream, PlaySound, and StopSound functions.
-  -2/9/16     : Fixed filepaths for the sound loading functions.
-                Sounds now play.
-                Added functionality to play music from a stream
-                Changed LoadSoundStream to LoadMusic.
-  -2/14/16    : Added data structures to store sound info.
-                Changed names of functions to Audio_FunctionName to make it easier to pick out
-                functions from this module.
-  -2/16/16    : Added basic error checking for back-end FMOD functions.
-                Modified functions to provide simpler interfaces.
-                Cleaned up code, removed deprecated code.
-  -3/8/16     : Added automatic initialization of sound assets
+/*!
+Project (working title): Epoch
+\file   Audio.c
+\author Matt Chasengnou
+\par    email: chasengnou.m@digipen.edu
+\par    Course: GAM150
+\par    Created: 1/25/16
+\par    Copyright © 2016 DigiPen (USA) Corporation.
+\brief
+Provides functionality for working with audio
 
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
-**************************************************************************************************/
+\ChangeLog
+-2/3/16     : Added LoadSoundSample, LoadSoundStream, PlaySound, and StopSound functions.
+-2/9/16     : Fixed filepaths for the sound loading functions.
+Sounds now play.
+Added functionality to play music from a stream
+Changed LoadSoundStream to LoadMusic.
+-2/14/16    : Added data structures to store sound info.
+Changed names of functions to Audio_FunctionName to make it easier to pick out
+functions from this module.
+-2/16/16    : Added basic error checking for back-end FMOD functions.
+Modified functions to provide simpler interfaces.
+Cleaned up code, removed deprecated code.
+-3/8/16     : Added automatic initialization of sound assets
+*/
 
 #include "Audio.h"
 #include <fmod.h>

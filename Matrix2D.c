@@ -1,16 +1,20 @@
-/*---------------------------------------------------------------------------
-Author        :  Matt Chasengnou
-File          :  Matrix2D.c  
-Created       :  1/19/16
-Description   :  Provides functions for matrix operations
-ChangeLog
+/*!
+Project (working title): Epoch
+\file   Matrix2D.c  
+\author Matt Chasengnou
+\par    email: chasengnou.m@digipen.edu
+\par    Course: GAM150
+\par    Created:  1/19/16
+\par    Copyright © 2016 DigiPen (USA) Corporation.
+\brief
+Provides functions for matrix operations
 
+\ChangeLog
 -1/20/16      :  Changes made to Matrix2DTranspose
 
 -NOTE: Don't count code from this. Reused from CS230.
+*/
 
-© Copyright 1996 - 2016, DigiPen Institute of Technology(USA).All rights reserved.
-----------------------------------------------------------------------------*/
 #include "Matrix2D.h"
 #include <math.h>
 

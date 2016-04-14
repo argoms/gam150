@@ -1,17 +1,20 @@
-/**************************************************************************************************
-Project       :  EPOCH
-File          :  Audio.h
-Author        :  Matt Chasengnou
-Created       :  1/25/16
-Description   :  Contains forward declarations used by Audio.c
-ChangeLog
-  -2/3/16     : Added LoadSoundSample, LoadSoundStream, PlaySound,
-                and StopSound functions.
-  -2/16/16    : Cleaned up file.
-                Implemented black-box approach to accessing audio
+/*!
+Project (working title): Epoch
+\file   Audio.h
+\author Matt Chasengnou
+\par    email: chasengnou.m@digipen.edu
+\par    Course: GAM150
+\par    Created: 1/25/16
+\par    Copyright © 2016 DigiPen (USA) Corporation.
+\brief
+Contains forward declarations used by Audio.c
 
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
-**************************************************************************************************/
+\ChangeLog
+-2/3/16     : Added LoadSoundSample, LoadSoundStream, PlaySound,
+and StopSound functions.
+-2/16/16    : Cleaned up file.
+Implemented black-box approach to accessing audio
+*/
 
 #ifndef AUDIO_H
 #define AUDIO_H

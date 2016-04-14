@@ -1,17 +1,18 @@
-/**************************************************************************************************
-Project       :  EPOCH
-File          :  Compass.c
-Author        :  Matt Chasengnou
-Created       :  3/28/16
-Description   :  Contains the functionality of the compass on the screen.
-ChangeLog
+/*!
+Project (working title): Epoch
+\file   Compass.c
+\author Matt Chasengnou
+\par    email: chasengnou.m@digipen.edu
+\par    Course: GAM150
+\par    Created: 3/28/16
+\par    Copyright © 2016 DigiPen (USA) Corporation.
+\brief
+Provides the functionality of the compass on the screen.
 
+\ChangeLog
 4/1/16        :  Added oscillating behavior to compass
 
-4/12/16       :  Added comments to code
-
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
-**************************************************************************************************/
+*/
 #include "AEEngine.h"
 #include "Vector2D.h"
 #include "Graphics.h"
