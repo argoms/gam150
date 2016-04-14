@@ -31,6 +31,7 @@ void DeathScreenInit()
   //-----------------Tarant text------------------------------
   //text string
   
+  
 
   // window size vars
   float winMaxX;
@@ -54,6 +55,8 @@ void DeathScreenInit()
 
   string_xpos += 0;
   string_ypos += 0.25f * screenHeight;
+
+  PrintStats(GetPlayerStats());
 
   //TextString* textString;
   //textString = TextCreateString("EPOCH", string_xpos, string_ypos); // title

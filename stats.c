@@ -214,7 +214,7 @@ void PrintStats(statistics* stats)
     return;
   }
 
-  TextInit();
+  //TextInit();
   // window size vars
   float winMaxX;
   float winMaxY;
@@ -242,15 +242,31 @@ void PrintStats(statistics* stats)
   char buffer_highest_level_reached[BUFFER_SIZE];
   
   // put the stats into buffers
-  sprintf_s(&buffer_kills,"%d enemies killed.", stats->kills);
-  sprintf_s(&buffer_damage_taken, "%d damage taken", stats->damageTaken);
-  sprintf_s(&buffer_time,"Time: %d minutes %d seconds", GetMinutes(stats), GetSeconds(stats));
-  sprintf_s(&buffer_rooms_cleared,"%d rooms cleared", GetRoomsCleared(stats));
-  sprintf_s(&buffer_highest_level_reached, "Highest Level: %d", GetHighestLevelReached(stats));
+  sprintf(&buffer_kills,"%d enemies killed.", stats->kills);
+  sprintf(&buffer_damage_taken, "%d damage taken", stats->damageTaken);
+  sprintf(&buffer_time,"Time: %d minutes %d seconds", GetMinutes(stats), GetSeconds(stats));
+  sprintf(&buffer_rooms_cleared,"%d rooms cleared", GetRoomsCleared(stats));
+  sprintf(&buffer_highest_level_reached, "Highest Level: %d", GetHighestLevelReached(stats));
 
   
+  // print kills
+  stat_print_data = TextCreateHUDString(buffer_kills, 0, 100);
+  TextStringSetTint(stat_print_data, GTint(1, 1, 1, 1));
 
-  stat_print_data = TextCreateHUDString(buffer_kills, 0, 0);
+  //print damage taken
+  stat_print_data = TextCreateHUDString(buffer_damage_taken, 0, 25);
+  TextStringSetTint(stat_print_data, GTint(1, 1, 1, 1));
+
+  // print time
+  stat_print_data = TextCreateHUDString(buffer_time, 0, -50);
+  TextStringSetTint(stat_print_data, GTint(1, 1, 1, 1));
+
+  // print data
+  stat_print_data = TextCreateHUDString(buffer_rooms_cleared, 0, -125);
+  TextStringSetTint(stat_print_data, GTint(1, 1, 1, 1));
+
+  //print highest level
+  stat_print_data = TextCreateHUDString(buffer_highest_level_reached, 0, -200);
   TextStringSetTint(stat_print_data, GTint(1, 1, 1, 1));
 }
 
