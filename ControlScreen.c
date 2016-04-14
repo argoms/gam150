@@ -80,6 +80,23 @@ void ControlScreenInit()
 
   GameObject* button = CreateButton(0, button_sprite, NULL, button_type, buttonsize, meshx, meshy);
   //end button level 1 ------------------------------
+
+  text_offset = 550;
+
+  main_menu_text = TextCreateHUDString("WASD to Move", buttonx - text_offset, buttony -75);
+  TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
+
+  main_menu_text = TextCreateHUDString("Left click to attack", buttonx - text_offset, buttony - 150);
+  TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
+
+  main_menu_text = TextCreateHUDString("Right click or Space to dash/dodge", buttonx - text_offset, buttony - 225);
+  TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
+
+  main_menu_text = TextCreateHUDString("Dash then attack to do 3x damage", buttonx - text_offset, buttony - 300);
+  TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
+
+  main_menu_text = TextCreateHUDString("Use the mouse to aim the direction of the player ", buttonx - text_offset, buttony - 375);
+  TextStringSetTint(main_menu_text, GTint(1, 1, 1, 1));
 }
 
 void ControlScreenRun()
