@@ -84,7 +84,7 @@ void EnemyAI_MeleeCharger_AttackUpdate(GameObject* enemy, EnemyContainer* enemyC
     enemyContainer->attackWindup -= (float)AEFrameRateControllerGetFrameTime();
   }
 
-  if (enemyContainer->attackWindup <= .62f && enemyContainer->attackWindup > 0.6f)
+  if (enemyContainer->attackWindup <= .62f && enemyContainer->attackWindup > 0.6f && (enemy->physics->velocity.x == 0 && enemy->physics->velocity.y == 0))
   {
     Vector2D attackDirection;
     attackDirection.x = enemy->target->physics->position.x - enemy->physics->position.x;
@@ -98,16 +98,12 @@ void EnemyAI_MeleeCharger_AttackUpdate(GameObject* enemy, EnemyContainer* enemyC
 
   if (enemyContainer->attackWindup <= 0)
   {
-    Vector2D attackDirection;
-    attackDirection.x = enemy->target->physics->position.x - enemy->physics->position.x;
-    attackDirection.y = enemy->target->physics->position.y - enemy->physics->position.y;
-    Vector2DNormalize(&attackDirection, &attackDirection);
 
     enemy->physics->velocity.x = 0;
     enemy->physics->velocity.y = 0;
     enemyContainer->attackCooldown = enemyContainer->attackCooldownLength;
 
-    EnemyMeleeAttack(enemy, attackDirection);
+    EnemyMeleeAttack(enemy, enemyContainer->lookDirection);
     enemy->enemyAI->newEnemyState = ENEMY_STATE_COOLDOWN;
   }
 }
