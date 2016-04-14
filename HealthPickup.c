@@ -5,6 +5,7 @@
 #include "EnvironmentAssets.h"
 #include "EnvironmentalEffects.h"
 #include "Isometric.h"
+#include "Audio.h"
 
 static int HealthBoost = 10;
 static Animation* healthAnimation;
@@ -43,5 +44,13 @@ void HealthPickupCollide(GameObject* thisObject, GameObject* otherObject)
     otherObject->entity->health = HealthBoost;
     GameObjectDestroy(&thisObject);
     EffectRemove((GameObject*)(thisObject->miscData));
+
+    Audio_PlaySoundSample("coin.ogg", 0);
+    SetParticleAnim(GetAsset_Animation(asset_particleHeart));
+    GameObject* explosionEffect = EffectCreate(Vec2(-10.f, -10.f), Vec2(20, 20), IsoWorldToScreen(&thisObject->physics->position),
+      16, -1.f, Vec2(5, 10), 0.9f, 0.4f, 0, Vec2(60, 60), 10, GTint(1, 1, 1, 0.75));
+    ParticleApplyBehavior(particleBehavior_linearAlpha, explosionEffect);
+    ParticleSetLifetime(explosionEffect, 0.05f);
+
   }
 }

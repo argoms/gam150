@@ -23,6 +23,8 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "conversions.h"
 #include "EnvironmentalEffects.h"
 #include "EnvironmentAssets.h"
+#include "stats.h"
+#include "HealthPickup.h"
 
 //private info 
 #define NUM_ROOMS 12
@@ -522,9 +524,10 @@ void OpenRoom(GameObject* room)
     abort();
   }
 
-  
+  IncrementRoomsCleared(GetPlayerStats());
   MapRoom* roomData = (MapRoom*)(room->miscData);
 
+  HealthPickupSpawn(roomData->position.x, roomData->position.y);
   
   int i = 0;
   while (i < 4)
@@ -611,7 +614,9 @@ int GetRoomSize(GameObject* room)
   return roomData->size;
 }
 
-
+/*!
+\brief Called when an enemy is killed to decrement the number of enemies in the room.
+*/
 void EnemyKilled(GameObject* room)
 {
   //printf("\n thiswascalled \n \n");
