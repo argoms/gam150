@@ -336,8 +336,8 @@ void EnemyAnimationStateManager(GameObject* enemy)
 
   Vector2DNormalize(&facingDirection, &facingDirection);
 
-  // Standard Spiders, Melee and Ranged
-  if (enemyContainer->enemyType == ENEMY_TYPE_MELEE || enemyContainer->enemyType == ENEMY_TYPE_RANGED)
+  // Standard Spiders, Melee
+  if (enemyContainer->enemyType == ENEMY_TYPE_MELEE)
   {
     switch (enemyContainer->enemyAnimationState)
     {
@@ -350,7 +350,7 @@ void EnemyAnimationStateManager(GameObject* enemy)
         break;
       case ENEMY_ATTACK:
         enemy->sprite->animation = AnimationPlay(AS_SpiderWolfAttack, &facingDirection);
-        enemy->sprite->frameDelay = 4.0;
+        enemy->sprite->frameDelay = 3.0;
         break;
     }
 
@@ -371,7 +371,7 @@ void EnemyAnimationStateManager(GameObject* enemy)
       break;
     case ENEMY_ATTACK:
       enemy->sprite->animation = AnimationPlay(AS_ChargerTatoAttack, &(enemyContainer->lookDirection));
-      enemy->sprite->frameDelay = 10.0f;
+      enemy->sprite->frameDelay = 5.0f;
       break;
     case ENEMY_COOLDOWN:
       enemy->sprite->animation = AnimationPlay(AS_ChargerTatoCooldown, &(enemyContainer->lookDirection));
@@ -402,7 +402,7 @@ void EnemyAnimationStateManager(GameObject* enemy)
       break;
     case ENEMY_COOLDOWN:
       enemy->sprite->animation = AnimationPlay(AS_StabbyCooldown, &(enemyContainer->lookDirection));
-      enemy->sprite->frameDelay = 9.0f;
+      enemy->sprite->frameDelay = 6.0f;
       enemy->sprite->offset.y = 180.0f;
     }
   }
