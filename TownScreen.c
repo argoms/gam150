@@ -14,6 +14,8 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Text.h"
 #include <stdio.h>
 #include "Button.h"
+#include "stats.h"
+#include "PlayerEntity.h"
 
 extern int level;
 
@@ -38,10 +40,11 @@ void TownScreenInit()
   //char levelIndicator[3];
   //itoa(level, levelIndicator, 10);
   //TextCreateString(levelIndicator, -350, 50);
-  TextString* cleared = TextCreateString("Level Cleared!", 50, 0);
+  TextString* cleared = TextCreateString("Level Cleared!", 200, 0);
   TextStringSetTint(cleared, GTint(1, 1, 1, 1));
   //TextCreateString("PRESS SPACE TO LEAVE", -300, -50);
 
+  PrintStats(GetPlayerStats());
 
   Animation* anim2 = GCreateAnimation(1,
     GCreateTexture("animations/isoTileGreen.png"),
