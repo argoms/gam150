@@ -12,7 +12,6 @@
 */
 void ESMachineRun(GameObject* enemy)
 {
-  printf("ENEMYAI RUNNING\n");
   EnemyContainer* enemyContainer = enemy->miscData;
   if (enemy->enemyAI->currentEnemyState != enemy->enemyAI->newEnemyState)
   {
