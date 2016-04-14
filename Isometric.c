@@ -3,10 +3,10 @@ Project (working title): Epoch
 \file   Isometric.c
 \author James Do
 \par    email: j.do\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
 Isometric tilemap implementation. Contains functions relating to tilemaps and isometric conversions.
-
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "Vector2D.h"
 #include "Isometric.h"

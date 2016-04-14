@@ -3,10 +3,10 @@ Project (working title): Epoch
 \file   MapLevelSpawning.c
 \author James Do
 \par    email: j.do\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
 Implementation for functions that actually create the gameobjects corresponding to the map tiledata.
-
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 
 #include "Vector2D.h"

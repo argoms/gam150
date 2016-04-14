@@ -3,10 +3,12 @@ Project (working title): Epoch
 \file   EnvironmentalAssets.c
 \author James Do
 \par    email: j.do\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
 functions to load assets that may end up shared between multiple files/scopes
 
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
+
 */
 #include "EnvironmentAssets.h"
 #include "PlayerSmoke.h"
