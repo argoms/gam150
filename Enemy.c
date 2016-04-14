@@ -224,6 +224,15 @@ GameObject* EnemySpawn(float x, float y, int enemyType, GameObject* player)
 
   newEnemy->entity->health = health;
 
+  if (newEnemy->enemyAI)
+  {
+    printf("ENEMY SPAWNED\n");
+  }
+  else
+  {
+    printf("WHY NO AI\n");
+  }
+
   return newEnemy;
 }
 
