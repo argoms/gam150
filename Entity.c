@@ -55,7 +55,7 @@ void EntityTakeDamage(Entity** _entity, int _damage)
       {
         //CreatePlayerSmokePuff(4);
         AddScreenShake(0.1f, 300.f * _damage);
-        Audio_PlaySoundSample("hitSound.ogg", 0);
+        Audio_PlaySoundSample("grunt1.ogg", 0);
 
         //damage number popup
         DamageTextCreate((*_entity)->owner->physics->position, _damage, 1);

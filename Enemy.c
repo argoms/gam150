@@ -11,6 +11,7 @@
 #include "EnemyAIMeleeBehavior.h"
 #include "EnemyAIMeleeBigBehavior.h"
 #include "EnemyAIMeleeChargerBehavior.h"
+#include "Audio.h"
 
 static Animation* tracerAnimation;
 
@@ -286,6 +287,7 @@ void EnemyOnCollision(GameObject* _thisObject, GameObject* _otherObject)
 */
 void EnemyOnKilled(GameObject* _self)
 {
+  Audio_PlaySoundSample("SwordScrape.ogg", 0);
   GameObjectDestroy(&_self);
 }
 
