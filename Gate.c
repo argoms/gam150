@@ -22,6 +22,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include "Audio.h"
 #include <stdio.h>
 #include "ScreenShake.h"
+#include "HealthPickup.h"
 
 static float GATE_FADE_DIST = 5.f;
 
@@ -114,6 +115,8 @@ void GateOpened(GameObject* DeadGate)
     IsoTileSet(GetWorldGate(DeadGate)->positionX, GetWorldGate(DeadGate)->positionY - 1, tile_floor);
     break;
   }
+
+  HealthPickupSpawn(GetWorldGate(DeadGate)->positionX, GetWorldGate(DeadGate)->positionY);
   GameObjectDestroy(&DeadGate);
 }
 

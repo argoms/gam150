@@ -205,11 +205,11 @@ GameObject* EnemySpawn(float x, float y, int enemyType, GameObject* player)
   enemyEntity->maxHealth = health;
   EntityInit(&enemyEntity);
 
-  Animation* enemyAnimation = GCreateAnimation(1,
+/*  Animation* enemyAnimation = GCreateAnimation(1,
     GCreateTexture("animations/isotilePlaceholder1.png"),
     GCreateMesh(128.f, 64.f, 1, 1),
-    1);
-  GameObject* newEnemy = EnemyCreate(PhysicsCreateObject(Vec2(x, y), size), GCreateSprite(0, 40, enemyAnimation, 1), enemyEntity, entity_enemy, enemyType,
+    1);     */  
+  GameObject* newEnemy = EnemyCreate(PhysicsCreateObject(Vec2(x, y), size), GCreateSprite(0, 40, NULL, 1), enemyEntity, entity_enemy, enemyType,
     chaseSpeed, detectRange, knockbackForce, attackCooldown, attackCooldownLength,
     attackWindup, attackWindupLength, attackRange, attackKnockback, attackDamage, enemyProjectileSpeed, health);
 

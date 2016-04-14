@@ -145,6 +145,7 @@
     <ClCompile Include="ScreenShake.c">
       <Filter>Player</Filter>
     </ClCompile>
+    <ClCompile Include="HealthPickup.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
@@ -290,6 +291,7 @@
     <ClInclude Include="ScreenShake.h">
       <Filter>Player</Filter>
     </ClInclude>
+    <ClInclude Include="HealthPickup.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="EnemyFiles">

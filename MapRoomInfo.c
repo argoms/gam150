@@ -17,6 +17,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include <stdio.h>
 #include "MyRandom.h"
 #include "EnemySpawnEffect.h"
+#include "HealthPickup.h"
 
 int ChooseEnemyType();
 

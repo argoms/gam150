@@ -10,6 +10,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "EnvironmentAssets.h"
 #include "PlayerSmoke.h"
+#include "HealthPickup.h"
 
 //ASSET POINTER LIST:
 static Animation* Asset_particleGate;
@@ -43,7 +44,7 @@ void EnvironmentAssetsInitialize()
     1);
 
 
-
+  HealthPickupInitialize();
   InitializePlayerSmoke();
 
 

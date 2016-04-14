@@ -196,6 +196,7 @@
     <ClCompile Include="Gate.c" />
     <ClCompile Include="Graphics.c" />
     <ClCompile Include="Hazard.c" />
+    <ClCompile Include="HealthPickup.c" />
     <ClCompile Include="Isometric.c" />
     <ClCompile Include="LevelManager.c" />
     <ClCompile Include="LevelSelect.c" />
@@ -256,6 +257,7 @@
     <ClInclude Include="Gate.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Hazard.h" />
+    <ClInclude Include="HealthPickup.h" />
     <ClInclude Include="Isometric.h" />
     <ClInclude Include="LevelManager.h" />
     <ClInclude Include="LevelSelect.h" />
