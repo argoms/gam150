@@ -75,6 +75,12 @@ void GRender()
 
     while (spriteIndex)
     {
+      if (!spriteIndex->animation)
+      {
+        spriteIndex = spriteIndex->lowerSprite;
+        continue;
+      }
+
       SimAnimation(spriteIndex); //update sprite texture offsets according to animation
       
       //culling:
