@@ -69,6 +69,20 @@ void CreditsScreenInit()
   text = TextCreateString("Tarrant Mangasarian", winMinX + screenWidth / 5, winMinY + screenHeight / 2 - 240);
   TextStringSetTint(text, GTint(1, 1, 1, 1));
 
+
+  text = TextCreateString("President:", winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 + 170);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
+  text = TextCreateString("Claude Comair", winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 + 130);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
+
+  text = TextCreateString("Instructors:", winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 + 80);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
+  text = TextCreateString("Doug Schilling", winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 + 40);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
+
+  text = TextCreateString("Matthew Picioccio", winMinX + 2 * screenWidth / 3, winMinY + screenHeight / 2 + 0);
+  TextStringSetTint(text, GTint(1, 1, 1, 1));
+
   // string positions
   float string_xpos = 0.0f; // default x
   float string_ypos = 0.0f; // default y
