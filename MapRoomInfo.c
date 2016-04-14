@@ -17,7 +17,7 @@ All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 #include <stdio.h>
 #include "MyRandom.h"
 #include "EnemySpawnEffect.h"
-#include "EnemyHealthIndicator.h"
+#include "HealthPickup.h"
 
 int ChooseEnemyType();
 
@@ -104,8 +104,6 @@ void MapRoomBehavior_BasicEnemies(MapRoom* roomData)
       roomData->numEnemies++;
       newEnemy = EnemySpawn(cursor.x, cursor.y, ChooseEnemyType(), GetPlayerObject());
       newEnemy->parent = roomData->parent;
-      AddEnemyHealthBar(newEnemy, Vec2(0, 100));
-
 
       //create particle effect
       CreateEnemySpawnEffect(cursor, 16);
@@ -145,7 +143,6 @@ void MapRoomBehavior_SmallRoom(MapRoom* roomData)
       newEnemy = EnemySpawn(cursor.x, cursor.y, ChooseEnemyType(), GetPlayerObject());
       newEnemy->parent = roomData->parent;
       CreateEnemySpawnEffect(cursor, 16);
-      AddEnemyHealthBar(newEnemy, Vec2(-100, 100));
     }
     else
     {
