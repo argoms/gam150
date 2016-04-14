@@ -3,6 +3,8 @@ Project (working title): Epoch
 \file   Graphics.c
 \author James Do
 \par    email: j.do\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
 Graphics implementation front end handling sprite layering, dynamic sprite creation etc.
 
@@ -14,8 +16,6 @@ index through every instance in the array in debug mode, while 0 -> array length
 doing 0 ->array length in release mode crashes (as expected, since you go 1 index out of bounds), while
 0 -> array length - 1 indexes through and applies the effect to all the items in the array. Stuff's weird.
 
-
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "Graphics.h"
 #include "AEEngine.h"

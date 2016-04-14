@@ -3,11 +3,11 @@ Project (working title): Epoch
 \file   EntityAnimation.c
 \author James Do
 \par    email: j.do\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
 Wrapper around graphics animations objects to allow for easier animation setting for game objects that face multiple directions (e.g. player).
 Stores groups of animation objects and outputs the appropriate one given a direction vector.
-
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "EntityAnimation.h"
 #include <stdlib.h>

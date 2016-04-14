@@ -1,15 +1,14 @@
-/*****************************************************************************/
 /*!
+Project (working title): Epoch
 \file   Button.h
 \author Tarrant Mangasarian
 \par    email: tarrant.mangasarian\@digipen.edu
-\par    DigiPen login: tarrant.mangasarian
 \par    Course: GAM150
-\date   2/19/2016
+\par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
 This file contains the function declarations for buttons
 */
-/*****************************************************************************/
+
 #include "GameObject.h"
 #include "AEEngine.h"
 #include "LevelManager.h"

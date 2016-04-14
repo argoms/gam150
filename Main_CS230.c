@@ -1,14 +1,20 @@
-// ---------------------------------------------------------------------------
-// Project Name		:	Simple Demo
-// File Name		:	Main.cpp
-// Author			:	Antoine Abi Chacra
-// Creation Date	:	2012/01/11
-// Purpose			:	entry point for program
-// History			:
-// - 2012/01/11		:	- initial implementation
 
-// - 2/12/16        :  Matt - Added sample audio playback.
-// ---------------------------------------------------------------------------
+
+/*!
+Project (working title): Epoch
+\file   Main_CS230.c
+\author Antoine Abi Chacra
+\par    email: achacra\@digipen.edu
+\par    Course: CS230
+\par    Copyright © 2016 DigiPen (USA) Corporation.
+\brief
+entry point for program
+
+ History			:
+ - 2012/01/11		:	- initial implementation
+
+ - 2/12/16        :  Matt - Added sample audio playback.
+*/
 
 // ---------------------------------------------------------------------------
 // includes

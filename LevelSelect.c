@@ -1,3 +1,13 @@
+/*!
+Project (working title): Epoch
+\file   LevelSelect.c
+\author Tarrant Mangasarian
+\par    email: tarrant.mangasarian\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
+\brief
+This file contains function implementations for setting up the level select screen layout
+*/
 #include "LevelSelect.h"
 #include "Graphics.h"
 #include "AEEngine.h"

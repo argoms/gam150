@@ -3,10 +3,11 @@ Project (working title): Epoch
 \file   Gate.c
 \author James Do
 \par    email: j.do\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
 Contains functionality for gates that close when the player enters a room.
 
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 
 #include "Gate.h"

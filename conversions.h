@@ -1,16 +1,14 @@
-/*****************************************************************************/
 /*!
+Project (working title): Epoch
 \file   conversions.h
 \author Tarrant Mangasarian
 \par    email: tarrant.mangasarian\@digipen.edu
-\par    DigiPen login: tarrant.mangasarian
 \par    Course: GAM150
-\date   2/14/2016
+\par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
 This file contains the function prototypes for conversions
 include this if you have warnings with type conversions
 */
-/*****************************************************************************/
 //to int
 int DoubleToInt(double d);
 int FloatToInt(float f);

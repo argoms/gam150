@@ -3,10 +3,11 @@ Project (working title): Epoch
 \file   Door.c
 \author James Do
 \par    email: j.do\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
 Contains functionality for doors to move between levels on contact.
 
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "Door.h"
 #include "EnvironmentalEffects.h"

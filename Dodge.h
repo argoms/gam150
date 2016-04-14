@@ -1,3 +1,13 @@
+/*!
+Project (working title): Epoch
+\file   Dodge.c
+\author Tarrant Mangasarian
+\par    email: tarrant.mangasarian\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
+\brief
+This file contains function declarations for player dodging/invulnerabilty on hit behavior
+*/
 #pragma once
 #include "Graphics.h"
 #include "AEEngine.h"

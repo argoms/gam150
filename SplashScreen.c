@@ -3,10 +3,11 @@ Project (working title): Epoch
 \file   SplashScreen.c
 \author James Do
 \par    email: j.do\@digipen.edu
+\par    Course: GAM150
+\par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
 Functions handling the starting splash screen
 
-All content © 2016 DigiPen (USA) Corporation, all rights reserved.
 */
 #include "Graphics.h"
 #include "AEEngine.h"
