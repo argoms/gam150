@@ -2,6 +2,7 @@
 #include "EnemyAnimations.h"
 #include "Isometric.h"
 #include "AEEngine.h"
+#include "ScreenShake.h"
 
 /****************PATROL******************/
 
@@ -85,12 +86,14 @@ void EnemyAI_MeleeBig_AttackUpdate(GameObject* enemy, EnemyContainer* enemyConta
 
   if (enemyContainer->attackWindup <= 0)
   {
+    // Deprecated code
     //Vector2D attackDirection;
     //attackDirection.x = enemy->target->physics->position.x - enemy->physics->position.x;
     //attackDirection.y = enemy->target->physics->position.y - enemy->physics->position.y;
     //Vector2DNormalize(&attackDirection, &(enemyContainer->lookDirection));
     enemyContainer->attackCooldown = enemyContainer->attackCooldownLength;
 
+    AddScreenShake(0.1f, 200);
     EnemyMeleeAttack(enemy, enemyContainer->lookDirection);
     enemy->enemyAI->newEnemyState = ENEMY_STATE_COOLDOWN;
   }
