@@ -26,7 +26,7 @@ void DeathScreenInit()
   //TextCreateString("PRESS SPACE TO RETURN", -360, -50);
   //TextCreateString("TO MAIN MENU", -300, -100);
   
-  PrintStats(GetPlayerStats()); // print the player stats
+  //PrintStats(GetPlayerStats()); // print the player stats
   //TARRANT CODE START
   //-----------------Tarant text------------------------------
   //text string
