@@ -17,6 +17,7 @@ static Animation* Asset_particleGate;
 static Animation* Asset_particleHitEnemy;
 static Animation* Asset_smokeParticle;
 static Animation* Asset_particleDoor;
+static Animation* Asset_particleHeart;
 
 /*!
 \brief Loads in relevent assets and stores the addresses of the loaded assets in static pointers.
@@ -43,6 +44,11 @@ void EnvironmentAssetsInitialize()
     GCreateMesh(24.f, 24.f, 1, 1),
     1);
 
+  Asset_particleHeart = GCreateAnimation(1,
+    GCreateTexture("animations/heart.png"),
+    GCreateMesh(8.f, 12.f, 1, 1),
+    1);
+
 
   HealthPickupInitialize();
   InitializePlayerSmoke();
@@ -65,6 +71,9 @@ Animation* GetAsset_Animation(int assetName)
     break;
   case asset_particleDoor:
     return Asset_particleDoor;
+    break;
+  case asset_particleHeart:
+    return Asset_particleHeart;
     break;
   }
 

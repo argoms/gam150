@@ -19,7 +19,8 @@ enum AssetsList
   asset_particleHitEnemy,
   asset_particleHitPlayer,
   asset_smokeParticle,
-  asset_particleDoor
+  asset_particleDoor,
+  asset_particleHeart
 };
 
 void EnvironmentAssetsInitialize();
