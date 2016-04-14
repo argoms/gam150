@@ -277,6 +277,7 @@
     <ClInclude Include="PlayerEntity.h" />
     <ClInclude Include="PlayerHUD.h" />
     <ClInclude Include="PlayerSmoke.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="ScreenShake.h" />
     <ClInclude Include="SplashScreen.h" />
     <ClInclude Include="stats.h" />
@@ -290,6 +291,12 @@
     <Text Include="EnemyMelee.txt" />
     <Text Include="EnemyMeleeCharger.txt" />
     <Text Include="EnemyRanged.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Epoch.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

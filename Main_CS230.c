@@ -29,6 +29,7 @@ entry point for program
 #include "MapCreator.h"
 
 #include <Windows.h>
+#include "resource.h"
 // ---------------------------------------------------------------------------
 
 // Libraries
@@ -111,6 +112,12 @@ int WINAPI WinMain(HINSTANCE instanceH, HINSTANCE prevInstanceH, LPSTR command_l
   /* End full screen code - Matt */
 
   /* End Matt's window stuff */
+
+  /* Set icon for game window. Thanks to Aaron Kitchen for posting the solution on the forums! */
+  HANDLE iconH = LoadImage(instanceH, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 0, 0, LR_DEFAULTSIZE);
+
+  if (NULL != iconH)
+    SendMessage(hwnd, WM_SETICON, ICON_BIG, (LPARAM)iconH);
 
 
   /*----------------------------------------------------------------------------

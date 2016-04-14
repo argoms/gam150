@@ -302,6 +302,7 @@
     <ClInclude Include="CreditsScreen.h">
       <Filter>Menu/UI</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="EnemyFiles">
@@ -348,5 +349,11 @@
     <Text Include="EnemyMeleeCharger.txt">
       <Filter>EnemyFiles</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Epoch.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
   </ItemGroup>
 </Project>
