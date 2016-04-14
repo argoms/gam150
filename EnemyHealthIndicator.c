@@ -55,7 +55,7 @@ void HealthObjectSimulate(GameObject* inst)
   int count = 0;
   
   //fill characters in buffer
-  while (tempHP > 0 && count < 10) 
+  while (tempHP > 0 && count < 9) 
   {
     count++;
     hpstring[count] = 4;
@@ -63,13 +63,20 @@ void HealthObjectSimulate(GameObject* inst)
   }
   if (GetHIComponent(inst)->healthText)
   {
-    TextRemoveString(GetHIComponent(inst)->healthText);
+    if (GetHIComponent(inst)->healthText)
+    {
+      TextRemoveString(GetHIComponent(inst)->healthText); 
+    }
   }
 
   Vector2D writePosition = GetHIComponent(inst)->enemyOwner->physics->position;
   writePosition = IsoWorldToScreen(&writePosition);
-  GetHIComponent(inst)->healthText = TextCreateString(hpstring, writePosition.x + GetHIComponent(inst)->offset.x, 
-                                                      writePosition.y + GetHIComponent(inst)->offset.y);
+
+  if (count > 0)
+  {
+    GetHIComponent(inst)->healthText = TextCreateString(hpstring, writePosition.x + GetHIComponent(inst)->offset.x,
+      writePosition.y + GetHIComponent(inst)->offset.y);
+  }
 }
 
 /*!
