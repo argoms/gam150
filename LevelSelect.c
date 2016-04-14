@@ -28,7 +28,7 @@ void LevelSelectScreenInit()
   float screenHeight = winMaxY - winMinY;
 
   TextString* title;
-  title = TextCreateHUDString("Level Select",0,0.25 * screenHeight );
+  title = TextCreateHUDString("Level Select",0,0.25f * screenHeight );
   TextStringSetTint(title, GTint(1, 1, 1, 1));
 
 

@@ -26,7 +26,8 @@ static EnemyInfo enemyInfo[] =
 //call once
 void EnemyImportInfo(int enemyType, const char *file)
 {
-  FILE *infile = fopen(file, "r");
+  FILE *infile;
+  fopen_s(&infile, file, "r");
   if (infile)
   {
     while (!feof(infile))
@@ -49,23 +50,23 @@ void EnemyImportInfo(int enemyType, const char *file)
       float attackKnockback;      /* Knockback the PLAYER feels when hit by an ENEMY'S attack */
       float enemyProjectileSpeed; /* Projectile speed for ranged enemies, set it to 0 for melee enemies obviously. Setting it to anything but 0 for melee enemies will do nothing anyways */
 
-      fscanf(infile, "ENEMY - %i\n", &enemyTypeNumber);
-      fscanf(infile, "  SIZE     - %f\n", &size);
-      fscanf(infile, "  HEALTH   - %i\n", &health);
+      fscanf_s(infile, "ENEMY - %i\n", &enemyTypeNumber);
+      fscanf_s(infile, "  SIZE     - %f\n", &size);
+      fscanf_s(infile, "  HEALTH   - %i\n", &health);
 
-      fscanf(infile, "  CHASE SPEED     - %f\n", &chaseSpeed);
-      fscanf(infile, "  PATROL SPEED    - %f\n", &patrolSpeed);
-      fscanf(infile, "  DETECT RANGE    - %f\n", &detectRange);
-      fscanf(infile, "  KNOCKBACK FORCE - %f\n", &knockbackForce);
+      fscanf_s(infile, "  CHASE SPEED     - %f\n", &chaseSpeed);
+      fscanf_s(infile, "  PATROL SPEED    - %f\n", &patrolSpeed);
+      fscanf_s(infile, "  DETECT RANGE    - %f\n", &detectRange);
+      fscanf_s(infile, "  KNOCKBACK FORCE - %f\n", &knockbackForce);
 
-      fscanf(infile, "  ENEMY ATTACK COOLDOWN        - %f\n", &attackCooldown);
-      fscanf(infile, "  ENEMY ATTACK COOLDOWN LENGTH - %f\n", &attackCooldownLength);
-      fscanf(infile, "  ENEMY ATTACK WINDUP          - %f\n", &attackWindup);
-      fscanf(infile, "  ENEMY ATTACK WINDUP LENGTH   - %f\n", &attackWindupLength);
-      fscanf(infile, "  ENEMY ATTACK RANGE           - %f\n", &attackRange);
-      fscanf(infile, "  ENEMY ATTACK DAMAGE          - %i\n", &attackDamage);
-      fscanf(infile, "  ENEMY ATTACK KNOCKBACK FORCE - %f\n", &attackKnockback);
-      fscanf(infile, "  ENEMY PROJECTILE SPEED       - %f\n", &enemyProjectileSpeed);
+      fscanf_s(infile, "  ENEMY ATTACK COOLDOWN        - %f\n", &attackCooldown);
+      fscanf_s(infile, "  ENEMY ATTACK COOLDOWN LENGTH - %f\n", &attackCooldownLength);
+      fscanf_s(infile, "  ENEMY ATTACK WINDUP          - %f\n", &attackWindup);
+      fscanf_s(infile, "  ENEMY ATTACK WINDUP LENGTH   - %f\n", &attackWindupLength);
+      fscanf_s(infile, "  ENEMY ATTACK RANGE           - %f\n", &attackRange);
+      fscanf_s(infile, "  ENEMY ATTACK DAMAGE          - %i\n", &attackDamage);
+      fscanf_s(infile, "  ENEMY ATTACK KNOCKBACK FORCE - %f\n", &attackKnockback);
+      fscanf_s(infile, "  ENEMY PROJECTILE SPEED       - %f\n", &enemyProjectileSpeed);
 
       int arraySize = sizeof(enemyInfo) / sizeof(EnemyInfo);
       for (int i = 0; i < arraySize; i++)
