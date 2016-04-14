@@ -191,6 +191,18 @@ int GetHighestLevelReached(statistics* stats)
   }
 }
 
+int GetRawTime(statistics* stats)
+{
+  if (stats)
+  {
+    return (stats->time);
+  }
+  else
+  {
+    return 0;
+  }
+}
+
 int ResetStats(statistics* stats)
 {
   if (stats)
@@ -233,6 +245,8 @@ void PrintStats(statistics* stats)
 
 
   TextString* stat_print_data;
+  float score = 0.0f;
+  score = ((stats->rooms_cleared) * (stats->rooms_cleared)) / ((stats->time) * (0.15f)) + (stats->kills)  - (stats->damageTaken);
 
   // init buffers for the 
   char buffer_kills[BUFFER_SIZE];
@@ -240,14 +254,15 @@ void PrintStats(statistics* stats)
   char buffer_time[BUFFER_SIZE];
   char buffer_rooms_cleared[BUFFER_SIZE];
   char buffer_highest_level_reached[BUFFER_SIZE];
+  char buffer_overall_score[BUFFER_SIZE];
   
   // put the stats into buffers
   sprintf(&buffer_kills,"%d enemies killed", stats->kills);
   sprintf(&buffer_damage_taken, "%d damage taken", stats->damageTaken);
-  sprintf(&buffer_time,"Time: %d minutes %d seconds", GetMinutes(stats), GetSeconds(stats));
+  sprintf(&buffer_time,"Time: %d\' %d\"", GetMinutes(stats), GetSeconds(stats));
   sprintf(&buffer_rooms_cleared,"%d rooms cleared", GetRoomsCleared(stats));
   sprintf(&buffer_highest_level_reached, "Highest Level: %d", GetHighestLevelReached(stats));
-
+  sprintf(&buffer_overall_score, "Your score is %.3f", score);
   
   // print kills
   stat_print_data = TextCreateHUDString(buffer_kills, 0, 100);
@@ -266,7 +281,11 @@ void PrintStats(statistics* stats)
   TextStringSetTint(stat_print_data, GTint(1, 1, 1, 1));
 
   //print highest level
-  stat_print_data = TextCreateHUDString(buffer_highest_level_reached, 0, -200);
+  //stat_print_data = TextCreateHUDString(buffer_highest_level_reached, 0, -125);
+  //TextStringSetTint(stat_print_data, GTint(1, 1, 1, 1));
+
+  //print score
+  stat_print_data = TextCreateHUDString(buffer_overall_score, 0, -200);
   TextStringSetTint(stat_print_data, GTint(1, 1, 1, 1));
 }
 

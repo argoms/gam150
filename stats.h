@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "Text.h"
 #include  <stdio.h>
+//#include "PlayerEntity.h"
 
 typedef struct statistics statistics;
 struct statistics
@@ -37,6 +38,7 @@ int GetSeconds(statistics* stats);
 int GetMinutes(statistics* stats);
 int GetHighestLevelReached(statistics* stats);
 int GetRoomsCleared(statistics* stats);
+int GetRawTime(statistics* stats);
 
 int ResetStats(statistics* stats);
 void PrintStats(statistics* stats);

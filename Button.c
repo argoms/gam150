@@ -12,6 +12,7 @@ This file contains the function implementations for buttons
 /*****************************************************************************/
 #include "Button.h"
 #include "Audio.h"
+//#include "stats.h"
 
 #define LEFT_CLICK 1
 #define RIGHT_CLICK 2
@@ -349,24 +350,29 @@ void PlayButtonHoverAnimation(GameObject *button)
   //printf("played hover animation");
   //ScaleButtonSpriteColor(button);
 
+  //statistics* playerStats = GetPlayerStats();
   if (button_data->type == LEVEL_ONE_BUTTON)
   {
     level = LEVEL_ONE_BUTTON;  //set the level
+    //playerStats->highest_level_reached = 1;
   }
   else
   if (button_data->type == LEVEL_TWO_BUTTON)
   {
     level = LEVEL_TWO_BUTTON;  //set the level
+    //playerStats->highest_level_reached = 2;
   }
   else
   if (button_data->type == LEVEL_THREE_BUTTON)
   {
     level = LEVEL_THREE_BUTTON;  //set the level
+   // playerStats->highest_level_reached = 3;
   }
   else
   if (button_data->type == LEVEL_FOUR_BUTTON)
   {
     level = LEVEL_FOUR_BUTTON;  //set the level
+   // playerStats->highest_level_reached = 4;
   }
   else
   {
