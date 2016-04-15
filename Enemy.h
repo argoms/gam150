@@ -6,6 +6,7 @@ Project (working title): Epoch
 \par    Course: GAM150
 \par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
+  Function declarations and enums for Enemy.c
 */
 #pragma once
 #include "GameObject.h"
@@ -13,6 +14,7 @@ Project (working title): Epoch
 
 //#define PI 3.1415926535897
 
+// Enums used to determien AI states
 enum
 {
   ENEMY_STATE_IDLE,
@@ -22,6 +24,10 @@ enum
   ENEMY_STATE_COOLDOWN
 };
 
+/*!
+\struct EnemyInfo
+\brief Enemy info that holds everything to do with an enemy, all its stats anyways
+*/
 typedef struct
 {
   int enemyType;    /* Enemy type, refer to enum in GameObject.h | REMEMBER THIS TAKES AN INTEGER NUMBER NOT A STRING */
@@ -41,7 +47,7 @@ typedef struct
   int attackDamage;           /* Self explanatory, applies to both melee and projectile enemies*/
   float attackKnockback;      /* Knockback the PLAYER feels when hit by an ENEMY'S attack */
   float enemyProjectileSpeed; /* Projectile speed for ranged enemies, set it to 0 for melee enemies obviously. Setting it to anything but 0 for melee enemies will do nothing anyways */
-  Animation* enemyAnimation;
+  Animation* enemyAnimation;  /* The animation for the enemy*/
 }EnemyInfo;
 
 void EnemyHitBoxInitialize();

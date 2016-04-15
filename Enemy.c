@@ -6,6 +6,8 @@ Project (working title): Epoch
 \par    Course: GAM150
 \par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
+  Handles enemy creation, importing enemy data for txt files, collision for enemies, enemy attacks,
+  and enemy death
 */
 #include "Enemy.h"
 #include "EnemyAnimations.h"
@@ -22,8 +24,10 @@ Project (working title): Epoch
 #include "EnemyAIMeleeChargerBehavior.h"
 #include "Audio.h"
 
+// To hold the hitbox animation, which is supposed to be invisible
 static Animation* tracerAnimation;
 
+// Static that holds onto all enemy information for the game session
 static EnemyInfo enemyInfo[] =
 {
   { ENEMY_TYPE_MELEE        , 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL }, //0
@@ -33,6 +37,9 @@ static EnemyInfo enemyInfo[] =
   { ENEMY_TYPE_HEALER       , 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL }  //4
 };
 
+/*!
+\brief Setup of hitbox used in enemy attacks
+*/
 void EnemyHitBoxInitialize()
 {
   tracerAnimation = GCreateAnimation(1,
@@ -41,7 +48,12 @@ void EnemyHitBoxInitialize()
     1);
 }
 
-//call once
+/*!
+\brief Imports data from txt files for enemies
+
+\param enemyType Should take an enum that specifies what the enemy type is
+\param file The name of the text file
+*/
 void EnemyImportInfo(int enemyType, const char *file)
 {
   FILE *infile;
@@ -118,11 +130,36 @@ void EnemyImportInfo(int enemyType, const char *file)
 \brief
 Creates an enemy
 
-Don't actually call this method. Use EnemySpawn function instead, which calls this anyways
-
-//KILL ME
-\param
-a metrik fuk ton
+\param _physics 
+  Physics component
+\param _sprite 
+  Sprite component
+\param _entity 
+  Entity component
+\param _type 
+  Enum for the entity type
+\param enemyType 
+  enum for the enemy type (SEPARATE FROM ENTITY TYPE)
+\param chaseSpeed 
+  Chase speed of the enemy
+\param detectRange 
+  detection range of the enemy
+\param knockback 
+  Knockback of enemy
+\param attackCooldown 
+  Internal timer for attackcooldown
+\param attackCooldownLength 
+  The actual length of the attackcooldown
+\param attackWindup 
+  Internal timer for attackwindup
+\param attackRange 
+  Attack range of enemy
+\param attackKnockbackForce 
+  Knockback force of enemy
+\param projectileSpeed 
+  Unused
+\param health 
+  Health of enemy
 */
 GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entity, int _type,
   int enemyType, float chaseSpeed, float detectRange, float knockback, float attackCooldown, float attackCooldownLength, float attackWindup, float attackWindupLength,
@@ -178,6 +215,19 @@ GameObject* EnemyCreate(PhysicsObject* _physics, Sprite* _sprite, Entity* _entit
   return enemy;
 }
 
+/*
+\brief
+  SPAWNS an enemy. Uses EnemyCreate and initializes necessary values to spawn an enemy at a desired location
+
+\param x
+  X position to put the enemy
+\param y
+  Y position to put the enemy
+\param enemyType
+  Enemy type which is an enum
+\param player
+  Pointer to the player
+*/
 GameObject* EnemySpawn(float x, float y, int enemyType, GameObject* player)
 {
   float size;       /* Size */
@@ -256,7 +306,12 @@ GameObject* EnemySpawn(float x, float y, int enemyType, GameObject* player)
 }
 
 
-
+/*
+\brief
+  Enemy's initialize. Really it's a safety check to make sure we're initializing an enemy
+\param _thisObject
+  Hopefully this is an enemy object
+*/
 void EnemyInitialize(GameObject* _thisObject)
 {
 
@@ -269,6 +324,12 @@ void EnemyInitialize(GameObject* _thisObject)
 
 }
 
+/*
+\brief
+  Runs the AI state machine and the Animation state machine
+\param _thisObject
+  Hopefully this is an enemy object
+*/
 void EnemySimulate(GameObject* _thisObject)
 {
   ESMachineRun(_thisObject);
@@ -302,6 +363,14 @@ void EnemyOnKilled(GameObject* _self)
   GameObjectDestroy(&_self);
 }
 
+/*
+\brief
+  Melee attack for enemy's, spawns a hitbox 
+\param _thisObject
+  Hopefully this is an enemy object that is using this
+\param attackDirection
+  The direction to spawn the hitbox
+*/
 void EnemyMeleeAttack(GameObject* _thisObject, Vector2D attackDirection)
 {
   GameObject* tracer = GameObjectCreate(
@@ -314,6 +383,16 @@ void EnemyMeleeAttack(GameObject* _thisObject, Vector2D attackDirection)
   tracer->parent = _thisObject;
 }
 
+/*
+\brief
+  Ranged attack for enemy's, spawns a hitbox
+\param _thisObject
+  Hopefully this is an enemy object that is using this
+\param attackDirection
+  The direction to spawn the hitbox
+\param projectileSpeed
+  Projectile speed of the projectile to spawn
+*/
 void EnemyRangedAttack(GameObject* _thisObject, Vector2D attackDirection, float projectileSpeed)
 {
   GameObject* tracer = GameObjectCreate(
@@ -329,6 +408,14 @@ void EnemyRangedAttack(GameObject* _thisObject, Vector2D attackDirection, float 
   tracer->parent = _thisObject;
 }
 
+/*
+\brief
+  The collision logic for hitbox which handles damaging the player when they are hit by it
+\param _thisObject
+  Hopefully the hitbox
+\param _otherObject
+  Otherobject to resolve a collision check
+*/
 void EnemyTracerProjectileCollision(GameObject* _thisObject, GameObject* _otherObject)
 {
   if (_otherObject && _otherObject->type == entity_player && (_otherObject->entity && _otherObject->entity->canBeDamaged))
@@ -339,6 +426,12 @@ void EnemyTracerProjectileCollision(GameObject* _thisObject, GameObject* _otherO
   }
 }
 
+/*
+\brief
+  Despawns the hitbox in case the enemy misses
+\param _thisTracer
+  The hitbox to handle lifetime of
+*/
 void EnemyTracerSimulate(GameObject* _thisTracer)
 {
   if (_thisTracer->projectileLifeTime < 0)
@@ -349,6 +442,12 @@ void EnemyTracerSimulate(GameObject* _thisTracer)
 }
 
 /*
+\brief
+  Used when resolve collisions between enemies and player
+\param _thisObject
+  Hopefully an enemy object
+\param _otherObject
+  Other object to resolve collision check against
 */
 static void EnemyKnockBack(GameObject* _thisObject, GameObject* _otherObject)
 {

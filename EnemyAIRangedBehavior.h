@@ -6,6 +6,7 @@ Project (working title): Epoch
 \par    Course: GAM150
 \par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
+  DEPRECATED AND UNUSED
 */
 #pragma once
 #include "EnemyStateMachine.h"

@@ -1,11 +1,12 @@
 /*!
-Project (working title): Epoch
+Project: Epoch
 \file   EnemyAIMeleeBehavior.c
 \author Harmonson Park
 \par    email: h.noah\@digipen.edu
 \par    Course: GAM150
 \par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
+  AI Behavior for the Spider enemy
 */
 #include "EnemyAIMeleeBehavior.h"
 #include "EnemyAnimations.h"
@@ -14,6 +15,12 @@ Project (working title): Epoch
 
 /****************PATROL******************/
 
+/*!
+\brief Called when entering the patrol state
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_Melee_PatrolStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemy->physics->velocity.x = 0;
@@ -21,6 +28,12 @@ void EnemyAI_Melee_PatrolStart(GameObject* enemy, EnemyContainer* enemyContainer
   enemyContainer->enemyAnimationState = ENEMY_IDLE;
 }
 
+/*!
+\brief Constantly called for the Patrol state, simply detects for the player's presence
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_Melee_PatrolUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   float distanceToPlayer = Vector2DSquareDistance(&(enemy->physics->position), &(enemy->target->physics->position));
@@ -31,6 +44,12 @@ void EnemyAI_Melee_PatrolUpdate(GameObject* enemy, EnemyContainer* enemyContaine
   }
 }
 
+/*!
+\brief When exiting the patrol state, sets the animation state
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_Melee_PatrolExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~ENEMY_IDLE;
@@ -38,11 +57,23 @@ void EnemyAI_Melee_PatrolExit(GameObject* enemy, EnemyContainer* enemyContainer)
 
 /****************CHASE******************/
 
+/*!
+\brief Sets enemy walk animation when entering the chase state
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_Melee_ChaseStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = ENEMY_WALK;
 }
 
+/*!
+\brief Constantly chases after the player
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_Melee_ChaseUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   Vector2D facingDirection;
@@ -64,6 +95,12 @@ void EnemyAI_Melee_ChaseUpdate(GameObject* enemy, EnemyContainer* enemyContainer
   }
 }
 
+/*!
+\brief Strip the animaton when exiting chase state
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_Melee_ChaseExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~ENEMY_WALK;
@@ -72,12 +109,24 @@ void EnemyAI_Melee_ChaseExit(GameObject* enemy, EnemyContainer* enemyContainer)
 
 /****************ATTACK******************/
 
+/*!
+\brief Assign new animation and reset the frames
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_Melee_AttackStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = ENEMY_ATTACK;
   enemy->sprite->frame = 0;
 }
 
+/*!
+\brief Handles cooldown and windup when attacking
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_Melee_AttackUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemy->physics->velocity.x = 0;
@@ -106,6 +155,12 @@ void EnemyAI_Melee_AttackUpdate(GameObject* enemy, EnemyContainer* enemyContaine
   }
 }
 
+/*!
+\brief Resets the animation states and resets the attackwindup
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_Melee_AttackExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~ENEMY_ATTACK;
@@ -114,12 +169,24 @@ void EnemyAI_Melee_AttackExit(GameObject* enemy, EnemyContainer* enemyContainer)
 
 //******************* COOL DOWN *********************//s
 
+/*!
+\brief Sets the animation state when entering cooldown, which is idle and resets the frame
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_Melee_CooldownStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = ENEMY_IDLE;
   enemy->sprite->frame = 0;
 }
 
+/*!
+\brief Constantly checks against the cooldown timer, while in cooldown stays still
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_Melee_CooldownUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemy->physics->velocity.x = 0;
@@ -143,6 +210,12 @@ void EnemyAI_Melee_CooldownUpdate(GameObject* enemy, EnemyContainer* enemyContai
   }
 }
 
+/*!
+\brief Resets attackcooldown and strips the animation state
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_Melee_CooldownExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->attackCooldown = enemyContainer->attackCooldownLength;

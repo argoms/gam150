@@ -6,10 +6,12 @@ Project (working title): Epoch
 \par    Course: GAM150
 \par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
+  Function declarations for EnemyAnimations.h
 */
 #pragma once
 #include "GameObject.h"
 
+// Enemy animation state enums
 enum actions
 {
   ENEMY_IDLE = 1,

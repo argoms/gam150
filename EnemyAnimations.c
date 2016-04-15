@@ -6,6 +6,7 @@ Project (working title): Epoch
 \par    Course: GAM150
 \par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
+  Handles setting up enemy animations and switching them as well
 */
 #include "EnemyAnimations.h"
 #include "Graphics.h"
@@ -27,6 +28,11 @@ static AnimationSet* AS_StabbyWalk;
 static AnimationSet* AS_StabbyAttack;
 static AnimationSet* AS_StabbyCooldown;
 
+/*!
+\struct AnimationDefinition
+\brief 
+  Animation definition, really holds the filenames for the locations of all our sprite sheets
+*/
 typedef struct
 {
   const char *filename;
@@ -253,6 +259,10 @@ static AnimationDefinition AD_StabbyCooldown[] =
   { "animations/stabby/Cooldown3.png",  NULL }
 };
 
+/*!
+\brief
+  Initializes all animations for all enemy's, stores them in static pointers for use later in the game cycle
+*/
 void EnemyAnimationInitialize()
 {
   /*************** Spider *****************/
@@ -303,6 +313,7 @@ void EnemyAnimationInitialize()
   Animation* array_stabbyAttack[16];
   Animation* array_stabbyCooldown[16];
 
+  // Populate animation array
   int i = 0;
   for (i = 0; i < 16; ++i)
   {
@@ -321,6 +332,7 @@ void EnemyAnimationInitialize()
     array_stabbyCooldown[i] = GCreateAnimation(1, GCreateTexture(AD_StabbyCooldown[i].filename), mesh_stabbyCooldown, stabbyCooldownFrames);
   }
 
+  // Turn animation arrays into animation sets and give them to statics
   AS_SpiderWolfIdle   = CreateAnimationSet(array_spiderWolfIdle);
   AS_SpiderWolfWalk   = CreateAnimationSet(array_spiderWolfWalk);
   AS_SpiderWolfAttack = CreateAnimationSet(array_spiderWolfAttack);
@@ -336,6 +348,12 @@ void EnemyAnimationInitialize()
   AS_StabbyCooldown = CreateAnimationSet(array_stabbyCooldown);
 }
 
+/*!
+\brief
+  Handles animation states and switching between all of the various animations
+\param enemy
+  The enemy to change animations for
+*/
 void EnemyAnimationStateManager(GameObject* enemy)
 {
   EnemyContainer* enemyContainer = enemy->miscData;

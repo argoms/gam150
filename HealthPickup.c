@@ -6,6 +6,7 @@ Project (working title): Epoch
 \par    Course: GAM150
 \par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
+  Health pickup powerup that restores health
 */
 #include "Graphics.h"
 #include "Physics.h"
@@ -16,14 +17,26 @@ Project (working title): Epoch
 #include "Isometric.h"
 #include "Audio.h"
 
-static int HealthBoost = 10;
+static int HealthBoost = 10;  // Set player's health to this value when picking up the powerup
 static Animation* healthAnimation;
 
+/*!
+\brief
+  Initializes animation for all future health pickups
+*/
 void HealthPickupInitialize()
 {
   healthAnimation = GCreateAnimation(1, GCreateTexture("animations/heart.png"), GCreateMesh(50.f, 50.f, 1, 1), 1);
 }
 
+/*!
+\brief
+  Call this to spawn a health pickup
+\param x
+  X location of powerup
+\param y
+  Y location of powerup
+*/
 void HealthPickupSpawn(float x, float y)
 {
   Vector2D position;
@@ -46,6 +59,15 @@ void HealthPickupSpawn(float x, float y)
   //EffectRemove((GameObject*)(healthPowerup->miscData));
 }
 
+/*!
+\brief
+  Handles actual logic when player collides with the powerup
+  Plays a sound, resets player health, and destroys the powerup
+\param thisObject
+  The health pickup object
+\param y
+  Hopefully the player object
+*/
 void HealthPickupCollide(GameObject* thisObject, GameObject* otherObject)
 {
   if (otherObject->type == entity_player && thisObject->type == entity_healthpowerup)
@@ -60,6 +82,5 @@ void HealthPickupCollide(GameObject* thisObject, GameObject* otherObject)
       16, -1.f, Vec2(5, 10), 0.9f, 0.4f, 0, Vec2(60, 60), 10, GTint(1, 1, 1, 0.75));
     ParticleApplyBehavior(particleBehavior_linearAlpha, explosionEffect);
     ParticleSetLifetime(explosionEffect, 0.05f);
-
   }
 }
