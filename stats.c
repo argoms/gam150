@@ -267,6 +267,8 @@ void PrintStats(statistics* stats)
   char buffer_highest_level_reached[BUFFER_SIZE];
   char buffer_overall_score[BUFFER_SIZE];
   
+  // the warnings associated with the buffers cannot be surrpressed wihout crashing the game
+  // making it const breaks other code that needs to modify it
   // put the stats into buffers
   sprintf_s(&buffer_kills, (size_t)BUFFER_SIZE, "%d enemies killed", stats->kills);
   sprintf_s(&buffer_damage_taken, (size_t)BUFFER_SIZE, "%d damage taken", stats->damageTaken);
@@ -299,6 +301,7 @@ void PrintStats(statistics* stats)
   stat_print_data = TextCreateHUDString(buffer_overall_score, 0, -200);
   TextStringSetTint(stat_print_data, GTint(1, 1, 1, 1));
 }
+
 
 void FreeStats(statistics* stats)
 {
