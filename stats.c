@@ -21,6 +21,15 @@ int highest_level_reached;  // highest level reached
 #include "stats.h"
 #define BUFFER_SIZE 64
 
+/*************************************************************************/
+/*!
+\par   Function:  InitializePlayerStats
+
+\par Description: inits the stats to 0 so no garabage
+
+\return  pointer to a statisict struct
+*/
+/*************************************************************************/
 statistics* InitializePlayerStats()
 {
   statistics* stats = (statistics*)malloc(sizeof(statistics));  // malloc the staticsitc struct
@@ -34,6 +43,16 @@ statistics* InitializePlayerStats()
   return stats;
 }
 
+/*************************************************************************/
+/*!
+\par   Function:  IncrementKills
+
+\par Description: increments the kills
+
+\param - pointer to a statistic struct
+
+*/
+/*************************************************************************/
 void IncrementKills(statistics* stats)
 {
   if (stats)
@@ -46,6 +65,16 @@ void IncrementKills(statistics* stats)
   }
 }
 
+/*************************************************************************/
+/*!
+\par   Function:  IncrementDamageTaken
+
+\par Description: increments the damage taken
+
+\param - stats pointer to a statsistic struct
+
+*/
+/*************************************************************************/
 void IncrementDamageTaken(statistics* stats)
 {
   if (stats)
@@ -58,6 +87,18 @@ void IncrementDamageTaken(statistics* stats)
   }
 }
 
+/*************************************************************************/
+/*!
+\par   Function:  SetTime
+
+\par Description: sets the time
+
+\param stats - poointer to a statistic struct
+
+\param elapsed_time - float of the time
+
+*/
+/*************************************************************************/
 void SetTime(statistics* stats, float elapsed_time)
 {
   if (stats)
@@ -70,6 +111,16 @@ void SetTime(statistics* stats, float elapsed_time)
   }
 }
 
+/*************************************************************************/
+/*!
+\par   Function:  IncrementRoomsCleared
+
+\par Description: increments the rooms cleared
+
+\param stats - pointer to a statistic struct
+
+*/
+/*************************************************************************/
 void IncrementRoomsCleared(statistics* stats)
 {
   if (stats)
@@ -82,6 +133,16 @@ void IncrementRoomsCleared(statistics* stats)
   }
 }
 
+/*************************************************************************/
+/*!
+\par   Function:  Incrementhighest_level_reached
+
+\par Description: increments the highest level reached
+
+\param  stats - pointer to a statistic struct
+
+*/
+/*************************************************************************/
 void Incrementhighest_level_reached(statistics* stats)
 {
   if (stats)
@@ -94,6 +155,16 @@ void Incrementhighest_level_reached(statistics* stats)
   }
 }
 
+/*************************************************************************/
+/*!
+\par   Function:  ResetKills
+
+\par Description: resets the number of kills
+
+\param stats - pointer to a ststistc struct
+
+*/
+/*************************************************************************/
 void ResetKills(statistics* stats)
 {
   if (stats)
@@ -106,6 +177,16 @@ void ResetKills(statistics* stats)
   }
 }
 
+/*************************************************************************/
+/*!
+\par   Function:  ResetDamageTaken
+
+\par Description: resests the damage taken back to 0
+
+\param stats - pointer to a statsic struct
+
+*/
+/*************************************************************************/
 void ResetDamageTaken(statistics* stats)
 {
   if (stats)
@@ -117,6 +198,17 @@ void ResetDamageTaken(statistics* stats)
     return;
   }
 }
+
+/*************************************************************************/
+/*!
+\par   Function:  ResetRoomsCleared
+
+\par Description: resets the number of rooms cleared
+
+\param stats - pointer to a statsistic struct
+
+*/
+/*************************************************************************/
 void ResetRoomsCleared(statistics* stats)
 {
   if (stats)
@@ -129,6 +221,16 @@ void ResetRoomsCleared(statistics* stats)
   }
 }
 
+/*************************************************************************/
+/*!
+\par   Function: Resethighest_level_reached
+
+\par Description: resets the highest level reached back to 0
+
+\param stats - pointer to a statistic struct
+
+*/
+/*************************************************************************/
 void Resethighest_level_reached(statistics* stats)
 {
   if (stats)
@@ -141,6 +243,16 @@ void Resethighest_level_reached(statistics* stats)
   }
 }
 
+/*************************************************************************/
+/*!
+\par   Function:  ResetTime
+
+\par Description: Resets the time
+
+\param stats - pointer to a statsistic struct
+
+*/
+/*************************************************************************/
 void ResetTime(statistics* stats)
 {
   if (stats)
@@ -153,6 +265,18 @@ void ResetTime(statistics* stats)
   }
 }
 
+/*************************************************************************/
+/*!
+\par   Function:  GetSeconds
+
+\par Description: Returns the number of seconds in the time, not raw
+seconds
+
+\param  stats - pointer to a statistic struct
+
+\return the number of seconds
+*/
+/*************************************************************************/
 int GetSeconds(statistics* stats)
 {
   if (stats)
@@ -165,6 +289,17 @@ int GetSeconds(statistics* stats)
   }
 }
 
+/*************************************************************************/
+/*!
+\par   Function:  GetMinutes
+
+\par Description: returns the number of muntes in the time
+
+\param  stats - pointer to a statistic struct
+
+\return the number of minutes
+*/
+/*************************************************************************/
 int GetMinutes(statistics* stats)
 {
   if (stats)
@@ -177,6 +312,17 @@ int GetMinutes(statistics* stats)
   }
 }
 
+/*************************************************************************/
+/*!
+\par   Function:  GetRoomsCleared
+
+\par Description: Returns the number of rooms cleared
+
+\param  stats - pointer to a statsistic struct
+
+\return the number of rooms cleared
+*/
+/*************************************************************************/
 int GetRoomsCleared(statistics* stats)
 {
   if (stats)
@@ -189,6 +335,17 @@ int GetRoomsCleared(statistics* stats)
   }
 }
 
+/*************************************************************************/
+/*!
+\par   Function: GetHighestLevelReached
+
+\par Description: Returns the highest level reached
+
+\param stats - pointer to a statistic struct
+
+\return the highest level reached
+*/
+/*************************************************************************/
 int GetHighestLevelReached(statistics* stats)
 {
   if (stats)
@@ -201,6 +358,18 @@ int GetHighestLevelReached(statistics* stats)
   }
 }
 
+/*************************************************************************/
+/*!
+\par   Function:  GetRawTime
+
+\par Description: Gets the number of seconds in the stats,
+like 70 seconds NOT 1 min 10 secs
+
+\param stats - pointer to the statsistic struct
+
+\return the number of seconds
+*/
+/*************************************************************************/
 int GetRawTime(statistics* stats)
 {
   if (stats)
@@ -213,6 +382,17 @@ int GetRawTime(statistics* stats)
   }
 }
 
+/*************************************************************************/
+/*!
+\par   Function:  ResetStats
+
+\par Description: Resets the stats to 0
+
+\param  stats - pointer to a statistic struct
+
+\return 0 to show that it is now 0
+*/
+/*************************************************************************/
 int ResetStats(statistics* stats)
 {
   if (stats)
@@ -230,6 +410,16 @@ int ResetStats(statistics* stats)
   return 0;
 }
 
+/*************************************************************************/
+/*!
+\par   Function:   PrintStats
+
+\par Description:  prints the stats, use in death screen, win or town screen
+
+\param stats - pointe to statsitcs
+
+*/
+/*************************************************************************/
 void PrintStats(statistics* stats)
 {
   if (stats == NULL)
@@ -257,7 +447,7 @@ void PrintStats(statistics* stats)
 
   TextString* stat_print_data;
   float score = 0.0f;
-  score = ((stats->rooms_cleared) * (stats->rooms_cleared)) / ((stats->time) * (0.15f)) + (stats->kills)  - (stats->damageTaken);
+  score = ((stats->rooms_cleared) * (stats->rooms_cleared)) / ((stats->time) * (0.15f)) + (stats->kills) - (stats->damageTaken);
 
   // init buffers for the 
   char buffer_kills[BUFFER_SIZE];
@@ -266,9 +456,7 @@ void PrintStats(statistics* stats)
   char buffer_rooms_cleared[BUFFER_SIZE];
   char buffer_highest_level_reached[BUFFER_SIZE];
   char buffer_overall_score[BUFFER_SIZE];
-  
-  // the warnings associated with the buffers cannot be surrpressed wihout crashing the game
-  // making it const breaks other code that needs to modify it
+
   // put the stats into buffers
   sprintf_s(&buffer_kills, (size_t)BUFFER_SIZE, "%d enemies killed", stats->kills);
   sprintf_s(&buffer_damage_taken, (size_t)BUFFER_SIZE, "%d damage taken", stats->damageTaken);
@@ -276,7 +464,7 @@ void PrintStats(statistics* stats)
   sprintf_s(&buffer_rooms_cleared, (size_t)BUFFER_SIZE, "%d rooms cleared", GetRoomsCleared(stats));
   sprintf_s(&buffer_highest_level_reached, (size_t)BUFFER_SIZE, "Highest Level: %d", GetHighestLevelReached(stats));
   sprintf_s(&buffer_overall_score, (size_t)BUFFER_SIZE, "Your score is %.1f", score);
-  
+
   // print kills
   stat_print_data = TextCreateHUDString(buffer_kills, 0, 100);
   TextStringSetTint(stat_print_data, GTint(1, 1, 1, 1));
@@ -302,7 +490,16 @@ void PrintStats(statistics* stats)
   TextStringSetTint(stat_print_data, GTint(1, 1, 1, 1));
 }
 
+/*************************************************************************/
+/*!
+\par   Function:  FreeStats
 
+\par Description: frees the stats
+
+\param stats - pointer to a statsitics struct
+
+*/
+/*************************************************************************/
 void FreeStats(statistics* stats)
 {
   free(stats);
@@ -318,3 +515,4 @@ int rooms_cleared;          // #rooms cleared
 int highest_level_reached;  // highest level reached
 }statistics;
 */
+

@@ -225,7 +225,20 @@ void Dodge(int input_key, GameObject *obj)
   }
 }
 
+/*************************************************************************/
+/*!
+\par    Function: Dodge2
 
+\par Description: second dodge function b/c c function overloading
+
+\param  keys an array of input keys for the dodge
+
+\param obj - pointer to an object
+
+\param list_size - size of the list
+
+*/
+/*************************************************************************/
 void Dodge2(int keys[], GameObject *obj, int list_size)
 {
   int input_key = 0;
@@ -282,6 +295,16 @@ void Dodge2(int keys[], GameObject *obj, int list_size)
   }
 }
 
+/*************************************************************************/
+/*!
+\par    Function: ResetColor
+
+\par Description: resets the colorr
+
+\param  GameObj - a game object
+
+*/
+/*************************************************************************/
 void ResetColor(GameObject *GameObj)
 {
   if (GameObj == NULL)
@@ -314,6 +337,18 @@ void ResetColor(GameObject *GameObj)
 
 }
 
+/*************************************************************************/
+/*!
+\par    Function: BriefInvulnerability
+
+\par Description: grants brief invulnerability
+
+\param  GameObj - a game object
+
+\param PlayerOnly - flag if only the player
+
+*/
+/*************************************************************************/
 void BriefInvulnerability(GameObject *GameObj, int PlayerOnly)
 {
   if (GameObj == NULL)
@@ -357,6 +392,16 @@ void BriefInvulnerability(GameObject *GameObj, int PlayerOnly)
   //ent->wasDamaged = 0;
 }
 
+/*************************************************************************/
+/*!
+\par    Function: IdleDodge
+
+\par Description: dodge whill not moving
+
+\param  GameObj - a game object
+
+*/
+/*************************************************************************/
 void IdleDodge(GameObject *GameObj)
 {
   // do nothing on idle dodge
@@ -364,6 +409,15 @@ void IdleDodge(GameObject *GameObj)
   
 }
 
+
+/*************************************************************************/
+/*!
+\par    Function: CheckDrag
+
+\par Description: checks player drag
+
+*/
+/*************************************************************************/
 void CheckDrag()
 {
   //high drag
