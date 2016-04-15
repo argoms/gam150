@@ -6,6 +6,7 @@ Project (working title): Epoch
 \par    Course: GAM150
 \par    Copyright © 2016 DigiPen (USA) Corporation.
 \brief
+  Enemy AI behavior for the Big melee enemy with club
 */
 #include "EnemyAIMeleeBigBehavior.h"
 #include "EnemyAnimations.h"
@@ -14,7 +15,12 @@ Project (working title): Epoch
 #include "ScreenShake.h"
 
 /****************PATROL******************/
+/*!
+\brief Enemy patrol start, should stay still on initial
 
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_MeleeBig_PatrolStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemy->physics->velocity.x = 0;
@@ -22,6 +28,12 @@ void EnemyAI_MeleeBig_PatrolStart(GameObject* enemy, EnemyContainer* enemyContai
   enemyContainer->enemyAnimationState = ENEMY_IDLE;
 }
 
+/*!
+\brief Constantly checks to detect the player
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_MeleeBig_PatrolUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   float distanceToPlayer = Vector2DSquareDistance(&(enemy->physics->position), &(enemy->target->physics->position));
@@ -32,6 +44,12 @@ void EnemyAI_MeleeBig_PatrolUpdate(GameObject* enemy, EnemyContainer* enemyConta
   }
 }
 
+/*!
+\brief Strips the animation when exiting the state
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_MeleeBig_PatrolExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~ENEMY_IDLE;
@@ -39,11 +57,23 @@ void EnemyAI_MeleeBig_PatrolExit(GameObject* enemy, EnemyContainer* enemyContain
 
 /****************CHASE******************/
 
+/*!
+\brief Sets the animation when entering the chasing state
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_MeleeBig_ChaseStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = ENEMY_WALK;
 }
 
+/*!
+\brief Chases after the player and detects when in attack range
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_MeleeBig_ChaseUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   Vector2D facingDirection;
@@ -65,6 +95,12 @@ void EnemyAI_MeleeBig_ChaseUpdate(GameObject* enemy, EnemyContainer* enemyContai
   }
 }
 
+/*!
+\brief When exiting chase state, strips the animation
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_MeleeBig_ChaseExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~ENEMY_WALK;
@@ -72,6 +108,13 @@ void EnemyAI_MeleeBig_ChaseExit(GameObject* enemy, EnemyContainer* enemyContaine
 
 /****************ATTACK******************/
 
+/*!
+\brief Stays still when entering the attack state and sets the animation,
+also utilizes the special lookdirection vector2d to orient specific animations
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_MeleeBig_AttackStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemy->sprite->frame = 0;
@@ -82,6 +125,12 @@ void EnemyAI_MeleeBig_AttackStart(GameObject* enemy, EnemyContainer* enemyContai
   Vector2DNormalize(&(enemyContainer->lookDirection), &(enemyContainer->lookDirection));
 }
 
+/*!
+\brief Handles attackwindup when in the attack state, when attackwindup is done plays the attack
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_MeleeBig_AttackUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemy->physics->velocity.x = 0;
@@ -95,11 +144,6 @@ void EnemyAI_MeleeBig_AttackUpdate(GameObject* enemy, EnemyContainer* enemyConta
 
   if (enemyContainer->attackWindup <= 0)
   {
-    // Deprecated code
-    //Vector2D attackDirection;
-    //attackDirection.x = enemy->target->physics->position.x - enemy->physics->position.x;
-    //attackDirection.y = enemy->target->physics->position.y - enemy->physics->position.y;
-    //Vector2DNormalize(&attackDirection, &(enemyContainer->lookDirection));
     enemyContainer->attackCooldown = enemyContainer->attackCooldownLength;
 
     AddScreenShake(0.1f, 200);
@@ -108,6 +152,12 @@ void EnemyAI_MeleeBig_AttackUpdate(GameObject* enemy, EnemyContainer* enemyConta
   }
 }
 
+/*!
+\brief When exiting the attack state, strips the animation and resets sprite frames and attackwindup
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_MeleeBig_AttackExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = enemyContainer->enemyAnimationState & ~ENEMY_ATTACK;
@@ -117,11 +167,24 @@ void EnemyAI_MeleeBig_AttackExit(GameObject* enemy, EnemyContainer* enemyContain
 
 //******************* COOL DOWN *********************//
 
+/*!
+\brief Sets the animation for entering the cooldown state
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_MeleeBig_CooldownStart(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->enemyAnimationState = ENEMY_COOLDOWN;
 }
 
+/*!
+\brief Handles cooldown state by checking against the cooldown timer,
+switches back to correct states after cooldown is done
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_MeleeBig_CooldownUpdate(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemy->physics->velocity.x = 0;
@@ -145,6 +208,12 @@ void EnemyAI_MeleeBig_CooldownUpdate(GameObject* enemy, EnemyContainer* enemyCon
   }
 }
 
+/*!
+\brief Handles cooldown exit, resets cooldown timer and strips animation
+
+\param enemy The enemy gameobject
+\param enemyContainer EnemyContainer component with enemy information
+*/
 void EnemyAI_MeleeBig_CooldownExit(GameObject* enemy, EnemyContainer* enemyContainer)
 {
   enemyContainer->attackCooldown = enemyContainer->attackCooldownLength;
